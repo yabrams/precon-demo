@@ -1,30 +1,151 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import BidFormTable, { LineItem } from './BidFormTable';
 import { exportToPDF, exportToExcel, exportToCSV } from '@/lib/export';
+import DiagramOverlay from './DiagramOverlay';
+import ChatPanel from './ChatPanel';
+import MagnifyingGlass from './MagnifyingGlass';
+import { ChatMessage } from '@/types/chat';
 
 interface WorkspaceViewProps {
   diagramUrl: string | null;
   lineItems: LineItem[];
-  projectName: string;
   isExtracting: boolean;
   onLineItemsUpdate: (items: LineItem[]) => void;
-  onProjectNameChange: (name: string) => void;
   onUploadNew: () => void;
+  onReExtract?: (instructions: string) => void;
+  chatOpen: boolean;
+  chatMessages: ChatMessage[];
+  onChatToggle: () => void;
+  onSendChatMessage: (message: string) => void;
+  onAcceptChatChanges: (messageId: string) => void;
+  onRejectChatChanges: (messageId: string) => void;
+  isChatLoading?: boolean;
 }
 
 export default function WorkspaceView({
   diagramUrl,
   lineItems,
-  projectName,
   isExtracting,
   onLineItemsUpdate,
-  onProjectNameChange,
   onUploadNew,
+  onReExtract,
+  chatOpen,
+  chatMessages,
+  onChatToggle,
+  onSendChatMessage,
+  onAcceptChatChanges,
+  onRejectChatChanges,
+  isChatLoading = false,
 }: WorkspaceViewProps) {
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+  const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [showInstructionsPanel, setShowInstructionsPanel] = useState(false);
+  const [reExtractionInstructions, setReExtractionInstructions] = useState('');
+  const [magnifyingGlassEnabled, setMagnifyingGlassEnabled] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const workspaceRef = useRef<HTMLDivElement>(null);
+
+  // Update image dimensions and zoom level when image loads or on resize
+  useEffect(() => {
+    const updateImageDimensions = () => {
+      if (imageRef.current) {
+        const { width, height } = imageRef.current.getBoundingClientRect();
+        setImageDimensions({ width, height });
+
+        // Calculate zoom level
+        const naturalWidth = imageRef.current.naturalWidth;
+        const naturalHeight = imageRef.current.naturalHeight;
+
+        if (naturalWidth > 0 && naturalHeight > 0) {
+          // Calculate scale for both dimensions and use the smaller one (object-contain behavior)
+          const scaleX = width / naturalWidth;
+          const scaleY = height / naturalHeight;
+          const scale = Math.min(scaleX, scaleY);
+          setZoomLevel(Math.round(scale * 100));
+        }
+      }
+    };
+
+    // Update on image load
+    const img = imageRef.current;
+    if (img) {
+      img.addEventListener('load', updateImageDimensions);
+      // Also update immediately in case image is already loaded
+      updateImageDimensions();
+    }
+
+    // Update on window resize
+    window.addEventListener('resize', updateImageDimensions);
+
+    // Watch for panel resize using ResizeObserver
+    let resizeObserver: ResizeObserver | null = null;
+    if (img?.parentElement) {
+      resizeObserver = new ResizeObserver(() => {
+        updateImageDimensions();
+      });
+      resizeObserver.observe(img.parentElement);
+    }
+
+    return () => {
+      if (img) {
+        img.removeEventListener('load', updateImageDimensions);
+      }
+      window.removeEventListener('resize', updateImageDimensions);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [diagramUrl]);
+
+  const handleHoverChange = (itemId: string | null, element?: HTMLTableRowElement | null) => {
+    setHoveredItemId(itemId);
+    setHoveredRowElement(element || null);
+  };
+
+  // Calculate connection line positions and color
+  const getConnectionLineProps = () => {
+    if (!hoveredItemId || !hoveredRowElement || !imageRef.current || !workspaceRef.current) {
+      return null;
+    }
+
+    const item = lineItems.find((item) => item.id === hoveredItemId);
+    const itemIndex = lineItems.findIndex((item) => item.id === hoveredItemId);
+    if (!item || !item.boundingBox || itemIndex === -1) {
+      return null;
+    }
+
+    // Get positions
+    const workspaceRect = workspaceRef.current.getBoundingClientRect();
+    const rowRect = hoveredRowElement.getBoundingClientRect();
+    const imageRect = imageRef.current.getBoundingClientRect();
+
+    // Calculate from position (middle left of table row)
+    const fromX = rowRect.left - workspaceRect.left;
+    const fromY = rowRect.top + rowRect.height / 2 - workspaceRect.top;
+
+    // Calculate to position (center of bounding box)
+    const { x, y, width, height } = item.boundingBox;
+    const boxCenterX = (x + width / 2) * imageDimensions.width;
+    const boxCenterY = (y + height / 2) * imageDimensions.height;
+    const toX = imageRect.left - workspaceRect.left + boxCenterX;
+    const toY = imageRect.top - workspaceRect.top + boxCenterY;
+
+    // Get color
+    const HIGHLIGHT_COLORS = [
+      '#93c5fd', '#fca5a5', '#86efac', '#fcd34d', '#c4b5fd',
+      '#fdba74', '#f9a8d4', '#67e8f9', '#d8b4fe', '#a7f3d0',
+    ];
+    const color = HIGHLIGHT_COLORS[itemIndex % HIGHLIGHT_COLORS.length];
+
+    return { fromX, fromY, toX, toY, color };
+  };
+
   const handleExport = (format: 'pdf' | 'excel' | 'csv') => {
     if (format === 'pdf') {
       exportToPDF(lineItems, projectName);
@@ -35,9 +156,69 @@ export default function WorkspaceView({
     }
   };
 
+  const connectionLineProps = getConnectionLineProps();
+
   return (
-    <div className="h-screen overflow-hidden bg-gray-50">
-      <PanelGroup direction="horizontal">
+    <div ref={workspaceRef} className="h-screen overflow-hidden bg-gray-50 relative">
+      {/* Connection Line Overlay */}
+      <AnimatePresence>
+        {connectionLineProps && (
+          <svg
+            className="pointer-events-none absolute inset-0 w-full h-full"
+            style={{ zIndex: 1000 }}
+          >
+            {/* Curved connection line */}
+            <motion.path
+              d={`M ${connectionLineProps.fromX} ${connectionLineProps.fromY} C ${connectionLineProps.fromX - 100} ${connectionLineProps.fromY}, ${connectionLineProps.toX + 100} ${connectionLineProps.toY}, ${connectionLineProps.toX} ${connectionLineProps.toY}`}
+              stroke={connectionLineProps.color}
+              strokeWidth={3}
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray="5,5"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.7 }}
+              exit={{ pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
+            />
+            {/* Endpoint marker on diagram */}
+            <motion.circle
+              cx={connectionLineProps.toX}
+              cy={connectionLineProps.toY}
+              r={5}
+              fill={connectionLineProps.color}
+              stroke="white"
+              strokeWidth={2}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            />
+          </svg>
+        )}
+      </AnimatePresence>
+
+      {/* Chat Overlay */}
+      <AnimatePresence>
+        {chatOpen && (
+          <motion.div
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed left-0 top-0 bottom-0 w-[400px] bg-white shadow-2xl z-50"
+          >
+            <ChatPanel
+              messages={chatMessages}
+              onSendMessage={onSendChatMessage}
+              onAcceptChanges={onAcceptChatChanges}
+              onRejectChanges={onRejectChatChanges}
+              isLoading={isChatLoading}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <PanelGroup direction="horizontal" className="h-full">
         {/* Left Panel - Diagram Viewer */}
         <Panel defaultSize={35} minSize={20} className="relative bg-white flex flex-col">
           {/* Diagram Content */}
@@ -52,11 +233,64 @@ export default function WorkspaceView({
                   transition={{ duration: 0.4 }}
                   className="w-full h-full flex items-center justify-center"
                 >
-                  <img
-                    src={diagramUrl}
-                    alt="Construction Diagram"
-                    className="max-w-full max-h-full object-contain shadow-lg rounded"
-                  />
+                  <div className="relative inline-block">
+                    <img
+                      ref={imageRef}
+                      src={diagramUrl}
+                      alt="Construction Diagram"
+                      className="max-w-full max-h-full object-contain shadow-lg rounded"
+                    />
+                    <DiagramOverlay
+                      lineItems={lineItems}
+                      hoveredItemId={hoveredItemId}
+                      onHoverChange={(id) => handleHoverChange(id, null)}
+                      imageWidth={imageDimensions.width}
+                      imageHeight={imageDimensions.height}
+                    />
+                    {/* Magnifying Glass */}
+                    {diagramUrl && (
+                      <MagnifyingGlass
+                        imageSrc={diagramUrl}
+                        imageRef={imageRef}
+                        enabled={magnifyingGlassEnabled}
+                        zoomFactor={2.5}
+                        lensWidth={300}
+                        lensHeight={180}
+                      />
+                    )}
+                    {/* Bottom right controls */}
+                    <div className="absolute bottom-2 right-2 flex gap-2">
+                      {/* Zoom level indicator */}
+                      <div className="bg-black bg-opacity-70 text-white px-3 py-1.5 rounded text-sm font-medium pointer-events-none">
+                        {zoomLevel}%
+                      </div>
+                      {/* Magnifying Glass Toggle Button */}
+                      <button
+                        onClick={() => setMagnifyingGlassEnabled(!magnifyingGlassEnabled)}
+                        className={`px-3 py-1.5 rounded text-sm font-medium transition-all flex items-center gap-2 ${
+                          magnifyingGlassEnabled
+                            ? 'bg-blue-600 bg-opacity-90 text-white hover:bg-opacity-100'
+                            : 'bg-black bg-opacity-70 text-white hover:bg-opacity-90'
+                        }`}
+                        title={magnifyingGlassEnabled ? 'Disable magnifying glass' : 'Enable magnifying glass'}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                          />
+                        </svg>
+                        <span>Zoom</span>
+                      </button>
+                    </div>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -112,8 +346,25 @@ export default function WorkspaceView({
           <Panel defaultSize={65} minSize={30} className="flex flex-col bg-gray-50">
             {/* Right Panel Header with Export Toolbar */}
             <div className="bg-white border-b px-6 py-4 flex-shrink-0">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Bid Form</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-lg font-semibold text-gray-900">Bid Form</h2>
+
+                  {/* Chat Toggle Button */}
+                  <button
+                    onClick={onChatToggle}
+                    className={`px-4 py-2 rounded-lg transition-colors font-medium text-sm flex items-center gap-2 ${
+                      chatOpen
+                        ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    {chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
+                  </button>
+                </div>
 
                 {/* Export Buttons */}
                 <div className="flex gap-2">
@@ -142,20 +393,6 @@ export default function WorkspaceView({
                     CSV
                   </button>
                 </div>
-              </div>
-
-              {/* Project Name Input */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Project Name
-                </label>
-                <input
-                  type="text"
-                  value={projectName}
-                  onChange={(e) => onProjectNameChange(e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900 font-medium shadow-sm"
-                  placeholder="Enter project name"
-                />
               </div>
             </div>
 
@@ -189,6 +426,8 @@ export default function WorkspaceView({
                     <BidFormTable
                       initialLineItems={lineItems}
                       onUpdate={onLineItemsUpdate}
+                      hoveredItemId={hoveredItemId}
+                      onHoverChange={handleHoverChange}
                     />
                   </motion.div>
                 ) : (

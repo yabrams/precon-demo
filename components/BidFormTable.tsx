@@ -2,6 +2,24 @@
 
 import { useState, useEffect } from 'react';
 
+// Color palette for highlighting - must match DiagramOverlay
+const HIGHLIGHT_COLORS = [
+  '#93c5fd', // blue-300
+  '#fca5a5', // red-300
+  '#86efac', // green-300
+  '#fcd34d', // yellow-300
+  '#c4b5fd', // violet-300
+  '#fdba74', // orange-300
+  '#f9a8d4', // pink-300
+  '#67e8f9', // cyan-300
+  '#d8b4fe', // purple-300
+  '#a7f3d0', // emerald-300
+];
+
+const getColorForItem = (index: number): string => {
+  return HIGHLIGHT_COLORS[index % HIGHLIGHT_COLORS.length];
+};
+
 export interface LineItem {
   id?: string;
   item_number?: string | null;
@@ -12,18 +30,34 @@ export interface LineItem {
   total_price?: number | null;
   notes?: string | null;
   verified?: boolean;
+  boundingBox?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null;
 }
 
 interface BidFormTableProps {
   initialLineItems: LineItem[];
   onUpdate: (lineItems: LineItem[]) => void;
   readOnly?: boolean;
+  hoveredItemId?: string | null;
+  onHoverChange?: (itemId: string | null, element?: HTMLTableRowElement | null) => void;
 }
 
-export default function BidFormTable({ initialLineItems, onUpdate, readOnly = false }: BidFormTableProps) {
+export default function BidFormTable({
+  initialLineItems,
+  onUpdate,
+  readOnly = false,
+  hoveredItemId,
+  onHoverChange
+}: BidFormTableProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems);
 
   useEffect(() => {
+    console.log('BidFormTable: initialLineItems changed, count:', initialLineItems.length);
+    console.log('BidFormTable: First item:', initialLineItems[0]);
     setLineItems(initialLineItems);
   }, [initialLineItems]);
 
@@ -85,6 +119,7 @@ export default function BidFormTable({ initialLineItems, onUpdate, readOnly = fa
         <table className="w-full text-sm">
           <thead className="bg-gray-800 border-b border-gray-700">
             <tr>
+              <th className="px-3 py-3 text-left font-semibold text-white w-32">ID</th>
               <th className="px-3 py-3 text-left font-semibold text-white w-20">Item #</th>
               <th className="px-3 py-3 text-left font-semibold text-white min-w-64">Description</th>
               <th className="px-3 py-3 text-left font-semibold text-white w-24">Quantity</th>
@@ -98,13 +133,30 @@ export default function BidFormTable({ initialLineItems, onUpdate, readOnly = fa
           <tbody className="divide-y divide-gray-300">
             {lineItems.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-3 py-8 text-center text-gray-600 font-medium">
+                <td colSpan={9} className="px-3 py-8 text-center text-gray-600 font-medium">
                   No line items. {!readOnly && 'Click "Add Line Item" to get started.'}
                 </td>
               </tr>
             ) : (
-              lineItems.map((item, index) => (
-                <tr key={item.id || index} className="hover:bg-blue-50 transition-colors">
+              lineItems.map((item, index) => {
+                const isHovered = hoveredItemId === item.id;
+                const highlightColor = getColorForItem(index);
+                const hasBoundingBox = !!item.boundingBox;
+
+                return (
+                  <tr
+                    key={item.id || index}
+                    className="transition-colors"
+                    style={{
+                      backgroundColor: isHovered && hasBoundingBox ? `${highlightColor}40` : undefined,
+                      borderLeft: isHovered && hasBoundingBox ? `4px solid ${highlightColor}` : undefined,
+                    }}
+                    onMouseEnter={(e) => hasBoundingBox && onHoverChange?.(item.id || null, e.currentTarget)}
+                    onMouseLeave={() => hasBoundingBox && onHoverChange?.(null, null)}
+                  >
+                  <td className="px-3 py-2">
+                    <span className="text-xs text-gray-500 font-mono">{item.id || 'N/A'}</span>
+                  </td>
                   <td className="px-3 py-2">
                     <input
                       type="text"
@@ -181,12 +233,13 @@ export default function BidFormTable({ initialLineItems, onUpdate, readOnly = fa
                     </td>
                   )}
                 </tr>
-              ))
+                );
+              })
             )}
           </tbody>
           <tfoot className="bg-gradient-to-r from-blue-600 to-blue-700 border-t-2 border-blue-800">
             <tr>
-              <td colSpan={5} className="px-3 py-4 text-right text-white font-semibold text-base">Total Amount:</td>
+              <td colSpan={6} className="px-3 py-4 text-right text-white font-semibold text-base">Total Amount:</td>
               <td className="px-3 py-4 text-white font-bold text-xl">${totalAmount.toFixed(2)}</td>
               <td colSpan={2}></td>
             </tr>

@@ -5,7 +5,7 @@ import path from 'path';
 
 export async function POST(request: Request) {
   try {
-    const { imageUrl } = await request.json();
+    const { imageUrl, instructions } = await request.json();
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
             {
               type: 'text',
               text: `Analyze this construction/preconstruction diagram or work drawing and extract all bid items and information.
-
+${instructions ? `\nADDITIONAL INSTRUCTIONS FROM USER:\n${instructions}\n` : ''}
 Please extract the following information in a structured format:
 1. Project name or title (if visible)
 2. All line items with:
@@ -87,6 +87,15 @@ Please extract the following information in a structured format:
    - Unit of measurement (e.g., LF, SF, EA, CY, etc.)
    - Any visible pricing information
    - Any relevant notes or specifications
+   - IMPORTANT: The bounding box coordinates of where this item appears in the diagram
+
+For bounding boxes, provide normalized coordinates (0.0 to 1.0 range) relative to the image dimensions:
+- x: horizontal position of the left edge (0 = left edge, 1 = right edge)
+- y: vertical position of the top edge (0 = top edge, 1 = bottom edge)
+- width: horizontal span (as a fraction of total width)
+- height: vertical span (as a fraction of total height)
+
+If an item appears in multiple locations, use the primary or most prominent location. If you cannot determine the location with reasonable confidence, set boundingBox to null for that item.
 
 Format your response as a JSON object with this structure:
 {
@@ -99,7 +108,13 @@ Format your response as a JSON object with this structure:
       "unit": "string or null",
       "unit_price": number or null,
       "total_price": number or null,
-      "notes": "string or null"
+      "notes": "string or null",
+      "boundingBox": {
+        "x": number (0.0-1.0),
+        "y": number (0.0-1.0),
+        "width": number (0.0-1.0),
+        "height": number (0.0-1.0)
+      } or null
     }
   ],
   "extraction_confidence": "high/medium/low"

@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { motion } from 'framer-motion';
 
 interface UploadedFile {
   url: string;
@@ -12,17 +13,16 @@ interface UploadedFile {
 
 interface DiagramUploadProps {
   onUploadSuccess: (file: UploadedFile) => void;
-  onExtractStart: (url: string) => void;
-  autoExtract?: boolean; // Auto-trigger extraction after upload
+  onExtractStart: (url: string, instructions?: string) => void;
 }
 
 export default function DiagramUpload({
   onUploadSuccess,
   onExtractStart,
-  autoExtract = true
 }: DiagramUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
+  const [instructions, setInstructions] = useState('');
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
@@ -31,7 +31,6 @@ export default function DiagramUpload({
     setUploading(true);
 
     try {
-      // Upload to Vercel Blob Storage or local filesystem
       const formData = new FormData();
       formData.append('file', file);
 
@@ -47,18 +46,19 @@ export default function DiagramUpload({
       const uploadedData = await uploadResponse.json();
       setUploadedFile(uploadedData);
       onUploadSuccess(uploadedData);
-
-      // Auto-trigger extraction if enabled
-      if (autoExtract) {
-        onExtractStart(uploadedData.url);
-      }
     } catch (error) {
       console.error('Upload error:', error);
       alert('Failed to upload file');
     } finally {
       setUploading(false);
     }
-  }, [onUploadSuccess, onExtractStart, autoExtract]);
+  }, [onUploadSuccess]);
+
+  const handleExtract = () => {
+    if (uploadedFile) {
+      onExtractStart(uploadedFile.url, instructions);
+    }
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -67,8 +67,69 @@ export default function DiagramUpload({
       'application/pdf': ['.pdf'],
     },
     maxFiles: 1,
+    disabled: !!uploadedFile || uploading,
   });
 
+  // Show preview and instructions after upload
+  if (uploadedFile) {
+    return (
+      <div className="w-full h-full flex">
+        {/* Left side - Diagram Preview */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex-1 bg-white flex items-center justify-center p-6 overflow-auto"
+        >
+          <div className="w-full h-full flex items-center justify-center">
+            <img
+              src={uploadedFile.url}
+              alt="Uploaded diagram"
+              className="max-w-full max-h-full object-contain shadow-lg rounded"
+            />
+          </div>
+        </motion.div>
+
+        {/* Right side - Instructions */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex-1 flex flex-col bg-gray-50 p-6"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Instructions for AI (Optional)
+          </h3>
+          <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
+            <textarea
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder="Add specific instructions for the AI extractor...&#10;&#10;Examples:&#10;- Focus on electrical items only&#10;- Include labor costs&#10;- Group items by room&#10;- Extract quantities from the legend"
+              className="flex-1 w-full p-4 border-2 border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+            />
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => {
+                  setUploadedFile(null);
+                  setInstructions('');
+                }}
+                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleExtract}
+                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+              >
+                Start AI Extraction →
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Show upload dropzone
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div
@@ -77,7 +138,7 @@ export default function DiagramUpload({
           ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
           ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        <input {...getInputProps()} disabled={uploading} />
+        <input {...getInputProps()} />
 
         {uploading ? (
           <div className="space-y-2">
@@ -111,11 +172,6 @@ export default function DiagramUpload({
                   <p className="text-sm text-gray-500 mt-1">
                     PDF, PNG, JPG, GIF up to 10MB
                   </p>
-                  {autoExtract && (
-                    <p className="text-xs text-blue-600 mt-2">
-                      AI extraction will start automatically
-                    </p>
-                  )}
                 </>
               )}
             </div>
