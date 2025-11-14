@@ -9,6 +9,37 @@ interface ChatMessageProps {
   onRejectChanges?: (messageId: string) => void;
 }
 
+// Helper function to parse markdown bold syntax (**text**)
+function parseMarkdownBold(text: string) {
+  const parts: (string | JSX.Element)[] = [];
+  const regex = /\*\*(.*?)\*\*/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    // Add text before the match
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+
+    // Add bold text
+    parts.push(
+      <strong key={match.index} className="font-bold">
+        {match[1]}
+      </strong>
+    );
+
+    lastIndex = regex.lastIndex;
+  }
+
+  // Add remaining text after last match
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : [text];
+}
+
 export default function ChatMessage({ message, onAcceptChanges, onRejectChanges }: ChatMessageProps) {
   const isUser = message.role === 'user';
   const hasProposedChanges = message.proposedChanges && message.proposedChanges.length > 0;
@@ -29,7 +60,7 @@ export default function ChatMessage({ message, onAcceptChanges, onRejectChanges 
               : 'bg-white border border-slate-200 text-slate-900'
           }`}
         >
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+          <p className="text-sm leading-relaxed whitespace-pre-wrap">{parseMarkdownBold(message.content)}</p>
         </div>
 
         {/* Proposed changes card */}
@@ -70,6 +101,50 @@ export default function ChatMessage({ message, onAcceptChanges, onRejectChanges 
                       {change.type === 'update' && (change.newItem?.description || `Item ${change.itemId}`)}
                     </span>
                   </div>
+
+                  {/* Show details for ADD operations */}
+                  {change.type === 'add' && change.newItem && (
+                    <div className="ml-7 space-y-1">
+                      {change.newItem.item_number && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Item #:</span>{' '}
+                          <span className="font-semibold text-emerald-700">{change.newItem.item_number}</span>
+                        </div>
+                      )}
+                      {change.newItem.quantity != null && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Quantity:</span>{' '}
+                          <span className="font-semibold text-emerald-700">{change.newItem.quantity}</span>
+                        </div>
+                      )}
+                      {change.newItem.unit && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Unit:</span>{' '}
+                          <span className="font-semibold text-emerald-700">{change.newItem.unit}</span>
+                        </div>
+                      )}
+                      {change.newItem.unit_price != null && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Unit Price:</span>{' '}
+                          <span className="font-semibold text-emerald-700">${change.newItem.unit_price}</span>
+                        </div>
+                      )}
+                      {change.newItem.total_price != null && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Total Price:</span>{' '}
+                          <span className="font-semibold text-emerald-700">${change.newItem.total_price}</span>
+                        </div>
+                      )}
+                      {change.newItem.notes && (
+                        <div className="text-xs text-slate-600">
+                          <span className="font-medium">Notes:</span>{' '}
+                          <span className="font-semibold text-emerald-700">{change.newItem.notes}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Show details for UPDATE operations */}
                   {change.type === 'update' && change.changes && change.changes.length > 0 && (
                     <div className="ml-7 space-y-1">
                       {change.changes.map((fieldChange, fIdx) => (

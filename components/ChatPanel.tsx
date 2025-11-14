@@ -12,6 +12,7 @@ interface ChatPanelProps {
   onAcceptChanges: (messageId: string) => void;
   onRejectChanges: (messageId: string) => void;
   isLoading?: boolean;
+  onClose?: () => void;
 }
 
 export default function ChatPanel({
@@ -20,6 +21,7 @@ export default function ChatPanel({
   onAcceptChanges,
   onRejectChanges,
   isLoading = false,
+  onClose,
 }: ChatPanelProps) {
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -30,11 +32,76 @@ export default function ChatPanel({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Detect if the last message is a question from the assistant
+  const lastMessage = messages[messages.length - 1];
+  const isLastMessageQuestion =
+    lastMessage?.role === 'assistant' &&
+    !isLoading &&
+    (lastMessage.content.includes('?') ||
+     lastMessage.content.toLowerCase().includes('would you like') ||
+     lastMessage.content.toLowerCase().includes('do you want') ||
+     lastMessage.content.toLowerCase().includes('shall i') ||
+     lastMessage.content.toLowerCase().includes('confirm'));
+
+  // Extract numbered questions and pre-populate textarea
+  useEffect(() => {
+    if (!lastMessage || lastMessage.role !== 'assistant' || isLoading) return;
+
+    // Check for numbered questions (1. 2. 3. etc)
+    const numberedQuestionsRegex = /^\s*(\d+)\.\s+.+\?/gm;
+    const matches = [...lastMessage.content.matchAll(numberedQuestionsRegex)];
+
+    if (matches.length >= 2) {
+      // Found multiple numbered questions - pre-populate with template
+      const questionNumbers = matches.map(match => match[1]);
+      const template = questionNumbers.map(num => `${num}. `).join('\n');
+      setInputValue(template);
+
+      // Focus textarea and position cursor at the end of first line
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          const firstLineEnd = template.indexOf('\n') > 0 ? template.indexOf('\n') : template.length;
+          inputRef.current.setSelectionRange(firstLineEnd, firstLineEnd);
+        }
+      }, 100);
+    }
+  }, [lastMessage, isLoading]);
+
+  // Get quick reply suggestions based on the question
+  const getQuickReplies = () => {
+    if (!isLastMessageQuestion) return [];
+
+    const content = lastMessage.content.toLowerCase();
+
+    // Confirmation questions
+    if (content.includes('proceed') || content.includes('confirm') || content.includes('would you like')) {
+      return [
+        { text: 'Yes, proceed', value: 'Yes, please proceed with this update.' },
+        { text: 'No, cancel', value: 'No, please cancel this.' },
+      ];
+    }
+
+    // General questions
+    return [
+      { text: 'Yes', value: 'Yes' },
+      { text: 'No', value: 'No' },
+    ];
+  };
+
+  const quickReplies = getQuickReplies();
+
   const handleSend = () => {
     if (inputValue.trim() && !isLoading) {
       onSendMessage(inputValue.trim());
       setInputValue('');
       inputRef.current?.focus();
+    }
+  };
+
+  const handleQuickReply = (value: string) => {
+    if (!isLoading) {
+      onSendMessage(value);
     }
   };
 
@@ -49,13 +116,26 @@ export default function ChatPanel({
     <div className="h-full w-full bg-gradient-to-b from-slate-50 to-white overflow-hidden" style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto' }}>
       {/* Header */}
       <div className="border-b border-slate-200 bg-white px-5 py-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3 className="text-base font-bold text-slate-800">AI Assistant</h3>
           </div>
-          <h3 className="text-base font-bold text-slate-800">AI Assistant</h3>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+              title="Minimize chat"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -109,6 +189,27 @@ export default function ChatPanel({
 
       {/* Input area */}
       <div className="border-t border-slate-200 bg-white px-5 py-4">
+        {/* Quick Replies */}
+        {quickReplies.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex gap-2 mb-3 flex-wrap"
+          >
+            <div className="text-xs text-slate-500 font-medium mb-1 w-full">Quick replies:</div>
+            {quickReplies.map((reply, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleQuickReply(reply.value)}
+                disabled={isLoading}
+                className="px-3 py-2 text-sm bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-blue-700 rounded-lg hover:from-blue-100 hover:to-indigo-100 hover:border-blue-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-sm"
+              >
+                {reply.text}
+              </button>
+            ))}
+          </motion.div>
+        )}
+
         <div className="flex gap-3">
           <textarea
             ref={inputRef}

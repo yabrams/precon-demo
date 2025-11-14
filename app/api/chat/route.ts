@@ -97,10 +97,23 @@ Return your response in this JSON format:
   "response": "A brief confirmation message about what you're updating",
   "proposedChanges": [
     {
-      "type": "update",
-      "itemId": "the-item-id",
+      "type": "add",
       "newItem": {
-        "id": "same-as-itemId",
+        "id": "a3X9k2",
+        "item_number": "2.1",
+        "description": "New item description",
+        "quantity": 4,
+        "unit": "EA",
+        "unit_price": 100,
+        "total_price": 400,
+        "notes": "Optional notes"
+      }
+    },
+    {
+      "type": "update",
+      "itemId": "existing-item-id",
+      "newItem": {
+        "id": "existing-item-id",
         "description": "updated description",
         "quantity": 1,
         "unit": "updated unit",
@@ -109,17 +122,21 @@ Return your response in this JSON format:
         "notes": "updated notes"
       },
       "changes": [
-        { "field": "quantity", "oldValue": null, "newValue": 1 },
-        { "field": "unit_price", "oldValue": null, "newValue": 100 }
+        { "field": "quantity", "oldValue": 5, "newValue": 1 },
+        { "field": "unit_price", "oldValue": 50, "newValue": 100 }
       ]
+    },
+    {
+      "type": "delete",
+      "itemId": "item-id-to-delete"
     }
   ]
 }
 
 CRITICAL REQUIREMENTS:
+- For type "add": MUST include "newItem" with ALL fields (id, description, quantity, unit, unit_price, total_price). Generate unique ID using 6 random alphanumeric characters (e.g., "a3X9k2")
 - For type "update": MUST include "itemId" (existing item ID), "newItem" (complete updated item), AND "changes" array
 - The "changes" array MUST list every field that changed with oldValue and newValue
-- For type "add": include "newItem" with unique ID using 6 random alphanumeric characters (e.g., "a3X9k2")
 - For type "delete": include only "itemId"
 - Calculate total_price = quantity * unit_price
 - Return ONLY valid JSON, no markdown code blocks or additional text`;

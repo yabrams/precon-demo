@@ -213,10 +213,24 @@ export default function WorkspaceView({
               onAcceptChanges={onAcceptChatChanges}
               onRejectChanges={onRejectChatChanges}
               isLoading={isChatLoading}
+              onClose={onChatToggle}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Chat Toggle Overlay Button */}
+      <button
+        onClick={onChatToggle}
+        className={`fixed bottom-6 left-6 z-40 px-4 py-3 rounded-full shadow-lg transition-all flex items-center justify-center font-medium text-2xl ${
+          chatOpen
+            ? 'bg-gray-600 hover:bg-gray-700'
+            : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+        title={chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
+      >
+        💬
+      </button>
 
       <PanelGroup direction="horizontal" className="h-full">
         {/* Left Panel - Diagram Viewer */}
@@ -349,21 +363,6 @@ export default function WorkspaceView({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <h2 className="text-lg font-semibold text-gray-900">Bid Form</h2>
-
-                  {/* Chat Toggle Button */}
-                  <button
-                    onClick={onChatToggle}
-                    className={`px-4 py-2 rounded-lg transition-colors font-medium text-sm flex items-center gap-2 ${
-                      chatOpen
-                        ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    {chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
-                  </button>
                 </div>
 
                 {/* Export Buttons */}

@@ -260,15 +260,19 @@ export default function Home() {
     }
 
     console.log('Proposed changes:', message.proposedChanges);
+    console.log('Current line items count BEFORE changes:', activeProject.lineItems.length);
     let updatedLineItems = [...activeProject.lineItems];
 
     // Apply each proposed change
     message.proposedChanges.forEach((change, idx) => {
       console.log(`Applying change ${idx}:`, JSON.stringify(change, null, 2));
+      console.log(`Change type: "${change.type}"`);
+      console.log(`Has newItem:`, !!change.newItem);
 
       if (change.type === 'add' && change.newItem) {
-        console.log('Adding new item:', change.newItem);
+        console.log('✅ ADDING new item:', change.newItem);
         updatedLineItems.push(change.newItem);
+        console.log('Updated line items count after add:', updatedLineItems.length);
       } else if (change.type === 'update' && change.itemId) {
         const index = updatedLineItems.findIndex((item) => item.id === change.itemId);
         console.log(`Found item at index ${index} with id ${change.itemId}`);
@@ -297,7 +301,8 @@ export default function Home() {
       }
     });
 
-    console.log('Updated line items count:', updatedLineItems.length);
+    console.log('✅ FINAL Updated line items count:', updatedLineItems.length);
+    console.log('✅ FINAL Updated line items:', updatedLineItems);
 
     // Add acknowledgment message to chat
     const acknowledgmentMessage: ChatMessage = {
@@ -307,14 +312,16 @@ export default function Home() {
       timestamp: Date.now(),
     };
 
-    setProjects((prev) =>
-      prev.map((p) =>
+    setProjects((prev) => {
+      const updated = prev.map((p) =>
         p.id === activeProjectId
           ? { ...p, lineItems: updatedLineItems, chatMessages: [...p.chatMessages, acknowledgmentMessage] }
           : p
-      )
-    );
-    console.log('Projects state updated');
+      );
+      console.log('✅ Projects state updated. Active project line items count:',
+        updated.find(p => p.id === activeProjectId)?.lineItems.length);
+      return updated;
+    });
   };
 
   const handleRejectChatChanges = (messageId: string) => {
