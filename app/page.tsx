@@ -4,9 +4,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DiagramUpload from '@/components/DiagramUpload';
 import WorkspaceView from '@/components/WorkspaceView';
+import InboxListView from '@/components/InboxListView';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
+import { InboxItem } from '@/types/inbox';
 import { generateId } from '@/lib/generateId';
+import { mockInboxItems, mockInboxLineItems } from '@/lib/mockInboxData';
 
 // Extend Window interface for temporary project ID storage
 declare global {
@@ -25,14 +28,18 @@ interface Project {
   chatOpen: boolean;
 }
 
+type WorkflowMode = 'inbox' | 'upload' | 'workspace';
+
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
-  const [showUpload, setShowUpload] = useState(true);
+  const [workflowMode, setWorkflowMode] = useState<WorkflowMode>('inbox');
+  const [showUpload, setShowUpload] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+  const [inboxItems, setInboxItems] = useState<InboxItem[]>(mockInboxItems);
 
   const activeProject = projects.find((p) => p.id === activeProjectId);
 
@@ -120,7 +127,59 @@ export default function Home() {
   };
 
   const handleUploadNew = () => {
+    setWorkflowMode('upload');
     setShowUpload(true);
+  };
+
+  const handleStartUploadFlow = () => {
+    setWorkflowMode('upload');
+    setShowUpload(true);
+  };
+
+  const handleBackToInbox = () => {
+    setWorkflowMode('inbox');
+    setShowUpload(false);
+    setActiveProjectId(null);
+  };
+
+  const handleInboxItemSelect = (item: InboxItem) => {
+    // Check if this inbox item already has a project
+    const existingProject = projects.find(p => p.id === item.projectId);
+
+    if (existingProject) {
+      // Load existing project
+      setActiveProjectId(existingProject.id);
+      setWorkflowMode('workspace');
+      setShowUpload(false);
+    } else {
+      // Create new project from inbox item
+      const newProject: Project = {
+        id: generateId(),
+        name: item.subject,
+        diagramUrl: item.diagramUrl,
+        lineItems: mockInboxLineItems[item.id] || [],
+        createdAt: Date.now(),
+        chatMessages: [],
+        chatOpen: false,
+      };
+
+      // Add project to list
+      setProjects((prev) => [...prev, newProject]);
+      setActiveProjectId(newProject.id);
+
+      // Update inbox item status and link to project
+      setInboxItems((prev) =>
+        prev.map((i) =>
+          i.id === item.id
+            ? { ...i, status: item.status === 'pending' ? 'in_progress' : item.status, projectId: newProject.id }
+            : i
+        )
+      );
+
+      // Navigate to workspace
+      setWorkflowMode('workspace');
+      setShowUpload(false);
+    }
   };
 
   const handleProjectSwitch = (projectId: string) => {
@@ -357,20 +416,20 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Preconstruction Bidding
+                Cosmo
               </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Upload diagrams and extract bid data with AI
-              </p>
             </div>
 
-            {/* New Project Button */}
-            {!showUpload && projects.length > 0 && (
+            {/* Back to Inbox Button - shown when in workspace or upload mode */}
+            {workflowMode !== 'inbox' && (
               <button
-                onClick={() => setShowUpload(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                onClick={handleBackToInbox}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2"
               >
-                + New Project
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Inbox
               </button>
             )}
           </div>
@@ -505,6 +564,7 @@ export default function Home() {
                 isExtracting={extracting}
                 onLineItemsUpdate={handleLineItemsUpdate}
                 onUploadNew={handleUploadNew}
+                projectName={activeProject.name}
                 chatOpen={activeProject.chatOpen}
                 chatMessages={activeProject.chatMessages}
                 onChatToggle={handleChatToggle}
@@ -512,6 +572,21 @@ export default function Home() {
                 onAcceptChatChanges={handleAcceptChatChanges}
                 onRejectChatChanges={handleRejectChatChanges}
                 isChatLoading={chatLoading}
+              />
+            </motion.div>
+          ) : workflowMode === 'inbox' ? (
+            <motion.div
+              key="inbox"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <InboxListView
+                items={inboxItems}
+                onItemSelect={handleInboxItemSelect}
+                onNewDiagram={handleStartUploadFlow}
               />
             </motion.div>
           ) : null}

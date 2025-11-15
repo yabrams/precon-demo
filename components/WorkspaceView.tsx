@@ -17,6 +17,7 @@ interface WorkspaceViewProps {
   onLineItemsUpdate: (items: LineItem[]) => void;
   onUploadNew: () => void;
   onReExtract?: (instructions: string) => void;
+  projectName?: string;
   chatOpen: boolean;
   chatMessages: ChatMessage[];
   onChatToggle: () => void;
@@ -33,6 +34,7 @@ export default function WorkspaceView({
   onLineItemsUpdate,
   onUploadNew,
   onReExtract,
+  projectName,
   chatOpen,
   chatMessages,
   onChatToggle,

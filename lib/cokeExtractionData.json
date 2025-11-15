@@ -1,0 +1,336 @@
+{
+  "project_name": "LEVEL 01",
+  "line_items": [
+    {
+      "item_number": "2.6",
+      "description": "Typical all offices",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations marked as typical",
+      "boundingBox": {
+        "x": 0.19,
+        "y": 0.33,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.11",
+      "description": "Office/Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple instances in upper section",
+      "boundingBox": {
+        "x": 0.64,
+        "y": 0.06,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.13",
+      "description": "Typical all offices and conference/phone rooms",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations",
+      "boundingBox": {
+        "x": 0.19,
+        "y": 0.66,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.14",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Upper section marking",
+      "boundingBox": {
+        "x": 0.52,
+        "y": 0.14,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.15",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Right side marking",
+      "boundingBox": {
+        "x": 0.64,
+        "y": 0.35,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.16",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Top center marking",
+      "boundingBox": {
+        "x": 0.52,
+        "y": 0.06,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.17",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Lower left section",
+      "boundingBox": {
+        "x": 0.39,
+        "y": 0.58,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.18",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Center section",
+      "boundingBox": {
+        "x": 0.55,
+        "y": 0.57,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.19",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple instances right side",
+      "boundingBox": {
+        "x": 0.64,
+        "y": 0.28,
+        "width": 0.04,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "2.7",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Lower section multiple locations",
+      "boundingBox": {
+        "x": 0.29,
+        "y": 0.87,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "3.4",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Upper left section",
+      "boundingBox": {
+        "x": 0.45,
+        "y": 0.16,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "3.5",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations",
+      "boundingBox": {
+        "x": 0.52,
+        "y": 0.14,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "3.6",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Center left section",
+      "boundingBox": {
+        "x": 0.33,
+        "y": 0.25,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "3.7",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations throughout",
+      "boundingBox": {
+        "x": 0.39,
+        "y": 0.16,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "3.8",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Lower left section",
+      "boundingBox": {
+        "x": 0.19,
+        "y": 0.58,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "4.4",
+      "description": "Workspace marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple workstation areas",
+      "boundingBox": {
+        "x": 0.45,
+        "y": 0.28,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "4.5",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations",
+      "boundingBox": {
+        "x": 0.52,
+        "y": 0.18,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "7.3",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Multiple locations bottom section",
+      "boundingBox": {
+        "x": 0.26,
+        "y": 0.58,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "7.4",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Center bottom section",
+      "boundingBox": {
+        "x": 0.45,
+        "y": 0.82,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "7.5",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Upper right section",
+      "boundingBox": {
+        "x": 0.68,
+        "y": 0.16,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "7.6",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Lower right section multiple instances",
+      "boundingBox": {
+        "x": 0.91,
+        "y": 0.79,
+        "width": 0.03,
+        "height": 0.03
+      }
+    },
+    {
+      "item_number": "7.7",
+      "description": "Room marking",
+      "quantity": null,
+      "unit": null,
+      "unit_price": null,
+      "total_price": null,
+      "notes": "Lower right section",
+      "boundingBox": {
+        "x": 0.77,
+        "y": 0.87,
+        "width": 0.03,
+        "height": 0.03
+      }
+    }
+  ],
+  "extraction_confidence": "medium"
+}
