@@ -4,12 +4,27 @@ An AI-powered web application for project engineers to convert construction diag
 
 ## Features
 
+### Core Workflow
+- **Inbox-First Landing Page**: Email-like interface for managing diagram submissions with status tracking
 - **Diagram Upload**: Drag-and-drop upload for construction diagrams (PDF, PNG, JPG)
-- **AI-Powered Extraction**: Uses Claude 3.5 Sonnet vision API to extract bid line items from diagrams
-- **Editable Bid Forms**: Interactive tables with automatic price calculations
-- **Verification Workflow**: Split-screen view to compare diagrams with extracted data
-- **Export Options**: Export to PDF, Excel, or CSV formats
-- **Database Storage**: PostgreSQL database for projects, diagrams, and bid forms
+- **AI-Powered Extraction**: Uses Claude Sonnet 4.5 Vision API to extract bid line items with bounding boxes
+- **Editable Bid Forms**: Interactive tables with automatic price calculations and inline editing
+
+### AI Assistant
+- **Conversational Chat**: Ask questions about diagrams or request bid form updates
+- **Two-Phase Workflow**: Confirmation dialog before applying changes to line items
+- **Smart Detection**: Distinguishes between questions and update requests automatically
+
+### Visual Features
+- **Bounding Box Highlighting**: Visual indicators showing where line items appear on diagrams
+- **Interactive Linking**: Hover over table rows to highlight diagram regions (and vice versa)
+- **Magnifying Glass**: Zoom lens that follows mouse for detailed diagram inspection
+- **Connection Lines**: Animated curves linking table rows to their diagram locations
+
+### Export & Management
+- **Multi-Format Export**: Export to PDF, Excel, or CSV with project names
+- **Project Tabs**: Manage multiple projects simultaneously with tabbed interface
+- **Database Storage**: PostgreSQL schema ready for persistence (currently in-memory state)
 
 ## Tech Stack
 
@@ -103,30 +118,55 @@ precon/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   │   ├── upload/        # File upload endpoint
-│   │   └── extract/       # AI extraction endpoint
-│   └── page.tsx           # Main application page
+│   │   ├── extract/       # AI extraction endpoint
+│   │   └── chat/          # AI chat assistant endpoint (NEW)
+│   └── page.tsx           # Main application page (state management)
 ├── components/            # React components
+│   ├── InboxListView.tsx  # Inbox landing page (NEW)
+│   ├── InboxCard.tsx      # Inbox item cards (NEW)
 │   ├── DiagramUpload.tsx  # File upload component
 │   ├── BidFormTable.tsx   # Editable bid table
-│   └── VerificationView.tsx # Split-screen verification
+│   ├── WorkspaceView.tsx  # Main workspace with panels
+│   ├── ChatPanel.tsx      # AI chat interface (NEW)
+│   ├── ChatMessage.tsx    # Chat message component (NEW)
+│   ├── DiagramOverlay.tsx # Bounding box overlay (NEW)
+│   ├── MagnifyingGlass.tsx # Zoom lens (NEW)
+│   └── ConnectionLine.tsx # Visual linking (NEW)
+├── types/                 # TypeScript type definitions
+│   ├── inbox.ts          # Inbox types (NEW)
+│   └── chat.ts           # Chat types (NEW)
 ├── lib/                   # Utilities
 │   ├── prisma.ts         # Prisma client
-│   └── export.ts         # Export functions
+│   ├── export.ts         # Export functions (PDF/Excel/CSV)
+│   ├── mockInboxData.ts  # Mock inbox data (NEW)
+│   └── cokeExtractionData.json # Sample extracted data (NEW)
 ├── prisma/               # Database schema
 │   └── schema.prisma
-├── api/                  # FastAPI backend
-│   ├── main.py          # FastAPI app
-│   └── requirements.txt
+├── scripts/              # Utility scripts (NEW)
+│   └── processCokeImage.ts
 └── public/              # Static assets
+    └── uploads/         # Uploaded diagram files
 ```
 
 ## Workflow
 
-1. **Upload**: Upload a construction diagram (PDF or image)
-2. **Extract**: AI analyzes the diagram and extracts bid line items
-3. **Edit**: Review and edit the extracted data in an interactive table
-4. **Verify**: Compare the diagram side-by-side with the bid form, verify each item
-5. **Export**: Download the final bid form as PDF, Excel, or CSV
+1. **Inbox**: View all diagram submissions on landing page with status tracking
+2. **Upload**: Click "New Diagram" to upload a construction diagram (PDF or image)
+3. **Extract**: AI analyzes the diagram and extracts bid line items with bounding boxes
+4. **Review**: Interactive workspace with resizable panels showing diagram and bid table
+5. **Chat**: Use AI assistant to ask questions or request bid form modifications
+6. **Visual**: Hover over table rows to see highlighted regions on the diagram
+7. **Edit**: Make manual edits to line items with automatic calculations
+8. **Export**: Download the final bid form as PDF, Excel, or CSV
+
+## Documentation
+
+For detailed feature documentation:
+- **INBOX_WORKFLOW.md**: Inbox system and navigation patterns
+- **CHAT_SYSTEM.md**: AI chat assistant and conversation workflow
+- **VISUAL_FEATURES.md**: Bounding boxes, magnifying glass, connection lines
+- **COMPONENTS_REFERENCE.md**: Complete component API reference
+- **CLAUDE.md**: Claude Code-specific guidance and architecture overview
 
 ## Database Schema
 
