@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-An AI-powered preconstruction bidding application that converts construction diagrams into structured bid forms. The application uses Claude Sonnet 4.5 Vision API to extract bid line items from uploaded diagrams, presents them in an editable table, and exports to PDF/Excel/CSV formats.
+An AI-powered preconstruction bidding application that converts construction diagrams into structured bid forms. The application uses Claude Sonnet 4.5 Vision API to extract bid line items from uploaded diagrams, presents them in an editable table with AI chat assistance, visual diagram linking, and exports to PDF/Excel/CSV formats.
+
+**NEW FEATURES** (see dedicated documentation):
+- **Inbox-first workflow**: Email-like landing page for diagram submissions (INBOX_WORKFLOW.md)
+- **AI Chat Assistant**: Conversational interface for bid form updates (CHAT_SYSTEM.md)
+- **Visual Features**: Bounding boxes, magnifying glass, diagram-to-table linking (VISUAL_FEATURES.md)
+- **Component Reference**: Complete component API documentation (COMPONENTS_REFERENCE.md)
 
 ## Development Commands
 
@@ -43,28 +49,50 @@ This pattern avoids database calls during active editing. The workflow is:
 
 ### Component Architecture
 
-**Three main views controlled by state in `app/page.tsx`:**
+**Three main views controlled by workflow mode in `app/page.tsx`:**
 
-1. **Upload View** (`DiagramUpload.tsx`): Shown when `showUpload === true`
-2. **Workspace View** (`WorkspaceView.tsx`): Shown when active project exists
-3. **Resizable Split Layout**: Uses `react-resizable-panels` with 35/65 default split
+```typescript
+type WorkflowMode = 'inbox' | 'upload' | 'workspace';
+```
+
+1. **Inbox View** (`InboxListView.tsx`): **Default landing page** showing all diagram submissions
+2. **Upload View** (`DiagramUpload.tsx`): Triggered by "New Diagram" button from inbox
+3. **Workspace View** (`WorkspaceView.tsx`): Shown when viewing/editing a specific project
 
 **Key data flow:**
 ```
-DiagramUpload → Upload API → Extract API → Claude Vision →
-Update projects state → WorkspaceView → BidFormTable
+Inbox → Click "New Diagram" → Upload → Extract API → Workspace
+Inbox → Click item → Workspace (with pre-extracted data)
+Workspace → Click chat → AI Chat Assistant → Proposed changes
+Table row hover ↔ Diagram bounding box highlight
 ```
 
 ### Component Hierarchy
 
 ```
 app/page.tsx (state management hub)
+│
+├── InboxListView (NEW - landing page)
+│   ├── InboxCard (multiple items)
+│   └── "New Diagram" button → triggers upload mode
+│
 ├── DiagramUpload
 │   └── Handles: file upload, triggers extraction
-├── WorkspaceView (resizable panels)
-│   ├── Left Panel: Diagram viewer
-│   └── Right Panel: BidFormTable
-│       └── Handles: inline editing, add/delete rows, calculations
+│
+└── WorkspaceView (resizable panels)
+    ├── Left Panel: Diagram viewer
+    │   ├── DiagramOverlay (NEW - bounding boxes)
+    │   ├── MagnifyingGlass (NEW - zoom lens)
+    │   └── ConnectionLine (NEW - table-to-diagram link)
+    │
+    └── Right Panel: BidFormTable OR ChatPanel
+        ├── BidFormTable (when chat closed)
+        │   └── Inline editing, add/delete rows, calculations
+        │   └── Row hover triggers diagram highlighting
+        │
+        └── ChatPanel (NEW - when chat open)
+            └── ChatMessage components
+            └── Accept/Reject proposed changes
 ```
 
 ### API Routes
@@ -77,8 +105,15 @@ app/page.tsx (state management hub)
 - Input: `{ imageUrl }` (local path or remote URL)
 - Reads local files from `public/uploads/` or fetches remote URLs
 - Uses structured prompt to extract: project name, line items with quantities, units, pricing
+- **NEW**: Can also extract bounding boxes for visual linking
 - Returns: `{ project_name, line_items[], extraction_confidence }`
 - Handles both JSON blocks and inline JSON in Claude's response
+
+**`POST /api/chat`** (NEW): Conversational AI for bid form updates
+- Input: `{ message, imageUrl, currentLineItems, projectName, conversationHistory }`
+- Two-phase workflow: Question detection → Confirmation → Change generation
+- Returns: `{ response, proposedChanges[] }`
+- See CHAT_SYSTEM.md for full documentation
 
 ### State Update Pattern
 
@@ -184,15 +219,30 @@ interface LineItem {
   total_price?: number | null;
   notes?: string | null;
   verified?: boolean;
+  boundingBox?: {          // NEW - for visual linking
+    x: number;             // Normalized 0-1 coordinates
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 ```
 
 Note: All fields except `description` are optional/nullable for flexibility during extraction and editing.
 
+## New Features Documentation
+
+For detailed documentation on recently added features, see:
+- **INBOX_WORKFLOW.md**: Inbox-first landing page, project status tracking
+- **CHAT_SYSTEM.md**: AI assistant, two-phase confirmation workflow
+- **VISUAL_FEATURES.md**: Bounding boxes, magnifying glass, connection lines
+- **COMPONENTS_REFERENCE.md**: Complete component API reference
+
 ## Future Enhancements Ready
 
 The codebase includes infrastructure for features not yet implemented:
 - Database persistence (schema ready, not wired up)
+- Email integration for inbox (currently uses mock data)
 - Verification workflow (VerificationView component mentioned but not present)
 - Multi-diagram projects (schema supports it)
 - Vercel Blob Storage (can replace local uploads)
