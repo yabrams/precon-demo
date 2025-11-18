@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  diagrams    Diagram[]
+  bidForms    BidForm[]
+}
+
+model Diagram {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fileName    String
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  uploadedAt  DateTime @default(now())
+  bidForms    BidForm[]
+}
+
+model BidForm {
+  id                    String   @id @default(cuid())
+  projectId             String
+  project               Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  diagramId             String?
+  diagram               Diagram? @relation(fields: [diagramId], references: [id], onDelete: SetNull)
+  extractionConfidence  String?
+  rawExtractedText      String?  @db.Text
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  lineItems             LineItem[]
+  verificationRecords   VerificationRecord[]
+  status                String   @default("draft") // draft, in_review, verified, exported
+}
+
+model LineItem {
+  id          String   @id @default(cuid())
+  bidFormId   String
+  bidForm     BidForm  @relation(fields: [bidFormId], references: [id], onDelete: Cascade)
+  itemNumber  String?
+  description String
+  quantity    Float?
+  unit        String?
+  unitPrice   Float?
+  totalPrice  Float?
+  notes       String?  @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  verified    Boolean  @default(false)
+}
+
+model VerificationRecord {
+  id          String   @id @default(cuid())
+  bidFormId   String
+  bidForm     BidForm  @relation(fields: [bidFormId], references: [id], onDelete: Cascade)
+  verifiedBy  String?  // User ID or name
+  comments    String?  @db.Text
+  status      String   // pending, approved, needs_review
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
