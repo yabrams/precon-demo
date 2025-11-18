@@ -85,9 +85,10 @@ Please extract the following information in a structured format:
    - Description of work/material
    - Quantity (if specified)
    - Unit of measurement (e.g., LF, SF, EA, CY, etc.)
-   - Any visible pricing information
    - Any relevant notes or specifications
    - IMPORTANT: The bounding box coordinates of where this item appears in the diagram
+
+NOTE: Do not extract pricing information (unit prices or totals). This is a quantity takeoff only.
 
 For bounding boxes, provide normalized coordinates (0.0 to 1.0 range) relative to the image dimensions:
 - x: horizontal position of the left edge (0 = left edge, 1 = right edge)
@@ -106,8 +107,6 @@ Format your response as a JSON object with this structure:
       "description": "string",
       "quantity": number or null,
       "unit": "string or null",
-      "unit_price": number or null,
-      "total_price": number or null,
       "notes": "string or null",
       "boundingBox": {
         "x": number (0.0-1.0),
