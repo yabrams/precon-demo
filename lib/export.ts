@@ -18,8 +18,8 @@ export function exportToPDF(lineItems: LineItem[], projectName?: string) {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
 
-  const headers = ['Item #', 'Description', 'Qty', 'Unit', 'Unit Price', 'Total'];
-  const colWidths = [20, 70, 20, 20, 25, 25];
+  const headers = ['Item #', 'Description', 'Qty', 'Unit', 'Notes'];
+  const colWidths = [20, 80, 20, 20, 40];
   let x = 14;
 
   headers.forEach((header, i) => {
@@ -40,11 +40,10 @@ export function exportToPDF(lineItems: LineItem[], projectName?: string) {
     x = 14;
     const row = [
       item.item_number || '-',
-      item.description.substring(0, 35) || '-',
+      item.description.substring(0, 40) || '-',
       item.quantity?.toString() || '-',
       item.unit || '-',
-      item.unit_price ? `$${item.unit_price.toFixed(2)}` : '-',
-      item.total_price ? `$${item.total_price.toFixed(2)}` : '-',
+      item.notes?.substring(0, 20) || '-',
     ];
 
     row.forEach((cell, i) => {
@@ -54,12 +53,6 @@ export function exportToPDF(lineItems: LineItem[], projectName?: string) {
 
     y += 7;
   });
-
-  // Add total
-  y += 5;
-  doc.setFont('helvetica', 'bold');
-  const total = lineItems.reduce((sum, item) => sum + (item.total_price || 0), 0);
-  doc.text(`Total: $${total.toFixed(2)}`, 160, y);
 
   // Save
   doc.save(`bid-form-${Date.now()}.pdf`);
@@ -71,26 +64,14 @@ export function exportToExcel(lineItems: LineItem[], projectName?: string) {
     [projectName || 'Untitled Project'],
     [`Generated: ${new Date().toLocaleDateString()}`],
     [],
-    ['Item #', 'Description', 'Quantity', 'Unit', 'Unit Price', 'Total Price', 'Notes'],
+    ['Item #', 'Description', 'Quantity', 'Unit', 'Notes'],
     ...lineItems.map((item) => [
       item.item_number || '',
       item.description || '',
       item.quantity || '',
       item.unit || '',
-      item.unit_price || '',
-      item.total_price || '',
       item.notes || '',
     ]),
-    [],
-    [
-      'Total',
-      '',
-      '',
-      '',
-      '',
-      lineItems.reduce((sum, item) => sum + (item.total_price || 0), 0),
-      '',
-    ],
   ];
 
   const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
@@ -102,15 +83,13 @@ export function exportToExcel(lineItems: LineItem[], projectName?: string) {
 }
 
 export function exportToCSV(lineItems: LineItem[]) {
-  const headers = ['Item #', 'Description', 'Quantity', 'Unit', 'Unit Price', 'Total Price', 'Notes'];
+  const headers = ['Item #', 'Description', 'Quantity', 'Unit', 'Notes'];
 
   const rows = lineItems.map((item) => [
     item.item_number || '',
     `"${item.description || ''}"`, // Quote description to handle commas
     item.quantity || '',
     item.unit || '',
-    item.unit_price || '',
-    item.total_price || '',
     `"${item.notes || ''}"`,
   ]);
 

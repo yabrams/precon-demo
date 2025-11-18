@@ -79,6 +79,8 @@ export async function POST(request: Request) {
 Project: ${projectName}
 Current bid items count: ${currentLineItems.length}
 
+IMPORTANT: This bid form is for quantity takeoff only. Pricing information (unit_price and total_price) is NOT displayed or used.
+
 Current line items in the bid form:
 ${JSON.stringify(currentLineItems, null, 2)}
 
@@ -104,8 +106,6 @@ Return your response in this JSON format:
         "description": "New item description",
         "quantity": 4,
         "unit": "EA",
-        "unit_price": 100,
-        "total_price": 400,
         "notes": "Optional notes"
       }
     },
@@ -117,13 +117,11 @@ Return your response in this JSON format:
         "description": "updated description",
         "quantity": 1,
         "unit": "updated unit",
-        "unit_price": 100,
-        "total_price": 100,
         "notes": "updated notes"
       },
       "changes": [
         { "field": "quantity", "oldValue": 5, "newValue": 1 },
-        { "field": "unit_price", "oldValue": 50, "newValue": 100 }
+        { "field": "unit", "oldValue": "SF", "newValue": "updated unit" }
       ]
     },
     {
@@ -134,11 +132,11 @@ Return your response in this JSON format:
 }
 
 CRITICAL REQUIREMENTS:
-- For type "add": MUST include "newItem" with ALL fields (id, description, quantity, unit, unit_price, total_price). Generate unique ID using 6 random alphanumeric characters (e.g., "a3X9k2")
+- For type "add": MUST include "newItem" with fields (id, item_number, description, quantity, unit, notes). Do NOT include unit_price or total_price. Generate unique ID using 6 random alphanumeric characters (e.g., "a3X9k2")
 - For type "update": MUST include "itemId" (existing item ID), "newItem" (complete updated item), AND "changes" array
 - The "changes" array MUST list every field that changed with oldValue and newValue
 - For type "delete": include only "itemId"
-- Calculate total_price = quantity * unit_price
+- Do NOT include unit_price or total_price in any changes - these fields are not used
 - Return ONLY valid JSON, no markdown code blocks or additional text`;
     } else {
       // Analyze the user's message to determine intent
