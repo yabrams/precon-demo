@@ -61,21 +61,6 @@ export default function BidFormTable({
     setLineItems(initialLineItems);
   }, [initialLineItems]);
 
-  const handleAddRow = () => {
-    const newItem: LineItem = {
-      id: `temp-${Date.now()}`,
-      item_number: '',
-      description: '',
-      quantity: null,
-      unit: '',
-      notes: '',
-      verified: false,
-    };
-    const updated = [...lineItems, newItem];
-    setLineItems(updated);
-    onUpdate(updated);
-  };
-
   const handleDeleteRow = (index: number) => {
     const updated = lineItems.filter((_, i) => i !== index);
     setLineItems(updated);
@@ -90,18 +75,26 @@ export default function BidFormTable({
     onUpdate(updated);
   };
 
+  const handlePlaceholderChange = (field: keyof LineItem, value: any) => {
+    // When user starts typing in the placeholder row, create a new item
+    const newItem: LineItem = {
+      id: `temp-${Date.now()}`,
+      item_number: field === 'item_number' ? value : '',
+      description: field === 'description' ? value : '',
+      quantity: field === 'quantity' ? value : null,
+      unit: field === 'unit' ? value : '',
+      notes: field === 'notes' ? value : '',
+      verified: false,
+    };
+    const updated = [...lineItems, newItem];
+    setLineItems(updated);
+    onUpdate(updated);
+  };
+
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-900">Bid Form Line Items</h2>
-        {!readOnly && (
-          <button
-            onClick={handleAddRow}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium shadow-sm"
-          >
-            + Add Line Item
-          </button>
-        )}
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Bid Form</h2>
       </div>
 
       <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-sm bg-white">
@@ -118,14 +111,7 @@ export default function BidFormTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-300">
-            {lineItems.length === 0 ? (
-              <tr>
-                <td colSpan={readOnly ? 6 : 7} className="px-3 py-8 text-center text-gray-600 font-medium">
-                  No line items. {!readOnly && 'Click "Add Line Item" to get started.'}
-                </td>
-              </tr>
-            ) : (
-              lineItems.map((item, index) => {
+            {lineItems.map((item, index) => {
                 const isHovered = hoveredItemId === item.id;
                 const highlightColor = getColorForItem(index);
                 const hasBoundingBox = !!item.boundingBox;
@@ -207,7 +193,64 @@ export default function BidFormTable({
                   )}
                 </tr>
                 );
-              })
+              })}
+
+            {/* Placeholder row for adding new items (always visible when not read-only) */}
+            {!readOnly && (
+              <tr className="opacity-50 hover:opacity-75 transition-opacity bg-gray-50">
+                <td className="px-3 py-2">
+                  <span className="text-xs text-gray-400 font-mono italic">New</span>
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    type="text"
+                    value=""
+                    onChange={(e) => handlePlaceholderChange('item_number', e.target.value)}
+                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    placeholder="#"
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    type="text"
+                    value=""
+                    onChange={(e) => handlePlaceholderChange('description', e.target.value)}
+                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    placeholder="Description"
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    type="number"
+                    value=""
+                    onChange={(e) => handlePlaceholderChange('quantity', e.target.value)}
+                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    type="text"
+                    value=""
+                    onChange={(e) => handlePlaceholderChange('unit', e.target.value)}
+                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    placeholder="EA"
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    type="text"
+                    value=""
+                    onChange={(e) => handlePlaceholderChange('notes', e.target.value)}
+                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    placeholder="Notes"
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <span className="text-xs text-gray-400 italic">Start typing...</span>
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
