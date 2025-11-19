@@ -1,10 +1,13 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DiagramUpload from '@/components/DiagramUpload';
 import WorkspaceView from '@/components/WorkspaceView';
 import InboxListView from '@/components/InboxListView';
+import CSIWidget from '@/components/CSIWidget';
+import CSIFloatingButton from '@/components/CSIFloatingButton';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { InboxItem } from '@/types/inbox';
@@ -40,6 +43,7 @@ export default function Home() {
   const [editingName, setEditingName] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [inboxItems, setInboxItems] = useState<InboxItem[]>(mockInboxItems);
+  const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
 
   const activeProject = projects.find((p) => p.id === activeProjectId);
 
@@ -408,6 +412,12 @@ export default function Home() {
     );
   };
 
+  const handleCSICodeSelect = (code: string, title: string) => {
+    console.log('CSI code selected:', code, title);
+    // You can add custom logic here, e.g., copy to clipboard, add to form, etc.
+    // For now, just log it
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -415,9 +425,12 @@ export default function Home() {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Cosmo
-              </h1>
+              <Image
+                src="/logo.svg"
+                alt="plan.ai Logo"
+                width={120}
+                height={40}
+              />
             </div>
 
             {/* Back to Inbox Button - shown when in workspace or upload mode */}
@@ -592,6 +605,16 @@ export default function Home() {
           ) : null}
         </AnimatePresence>
       </main>
+
+      {/* CSI Floating Button */}
+      <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />
+
+      {/* CSI Widget */}
+      <CSIWidget
+        isOpen={csiWidgetOpen}
+        onClose={() => setCsiWidgetOpen(false)}
+        onSelectCode={handleCSICodeSelect}
+      />
     </div>
   );
 }
