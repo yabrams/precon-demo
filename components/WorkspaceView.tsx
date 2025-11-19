@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import BidFormTable, { LineItem } from './BidFormTable';
-import { exportToPDF, exportToExcel, exportToCSV } from '@/lib/export';
 import DiagramOverlay from './DiagramOverlay';
 import ChatPanel from './ChatPanel';
 import MagnifyingGlass from './MagnifyingGlass';
@@ -146,16 +145,6 @@ export default function WorkspaceView({
     const color = HIGHLIGHT_COLORS[itemIndex % HIGHLIGHT_COLORS.length];
 
     return { fromX, fromY, toX, toY, color };
-  };
-
-  const handleExport = (format: 'pdf' | 'excel' | 'csv') => {
-    if (format === 'pdf') {
-      exportToPDF(lineItems, projectName);
-    } else if (format === 'excel') {
-      exportToExcel(lineItems, projectName);
-    } else if (format === 'csv') {
-      exportToCSV(lineItems);
-    }
   };
 
   const connectionLineProps = getConnectionLineProps();
@@ -360,43 +349,6 @@ export default function WorkspaceView({
         {/* Right Panel - Bid Form */}
         {diagramUrl && (
           <Panel defaultSize={65} minSize={30} className="flex flex-col bg-gray-50">
-            {/* Right Panel Header with Export Toolbar */}
-            <div className="bg-white border-b px-6 py-4 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-lg font-semibold text-gray-900">Bid Form</h2>
-                </div>
-
-                {/* Export Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleExport('pdf')}
-                    disabled={lineItems.length === 0}
-                    className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    title="Export as PDF"
-                  >
-                    PDF
-                  </button>
-                  <button
-                    onClick={() => handleExport('excel')}
-                    disabled={lineItems.length === 0}
-                    className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    title="Export as Excel"
-                  >
-                    Excel
-                  </button>
-                  <button
-                    onClick={() => handleExport('csv')}
-                    disabled={lineItems.length === 0}
-                    className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    title="Export as CSV"
-                  >
-                    CSV
-                  </button>
-                </div>
-              </div>
-            </div>
-
             {/* Bid Form Content */}
             <div className="flex-1 overflow-auto p-6">
               <AnimatePresence mode="wait">
