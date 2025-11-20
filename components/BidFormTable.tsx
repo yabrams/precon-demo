@@ -47,13 +47,13 @@ interface BidFormTableProps {
 }
 
 export default function BidFormTable({
-  initialLineItems,
+  initialLineItems = [],
   onUpdate,
   readOnly = false,
   hoveredItemId,
   onHoverChange
 }: BidFormTableProps) {
-  const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems);
+  const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
 
   useEffect(() => {
     console.log('BidFormTable: initialLineItems changed, count:', initialLineItems.length);
