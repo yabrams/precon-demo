@@ -14,6 +14,8 @@ import BuildingConnectedProjectList from '@/components/BuildingConnectedProjectL
 import BidPackageListView from '@/components/BidPackageListView';
 import BidPackageWorkspace from '@/components/BidPackageWorkspace';
 import DiagramUpload from '@/components/DiagramUpload';
+import WorkspaceView from '@/components/WorkspaceView';
+import InboxListView from '@/components/InboxListView';
 import CSIWidget from '@/components/CSIWidget';
 import CSIFloatingButton from '@/components/CSIFloatingButton';
 import { LineItem } from '@/components/BidFormTable';
@@ -398,17 +400,25 @@ export default function Home() {
     );
   }
 
-  // Main application
+
+  const handleCSICodeSelect = (code: string, title: string) => {
+    console.log('CSI code selected:', code, title);
+    // You can add custom logic here, e.g., copy to clipboard, add to form, etc.
+    // For now, just log it
+  };
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b flex-shrink-0 z-10">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-              <h1 className="text-xl font-bold text-gray-900">Project Cosmo</h1>
-            </div>
+            <div>
+              <Image
+                src="/logo.svg"
+                alt="plan.ai Logo"
+                width={120}
+                height={40}
+              />
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
