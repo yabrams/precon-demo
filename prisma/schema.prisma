@@ -18,6 +18,7 @@ model User {
   userName        String           @unique
   firstName       String?
   lastName        String?
+  avatarUrl       String?
   passwordHash    String
   isActive        Boolean          @default(true)
   createdAt       DateTime         @default(now())
