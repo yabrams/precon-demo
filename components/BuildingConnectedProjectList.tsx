@@ -20,17 +20,17 @@ export default function BuildingConnectedProjectList({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'bidding':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20';
       case 'active':
-        return 'bg-green-100 text-green-800';
+        return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
       case 'awarded':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-violet-500/10 text-violet-400 border border-violet-500/20';
       case 'closed':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-slate-500/10 text-slate-400 border border-slate-500/20';
       case 'archived':
-        return 'bg-gray-100 text-gray-500';
+        return 'bg-slate-500/10 text-slate-400 border border-slate-500/20';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-slate-500/10 text-slate-400 border border-slate-500/20';
     }
   };
 
@@ -64,20 +64,20 @@ export default function BuildingConnectedProjectList({
   };
 
   return (
-    <div className="h-full bg-gray-50 overflow-auto p-6">
+    <div className="h-full bg-slate-950 overflow-auto p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">BuildingConnected Projects</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-white">BuildingConnected Projects</h1>
+          <p className="text-slate-400 mt-2">
             {projects.length} {projects.length === 1 ? 'project' : 'projects'}
           </p>
         </div>
 
         {/* Projects Grid */}
         {projects.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-xl shadow-sm p-12 text-center">
+            <div className="text-slate-500 mb-4">
               <svg
                 className="mx-auto h-12 w-12"
                 fill="none"
@@ -92,8 +92,8 @@ export default function BuildingConnectedProjectList({
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Projects Yet</h3>
-            <p className="text-gray-500">
+            <h3 className="text-lg font-medium text-slate-50 mb-2">No Projects Yet</h3>
+            <p className="text-slate-500">
               Projects from BuildingConnected will appear here
             </p>
           </div>
@@ -106,12 +106,12 @@ export default function BuildingConnectedProjectList({
                 <div
                   key={project.id}
                   onClick={() => onProjectSelect(project)}
-                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 overflow-hidden"
+                  className="bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-xl hover:border-violet-500/50 hover:shadow-xl hover:shadow-violet-900/10 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
                 >
                   {/* Project Header */}
-                  <div className="p-5 border-b border-gray-100">
+                  <div className="p-5 border-b border-slate-800">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-gray-900 text-lg leading-tight flex-1 pr-2">
+                      <h3 className="font-semibold text-white text-lg leading-tight flex-1 pr-2">
                         {project.name}
                       </h3>
                       <span
@@ -124,11 +124,11 @@ export default function BuildingConnectedProjectList({
                     </div>
 
                     {project.projectNumber && (
-                      <p className="text-sm text-gray-500 mb-3">#{project.projectNumber}</p>
+                      <p className="text-sm text-slate-500 mb-3 font-mono">#{project.projectNumber}</p>
                     )}
 
                     {project.description && (
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-sm text-slate-400 line-clamp-2">
                         {project.description}
                       </p>
                     )}
@@ -140,7 +140,7 @@ export default function BuildingConnectedProjectList({
                     {project.location && (project.location.city || project.location.state) && (
                       <div className="flex items-start">
                         <svg
-                          className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5"
+                          className="h-5 w-5 text-slate-500 mr-2 flex-shrink-0 mt-0.5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -158,7 +158,7 @@ export default function BuildingConnectedProjectList({
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-slate-400">
                           {[project.location.city, project.location.state]
                             .filter(Boolean)
                             .join(', ')}
@@ -170,7 +170,7 @@ export default function BuildingConnectedProjectList({
                     {project.marketSector && (
                       <div className="flex items-center">
                         <svg
-                          className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0"
+                          className="h-5 w-5 text-slate-500 mr-2 flex-shrink-0"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -182,7 +182,7 @@ export default function BuildingConnectedProjectList({
                             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                           />
                         </svg>
-                        <span className="text-sm text-gray-600">{project.marketSector}</span>
+                        <span className="text-sm text-slate-400">{project.marketSector}</span>
                       </div>
                     )}
 
@@ -190,7 +190,7 @@ export default function BuildingConnectedProjectList({
                     {project.projectValue && (
                       <div className="flex items-center">
                         <svg
-                          className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0"
+                          className="h-5 w-5 text-slate-500 mr-2 flex-shrink-0"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -202,7 +202,7 @@ export default function BuildingConnectedProjectList({
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-white font-mono">
                           {formatCurrency(project.projectValue)}
                         </span>
                       </div>
@@ -212,7 +212,7 @@ export default function BuildingConnectedProjectList({
                     {project.bidDueDate && (
                       <div className="flex items-center">
                         <svg
-                          className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0"
+                          className="h-5 w-5 text-slate-500 mr-2 flex-shrink-0"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -224,16 +224,16 @@ export default function BuildingConnectedProjectList({
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        <span className="text-sm text-gray-600">
-                          Bid Due: {formatDate(project.bidDueDate)}
+                        <span className="text-sm text-slate-400">
+                          Bid Due: <span className="font-mono">{formatDate(project.bidDueDate)}</span>
                           {daysUntilBid !== null && (
                             <span
                               className={`ml-2 font-medium ${
                                 daysUntilBid < 7
-                                  ? 'text-red-600'
+                                  ? 'text-red-400'
                                   : daysUntilBid < 14
-                                  ? 'text-orange-600'
-                                  : 'text-green-600'
+                                  ? 'text-orange-400'
+                                  : 'text-emerald-400'
                               }`}
                             >
                               ({daysUntilBid} {daysUntilBid === 1 ? 'day' : 'days'})
@@ -245,11 +245,11 @@ export default function BuildingConnectedProjectList({
                   </div>
 
                   {/* Project Footer */}
-                  <div className="px-5 py-3 bg-gray-50 border-t border-gray-100">
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="px-5 py-3 bg-slate-900/40 border-t border-slate-800">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
                       {project.client && <span>{project.client}</span>}
                       {project.updatedAt && (
-                        <span>
+                        <span className="font-mono">
                           Updated{' '}
                           {formatDistanceToNow(
                             typeof project.updatedAt === 'string'

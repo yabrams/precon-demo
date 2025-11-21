@@ -11,19 +11,33 @@ interface DiagramOverlayProps {
   imageHeight: number;
 }
 
-// Color palette for highlighting - pastel colors with good contrast
+// Color palette for highlighting - vibrant colors optimized for dark backgrounds
 const HIGHLIGHT_COLORS = [
-  '#93c5fd', // blue-300
-  '#fca5a5', // red-300
-  '#86efac', // green-300
-  '#fcd34d', // yellow-300
-  '#c4b5fd', // violet-300
-  '#fdba74', // orange-300
-  '#f9a8d4', // pink-300
-  '#67e8f9', // cyan-300
-  '#d8b4fe', // purple-300
-  '#a7f3d0', // emerald-300
+  '#8b5cf6', // violet-500
+  '#06b6d4', // cyan-500
+  '#10b981', // emerald-500
+  '#f59e0b', // amber-500
+  '#ec4899', // pink-500
+  '#f97316', // orange-500
+  '#6366f1', // indigo-500
+  '#14b8a6', // teal-500
+  '#a855f7', // purple-500
+  '#22d3ee', // cyan-400
 ];
+
+// Glow colors for active boxes - softer tones for the shadow effect
+const GLOW_COLORS: { [key: string]: string } = {
+  '#8b5cf6': '139, 92, 246',    // violet
+  '#06b6d4': '6, 182, 212',      // cyan
+  '#10b981': '16, 185, 129',     // emerald
+  '#f59e0b': '245, 158, 11',     // amber
+  '#ec4899': '236, 72, 153',     // pink
+  '#f97316': '249, 115, 22',     // orange
+  '#6366f1': '99, 102, 241',     // indigo
+  '#14b8a6': '20, 184, 166',     // teal
+  '#a855f7': '168, 85, 247',     // purple
+  '#22d3ee': '34, 211, 238',     // cyan-400
+};
 
 export default function DiagramOverlay({
   lineItems,
@@ -71,6 +85,8 @@ export default function DiagramOverlay({
 
           const color = getColorForItem(index);
 
+          const glowColor = GLOW_COLORS[color] || '139, 92, 246';
+
           return (
             <motion.g
               key={item.id || index}
@@ -79,6 +95,22 @@ export default function DiagramOverlay({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
+              {/* Glow effect for active bounding box (rendered first, behind the box) */}
+              {isHovered && (
+                <rect
+                  x={pixelX - 4}
+                  y={pixelY - 4}
+                  width={pixelWidth + 8}
+                  height={pixelHeight + 8}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={8}
+                  strokeOpacity={0.3}
+                  filter={`url(#glow-${index})`}
+                  className="pointer-events-none"
+                />
+              )}
+
               {/* Bounding box rectangle */}
               <rect
                 x={pixelX}
@@ -86,12 +118,16 @@ export default function DiagramOverlay({
                 width={pixelWidth}
                 height={pixelHeight}
                 fill={color}
-                fillOpacity={isHovered ? 0.4 : 0}
+                fillOpacity={isHovered ? 0.2 : 0}
                 stroke={color}
-                strokeWidth={isHovered ? 3 : 0}
-                strokeOpacity={isHovered ? 1 : 0}
+                strokeWidth={isHovered ? 2.5 : 0}
+                strokeOpacity={isHovered ? 0.9 : 0}
                 className="transition-all duration-200"
-                style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                style={{
+                  pointerEvents: 'auto',
+                  cursor: 'pointer',
+                  filter: isHovered ? `drop-shadow(0 0 8px rgba(${glowColor}, 0.6))` : 'none'
+                }}
                 onMouseEnter={() => onHoverChange(item.id || null)}
                 onMouseLeave={() => onHoverChange(null)}
               />
@@ -99,14 +135,18 @@ export default function DiagramOverlay({
               {/* Subtle indicator when not hovered (small dot in corner) */}
               {!isHovered && (
                 <circle
-                  cx={pixelX + 6}
-                  cy={pixelY + 6}
-                  r={4}
+                  cx={pixelX + 8}
+                  cy={pixelY + 8}
+                  r={5}
                   fill={color}
-                  fillOpacity={0.6}
-                  stroke="white"
-                  strokeWidth={1}
-                  style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                  fillOpacity={0.8}
+                  stroke="#1e293b"
+                  strokeWidth={2}
+                  style={{
+                    pointerEvents: 'auto',
+                    cursor: 'pointer',
+                    filter: `drop-shadow(0 0 4px rgba(${glowColor}, 0.5))`
+                  }}
                   onMouseEnter={() => onHoverChange(item.id || null)}
                   onMouseLeave={() => onHoverChange(null)}
                 />

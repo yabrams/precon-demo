@@ -126,17 +126,27 @@ export default function MagnifyingGlass({
         height: lensHeight,
       }}
     >
-      <canvas
-        ref={canvasRef}
-        width={lensWidth}
-        height={lensHeight}
-        className="rounded border-4 border-blue-500 shadow-2xl bg-white"
+      <div
+        className="rounded-lg border-2 border-violet-500 shadow-xl bg-slate-900/90 backdrop-blur-md overflow-hidden"
         style={{
-          filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))',
+          filter: 'drop-shadow(0 0 20px rgba(139, 92, 246, 0.3)) drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5))',
+          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2), 0 0 20px rgba(139, 92, 246, 0.15)',
         }}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          width={lensWidth}
+          height={lensHeight}
+          className="block"
+        />
+      </div>
       {/* Zoom level indicator */}
-      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold whitespace-nowrap shadow-lg">
+      <div
+        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-violet-600 text-white px-3 py-1 rounded text-xs font-bold whitespace-nowrap"
+        style={{
+          boxShadow: '0 0 15px rgba(139, 92, 246, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3)',
+        }}
+      >
         {zoomFactor}x zoom
       </div>
     </div>

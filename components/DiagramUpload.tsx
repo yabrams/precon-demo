@@ -78,7 +78,7 @@ export default function DiagramUpload({
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex-1 bg-white flex items-center justify-center p-6 overflow-auto"
+          className="flex-1 bg-slate-900 flex items-center justify-center p-6 overflow-auto"
         >
           <div className="w-full h-full flex items-center justify-center">
             <img
@@ -94,17 +94,17 @@ export default function DiagramUpload({
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex-1 flex flex-col bg-gray-50 p-6"
+          className="flex-1 flex flex-col bg-slate-900 p-6"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-white mb-4">
             Instructions for AI (Optional)
           </h3>
-          <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
+          <div className="flex-1 flex flex-col bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-xl shadow-lg p-6 hover:border-violet-500/50 hover:shadow-xl hover:shadow-violet-900/10 transition-all">
             <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Add specific instructions for the AI extractor...&#10;&#10;Examples:&#10;- Focus on electrical items only&#10;- Include labor costs&#10;- Group items by room&#10;- Extract quantities from the legend"
-              className="flex-1 w-full p-4 border-2 border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+              className="flex-1 w-full p-4 bg-slate-800/50 border border-slate-700 rounded-lg resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 focus:outline-none text-slate-100 placeholder:text-slate-500"
             />
             <div className="mt-4 flex gap-3">
               <button
@@ -112,13 +112,13 @@ export default function DiagramUpload({
                   setUploadedFile(null);
                   setInstructions('');
                 }}
-                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleExtract}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white border border-white/10 rounded-lg hover:from-violet-500 hover:to-cyan-500 transition-all font-medium shadow-lg shadow-violet-900/20"
               >
                 Process Diagram →
               </button>
@@ -131,26 +131,26 @@ export default function DiagramUpload({
 
   // Show upload dropzone
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-full flex items-center justify-center bg-slate-900">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors w-full max-w-2xl
-          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+        className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all w-full max-w-2xl bg-slate-900/60 backdrop-blur-md border-slate-700
+          ${isDragActive ? 'border-violet-500 bg-violet-500/5' : 'hover:border-violet-500/50 hover:shadow-xl hover:shadow-violet-900/10'}
           ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         <input {...getInputProps()} />
 
         {uploading ? (
-          <div className="space-y-2">
-            <div className="text-gray-600">Uploading...</div>
-            <div className="w-full bg-gray-200 rounded-full h-2 max-w-xs mx-auto">
-              <div className="bg-blue-500 h-2 rounded-full animate-pulse w-3/4"></div>
+          <div className="space-y-4">
+            <div className="text-slate-400">Uploading...</div>
+            <div className="w-full bg-slate-800 rounded-full h-2 max-w-xs mx-auto overflow-hidden">
+              <div className="bg-gradient-to-r from-violet-600 to-cyan-600 h-2 rounded-full animate-pulse w-3/4"></div>
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-4">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-slate-500"
               stroke="currentColor"
               fill="none"
               viewBox="0 0 48 48"
@@ -163,18 +163,28 @@ export default function DiagramUpload({
                 strokeLinejoin="round"
               />
             </svg>
-            <div className="text-gray-600">
+            <div className="text-slate-400">
               {isDragActive ? (
-                <p>Drop the diagram here...</p>
+                <p className="text-white font-medium">Drop the diagram here...</p>
               ) : (
                 <>
-                  <p className="font-medium">Click to upload or drag and drop</p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="font-medium text-white">Click to upload or drag and drop</p>
+                  <p className="text-sm text-slate-500 mt-2 font-mono">
                     PDF, PNG, JPG, GIF up to 10MB
                   </p>
                 </>
               )}
             </div>
+            {!isDragActive && (
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-lg shadow-lg shadow-violet-900/20 transition-colors font-medium"
+                >
+                  Choose file
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
