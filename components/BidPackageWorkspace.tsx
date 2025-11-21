@@ -18,6 +18,13 @@ import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
 import { Diagram } from '@/types/diagram';
 
+interface UploadedFile {
+  url: string;
+  fileName: string;
+  fileSize?: number;
+  fileType?: string;
+}
+
 interface BidPackageWorkspaceProps {
   bidPackage: BidPackage;
   project: BuildingConnectedProject;
@@ -26,6 +33,7 @@ interface BidPackageWorkspaceProps {
   isExtracting: boolean;
   onLineItemsUpdate: (items: LineItem[]) => void;
   onUploadNew: () => void;
+  onUploadSuccess?: (file: UploadedFile) => void;
   onBack: () => void;
   chatOpen: boolean;
   chatMessages: ChatMessage[];
@@ -44,6 +52,7 @@ export default function BidPackageWorkspace({
   isExtracting,
   onLineItemsUpdate,
   onUploadNew,
+  onUploadSuccess,
   onBack,
   chatOpen,
   chatMessages = [],
@@ -120,6 +129,39 @@ export default function BidPackageWorkspace({
   }, [diagramUrl]);
 
   const hoveredItem = lineItems.find((item) => item.id === hoveredItemId);
+
+  // Direct file upload handler
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const uploadedData = await uploadResponse.json();
+
+      // Pass uploaded file data to parent component
+      if (onUploadSuccess) {
+        onUploadSuccess(uploadedData);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload file');
+    }
+
+    // Reset input so same file can be selected again
+    event.target.value = '';
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -255,9 +297,16 @@ export default function BidPackageWorkspace({
               <p className="text-gray-500 mb-6">
                 Upload a construction diagram to start extracting bid items
               </p>
-              <button
-                onClick={onUploadNew}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              <input
+                type="file"
+                id="diagram-upload-workspace-empty"
+                className="hidden"
+                accept="image/*,.pdf"
+                onChange={handleFileSelect}
+              />
+              <label
+                htmlFor="diagram-upload-workspace-empty"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <svg
                   className="h-5 w-5 mr-2"
@@ -273,7 +322,7 @@ export default function BidPackageWorkspace({
                   />
                 </svg>
                 Upload Diagram
-              </button>
+              </label>
             </div>
           </div>
         ) : (

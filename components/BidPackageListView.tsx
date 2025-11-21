@@ -8,12 +8,20 @@
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
 
+interface UploadedFile {
+  url: string;
+  fileName: string;
+  fileSize?: number;
+  fileType?: string;
+}
+
 interface BidPackageListViewProps {
   project: BuildingConnectedProject;
   bidPackages: BidPackage[];
   onBidPackageSelect: (bidPackage: BidPackage) => void;
   onBack: () => void;
   onUploadDiagrams?: () => void;
+  onUploadSuccess?: (file: UploadedFile) => void;
 }
 
 export default function BidPackageListView({
@@ -22,6 +30,7 @@ export default function BidPackageListView({
   onBidPackageSelect,
   onBack,
   onUploadDiagrams,
+  onUploadSuccess,
 }: BidPackageListViewProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -48,6 +57,39 @@ export default function BidPackageListView({
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  // Direct file upload handler
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const uploadedData = await uploadResponse.json();
+
+      // Pass uploaded file data to parent component
+      if (onUploadSuccess) {
+        onUploadSuccess(uploadedData);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload file');
+    }
+
+    // Reset input so same file can be selected again
+    event.target.value = '';
   };
 
   return (
@@ -99,25 +141,34 @@ export default function BidPackageListView({
                   Project Diagrams ({project.diagrams.length})
                 </h3>
                 {onUploadDiagrams && (
-                  <button
-                    onClick={onUploadDiagrams}
-                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors flex items-center"
-                  >
-                    <svg
-                      className="h-4 w-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <>
+                    <input
+                      type="file"
+                      id="diagram-upload-existing"
+                      className="hidden"
+                      accept="image/*,.pdf"
+                      onChange={handleFileSelect}
+                    />
+                    <label
+                      htmlFor="diagram-upload-existing"
+                      className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors flex items-center cursor-pointer"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                      />
-                    </svg>
-                    Upload Diagram
-                  </button>
+                      <svg
+                        className="h-4 w-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        />
+                      </svg>
+                      Upload Diagram
+                    </label>
+                  </>
                 )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -175,9 +226,16 @@ export default function BidPackageListView({
               <p className="text-gray-500 mb-4">
                 Upload construction diagrams for this project
               </p>
-              <button
-                onClick={onUploadDiagrams}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              <input
+                type="file"
+                id="diagram-upload-empty"
+                className="hidden"
+                accept="image/*,.pdf"
+                onChange={handleFileSelect}
+              />
+              <label
+                htmlFor="diagram-upload-empty"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <svg
                   className="h-5 w-5 mr-2"
@@ -193,7 +251,7 @@ export default function BidPackageListView({
                   />
                 </svg>
                 Upload First Diagram
-              </button>
+              </label>
             </div>
           )}
 

@@ -14,8 +14,6 @@ import BuildingConnectedProjectList from '@/components/BuildingConnectedProjectL
 import BidPackageListView from '@/components/BidPackageListView';
 import BidPackageWorkspace from '@/components/BidPackageWorkspace';
 import DiagramUpload from '@/components/DiagramUpload';
-import WorkspaceView from '@/components/WorkspaceView';
-import InboxListView from '@/components/InboxListView';
 import CSIWidget from '@/components/CSIWidget';
 import CSIFloatingButton from '@/components/CSIFloatingButton';
 import { LineItem } from '@/components/BidFormTable';
@@ -27,7 +25,6 @@ import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
 import {
   mockBuildingConnectedProjects,
-  mockBidPackages,
   getBidPackagesByProject,
 } from '@/lib/mockBuildingConnectedData';
 
@@ -49,7 +46,6 @@ export default function Home() {
 
   // Application state
   const [bcProjects, setBcProjects] = useState<BuildingConnectedProject[]>(mockBuildingConnectedProjects);
-  const [bidPackages, setBidPackages] = useState<BidPackage[]>(mockBidPackages);
   const [selectedProject, setSelectedProject] = useState<BuildingConnectedProject | null>(null);
   const [selectedBidPackage, setSelectedBidPackage] = useState<BidPackageWorkspaceData | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('projects');
@@ -78,7 +74,7 @@ export default function Home() {
     }
   };
 
-  const handleLogin = async (user: UserPublic, token: string) => {
+  const handleLogin = async (user: UserPublic) => {
     setCurrentUser(user);
   };
 
@@ -162,12 +158,6 @@ export default function Home() {
 
       // If uploading from within a bid package, associate diagram and extract
       if (selectedBidPackage) {
-        setBidPackages(prev => prev.map(pkg =>
-          pkg.id === selectedBidPackage.id
-            ? { ...pkg, diagramIds: [...(pkg.diagramIds || []), newDiagram.id] }
-            : pkg
-        ));
-
         // Trigger extraction automatically for bid package
         handleExtractStart(file.url);
       } else {
@@ -400,12 +390,7 @@ export default function Home() {
     );
   }
 
-
-  const handleCSICodeSelect = (code: string, title: string) => {
-    console.log('CSI code selected:', code, title);
-    // You can add custom logic here, e.g., copy to clipboard, add to form, etc.
-    // For now, just log it
-  };
+  // Main application
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -419,6 +404,7 @@ export default function Home() {
                 width={120}
                 height={40}
               />
+            </div>
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
@@ -470,6 +456,7 @@ export default function Home() {
                 onBidPackageSelect={handleBidPackageSelect}
                 onBack={handleBackToProjects}
                 onUploadDiagrams={handleUploadNew}
+                onUploadSuccess={handleUploadSuccess}
               />
             </motion.div>
           )}
@@ -491,6 +478,7 @@ export default function Home() {
                 isExtracting={extracting}
                 onLineItemsUpdate={handleLineItemsUpdate}
                 onUploadNew={handleUploadNew}
+                onUploadSuccess={handleUploadSuccess}
                 onBack={handleBackToPackages}
                 chatOpen={selectedBidPackage.chatOpen || false}
                 chatMessages={selectedBidPackage.chatMessages || []}
