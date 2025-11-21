@@ -17,6 +17,8 @@ import DiagramUpload from '@/components/DiagramUpload';
 import CSIWidget from '@/components/CSIWidget';
 import CSIFloatingButton from '@/components/CSIFloatingButton';
 import Avatar from '@/components/Avatar';
+import DocumentReviewPanel from '@/components/DocumentReviewPanel';
+import DocumentReviewView from '@/components/DocumentReviewView';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { UserPublic } from '@/types/user';
@@ -24,12 +26,8 @@ import { BuildingConnectedProject } from '@/types/buildingconnected';
 import { BidPackage } from '@/types/bidPackage';
 import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
-import {
-  mockBuildingConnectedProjects,
-  getBidPackagesByProject,
-} from '@/lib/mockBuildingConnectedData';
 
-type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload';
+type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing';
 type AuthMode = 'login' | 'register';
 
 // Extended BidPackage with workspace data
@@ -46,10 +44,17 @@ export default function Home() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   // Application state
-  const [bcProjects, setBcProjects] = useState<BuildingConnectedProject[]>(mockBuildingConnectedProjects);
+  const [bcProjects, setBcProjects] = useState<BuildingConnectedProject[]>([]);
   const [selectedProject, setSelectedProject] = useState<BuildingConnectedProject | null>(null);
   const [selectedBidPackage, setSelectedBidPackage] = useState<BidPackageWorkspaceData | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('projects');
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+
+  // Document review state
+  const [pendingDiagram, setPendingDiagram] = useState<Diagram | null>(null);
+  const [categorization, setCategorization] = useState<any>(null);
+  const [isCategorizingDocument, setIsCategorizingDocument] = useState(false);
+  const [isProcessingCategory, setIsProcessingCategory] = useState(false);
 
   // Workspace state
   const [extracting, setExtracting] = useState(false);
@@ -61,6 +66,13 @@ export default function Home() {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  // Load projects from database when user is authenticated
+  useEffect(() => {
+    if (currentUser) {
+      loadProjects();
+    }
+  }, [currentUser]);
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -88,6 +100,21 @@ export default function Home() {
       console.error('Auth check failed:', error);
     } finally {
       setIsCheckingAuth(false);
+    }
+  };
+
+  const loadProjects = async () => {
+    try {
+      setIsLoadingProjects(true);
+      const response = await fetch('/api/projects');
+      if (response.ok) {
+        const data = await response.json();
+        setBcProjects(data.projects || []);
+      }
+    } catch (error) {
+      console.error('Failed to load projects:', error);
+    } finally {
+      setIsLoadingProjects(false);
     }
   };
 
@@ -119,10 +146,24 @@ export default function Home() {
 
   const handleBidPackageSelect = (bidPackage: BidPackage) => {
     // Initialize workspace data for bid package
-    // Diagrams are now at project level, not bid package level
+    // Load line items from bid forms
+    const allLineItems = bidPackage.bidForms?.flatMap(bf =>
+      bf.lineItems?.map(li => ({
+        id: li.id,
+        item_number: li.itemNumber,
+        description: li.description,
+        quantity: li.quantity,
+        unit: li.unit,
+        unit_price: li.unitPrice,
+        total_price: li.totalPrice,
+        notes: li.notes,
+        verified: li.verified
+      })) || []
+    ) || [];
+
     const workspaceData: BidPackageWorkspaceData = {
       ...bidPackage,
-      lineItems: [],
+      lineItems: allLineItems,
       chatMessages: [],
       chatOpen: false,
     };
@@ -145,46 +186,134 @@ export default function Home() {
     setViewMode('upload');
   };
 
-  const handleUploadSuccess = (file: { url: string; fileName: string; fileSize?: number; fileType?: string }) => {
-    if (selectedProject) {
-      // Create new diagram at project level
-      const newDiagram: Diagram = {
-        id: generateId(),
-        bcProjectId: selectedProject.bcProjectId,
-        fileName: file.fileName,
-        fileUrl: file.url,
-        fileType: file.fileType || 'image/png',
-        fileSize: file.fileSize || 0,
-        uploadedAt: new Date(),
-        uploadedBy: currentUser?.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+  const handleUploadSuccess = async (uploadResult: any) => {
+    if (!selectedProject || !uploadResult.diagram) return;
 
-      // Add diagram to project
-      setBcProjects(prev => prev.map(p =>
-        p.bcProjectId === selectedProject.bcProjectId
-          ? { ...p, diagrams: [...(p.diagrams || []), newDiagram] }
-          : p
-      ));
+    const diagram = uploadResult.diagram;
 
-      // Update selected project state
-      setSelectedProject(prev =>
-        prev ? { ...prev, diagrams: [...(prev.diagrams || []), newDiagram] } : null
-      );
+    // Reload project to get updated diagrams from database
+    await loadProjects();
 
-      // If uploading from within a bid package, associate diagram and extract
-      if (selectedBidPackage) {
-        // Trigger extraction automatically for bid package
-        handleExtractStart(file.url);
+    // Update selected project with new data
+    const updatedProject = bcProjects.find(p => p.id === selectedProject.id);
+    if (updatedProject) {
+      setSelectedProject(updatedProject);
+    }
+
+    // Immediately switch to reviewing view and show the document
+    setPendingDiagram(diagram);
+    setViewMode('reviewing');
+    setIsCategorizingDocument(true);
+
+    // Start AI categorization process in the background
+    try {
+      const response = await fetch('/api/ai/categorize-document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: diagram.fileUrl,
+          fileName: diagram.fileName,
+          fileType: diagram.fileType
+        })
+      });
+
+      if (response.ok) {
+        const categorizationResult = await response.json();
+        setCategorization(categorizationResult);
       } else {
-        // Just uploading at project level - go back to packages view
+        console.error('Categorization failed');
+        alert('Failed to categorize document. Please try again.');
+        setPendingDiagram(null);
         setViewMode('packages');
       }
+    } catch (error) {
+      console.error('Error categorizing document:', error);
+      alert('Error categorizing document. Please try again.');
+      setPendingDiagram(null);
+      setViewMode('packages');
+    } finally {
+      setIsCategorizingDocument(false);
     }
   };
 
-  const handleExtractStart = async (url: string, instructions?: string) => {
+  const handleCategoryConfirm = async (selectedCategory: string) => {
+    if (!pendingDiagram || !selectedProject) return;
+
+    setIsProcessingCategory(true);
+
+    try {
+      // Create or find bid package for this category
+      const bcBidPackageId = `${selectedProject.bcProjectId}-${selectedCategory.replace(/\s+/g, '-').toLowerCase()}`;
+
+      // Check if bid package exists
+      let bidPackage = selectedProject.bidPackages?.find(bp => bp.name === selectedCategory);
+
+      if (!bidPackage) {
+        // Create new bid package
+        const createResponse = await fetch('/api/bid-packages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bcBidPackageId,
+            bcProjectId: selectedProject.id,
+            name: selectedCategory,
+            description: `Bid package for ${selectedCategory}`,
+            status: 'draft',
+            progress: 0,
+            diagramIds: [pendingDiagram.id]
+          })
+        });
+
+        if (!createResponse.ok) {
+          throw new Error('Failed to create bid package');
+        }
+
+        const { bidPackage: newBidPackage } = await createResponse.json();
+        bidPackage = newBidPackage;
+      } else {
+        // Update existing bid package to include this diagram
+        const existingDiagramIds = bidPackage.diagramIds ? JSON.parse(bidPackage.diagramIds) : [];
+        if (!existingDiagramIds.includes(pendingDiagram.id)) {
+          existingDiagramIds.push(pendingDiagram.id);
+
+          await fetch(`/api/bid-packages/${bidPackage.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              diagramIds: existingDiagramIds
+            })
+          });
+        }
+      }
+
+      // Trigger extraction for this diagram and bid package
+      await handleExtractStart(pendingDiagram.fileUrl, undefined, bidPackage.id, pendingDiagram.id);
+
+      // Clear review state
+      setPendingDiagram(null);
+      setCategorization(null);
+
+      // Reload projects to get updated data
+      await loadProjects();
+
+      // Navigate to packages view to show the new/updated bid package
+      setViewMode('packages');
+
+    } catch (error) {
+      console.error('Error processing category:', error);
+      alert('Failed to process document category. Please try again.');
+    } finally {
+      setIsProcessingCategory(false);
+    }
+  };
+
+  const handleCategoryCancel = () => {
+    setPendingDiagram(null);
+    setCategorization(null);
+    setViewMode('packages');
+  };
+
+  const handleExtractStart = async (url: string, instructions?: string, bidPackageId?: string, diagramId?: string) => {
     setExtracting(true);
     setViewMode('workspace');
 
@@ -192,7 +321,12 @@ export default function Home() {
       const response = await fetch('/api/extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageUrl: url, instructions }),
+        body: JSON.stringify({
+          imageUrl: url,
+          instructions,
+          bidPackageId,
+          diagramId
+        }),
       });
 
       if (!response.ok) {
@@ -201,18 +335,54 @@ export default function Home() {
 
       const data = await response.json();
 
-      // Add unique IDs to line items
-      const lineItemsWithIds = (data.line_items || []).map((item: LineItem) => ({
-        ...item,
-        id: item.id || generateId(),
-      }));
+      // If bidPackageId was provided, extraction was saved to database
+      // Reload projects to get the latest data
+      if (bidPackageId) {
+        await loadProjects();
 
-      // Update bid package with extracted data
-      if (selectedBidPackage) {
-        setSelectedBidPackage({
-          ...selectedBidPackage,
-          lineItems: lineItemsWithIds,
-        });
+        // Update selectedProject with fresh data
+        const updatedProject = bcProjects.find(p => p.id === selectedProject?.id);
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+
+          // Update selectedBidPackage with the new bid form data
+          const updatedBidPackage = updatedProject.bidPackages?.find(bp => bp.id === bidPackageId);
+          if (updatedBidPackage) {
+            // Get line items from the bid forms
+            const allLineItems = updatedBidPackage.bidForms?.flatMap(bf =>
+              bf.lineItems?.map(li => ({
+                id: li.id,
+                item_number: li.itemNumber,
+                description: li.description,
+                quantity: li.quantity,
+                unit: li.unit,
+                unit_price: li.unitPrice,
+                total_price: li.totalPrice,
+                notes: li.notes,
+                verified: li.verified
+              })) || []
+            ) || [];
+
+            setSelectedBidPackage({
+              ...selectedBidPackage!,
+              ...updatedBidPackage,
+              lineItems: allLineItems,
+            });
+          }
+        }
+      } else {
+        // Legacy path - just update local state with extracted data
+        const lineItemsWithIds = (data.line_items || []).map((item: LineItem) => ({
+          ...item,
+          id: item.id || generateId(),
+        }));
+
+        if (selectedBidPackage) {
+          setSelectedBidPackage({
+            ...selectedBidPackage,
+            lineItems: lineItemsWithIds,
+          });
+        }
       }
     } catch (error) {
       console.error('Extraction error:', error);
@@ -514,7 +684,7 @@ export default function Home() {
             >
               <BidPackageListView
                 project={selectedProject}
-                bidPackages={getBidPackagesByProject(selectedProject.bcProjectId)}
+                bidPackages={selectedProject.bidPackages || []}
                 onBidPackageSelect={handleBidPackageSelect}
                 onBack={handleBackToProjects}
                 onUploadDiagrams={handleUploadNew}
@@ -563,9 +733,29 @@ export default function Home() {
               className="h-full flex items-center justify-center"
             >
               <DiagramUpload
+                bcProjectId={selectedProject.id}
                 onUploadSuccess={handleUploadSuccess}
                 onExtractStart={handleExtractStart}
                 onCancel={() => setViewMode(selectedBidPackage ? 'workspace' : 'packages')}
+              />
+            </motion.div>
+          )}
+
+          {viewMode === 'reviewing' && pendingDiagram && (
+            <motion.div
+              key="reviewing"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <DocumentReviewView
+                diagram={pendingDiagram}
+                categorization={categorization}
+                isProcessing={isCategorizingDocument || isProcessingCategory}
+                onConfirm={handleCategoryConfirm}
+                onCancel={handleCategoryCancel}
               />
             </motion.div>
           )}

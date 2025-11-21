@@ -2,16 +2,45 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { readFile } from 'fs/promises';
 import path from 'path';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
   try {
-    const { imageUrl, instructions } = await request.json();
+    const { imageUrl, instructions, bidPackageId, diagramId } = await request.json();
 
     if (!imageUrl) {
       return NextResponse.json(
         { error: 'No image URL provided' },
         { status: 400 }
       );
+    }
+
+    // If bidPackageId is provided, verify it exists
+    if (bidPackageId) {
+      const bidPackage = await prisma.bidPackage.findUnique({
+        where: { id: bidPackageId }
+      });
+
+      if (!bidPackage) {
+        return NextResponse.json(
+          { error: 'Bid package not found' },
+          { status: 404 }
+        );
+      }
+    }
+
+    // If diagramId is provided, verify it exists
+    if (diagramId) {
+      const diagram = await prisma.diagram.findUnique({
+        where: { id: diagramId }
+      });
+
+      if (!diagram) {
+        return NextResponse.json(
+          { error: 'Diagram not found' },
+          { status: 404 }
+        );
+      }
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -162,6 +191,58 @@ If this is not a construction diagram or you cannot extract meaningful bid infor
 
     console.log('Extraction result:', JSON.stringify(result, null, 2));
     console.log('Line items count:', result.line_items?.length || 0);
+
+    // If bidPackageId is provided, create BidForm and save line items to database
+    if (bidPackageId && result.line_items && result.line_items.length > 0) {
+      try {
+        const bidForm = await prisma.bidForm.create({
+          data: {
+            bidPackageId,
+            diagramId: diagramId || null,
+            extractionConfidence: result.extraction_confidence || 'unknown',
+            rawExtractedText: result.raw_text || null,
+            status: 'draft',
+            lineItems: {
+              create: result.line_items.map((item: any, index: number) => ({
+                itemNumber: item.item_number || null,
+                description: item.description,
+                quantity: item.quantity || null,
+                unit: item.unit || null,
+                unitPrice: item.unit_price || null,
+                totalPrice: item.total_price || null,
+                notes: item.notes || null,
+                order: index,
+                verified: false
+              }))
+            }
+          },
+          include: {
+            lineItems: {
+              orderBy: {
+                order: 'asc'
+              }
+            }
+          }
+        });
+
+        console.log('Created BidForm:', bidForm.id);
+
+        return NextResponse.json({
+          ...result,
+          bidFormId: bidForm.id,
+          bidForm: bidForm
+        });
+      } catch (dbError) {
+        console.error('Error saving to database:', dbError);
+        // Return extraction result even if DB save fails
+        return NextResponse.json({
+          ...result,
+          warning: 'Extraction successful but failed to save to database'
+        });
+      } finally {
+        await prisma.$disconnect();
+      }
+    }
 
     return NextResponse.json(result);
   } catch (error) {
