@@ -9,6 +9,7 @@ export interface User {
   userName: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;
   passwordHash: string; // bcrypt hashed password
   isActive: boolean;
   createdAt: Date;
@@ -23,6 +24,7 @@ export interface UserPublic {
   userName: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;
   isActive: boolean;
   createdAt: Date;
   lastLoginAt?: Date;
