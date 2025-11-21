@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { UserRegisterInput } from '@/types/user';
+import Avatar from './Avatar';
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -22,8 +23,42 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
     lastName: '',
   });
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be smaller than 5MB');
+      return;
+    }
+
+    setError('');
+    setAvatarFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +79,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
     setLoading(true);
 
     try {
+      // Step 1: Register the user
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -58,6 +94,26 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
         setError(data.error || 'Registration failed');
         setLoading(false);
         return;
+      }
+
+      // Step 2: Upload avatar if one was selected
+      if (avatarFile && data.token) {
+        try {
+          const avatarFormData = new FormData();
+          avatarFormData.append('file', avatarFile);
+
+          await fetch('/api/auth/avatar', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${data.token}`,
+            },
+            body: avatarFormData,
+          });
+          // Note: We don't fail registration if avatar upload fails
+        } catch (avatarError) {
+          console.error('Avatar upload failed:', avatarError);
+          // Continue anyway - user can upload avatar later
+        }
       }
 
       // Call success callback
@@ -109,6 +165,53 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
               disabled={loading}
             />
           </div>
+        </div>
+
+        {/* Avatar Upload Section */}
+        <div className="flex flex-col items-center py-4 border-y border-slate-800">
+          <label className="block text-sm font-medium text-slate-300 mb-3 text-center">
+            Profile Picture (Optional)
+          </label>
+
+          <div className="relative">
+            <Avatar
+              firstName={formData.firstName}
+              lastName={formData.lastName}
+              avatarUrl={avatarPreview}
+              size="large"
+            />
+            {avatarPreview && (
+              <button
+                type="button"
+                onClick={handleRemoveAvatar}
+                disabled={loading}
+                className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors disabled:opacity-50"
+                title="Remove avatar"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          <input
+            id="avatar"
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarSelect}
+            disabled={loading}
+            className="hidden"
+          />
+
+          <label
+            htmlFor="avatar"
+            className="mt-3 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg cursor-pointer transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Choose Photo
+          </label>
+
+          <p className="text-xs text-slate-500 mt-2 text-center">
+            JPG, PNG or GIF. Max 5MB
+          </p>
         </div>
 
         <div>
