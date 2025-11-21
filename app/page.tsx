@@ -1,78 +1,192 @@
 'use client';
 
+/**
+ * Main Application Page
+ * BuildingConnected project management with authentication and RBAC
+ */
+
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LoginForm from '@/components/LoginForm';
+import RegisterForm from '@/components/RegisterForm';
+import BuildingConnectedProjectList from '@/components/BuildingConnectedProjectList';
+import BidPackageListView from '@/components/BidPackageListView';
+import BidPackageWorkspace from '@/components/BidPackageWorkspace';
 import DiagramUpload from '@/components/DiagramUpload';
-import WorkspaceView from '@/components/WorkspaceView';
-import InboxListView from '@/components/InboxListView';
 import CSIWidget from '@/components/CSIWidget';
 import CSIFloatingButton from '@/components/CSIFloatingButton';
+import Avatar from '@/components/Avatar';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
-import { InboxItem } from '@/types/inbox';
+import { UserPublic } from '@/types/user';
+import { BuildingConnectedProject } from '@/types/buildingconnected';
+import { BidPackage } from '@/types/bidPackage';
+import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
-import { mockInboxItems, mockInboxLineItems } from '@/lib/mockInboxData';
+import {
+  mockBuildingConnectedProjects,
+  getBidPackagesByProject,
+} from '@/lib/mockBuildingConnectedData';
 
-// Extend Window interface for temporary project ID storage
-declare global {
-  interface Window {
-    __newProjectId?: string;
-  }
-}
+type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload';
+type AuthMode = 'login' | 'register';
 
-interface Project {
-  id: string;
-  name: string;
-  diagramUrl: string;
+// Extended BidPackage with workspace data
+interface BidPackageWorkspaceData extends BidPackage {
   lineItems: LineItem[];
-  createdAt: number;
   chatMessages: ChatMessage[];
   chatOpen: boolean;
 }
 
-type WorkflowMode = 'inbox' | 'upload' | 'workspace';
-
 export default function Home() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  // Authentication state
+  const [currentUser, setCurrentUser] = useState<UserPublic | null>(null);
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Application state
+  const [bcProjects, setBcProjects] = useState<BuildingConnectedProject[]>(mockBuildingConnectedProjects);
+  const [selectedProject, setSelectedProject] = useState<BuildingConnectedProject | null>(null);
+  const [selectedBidPackage, setSelectedBidPackage] = useState<BidPackageWorkspaceData | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('projects');
+
+  // Workspace state
   const [extracting, setExtracting] = useState(false);
-  const [workflowMode, setWorkflowMode] = useState<WorkflowMode>('inbox');
-  const [showUpload, setShowUpload] = useState(false);
-  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
-  const [inboxItems, setInboxItems] = useState<InboxItem[]>(mockInboxItems);
   const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  const activeProject = projects.find((p) => p.id === activeProjectId);
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
-  const handleUploadSuccess = (file: { url: string; fileName: string }) => {
-    // Create new project
-    const newProject: Project = {
-      id: generateId(),
-      name: file.fileName.replace(/\.[^/.]+$/, ''),
-      diagramUrl: file.url,
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (userMenuOpen && !target.closest('.user-menu-container')) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userMenuOpen]);
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.user);
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
+
+  const handleLogin = async (user: UserPublic) => {
+    setCurrentUser(user);
+  };
+
+  const handleRegisterSuccess = () => {
+    setAuthMode('login');
+    alert('Account created successfully! Please sign in.');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setCurrentUser(null);
+      setSelectedProject(null);
+      setSelectedBidPackage(null);
+      setViewMode('projects');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const handleProjectSelect = (project: BuildingConnectedProject) => {
+    setSelectedProject(project);
+    setViewMode('packages');
+  };
+
+  const handleBidPackageSelect = (bidPackage: BidPackage) => {
+    // Initialize workspace data for bid package
+    // Diagrams are now at project level, not bid package level
+    const workspaceData: BidPackageWorkspaceData = {
+      ...bidPackage,
       lineItems: [],
-      createdAt: Date.now(),
       chatMessages: [],
       chatOpen: false,
     };
+    setSelectedBidPackage(workspaceData);
+    setViewMode('workspace');
+  };
 
-    setProjects((prev) => [...prev, newProject]);
-    setActiveProjectId(newProject.id);
-    // Don't hide upload view yet - wait for extraction to start
+  const handleBackToProjects = () => {
+    setSelectedProject(null);
+    setSelectedBidPackage(null);
+    setViewMode('projects');
+  };
 
-    // Store the new project ID for extraction
-    window.__newProjectId = newProject.id;
+  const handleBackToPackages = () => {
+    setSelectedBidPackage(null);
+    setViewMode('packages');
+  };
+
+  const handleUploadNew = () => {
+    setViewMode('upload');
+  };
+
+  const handleUploadSuccess = (file: { url: string; fileName: string; fileSize?: number; fileType?: string }) => {
+    if (selectedProject) {
+      // Create new diagram at project level
+      const newDiagram: Diagram = {
+        id: generateId(),
+        bcProjectId: selectedProject.bcProjectId,
+        fileName: file.fileName,
+        fileUrl: file.url,
+        fileType: file.fileType || 'image/png',
+        fileSize: file.fileSize || 0,
+        uploadedAt: new Date(),
+        uploadedBy: currentUser?.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      // Add diagram to project
+      setBcProjects(prev => prev.map(p =>
+        p.bcProjectId === selectedProject.bcProjectId
+          ? { ...p, diagrams: [...(p.diagrams || []), newDiagram] }
+          : p
+      ));
+
+      // Update selected project state
+      setSelectedProject(prev =>
+        prev ? { ...prev, diagrams: [...(prev.diagrams || []), newDiagram] } : null
+      );
+
+      // If uploading from within a bid package, associate diagram and extract
+      if (selectedBidPackage) {
+        // Trigger extraction automatically for bid package
+        handleExtractStart(file.url);
+      } else {
+        // Just uploading at project level - go back to packages view
+        setViewMode('packages');
+      }
+    }
   };
 
   const handleExtractStart = async (url: string, instructions?: string) => {
     setExtracting(true);
-    setShowUpload(false); // Hide upload view when extraction starts
-
-    // Get the project ID that was just created
-    const projectIdToUpdate = window.__newProjectId || activeProjectId;
+    setViewMode('workspace');
 
     try {
       const response = await fetch('/api/extract', {
@@ -86,34 +200,20 @@ export default function Home() {
       }
 
       const data = await response.json();
-      console.log('Received extraction data:', data);
-      console.log('Line items received:', data.line_items);
-      console.log('Line items length:', data.line_items?.length);
-      console.log('Updating project ID:', projectIdToUpdate);
 
-      // Update the correct project with extracted data
-      // Add unique IDs to line items if they don't have them
+      // Add unique IDs to line items
       const lineItemsWithIds = (data.line_items || []).map((item: LineItem) => ({
         ...item,
         id: item.id || generateId(),
       }));
 
-      setProjects((prev) => {
-        const updated = prev.map((p) =>
-          p.id === projectIdToUpdate
-            ? {
-                ...p,
-                name: data.project_name || p.name,
-                lineItems: lineItemsWithIds,
-              }
-            : p
-        );
-        console.log('Updated projects:', updated);
-        return updated;
-      });
-
-      // Clean up the temporary ID
-      delete window.__newProjectId;
+      // Update bid package with extracted data
+      if (selectedBidPackage) {
+        setSelectedBidPackage({
+          ...selectedBidPackage,
+          lineItems: lineItemsWithIds,
+        });
+      }
     } catch (error) {
       console.error('Extraction error:', error);
       alert('Failed to extract bid data from diagram');
@@ -123,115 +223,29 @@ export default function Home() {
   };
 
   const handleLineItemsUpdate = (updatedItems: LineItem[]) => {
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === activeProjectId ? { ...p, lineItems: updatedItems } : p
-      )
-    );
-  };
-
-  const handleUploadNew = () => {
-    setWorkflowMode('upload');
-    setShowUpload(true);
-  };
-
-  const handleStartUploadFlow = () => {
-    setWorkflowMode('upload');
-    setShowUpload(true);
-  };
-
-  const handleBackToInbox = () => {
-    setWorkflowMode('inbox');
-    setShowUpload(false);
-    setActiveProjectId(null);
-  };
-
-  const handleInboxItemSelect = (item: InboxItem) => {
-    // Check if this inbox item already has a project
-    const existingProject = projects.find(p => p.id === item.projectId);
-
-    if (existingProject) {
-      // Load existing project
-      setActiveProjectId(existingProject.id);
-      setWorkflowMode('workspace');
-      setShowUpload(false);
-    } else {
-      // Create new project from inbox item
-      const newProject: Project = {
-        id: generateId(),
-        name: item.subject,
-        diagramUrl: item.diagramUrl,
-        lineItems: mockInboxLineItems[item.id] || [],
-        createdAt: Date.now(),
-        chatMessages: [],
-        chatOpen: false,
-      };
-
-      // Add project to list
-      setProjects((prev) => [...prev, newProject]);
-      setActiveProjectId(newProject.id);
-
-      // Update inbox item status and link to project
-      setInboxItems((prev) =>
-        prev.map((i) =>
-          i.id === item.id
-            ? { ...i, status: item.status === 'pending' ? 'in_progress' : item.status, projectId: newProject.id }
-            : i
-        )
-      );
-
-      // Navigate to workspace
-      setWorkflowMode('workspace');
-      setShowUpload(false);
+    if (selectedBidPackage) {
+      setSelectedBidPackage({
+        ...selectedBidPackage,
+        lineItems: updatedItems,
+      });
     }
-  };
-
-  const handleProjectSwitch = (projectId: string) => {
-    setActiveProjectId(projectId);
-    setShowUpload(false);
-  };
-
-  const handleDeleteProject = (projectId: string) => {
-    setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    if (activeProjectId === projectId) {
-      const remaining = projects.filter((p) => p.id !== projectId);
-      setActiveProjectId(remaining.length > 0 ? remaining[0].id : null);
-      setShowUpload(remaining.length === 0);
-    }
-  };
-
-  const handleStartEditingName = (projectId: string, currentName: string) => {
-    setEditingProjectId(projectId);
-    setEditingName(currentName);
-  };
-
-  const handleFinishEditingName = () => {
-    if (editingProjectId && editingName.trim()) {
-      setProjects((prev) =>
-        prev.map((p) => (p.id === editingProjectId ? { ...p, name: editingName.trim() } : p))
-      );
-    }
-    setEditingProjectId(null);
-    setEditingName('');
-  };
-
-  const handleCancelEditingName = () => {
-    setEditingProjectId(null);
-    setEditingName('');
   };
 
   const handleChatToggle = () => {
-    if (activeProjectId) {
-      setProjects((prev) =>
-        prev.map((p) => (p.id === activeProjectId ? { ...p, chatOpen: !p.chatOpen } : p))
-      );
+    if (selectedBidPackage) {
+      setSelectedBidPackage({
+        ...selectedBidPackage,
+        chatOpen: !selectedBidPackage.chatOpen,
+      });
     }
   };
 
   const handleSendChatMessage = async (message: string) => {
-    if (!activeProject) return;
+    if (!selectedBidPackage) return;
 
-    // Add user message immediately
+    setChatLoading(true);
+
+    // Add user message
     const userMessage: ChatMessage = {
       id: generateId(),
       role: 'user',
@@ -239,15 +253,10 @@ export default function Home() {
       timestamp: Date.now(),
     };
 
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === activeProjectId
-          ? { ...p, chatMessages: [...p.chatMessages, userMessage] }
-          : p
-      )
-    );
-
-    setChatLoading(true);
+    setSelectedBidPackage({
+      ...selectedBidPackage,
+      chatMessages: [...selectedBidPackage.chatMessages, userMessage],
+    });
 
     try {
       const response = await fetch('/api/chat', {
@@ -255,10 +264,10 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
-          imageUrl: activeProject.diagramUrl,
-          currentLineItems: activeProject.lineItems,
-          projectName: activeProject.name,
-          conversationHistory: activeProject.chatMessages.slice(-10), // Last 10 messages for context
+          imageUrl: selectedBidPackage.diagramUrl,
+          currentLineItems: selectedBidPackage.lineItems,
+          projectName: selectedBidPackage.name,
+          conversationHistory: selectedBidPackage.chatMessages,
         }),
       });
 
@@ -277,29 +286,30 @@ export default function Home() {
         proposedChanges: data.proposedChanges,
       };
 
-      setProjects((prev) =>
-        prev.map((p) =>
-          p.id === activeProjectId
-            ? { ...p, chatMessages: [...p.chatMessages, assistantMessage] }
-            : p
-        )
+      setSelectedBidPackage((prev) =>
+        prev
+          ? {
+              ...prev,
+              chatMessages: [...prev.chatMessages, assistantMessage],
+            }
+          : null
       );
     } catch (error) {
       console.error('Chat error:', error);
-      // Add error message
       const errorMessage: ChatMessage = {
         id: generateId(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: 'Sorry, I encountered an error processing your request.',
         timestamp: Date.now(),
       };
 
-      setProjects((prev) =>
-        prev.map((p) =>
-          p.id === activeProjectId
-            ? { ...p, chatMessages: [...p.chatMessages, errorMessage] }
-            : p
-        )
+      setSelectedBidPackage((prev) =>
+        prev
+          ? {
+              ...prev,
+              chatMessages: [...prev.chatMessages, errorMessage],
+            }
+          : null
       );
     } finally {
       setChatLoading(false);
@@ -307,197 +317,149 @@ export default function Home() {
   };
 
   const handleAcceptChatChanges = (messageId: string) => {
-    console.log('handleAcceptChatChanges called with messageId:', messageId);
+    if (!selectedBidPackage) return;
 
-    if (!activeProject) {
-      console.log('No active project');
-      return;
-    }
+    const message = selectedBidPackage.chatMessages.find((m) => m.id === messageId);
+    if (!message?.proposedChanges) return;
 
-    const message = activeProject.chatMessages.find((m) => m.id === messageId);
-    console.log('Found message:', message);
+    // Apply proposed changes
+    let updatedItems = [...selectedBidPackage.lineItems];
 
-    if (!message || !message.proposedChanges) {
-      console.log('No message or no proposed changes');
-      return;
-    }
-
-    console.log('Proposed changes:', message.proposedChanges);
-    console.log('Current line items count BEFORE changes:', activeProject.lineItems.length);
-    let updatedLineItems = [...activeProject.lineItems];
-
-    // Apply each proposed change
-    message.proposedChanges.forEach((change, idx) => {
-      console.log(`Applying change ${idx}:`, JSON.stringify(change, null, 2));
-      console.log(`Change type: "${change.type}"`);
-      console.log(`Has newItem:`, !!change.newItem);
-
-      if (change.type === 'add' && change.newItem) {
-        console.log('✅ ADDING new item:', change.newItem);
-        updatedLineItems.push(change.newItem);
-        console.log('Updated line items count after add:', updatedLineItems.length);
+    message.proposedChanges.forEach((change) => {
+      if (change.type === 'add') {
+        updatedItems.push({ ...change.item, id: change.item.id || generateId() });
       } else if (change.type === 'update' && change.itemId) {
-        const index = updatedLineItems.findIndex((item) => item.id === change.itemId);
-        console.log(`Found item at index ${index} with id ${change.itemId}`);
-
-        if (index !== -1) {
-          // If newItem is provided, use it
-          if (change.newItem) {
-            console.log('Replacing with newItem:', change.newItem);
-            updatedLineItems[index] = change.newItem;
-          }
-          // Otherwise apply field-by-field changes
-          else if (change.changes && change.changes.length > 0) {
-            console.log('Applying field changes:', change.changes);
-            const updatedItem = { ...updatedLineItems[index] };
-            change.changes.forEach((fieldChange) => {
-              (updatedItem as any)[fieldChange.field] = fieldChange.newValue;
-            });
-            updatedLineItems[index] = updatedItem;
-          }
-        } else {
-          console.log('Item not found with id:', change.itemId);
-        }
+        updatedItems = updatedItems.map((item) =>
+          item.id === change.itemId ? { ...item, ...change.item } : item
+        );
       } else if (change.type === 'delete' && change.itemId) {
-        console.log('Deleting item:', change.itemId);
-        updatedLineItems = updatedLineItems.filter((item) => item.id !== change.itemId);
+        updatedItems = updatedItems.filter((item) => item.id !== change.itemId);
       }
     });
 
-    console.log('✅ FINAL Updated line items count:', updatedLineItems.length);
-    console.log('✅ FINAL Updated line items:', updatedLineItems);
-
-    // Add acknowledgment message to chat
-    const acknowledgmentMessage: ChatMessage = {
-      id: generateId(),
-      role: 'assistant',
-      content: `✅ Changes accepted! Updated ${message.proposedChanges.length} item(s) in the bid form.`,
-      timestamp: Date.now(),
-    };
-
-    setProjects((prev) => {
-      const updated = prev.map((p) =>
-        p.id === activeProjectId
-          ? { ...p, lineItems: updatedLineItems, chatMessages: [...p.chatMessages, acknowledgmentMessage] }
-          : p
-      );
-      console.log('✅ Projects state updated. Active project line items count:',
-        updated.find(p => p.id === activeProjectId)?.lineItems.length);
-      return updated;
+    setSelectedBidPackage({
+      ...selectedBidPackage,
+      lineItems: updatedItems,
+      chatMessages: selectedBidPackage.chatMessages.map((m) =>
+        m.id === messageId ? { ...m, changesAccepted: true } : m
+      ),
     });
   };
 
   const handleRejectChatChanges = (messageId: string) => {
-    console.log('Changes rejected for message:', messageId);
+    if (!selectedBidPackage) return;
 
-    if (!activeProject) return;
-
-    const message = activeProject.chatMessages.find((m) => m.id === messageId);
-    if (!message || !message.proposedChanges) return;
-
-    // Add rejection acknowledgment message to chat
-    const acknowledgmentMessage: ChatMessage = {
-      id: generateId(),
-      role: 'assistant',
-      content: `❌ Changes rejected. The bid form remains unchanged.`,
-      timestamp: Date.now(),
-    };
-
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === activeProjectId
-          ? { ...p, chatMessages: [...p.chatMessages, acknowledgmentMessage] }
-          : p
-      )
-    );
+    setSelectedBidPackage({
+      ...selectedBidPackage,
+      chatMessages: selectedBidPackage.chatMessages.map((m) =>
+        m.id === messageId ? { ...m, changesRejected: true } : m
+      ),
+    });
   };
 
   const handleCSICodeSelect = (code: string, title: string) => {
     console.log('CSI code selected:', code, title);
-    // You can add custom logic here, e.g., copy to clipboard, add to form, etc.
-    // For now, just log it
   };
 
+  // Loading state
+  if (isCheckingAuth) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-950">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
+          <p className="text-slate-400 font-mono">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Authentication screen
+  if (!currentUser) {
+    return (
+      <div className="h-screen flex flex-col bg-slate-950">
+        {/* Header */}
+        <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Image src="/logo.svg" alt="Logo" width={32} height={32} />
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-400">ConstructAI</h1>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Auth Form */}
+        <div className="flex-1 flex items-center justify-center p-6">
+          {authMode === 'login' ? (
+            <LoginForm
+              onSuccess={handleLogin}
+              onSwitchToRegister={() => setAuthMode('register')}
+            />
+          ) : (
+            <RegisterForm
+              onSuccess={handleRegisterSuccess}
+              onSwitchToLogin={() => setAuthMode('login')}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Main application
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-slate-950">
       {/* Header */}
-      <header className="bg-white border-b flex-shrink-0 z-10">
+      <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <Image
                 src="/logo.svg"
-                alt="plan.ai Logo"
+                alt="ConstructAI Logo"
                 width={120}
                 height={40}
               />
             </div>
 
-            {/* Back to Inbox Button - shown when in workspace or upload mode */}
-            {workflowMode !== 'inbox' && (
+            {/* User Menu */}
+            <div className="relative user-menu-container">
               <button
-                onClick={handleBackToInbox}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back to Inbox
+                <Avatar
+                  firstName={currentUser.firstName}
+                  lastName={currentUser.lastName}
+                  avatarUrl={currentUser.avatarUrl}
+                  size="medium"
+                />
               </button>
-            )}
-          </div>
-        </div>
 
-        {/* Project Tabs */}
-        {projects.length > 0 && (
-          <div className="border-t bg-gray-50 px-6">
-            <div className="flex gap-2 overflow-x-auto py-2">
-              {projects.map((project) => {
-                const isEditing = editingProjectId === project.id;
-                return (
-                  <div
-                    key={project.id}
-                    className={`group flex items-center gap-2 px-4 py-2 rounded-t-lg border-b-2 transition-colors flex-shrink-0 ${
-                      activeProjectId === project.id
-                        ? 'bg-white border-blue-600 text-blue-600'
-                        : 'bg-gray-100 border-transparent text-gray-600 hover:bg-gray-200'
-                    } ${isEditing ? '' : 'cursor-pointer'}`}
-                    onClick={() => !isEditing && handleProjectSwitch(project.id)}
-                  >
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        onBlur={handleFinishEditingName}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleFinishEditingName();
-                          } else if (e.key === 'Escape') {
-                            handleCancelEditingName();
-                          }
-                        }}
-                        className="text-sm font-medium px-2 py-0.5 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                        autoFocus
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    ) : (
-                      <span
-                        className="text-sm font-medium truncate max-w-xs cursor-text"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleStartEditingName(project.id, project.name);
-                        }}
-                      >
-                        {project.name}
-                      </span>
-                    )}
+              {/* Dropdown Menu */}
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl shadow-black/20 overflow-hidden z-50">
+                  {/* User Info */}
+                  <div className="px-4 py-3 border-b border-slate-800">
+                    <p className="text-sm font-semibold text-slate-200">
+                      {currentUser.firstName && currentUser.lastName
+                        ? `${currentUser.firstName} ${currentUser.lastName}`
+                        : currentUser.userName}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {currentUser.email}
+                    </p>
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="py-2">
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteProject(project.id);
+                      onClick={() => {
+                        handleLogout();
+                        setUserMenuOpen(false);
                       }}
-                      className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-opacity"
+                      className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors flex items-center space-x-2"
                     >
                       <svg
                         className="w-4 h-4"
@@ -509,77 +471,79 @@ export default function Home() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                         />
                       </svg>
+                      <span>Sign Out</span>
                     </button>
                   </div>
-                );
-              })}
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 min-h-0">
         <AnimatePresence mode="wait">
-          {showUpload ? (
+          {viewMode === 'projects' && (
             <motion.div
-              key="upload"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              key="projects"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="h-full flex items-center justify-center p-8"
+              className="h-full"
             >
-              <div className="w-full max-w-3xl">
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="mb-8 text-center"
-                >
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    {projects.length === 0
-                      ? 'Get Started'
-                      : 'Upload Another Diagram'}
-                  </h2>
-                  <p className="text-gray-600">
-                    Upload a construction diagram to extract bid items automatically
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <DiagramUpload
-                    onUploadSuccess={handleUploadSuccess}
-                    onExtractStart={handleExtractStart}
-                  />
-                </motion.div>
-              </div>
+              <BuildingConnectedProjectList
+                projects={bcProjects}
+                onProjectSelect={handleProjectSelect}
+              />
             </motion.div>
-          ) : activeProject ? (
+          )}
+
+          {viewMode === 'packages' && selectedProject && (
+            <motion.div
+              key="packages"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <BidPackageListView
+                project={selectedProject}
+                bidPackages={getBidPackagesByProject(selectedProject.bcProjectId)}
+                onBidPackageSelect={handleBidPackageSelect}
+                onBack={handleBackToProjects}
+                onUploadDiagrams={handleUploadNew}
+                onUploadSuccess={handleUploadSuccess}
+              />
+            </motion.div>
+          )}
+
+          {viewMode === 'workspace' && selectedBidPackage && selectedProject && (
             <motion.div
               key="workspace"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3 }}
               className="h-full"
             >
-              <WorkspaceView
-                diagramUrl={activeProject.diagramUrl}
-                lineItems={activeProject.lineItems}
+              <BidPackageWorkspace
+                bidPackage={selectedBidPackage}
+                project={selectedProject}
+                projectDiagrams={selectedProject.diagrams || []}
+                lineItems={selectedBidPackage.lineItems || []}
                 isExtracting={extracting}
                 onLineItemsUpdate={handleLineItemsUpdate}
                 onUploadNew={handleUploadNew}
-                projectName={activeProject.name}
-                chatOpen={activeProject.chatOpen}
-                chatMessages={activeProject.chatMessages}
+                onUploadSuccess={handleUploadSuccess}
+                onBack={handleBackToPackages}
+                chatOpen={selectedBidPackage.chatOpen || false}
+                chatMessages={selectedBidPackage.chatMessages || []}
                 onChatToggle={handleChatToggle}
                 onSendChatMessage={handleSendChatMessage}
                 onAcceptChatChanges={handleAcceptChatChanges}
@@ -587,27 +551,29 @@ export default function Home() {
                 isChatLoading={chatLoading}
               />
             </motion.div>
-          ) : workflowMode === 'inbox' ? (
+          )}
+
+          {viewMode === 'upload' && selectedProject && (
             <motion.div
-              key="inbox"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              key="upload"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="h-full"
+              className="h-full flex items-center justify-center"
             >
-              <InboxListView
-                items={inboxItems}
-                onItemSelect={handleInboxItemSelect}
-                onNewDiagram={handleStartUploadFlow}
+              <DiagramUpload
+                onUploadSuccess={handleUploadSuccess}
+                onExtractStart={handleExtractStart}
+                onCancel={() => setViewMode(selectedBidPackage ? 'workspace' : 'packages')}
               />
             </motion.div>
-          ) : null}
+          )}
         </AnimatePresence>
       </main>
 
       {/* CSI Floating Button */}
-      <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />
+      {currentUser && <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />}
 
       {/* CSI Widget */}
       <CSIWidget

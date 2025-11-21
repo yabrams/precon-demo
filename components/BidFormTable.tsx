@@ -47,13 +47,13 @@ interface BidFormTableProps {
 }
 
 export default function BidFormTable({
-  initialLineItems,
+  initialLineItems = [],
   onUpdate,
   readOnly = false,
   hoveredItemId,
   onHoverChange
 }: BidFormTableProps) {
-  const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems);
+  const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
 
   useEffect(() => {
     console.log('BidFormTable: initialLineItems changed, count:', initialLineItems.length);
@@ -94,23 +94,23 @@ export default function BidFormTable({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-gray-900">Bid Form</h2>
+        <h2 className="text-xl font-semibold text-slate-100">Bid Form</h2>
       </div>
 
-      <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-sm bg-white">
+      <div className="overflow-x-auto border border-slate-800 rounded-xl shadow-sm bg-slate-900/40 backdrop-blur-sm">
         <table className="w-full text-sm">
-          <thead className="bg-gray-800 border-b border-gray-700">
+          <thead className="bg-slate-900/60 border-b border-slate-800">
             <tr>
-              <th className="px-3 py-3 text-left font-semibold text-white w-32">ID</th>
-              <th className="px-3 py-3 text-left font-semibold text-white w-20">Item #</th>
-              <th className="px-3 py-3 text-left font-semibold text-white min-w-64">Description</th>
-              <th className="px-3 py-3 text-left font-semibold text-white w-24">Quantity</th>
-              <th className="px-3 py-3 text-left font-semibold text-white w-20">Unit</th>
-              <th className="px-3 py-3 text-left font-semibold text-white min-w-32">Notes</th>
-              {!readOnly && <th className="px-3 py-3 text-left font-semibold text-white w-20">Actions</th>}
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 w-32">ID</th>
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 w-20">Item #</th>
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 min-w-64">Description</th>
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 w-24">Quantity</th>
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 w-20">Unit</th>
+              <th className="px-3 py-3 text-left font-semibold text-slate-300 min-w-32">Notes</th>
+              {!readOnly && <th className="px-3 py-3 text-left font-semibold text-slate-300 w-20">Actions</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-300">
+          <tbody className="divide-y divide-slate-800">
             {lineItems.map((item, index) => {
                 const isHovered = hoveredItemId === item.id;
                 const highlightColor = getColorForItem(index);
@@ -119,7 +119,7 @@ export default function BidFormTable({
                 return (
                   <tr
                     key={item.id || index}
-                    className="transition-colors"
+                    className={`transition-colors ${index % 2 === 0 ? 'bg-slate-900/30' : ''} hover:bg-slate-800/60`}
                     style={{
                       backgroundColor: isHovered && hasBoundingBox ? `${highlightColor}40` : undefined,
                       borderLeft: isHovered && hasBoundingBox ? `4px solid ${highlightColor}` : undefined,
@@ -128,7 +128,7 @@ export default function BidFormTable({
                     onMouseLeave={() => hasBoundingBox && onHoverChange?.(null, null)}
                   >
                   <td className="px-3 py-2">
-                    <span className="text-xs text-gray-500 font-mono">{item.id || 'N/A'}</span>
+                    <span className="text-xs text-slate-500 font-mono">{item.id || 'N/A'}</span>
                   </td>
                   <td className="px-3 py-2">
                     <input
@@ -136,7 +136,7 @@ export default function BidFormTable({
                       value={item.item_number || ''}
                       onChange={(e) => handleChange(index, 'item_number', e.target.value)}
                       disabled={readOnly}
-                      className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-700 disabled:border-gray-400 text-gray-900"
+                      className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 font-mono placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="#"
                     />
                   </td>
@@ -146,7 +146,7 @@ export default function BidFormTable({
                       value={item.description || ''}
                       onChange={(e) => handleChange(index, 'description', e.target.value)}
                       disabled={readOnly}
-                      className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-700 disabled:border-gray-400 text-gray-900"
+                      className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="Description"
                     />
                   </td>
@@ -156,7 +156,7 @@ export default function BidFormTable({
                       value={item.quantity || ''}
                       onChange={(e) => handleChange(index, 'quantity', e.target.value)}
                       disabled={readOnly}
-                      className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-700 disabled:border-gray-400 text-gray-900"
+                      className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 font-mono placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="0"
                       step="0.01"
                     />
@@ -167,7 +167,7 @@ export default function BidFormTable({
                       value={item.unit || ''}
                       onChange={(e) => handleChange(index, 'unit', e.target.value)}
                       disabled={readOnly}
-                      className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-700 disabled:border-gray-400 text-gray-900"
+                      className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="EA"
                     />
                   </td>
@@ -177,7 +177,7 @@ export default function BidFormTable({
                       value={item.notes || ''}
                       onChange={(e) => handleChange(index, 'notes', e.target.value)}
                       disabled={readOnly}
-                      className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-700 disabled:border-gray-400 text-gray-900"
+                      className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="Notes"
                     />
                   </td>
@@ -185,7 +185,7 @@ export default function BidFormTable({
                     <td className="px-3 py-2">
                       <button
                         onClick={() => handleDeleteRow(index)}
-                        className="px-2 py-1 text-red-700 font-medium hover:bg-red-100 rounded transition-colors text-xs border border-red-300"
+                        className="px-2 py-1 text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 rounded transition-colors text-xs font-medium"
                       >
                         Delete
                       </button>
@@ -197,16 +197,16 @@ export default function BidFormTable({
 
             {/* Placeholder row for adding new items (always visible when not read-only) */}
             {!readOnly && (
-              <tr className="opacity-50 hover:opacity-75 transition-opacity bg-gray-50">
+              <tr className="opacity-50 hover:opacity-75 transition-opacity bg-slate-900/30">
                 <td className="px-3 py-2">
-                  <span className="text-xs text-gray-400 font-mono italic">New</span>
+                  <span className="text-xs text-slate-500 font-mono italic">New</span>
                 </td>
                 <td className="px-3 py-2">
                   <input
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('item_number', e.target.value)}
-                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 font-mono placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50"
                     placeholder="#"
                   />
                 </td>
@@ -215,7 +215,7 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('description', e.target.value)}
-                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50"
                     placeholder="Description"
                   />
                 </td>
@@ -224,7 +224,7 @@ export default function BidFormTable({
                     type="number"
                     value=""
                     onChange={(e) => handlePlaceholderChange('quantity', e.target.value)}
-                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 font-mono placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50"
                     placeholder="0"
                     step="0.01"
                   />
@@ -234,7 +234,7 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('unit', e.target.value)}
-                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50"
                     placeholder="EA"
                   />
                 </td>
@@ -243,12 +243,12 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('notes', e.target.value)}
-                    className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-gray-900"
+                    className="w-full px-2 py-1.5 bg-slate-950/50 border border-slate-800 rounded text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50"
                     placeholder="Notes"
                   />
                 </td>
                 <td className="px-3 py-2">
-                  <span className="text-xs text-gray-400 italic">Start typing...</span>
+                  <span className="text-xs text-slate-500 italic">Start typing...</span>
                 </td>
               </tr>
             )}

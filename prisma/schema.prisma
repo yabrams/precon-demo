@@ -11,6 +11,154 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+// User authentication model
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  userName        String           @unique
+  firstName       String?
+  lastName        String?
+  avatarUrl       String?
+  passwordHash    String
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  lastLoginAt     DateTime?
+  sessions        Session[]
+  userAssignments UserAssignment[]
+
+  @@index([email])
+  @@index([userName])
+}
+
+// Session model for JWT tokens
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+// BuildingConnected Project model
+model BuildingConnectedProject {
+  id                String           @id @default(cuid())
+  bcProjectId       String           @unique // BC's 24-char project ID
+  accProjectId      String?          // Autodesk Construction Cloud UUID
+  accDocsFolderId   String?          // ACC Docs folder ID
+
+  // Basic info
+  name              String
+  projectNumber     String?
+  description       String?          @db.Text
+  status            String           @default("active") // active, bidding, awarded, closed, archived
+
+  // Dates
+  bidDueDate        DateTime?
+  expectedStartDate DateTime?
+  expectedEndDate   DateTime?
+
+  // Location
+  address           String?
+  city              String?
+  state             String?
+  zipCode           String?
+  country           String?
+
+  // Project details
+  projectSize       Float?
+  projectSizeUnit   String?          // SF, square meters, etc.
+  projectValue      Float?           // Estimated value in dollars
+  marketSector      String?          // Commercial, Healthcare, Education, etc.
+  typeOfWork        String?          // New Construction, Renovation, etc.
+  architect         String?
+  client            String?          // Owner/client name
+  accountManager    String?
+  owningOffice      String?
+  feePercentage     Float?
+
+  // Sync metadata
+  lastSyncedAt      DateTime?
+  syncStatus        String           @default("pending") // pending, syncing, synced, error
+  syncError         String?          @db.Text
+
+  // Relations
+  diagrams          Diagram[]        // Project-level diagrams
+  bidPackages       BidPackage[]
+  userAssignments   UserAssignment[]
+
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([bcProjectId])
+  @@index([status])
+  @@index([bidDueDate])
+}
+
+// Bid Package model
+model BidPackage {
+  id                String                       @id @default(cuid())
+  bcBidPackageId    String                       @unique // BC bid package ID
+  bcProjectId       String
+  project           BuildingConnectedProject     @relation(fields: [bcProjectId], references: [id], onDelete: Cascade)
+
+  // Basic info
+  name              String
+  description       String?                      @db.Text
+  scope             String?                      @db.Text
+
+  // Dates
+  bidDueDate        DateTime?
+
+  // Status tracking
+  status            String                       @default("draft") // draft, active, bidding, awarded, closed
+  progress          Int                          @default(0) // 0-100 percentage
+
+  // Diagram references (stored as JSON array of diagram IDs from parent project)
+  diagramIds        String?                      @db.Text // JSON array of diagram IDs
+
+  // Relations
+  bidForms          BidForm[]
+  userAssignments   UserAssignment[]
+
+  createdAt         DateTime                     @default(now())
+  updatedAt         DateTime                     @updatedAt
+
+  @@index([bcProjectId])
+  @@index([status])
+}
+
+// User assignment to bid packages with roles
+model UserAssignment {
+  id              String                      @id @default(cuid())
+  userId          String
+  user            User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userEmail       String
+  userName        String
+  role            String                      // viewer, editor, owner
+
+  // Assignment can be to either a project OR a bid package
+  bcProjectId     String?
+  project         BuildingConnectedProject?   @relation(fields: [bcProjectId], references: [id], onDelete: Cascade)
+  bidPackageId    String?
+  bidPackage      BidPackage?                 @relation(fields: [bidPackageId], references: [id], onDelete: Cascade)
+
+  // Assignment metadata
+  assignedAt      DateTime                    @default(now())
+  assignedBy      String?                     // User ID of who made the assignment
+
+  @@unique([userId, bcProjectId])
+  @@unique([userId, bidPackageId])
+  @@index([userId])
+  @@index([bcProjectId])
+  @@index([bidPackageId])
+}
+
+// Legacy Project model (kept for backward compatibility)
 model Project {
   id          String   @id @default(cuid())
   name        String
@@ -21,31 +169,62 @@ model Project {
   bidForms    BidForm[]
 }
 
+// Updated Diagram model - belongs to BuildingConnectedProject (or legacy Project)
 model Diagram {
-  id          String   @id @default(cuid())
-  projectId   String
-  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  fileName    String
-  fileUrl     String
-  fileType    String
-  fileSize    Int
-  uploadedAt  DateTime @default(now())
-  bidForms    BidForm[]
+  id            String                       @id @default(cuid())
+
+  // New: Link to BuildingConnectedProject (primary relation)
+  bcProjectId   String?
+  bcProject     BuildingConnectedProject?    @relation(fields: [bcProjectId], references: [id], onDelete: Cascade)
+
+  // Legacy: Keep Project relation for backward compatibility
+  projectId     String?
+  project       Project?                     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  fileName      String
+  fileUrl       String
+  fileType      String
+  fileSize      Int
+  uploadedAt    DateTime                     @default(now())
+  uploadedBy    String?                      // User ID who uploaded
+
+  // Optional categorization
+  category      String?                      // e.g., 'Floor Plan', 'Elevation', 'Detail'
+  description   String?                      @db.Text
+  tags          String?                      @db.Text // JSON array of tags
+
+  bidForms      BidForm[]
+  createdAt     DateTime                     @default(now())
+  updatedAt     DateTime                     @updatedAt
+
+  @@index([bcProjectId])
+  @@index([projectId])
 }
 
+// Updated BidForm model - can belong to either BidPackage or legacy Project
 model BidForm {
-  id                    String   @id @default(cuid())
-  projectId             String
-  project               Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id                    String               @id @default(cuid())
+
+  // New: Link to BidPackage
+  bidPackageId          String?
+  bidPackage            BidPackage?          @relation(fields: [bidPackageId], references: [id], onDelete: Cascade)
+
+  // Legacy: Keep Project relation for backward compatibility
+  projectId             String?
+  project               Project?             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
   diagramId             String?
-  diagram               Diagram? @relation(fields: [diagramId], references: [id], onDelete: SetNull)
+  diagram               Diagram?             @relation(fields: [diagramId], references: [id], onDelete: SetNull)
   extractionConfidence  String?
-  rawExtractedText      String?  @db.Text
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  rawExtractedText      String?              @db.Text
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
   lineItems             LineItem[]
   verificationRecords   VerificationRecord[]
-  status                String   @default("draft") // draft, in_review, verified, exported
+  status                String               @default("draft") // draft, in_review, verified, exported
+
+  @@index([bidPackageId])
+  @@index([projectId])
 }
 
 model LineItem {
