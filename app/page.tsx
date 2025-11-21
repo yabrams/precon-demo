@@ -347,10 +347,10 @@ export default function Home() {
   // Loading state
   if (isCheckingAuth) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-slate-950">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
+          <p className="text-slate-400 font-mono">Loading...</p>
         </div>
       </div>
     );
@@ -359,14 +359,14 @@ export default function Home() {
   // Authentication screen
   if (!currentUser) {
     return (
-      <div className="h-screen flex flex-col bg-gray-50">
+      <div className="h-screen flex flex-col bg-slate-950">
         {/* Header */}
-        <header className="bg-white border-b flex-shrink-0 z-10">
+        <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-                <h1 className="text-xl font-bold text-gray-900">Project Cosmo</h1>
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-400">ConstructAI</h1>
               </div>
             </div>
           </div>
@@ -392,15 +392,15 @@ export default function Home() {
 
   // Main application
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-slate-950">
       {/* Header */}
-      <header className="bg-white border-b flex-shrink-0 z-10">
+      <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <Image
                 src="/logo.svg"
-                alt="plan.ai Logo"
+                alt="ConstructAI Logo"
                 width={120}
                 height={40}
               />
@@ -408,12 +408,12 @@ export default function Home() {
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-slate-400 font-mono">
                 {currentUser.firstName || currentUser.userName}
               </span>
               <button
                 onClick={handleLogout}
-                className="px-3 py-1.5 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-3 py-1.5 text-sm text-slate-100 hover:text-white border border-slate-700 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all duration-200"
               >
                 Sign Out
               </button>

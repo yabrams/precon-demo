@@ -67,9 +67,9 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
   };
 
   const getConfidenceBadgeColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'bg-green-100 text-green-700 border-green-300';
-    if (confidence >= 0.5) return 'bg-yellow-100 text-yellow-700 border-yellow-300';
-    return 'bg-red-100 text-red-700 border-red-300';
+    if (confidence >= 0.8) return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50';
+    if (confidence >= 0.5) return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50';
+    return 'bg-slate-500/20 text-slate-400 border-slate-500/50';
   };
 
   const getConfidenceLabel = (confidence: number) => {
@@ -84,18 +84,18 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Item Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Item Description <span className="text-red-500">*</span>
+          <label className="block text-sm font-medium text-white mb-2">
+            Item Description <span className="text-red-400">*</span>
           </label>
           <textarea
             value={itemDescription}
             onChange={(e) => setItemDescription(e.target.value)}
             placeholder="e.g., Cast-in-place concrete foundation walls, 3000 psi"
             rows={3}
-            className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+            className="w-full px-4 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500"
             disabled={isLoading}
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-slate-500">
             Describe the construction item in detail
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
         {/* Quantity and Unit */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Quantity (Optional)
             </label>
             <input
@@ -112,12 +112,12 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
               onChange={(e) => setQuantity(e.target.value)}
               placeholder="150"
               step="0.01"
-              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500"
               disabled={isLoading}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Unit (Optional)
             </label>
             <input
@@ -125,7 +125,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
               placeholder="CY, SF, EA..."
-              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500"
               disabled={isLoading}
             />
           </div>
@@ -133,7 +133,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
 
         {/* Notes */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Notes (Optional)
           </label>
           <input
@@ -141,15 +141,15 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Additional specifications or context..."
-            className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+            className="w-full px-4 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500"
             disabled={isLoading}
           />
         </div>
 
         {/* Max Matches */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Maximum Matches: {maxMatches}
+          <label className="block text-sm font-medium text-white mb-2">
+            Maximum Matches: <span className="font-mono text-cyan-400">{maxMatches}</span>
           </label>
           <input
             type="range"
@@ -157,10 +157,10 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
             max="10"
             value={maxMatches}
             onChange={(e) => setMaxMatches(parseInt(e.target.value))}
-            className="w-full"
+            className="w-full accent-violet-600"
             disabled={isLoading}
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-slate-500 mt-1">
             <span>1</span>
             <span>10</span>
           </div>
@@ -171,7 +171,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
           <button
             type="submit"
             disabled={isLoading || !itemDescription.trim()}
-            className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium transition-colors flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-lg hover:from-violet-500 hover:to-cyan-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed font-medium transition-all shadow-lg shadow-violet-900/30 flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -206,7 +206,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
                     d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                   />
                 </svg>
-                Find Matching Codes
+                AI Match
               </>
             )}
           </button>
@@ -215,7 +215,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
               type="button"
               onClick={handleClear}
               disabled={isLoading}
-              className="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed font-medium transition-colors"
+              className="px-4 py-3 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 hover:text-white disabled:bg-slate-900 disabled:cursor-not-allowed font-medium transition-colors"
             >
               Clear
             </button>
@@ -225,7 +225,7 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm text-red-400">
           {error}
         </div>
       )}
@@ -234,66 +234,66 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
       {result && (
         <div className="space-y-4">
           {/* Overall Confidence */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-700">Analysis Result</h3>
+              <h3 className="text-sm font-semibold text-white">Analysis Result</h3>
               <span
-                className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                className={`px-3 py-1 text-xs font-semibold rounded-full border font-mono ${
                   result.overallConfidence === 'high'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50'
                     : result.overallConfidence === 'medium'
-                    ? 'bg-yellow-100 text-yellow-700'
-                    : 'bg-red-100 text-red-700'
+                    ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50'
+                    : 'bg-slate-500/20 text-slate-400 border-slate-500/50'
                 }`}
               >
                 {result.overallConfidence.toUpperCase()} CONFIDENCE
               </span>
             </div>
-            <p className="text-sm text-gray-600">
-              Found {result.matchCount} matching {result.matchCount === 1 ? 'code' : 'codes'}{' '}
-              for: <span className="font-medium">{result.itemDescription}</span>
+            <p className="text-sm text-slate-400">
+              Found <span className="font-mono text-cyan-400">{result.matchCount}</span> matching {result.matchCount === 1 ? 'code' : 'codes'}{' '}
+              for: <span className="font-medium text-white">{result.itemDescription}</span>
             </p>
           </div>
 
           {/* Matches */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-gray-700">Matched Codes</h4>
+            <h4 className="text-sm font-semibold text-white">Matched Codes</h4>
             {result.matches.map((match, index) => (
               <button
                 key={match.code}
                 onClick={() => onSelectCode(match.code, match.title)}
-                className="w-full text-left p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-lg transition-all group"
+                className="w-full text-left p-4 bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-lg hover:border-cyan-500/50 hover:shadow-xl transition-all group"
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-sm">
+                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {index + 1}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-mono text-sm font-bold text-blue-600 group-hover:text-blue-700">
+                      <span className="font-mono text-sm font-bold text-cyan-400 group-hover:text-cyan-300">
                         {match.code}
                       </span>
-                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                      <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs font-medium rounded border border-cyan-500/50">
                         Level {match.level}
                       </span>
                       <span
-                        className={`px-2 py-0.5 text-xs font-semibold rounded border ${getConfidenceBadgeColor(
+                        className={`px-2 py-0.5 text-xs font-semibold rounded border font-mono ${getConfidenceBadgeColor(
                           match.confidence
                         )}`}
                       >
                         {Math.round(match.confidence * 100)}%
                       </span>
                     </div>
-                    <p className="text-sm font-medium text-gray-900 group-hover:text-blue-900 mb-2">
+                    <p className="text-sm font-medium text-slate-200 group-hover:text-white mb-2">
                       {match.title}
                     </p>
-                    <div className="bg-blue-50 rounded p-2 mb-2">
-                      <p className="text-xs text-gray-700">
-                        <span className="font-semibold">AI Reasoning:</span> {match.reasoning}
+                    <div className="bg-cyan-500/10 border border-cyan-500/30 rounded p-2 mb-2">
+                      <p className="text-xs text-slate-300">
+                        <span className="font-semibold text-cyan-400">AI Reasoning:</span> {match.reasoning}
                       </p>
                     </div>
                     {match.breadcrumb.length > 0 && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500 font-mono">
                         {match.breadcrumb.join(' › ')}
                       </p>
                     )}
@@ -308,21 +308,23 @@ export default function CSIAIMatchTab({ onSelectCode }: CSIAIMatchTabProps) {
       {/* Empty State */}
       {!result && !isLoading && (
         <div className="text-center py-12">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-            />
-          </svg>
-          <h3 className="mt-4 text-sm font-medium text-gray-900">AI-Powered Code Matching</h3>
-          <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
+          <div className="inline-block p-4 bg-gradient-to-r from-violet-600/20 to-cyan-600/20 border border-cyan-500/50 rounded-xl mb-4">
+            <svg
+              className="h-12 w-12 text-cyan-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+              />
+            </svg>
+          </div>
+          <h3 className="mt-4 text-sm font-medium text-white">AI-Powered Code Matching</h3>
+          <p className="mt-2 text-sm text-slate-400 max-w-sm mx-auto">
             Describe your construction item and let AI find the most appropriate CSI codes with
             confidence scores and reasoning.
           </p>

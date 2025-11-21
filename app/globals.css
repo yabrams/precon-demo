@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
+/* ConstructAI Design System - Deep Space Industrial Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark mode only - Deep Space Industrial */
+  --background: #020617;        /* slate-950 */
+  --foreground: #f8fafc;        /* slate-50 */
+  --panel: #0f172a;             /* slate-900 */
+  --border: #1e293b;            /* slate-800 */
+  --muted: #94a3b8;             /* slate-400 */
+
+  /* Brand colors */
+  --primary: #7c3aed;           /* violet-600 */
+  --primary-hover: #8b5cf6;     /* violet-500 */
+  --secondary: #06b6d4;         /* cyan-500 */
+
+  /* Fonts */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-panel: var(--panel);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.875rem; /* text-sm baseline for UI density */
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; /* slate-600 */
+}
+
+/* Pulse animation for AI states */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
