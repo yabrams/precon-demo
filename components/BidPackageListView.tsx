@@ -67,6 +67,7 @@ export default function BidPackageListView({
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('bcProjectId', project.id);
 
       const uploadResponse = await fetch('/api/upload', {
         method: 'POST',

@@ -2,11 +2,14 @@ import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const bcProjectId = formData.get('bcProjectId') as string;
+    const uploadedBy = formData.get('uploadedBy') as string | null;
 
     if (!file) {
       return NextResponse.json(
@@ -15,21 +18,36 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!bcProjectId) {
+      return NextResponse.json(
+        { error: 'bcProjectId is required' },
+        { status: 400 }
+      );
+    }
+
+    // Verify project exists
+    const project = await prisma.buildingConnectedProject.findUnique({
+      where: { id: bcProjectId }
+    });
+
+    if (!project) {
+      return NextResponse.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      );
+    }
+
     // Check if we have Blob token for production
     const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+
+    let fileUrl: string;
 
     if (blobToken) {
       // Use Vercel Blob Storage in production
       const blob = await put(file.name, file, {
         access: 'public',
       });
-
-      return NextResponse.json({
-        url: blob.url,
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-      });
+      fileUrl = blob.url;
     } else {
       // Use local file system for development
       const bytes = await file.arrayBuffer();
@@ -48,21 +66,38 @@ export async function POST(request: Request) {
       await writeFile(filepath, buffer);
 
       // Return local URL
-      const url = `/uploads/${filename}`;
-
-      return NextResponse.json({
-        url,
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-      });
+      fileUrl = `/uploads/${filename}`;
     }
+
+    // Create diagram record in database
+    const diagram = await prisma.diagram.create({
+      data: {
+        bcProjectId,
+        fileName: file.name,
+        fileUrl,
+        fileType: file.type,
+        fileSize: file.size,
+        uploadedBy: uploadedBy || undefined
+      }
+    });
+
+    return NextResponse.json({
+      diagram,
+      // Legacy fields for backward compatibility
+      url: fileUrl,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
+
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json(
       { error: 'Failed to upload file' },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
