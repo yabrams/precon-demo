@@ -17,6 +17,8 @@ import DiagramUpload from '@/components/DiagramUpload';
 import CSIWidget from '@/components/CSIWidget';
 import CSIFloatingButton from '@/components/CSIFloatingButton';
 import Avatar from '@/components/Avatar';
+import LeftMenuPanel from '@/components/LeftMenuPanel';
+import ChatPanel from '@/components/ChatPanel';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { UserPublic } from '@/types/user';
@@ -56,6 +58,7 @@ export default function Home() {
   const [chatLoading, setChatLoading] = useState(false);
   const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [globalChatOpen, setGlobalChatOpen] = useState(false);
 
   // Check authentication on mount
   useEffect(() => {
@@ -364,10 +367,10 @@ export default function Home() {
   // Loading state
   if (isCheckingAuth) {
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-950">
+      <div className="h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
-          <p className="text-slate-400 font-mono">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-mono">Loading...</p>
         </div>
       </div>
     );
@@ -376,14 +379,14 @@ export default function Home() {
   // Authentication screen
   if (!currentUser) {
     return (
-      <div className="h-screen flex flex-col bg-slate-950">
+      <div className="h-screen flex flex-col bg-gray-50">
         {/* Header */}
-        <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
+        <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-400">ConstructAI</h1>
+                <h1 className="text-xl font-bold text-zinc-900">ConstructAI</h1>
               </div>
             </div>
           </div>
@@ -407,24 +410,41 @@ export default function Home() {
     );
   }
 
+  // Handle left menu item clicks
+  const handleMenuItemClick = (item: string) => {
+    if (item === 'chat') {
+      // If in workspace, toggle workspace chat
+      if (selectedBidPackage) {
+        handleChatToggle();
+      } else {
+        // Otherwise toggle global chat
+        setGlobalChatOpen(!globalChatOpen);
+      }
+    } else {
+      console.log('Menu item clicked:', item);
+    }
+  };
+
+  // Determine if chat should be shown as active
+  const isChatActive = selectedBidPackage?.chatOpen || globalChatOpen;
+
   // Main application
   return (
-    <div className="h-screen flex flex-col bg-slate-950">
-      {/* Header */}
-      <header className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 flex-shrink-0 z-10">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Image
-                src="/logo.svg"
-                alt="ConstructAI Logo"
-                width={120}
-                height={40}
-              />
-            </div>
+    <div className="h-screen flex bg-gray-50">
+      {/* Left Menu Panel */}
+      <LeftMenuPanel
+        activeItem={isChatActive ? 'chat' : 'projects'}
+        onItemClick={handleMenuItemClick}
+      />
 
-            {/* User Menu */}
-            <div className="relative user-menu-container">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-end">
+              {/* User Menu */}
+              <div className="relative user-menu-container">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
@@ -439,15 +459,15 @@ export default function Home() {
 
               {/* Dropdown Menu */}
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl shadow-black/20 overflow-hidden z-50">
+                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden z-50">
                   {/* User Info */}
-                  <div className="px-4 py-3 border-b border-slate-800">
-                    <p className="text-sm font-semibold text-slate-200">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <p className="text-sm font-semibold text-zinc-900">
                       {currentUser.firstName && currentUser.lastName
                         ? `${currentUser.firstName} ${currentUser.lastName}`
                         : currentUser.userName}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-gray-500 mt-0.5">
                       {currentUser.email}
                     </p>
                   </div>
@@ -459,7 +479,7 @@ export default function Home() {
                         handleLogout();
                         setUserMenuOpen(false);
                       }}
-                      className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors flex items-center space-x-2"
+                      className="w-full px-4 py-2 text-left text-sm text-gray-600 hover:bg-gray-50 hover:text-zinc-900 transition-colors flex items-center space-x-2"
                     >
                       <svg
                         className="w-4 h-4"
@@ -572,15 +592,36 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
-      {/* CSI Floating Button */}
-      {currentUser && <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />}
+        {/* CSI Floating Button */}
+        {currentUser && <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />}
 
-      {/* CSI Widget */}
-      <CSIWidget
-        isOpen={csiWidgetOpen}
-        onClose={() => setCsiWidgetOpen(false)}
-        onSelectCode={handleCSICodeSelect}
-      />
+        {/* CSI Widget */}
+        <CSIWidget
+          isOpen={csiWidgetOpen}
+          onClose={() => setCsiWidgetOpen(false)}
+          onSelectCode={handleCSICodeSelect}
+        />
+
+        {/* Global Chat Panel */}
+        {globalChatOpen && (
+          <div className="fixed right-0 top-0 bottom-0 w-96 z-50 shadow-2xl">
+            <ChatPanel
+              diagramUrl={null}
+              currentLineItems={[]}
+              projectName="General Chat"
+              messages={[]}
+              onSendMessage={(message) => {
+                console.log('Global chat message:', message);
+                // TODO: Implement global chat API call
+              }}
+              onAcceptChanges={() => {}}
+              onRejectChanges={() => {}}
+              onClose={() => setGlobalChatOpen(false)}
+              isLoading={false}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,3778 @@
+{
+  "version": "MasterFormat 2018",
+  "lastUpdated": "2025-01-18",
+  "note": "This dataset contains Level 1 and Level 2 codes for all 35 divisions, with Level 3 codes where available from public sources. Complete Level 3 and Level 4 hierarchies require a CSI license.",
+  "divisions": [
+    {
+      "code": "00",
+      "title": "Procurement and Contracting Requirements",
+      "level": 1,
+      "parentCode": null,
+      "division": "00",
+      "children": [
+        {
+          "code": "00 01 01",
+          "title": "Project Title Page",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 03",
+          "title": "Project Directory",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 05",
+          "title": "Certifications Page",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 07",
+          "title": "Seals Page",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 10",
+          "title": "Table of Contents",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 15",
+          "title": "List of Drawing Sheets",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 01 20",
+          "title": "List of Schedules",
+          "level": 3,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 10 00",
+          "title": "Solicitation",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 20 00",
+          "title": "Instructions for Procurement",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 21 00",
+          "title": "Procurement Definitions",
+          "level": 3,
+          "parentCode": "00 20 00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 30 00",
+          "title": "Available Information",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 40 00",
+          "title": "Procurement Forms and Supplements",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 50 00",
+          "title": "Contracting Forms and Supplements",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 60 00",
+          "title": "Project Forms",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 70 00",
+          "title": "Conditions of the Contract",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        },
+        {
+          "code": "00 90 00",
+          "title": "Revisions, Clarifications, and Modifications",
+          "level": 2,
+          "parentCode": "00",
+          "division": "00",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "01",
+      "title": "General Requirements",
+      "level": 1,
+      "parentCode": null,
+      "division": "01",
+      "children": [
+        {
+          "code": "01 10 00",
+          "title": "Summary",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 11 00",
+              "title": "Summary of Work",
+              "level": 3,
+              "parentCode": "01 10 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 12 00",
+              "title": "Multiple Contract Summary",
+              "level": 3,
+              "parentCode": "01 10 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 14 00",
+              "title": "Work Restrictions",
+              "level": 3,
+              "parentCode": "01 10 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 18 00",
+              "title": "Project Utility Sources",
+              "level": 3,
+              "parentCode": "01 10 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 20 00",
+          "title": "Price and Payment Procedures",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 21 00",
+              "title": "Allowances",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 22 00",
+              "title": "Unit Prices",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 23 00",
+              "title": "Alternates",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 24 00",
+              "title": "Value Analysis",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 25 00",
+              "title": "Substitution Procedures",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 26 00",
+              "title": "Contract Modification Procedures",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 29 00",
+              "title": "Payment Procedures",
+              "level": 3,
+              "parentCode": "01 20 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 30 00",
+          "title": "Administrative Requirements",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 31 00",
+              "title": "Project Management and Coordination",
+              "level": 3,
+              "parentCode": "01 30 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 32 00",
+              "title": "Construction Progress Documentation",
+              "level": 3,
+              "parentCode": "01 30 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 33 00",
+              "title": "Submittal Procedures",
+              "level": 3,
+              "parentCode": "01 30 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 35 00",
+              "title": "Special Procedures",
+              "level": 3,
+              "parentCode": "01 30 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 40 00",
+          "title": "Quality Requirements",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 41 00",
+              "title": "Regulatory Requirements",
+              "level": 3,
+              "parentCode": "01 40 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 42 00",
+              "title": "References",
+              "level": 3,
+              "parentCode": "01 40 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 43 00",
+              "title": "Quality Assurance",
+              "level": 3,
+              "parentCode": "01 40 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 45 00",
+              "title": "Quality Control",
+              "level": 3,
+              "parentCode": "01 40 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 50 00",
+          "title": "Temporary Facilities and Controls",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 51 00",
+              "title": "Temporary Utilities",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 52 00",
+              "title": "Construction Facilities",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 53 00",
+              "title": "Temporary Construction",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 54 00",
+              "title": "Construction Aids",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 55 00",
+              "title": "Vehicular Access and Parking",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 56 00",
+              "title": "Temporary Barriers and Enclosures",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 57 00",
+              "title": "Temporary Controls",
+              "level": 3,
+              "parentCode": "01 50 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 60 00",
+          "title": "Product Requirements",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 61 00",
+              "title": "Common Product Requirements",
+              "level": 3,
+              "parentCode": "01 60 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 62 00",
+              "title": "Product Options",
+              "level": 3,
+              "parentCode": "01 60 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 64 00",
+              "title": "Owner-Furnished Products",
+              "level": 3,
+              "parentCode": "01 60 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 65 00",
+              "title": "Product Delivery Requirements",
+              "level": 3,
+              "parentCode": "01 60 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 66 00",
+              "title": "Product Storage and Handling Requirements",
+              "level": 3,
+              "parentCode": "01 60 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 70 00",
+          "title": "Execution and Closeout Requirements",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 71 00",
+              "title": "Examination and Preparation",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 73 00",
+              "title": "Execution",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 74 00",
+              "title": "Cleaning and Waste Management",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 75 00",
+              "title": "Starting and Adjusting",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 76 00",
+              "title": "Protecting Installed Construction",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 77 00",
+              "title": "Closeout Procedures",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 78 00",
+              "title": "Closeout Submittals",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 79 00",
+              "title": "Demonstration and Training",
+              "level": 3,
+              "parentCode": "01 70 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 80 00",
+          "title": "Performance Requirements",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 81 00",
+              "title": "Facility Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 82 00",
+              "title": "Facility Substructure Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 83 00",
+              "title": "Facility Shell Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 84 00",
+              "title": "Interiors Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 85 00",
+              "title": "Conveying Equipment Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 86 00",
+              "title": "Facility Services Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 87 00",
+              "title": "Equipment and Furnishings Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 88 00",
+              "title": "Other Facility Construction Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 89 00",
+              "title": "Site Construction Performance Requirements",
+              "level": 3,
+              "parentCode": "01 80 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "01 90 00",
+          "title": "Life Cycle Activities",
+          "level": 2,
+          "parentCode": "01",
+          "division": "01",
+          "children": [
+            {
+              "code": "01 91 00",
+              "title": "Commissioning",
+              "level": 3,
+              "parentCode": "01 90 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 92 00",
+              "title": "Facility Operation",
+              "level": 3,
+              "parentCode": "01 90 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 93 00",
+              "title": "Facility Maintenance",
+              "level": 3,
+              "parentCode": "01 90 00",
+              "division": "01",
+              "children": []
+            },
+            {
+              "code": "01 94 00",
+              "title": "Facility Decommissioning",
+              "level": 3,
+              "parentCode": "01 90 00",
+              "division": "01",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "02",
+      "title": "Existing Conditions",
+      "level": 1,
+      "parentCode": null,
+      "division": "02",
+      "children": [
+        {
+          "code": "02 01 00",
+          "title": "Maintenance of Existing Conditions",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": []
+        },
+        {
+          "code": "02 03 00",
+          "title": "Conservation Treatment for Existing Period Conditions",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": []
+        },
+        {
+          "code": "02 05 00",
+          "title": "Common Work Results for Existing Conditions",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": []
+        },
+        {
+          "code": "02 06 00",
+          "title": "Schedules for Existing Conditions",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": []
+        },
+        {
+          "code": "02 08 00",
+          "title": "Commissioning of Existing Conditions",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": []
+        },
+        {
+          "code": "02 20 00",
+          "title": "Assessment",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 21 00",
+              "title": "Existing Conditions Assessment",
+              "level": 3,
+              "parentCode": "02 20 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 22 00",
+              "title": "Environmental Assessment",
+              "level": 3,
+              "parentCode": "02 20 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 24 00",
+              "title": "Existing Material Assessment",
+              "level": 3,
+              "parentCode": "02 20 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 25 00",
+              "title": "Hazardous Material Assessment",
+              "level": 3,
+              "parentCode": "02 20 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 30 00",
+          "title": "Subsurface Investigation",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 31 00",
+              "title": "Geotechnical Investigations",
+              "level": 3,
+              "parentCode": "02 30 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 32 00",
+              "title": "Geophysical Investigations",
+              "level": 3,
+              "parentCode": "02 30 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 40 00",
+          "title": "Demolition and Structure Moving",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 41 00",
+              "title": "Demolition",
+              "level": 3,
+              "parentCode": "02 40 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 42 00",
+              "title": "Removal and Diversion of Construction Materials",
+              "level": 3,
+              "parentCode": "02 40 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 43 00",
+              "title": "Structure Moving",
+              "level": 3,
+              "parentCode": "02 40 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 50 00",
+          "title": "Site Remediation",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 51 00",
+              "title": "Physical Decontamination",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 52 00",
+              "title": "Chemical Decontamination",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 53 00",
+              "title": "Thermal Decontamination",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 54 00",
+              "title": "Biological Decontamination",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 55 00",
+              "title": "Remediation",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 56 00",
+              "title": "Soil Stabilization",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 57 00",
+              "title": "Site Containment",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 58 00",
+              "title": "Sinkhole Remediation",
+              "level": 3,
+              "parentCode": "02 50 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 60 00",
+          "title": "Contaminated Site Material Removal",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 61 00",
+              "title": "Removal and Disposal of Contaminated Soils",
+              "level": 3,
+              "parentCode": "02 60 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 62 00",
+              "title": "Hazardous Waste Recovery Processes",
+              "level": 3,
+              "parentCode": "02 60 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 65 00",
+              "title": "Underground Storage Tank Removal",
+              "level": 3,
+              "parentCode": "02 60 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 70 00",
+          "title": "Water Remediation",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 71 00",
+              "title": "Groundwater Treatment",
+              "level": 3,
+              "parentCode": "02 70 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 72 00",
+              "title": "Water Decontamination",
+              "level": 3,
+              "parentCode": "02 70 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "02 80 00",
+          "title": "Facility Remediation",
+          "level": 2,
+          "parentCode": "02",
+          "division": "02",
+          "children": [
+            {
+              "code": "02 81 00",
+              "title": "Transportation and Disposal of Hazardous Materials",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 82 00",
+              "title": "Asbestos Remediation",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 83 00",
+              "title": "Lead Remediation",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 84 00",
+              "title": "Polychlorinate Biphenyl Remediation",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 86 00",
+              "title": "Hazardous Waste Drum Handling",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            },
+            {
+              "code": "02 87 00",
+              "title": "Biohazard Remediation",
+              "level": 3,
+              "parentCode": "02 80 00",
+              "division": "02",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "03",
+      "title": "Concrete",
+      "level": 1,
+      "parentCode": null,
+      "division": "03",
+      "children": [
+        {
+          "code": "03 01 00",
+          "title": "Maintenance of Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": []
+        },
+        {
+          "code": "03 03 00",
+          "title": "Conservation Treatment for Period Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": []
+        },
+        {
+          "code": "03 05 00",
+          "title": "Common Work Results for Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": []
+        },
+        {
+          "code": "03 06 00",
+          "title": "Schedules for Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": []
+        },
+        {
+          "code": "03 08 00",
+          "title": "Commissioning of Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": []
+        },
+        {
+          "code": "03 10 00",
+          "title": "Concrete Forming and Accessories",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 11 00",
+              "title": "Concrete Forming",
+              "level": 3,
+              "parentCode": "03 10 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 15 00",
+              "title": "Concrete Accessories",
+              "level": 3,
+              "parentCode": "03 10 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 20 00",
+          "title": "Concrete Reinforcing",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 21 00",
+              "title": "Reinforcement Bars",
+              "level": 3,
+              "parentCode": "03 20 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 22 00",
+              "title": "Fabric and Grid Reinforcing",
+              "level": 3,
+              "parentCode": "03 20 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 23 00",
+              "title": "Stressed Tendon Reinforcing",
+              "level": 3,
+              "parentCode": "03 20 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 24 00",
+              "title": "Fibrous Reinforcing",
+              "level": 3,
+              "parentCode": "03 20 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 25 00",
+              "title": "Composite Reinforcing",
+              "level": 3,
+              "parentCode": "03 20 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 30 00",
+          "title": "Cast-in-Place Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 31 00",
+              "title": "Structural Concrete",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 33 00",
+              "title": "Architectural Concrete",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 34 00",
+              "title": "Low-Density Concrete",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 35 00",
+              "title": "Concrete Finishing",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 37 00",
+              "title": "Specialty Placed Concrete",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 38 00",
+              "title": "Post-Tensioned Concrete",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 39 00",
+              "title": "Concrete Curing",
+              "level": 3,
+              "parentCode": "03 30 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 40 00",
+          "title": "Precast Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 41 00",
+              "title": "Precast Structural Concrete",
+              "level": 3,
+              "parentCode": "03 40 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 45 00",
+              "title": "Precast Architectural Concrete",
+              "level": 3,
+              "parentCode": "03 40 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 50 00",
+          "title": "Cast Decks and Underlayment",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 51 00",
+              "title": "Cast Roof Decks",
+              "level": 3,
+              "parentCode": "03 50 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 52 00",
+              "title": "Lightweight Concrete Roof Insulation",
+              "level": 3,
+              "parentCode": "03 50 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 53 00",
+              "title": "Concrete Topping",
+              "level": 3,
+              "parentCode": "03 50 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 54 00",
+              "title": "Cast Underlayment",
+              "level": 3,
+              "parentCode": "03 50 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 60 00",
+          "title": "Grouting",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 61 00",
+              "title": "Cementitious Grouting",
+              "level": 3,
+              "parentCode": "03 60 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 62 00",
+              "title": "Non-Shrink Grouting",
+              "level": 3,
+              "parentCode": "03 60 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 63 00",
+              "title": "Epoxy Grouting",
+              "level": 3,
+              "parentCode": "03 60 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 64 00",
+              "title": "Injection Grouting",
+              "level": 3,
+              "parentCode": "03 60 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 70 00",
+          "title": "Mass Concrete",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 71 00",
+              "title": "Mass Concrete for Raft Foundations",
+              "level": 3,
+              "parentCode": "03 70 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 72 00",
+              "title": "Mass Concrete for Dams",
+              "level": 3,
+              "parentCode": "03 70 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "03 80 00",
+          "title": "Concrete Cutting and Boring",
+          "level": 2,
+          "parentCode": "03",
+          "division": "03",
+          "children": [
+            {
+              "code": "03 81 00",
+              "title": "Concrete Cutting",
+              "level": 3,
+              "parentCode": "03 80 00",
+              "division": "03",
+              "children": []
+            },
+            {
+              "code": "03 82 00",
+              "title": "Concrete Boring",
+              "level": 3,
+              "parentCode": "03 80 00",
+              "division": "03",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "04",
+      "title": "Masonry",
+      "level": 1,
+      "parentCode": null,
+      "division": "04",
+      "children": [
+        {
+          "code": "04 01 00",
+          "title": "Maintenance of Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 03 00",
+          "title": "Conservation Treatment for Period Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 05 00",
+          "title": "Common Work Results for Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 06 00",
+          "title": "Schedules for Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 08 00",
+          "title": "Commissioning of Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 20 00",
+          "title": "Unit Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 40 00",
+          "title": "Stone Assemblies",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 50 00",
+          "title": "Refractory Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 60 00",
+          "title": "Corrosion-Resistant Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        },
+        {
+          "code": "04 70 00",
+          "title": "Manufactured Masonry",
+          "level": 2,
+          "parentCode": "04",
+          "division": "04",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "05",
+      "title": "Metals",
+      "level": 1,
+      "parentCode": null,
+      "division": "05",
+      "children": [
+        {
+          "code": "05 01 00",
+          "title": "Maintenance of Metals",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 03 00",
+          "title": "Conservation Treatment for Period Metals",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 05 00",
+          "title": "Common Work Results for Metals",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 06 00",
+          "title": "Schedules for Metals",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 08 00",
+          "title": "Commissioning of Metals",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 10 00",
+          "title": "Structural Metal Framing",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 12 00",
+              "title": "Structural Steel Framing",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 13 00",
+              "title": "Structural Stainless Steel Framing",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 14 00",
+              "title": "Structural Aluminum Framing",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 15 00",
+              "title": "Wire Rope Assemblies",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 16 00",
+              "title": "Structural Cabling",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 17 00",
+              "title": "Structural Rod Assemblies",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 19 00",
+              "title": "Tension Rod and Cable Truss Assemblies",
+              "level": 3,
+              "parentCode": "05 10 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "05 20 00",
+          "title": "Metal Joists",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 21 00",
+              "title": "Steel Joist Framing",
+              "level": 3,
+              "parentCode": "05 20 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 25 00",
+              "title": "Aluminum Joist Framing",
+              "level": 3,
+              "parentCode": "05 20 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "05 30 00",
+          "title": "Metal Decking",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 31 00",
+              "title": "Steel Decking",
+              "level": 3,
+              "parentCode": "05 30 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 33 00",
+              "title": "Aluminum Decking",
+              "level": 3,
+              "parentCode": "05 30 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 34 00",
+              "title": "Acoustical Metal Decking",
+              "level": 3,
+              "parentCode": "05 30 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 35 00",
+              "title": "Raceway Decking Assemblies",
+              "level": 3,
+              "parentCode": "05 30 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "05 36 00",
+          "title": "Composite Metal Decking",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": []
+        },
+        {
+          "code": "05 40 00",
+          "title": "Cold-Formed Metal Framing",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 41 00",
+              "title": "Structural Metal Stud Framing",
+              "level": 3,
+              "parentCode": "05 40 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 42 00",
+              "title": "Cold-Formed Metal Joist Framing",
+              "level": 3,
+              "parentCode": "05 40 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 43 00",
+              "title": "Slotted Channel Framing",
+              "level": 3,
+              "parentCode": "05 40 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 44 00",
+              "title": "Cold-Formed Metal Trusses",
+              "level": 3,
+              "parentCode": "05 40 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 45 00",
+              "title": "Metal Support Assemblies",
+              "level": 3,
+              "parentCode": "05 40 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "05 50 00",
+          "title": "Metal Fabrications",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 51 00",
+              "title": "Metal Stairs",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 52 00",
+              "title": "Metal Railings",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 53 00",
+              "title": "Metal Gratings",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 54 00",
+              "title": "Metal Floor Plates",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 55 00",
+              "title": "Metal Stair Treads and Nosings",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 56 00",
+              "title": "Metal Castings",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 58 00",
+              "title": "Formed Metal Fabrications",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 59 00",
+              "title": "Metal Specialties",
+              "level": 3,
+              "parentCode": "05 50 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "05 70 00",
+          "title": "Decorative Metal",
+          "level": 2,
+          "parentCode": "05",
+          "division": "05",
+          "children": [
+            {
+              "code": "05 71 00",
+              "title": "Decorative Metal Stairs",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 73 00",
+              "title": "Decorative Metal Railings",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 74 00",
+              "title": "Decorative Metal Castings",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 75 00",
+              "title": "Decorative Formed Metal",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 76 00",
+              "title": "Decorative Forged Metal",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            },
+            {
+              "code": "05 77 00",
+              "title": "Decorative Extruded Metal",
+              "level": 3,
+              "parentCode": "05 70 00",
+              "division": "05",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "06",
+      "title": "Wood, Plastics, and Composites",
+      "level": 1,
+      "parentCode": null,
+      "division": "06",
+      "children": [
+        {
+          "code": "06 01 00",
+          "title": "Maintenance of Wood, Plastics, and Composites",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": []
+        },
+        {
+          "code": "06 03 00",
+          "title": "Conservation Treatment for Period Wood",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": []
+        },
+        {
+          "code": "06 05 00",
+          "title": "Common Work Results for Wood, Plastics, and Composites",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": []
+        },
+        {
+          "code": "06 06 00",
+          "title": "Schedules for Wood, Plastics, and Composites",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": []
+        },
+        {
+          "code": "06 08 00",
+          "title": "Commissioning of Wood, Plastics, and Composites",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": []
+        },
+        {
+          "code": "06 10 00",
+          "title": "Rough Carpentry",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 11 00",
+              "title": "Wood Framing",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 12 00",
+              "title": "Structural Panels",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 13 00",
+              "title": "Heavy Timber Construction",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 14 00",
+              "title": "Treated Wood Foundations",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 15 00",
+              "title": "Wood Decking",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 16 00",
+              "title": "Sheathing",
+              "level": 3,
+              "parentCode": "06 10 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 20 00",
+          "title": "Finish Carpentry",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 22 00",
+              "title": "Millwork",
+              "level": 3,
+              "parentCode": "06 20 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 25 00",
+              "title": "Prefinished Paneling",
+              "level": 3,
+              "parentCode": "06 20 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 26 00",
+              "title": "Board Paneling",
+              "level": 3,
+              "parentCode": "06 20 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 40 00",
+          "title": "Architectural Woodwork",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 41 00",
+              "title": "Architectural Wood Casework",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 42 00",
+              "title": "Wood Paneling",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 43 00",
+              "title": "Wood Stairs and Railings",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 44 00",
+              "title": "Ornamental Woodwork",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 46 00",
+              "title": "Wood Trim",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 48 00",
+              "title": "Wood Frames",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 49 00",
+              "title": "Wood Screens and Shutters",
+              "level": 3,
+              "parentCode": "06 40 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 50 00",
+          "title": "Structural Plastics",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 51 00",
+              "title": "Structural Plastic Shapes and Plates",
+              "level": 3,
+              "parentCode": "06 50 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 52 00",
+              "title": "Plastic Structural Assemblies",
+              "level": 3,
+              "parentCode": "06 50 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 53 00",
+              "title": "Plastic Decking",
+              "level": 3,
+              "parentCode": "06 50 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 60 00",
+          "title": "Plastic Fabrications",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 61 00",
+              "title": "Cast Polymer Fabrications",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 62 00",
+              "title": "Plastic Foam Fabrications",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 63 00",
+              "title": "Plastic Railings",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 64 00",
+              "title": "Plastic Paneling",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 65 00",
+              "title": "Plastic Trim",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 66 00",
+              "title": "Custom Ornamental Simulated Woodwork",
+              "level": 3,
+              "parentCode": "06 60 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 70 00",
+          "title": "Structural Composites",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 71 00",
+              "title": "Structural Composite Shapes and Plates",
+              "level": 3,
+              "parentCode": "06 70 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 72 00",
+              "title": "Composite Structural Assemblies",
+              "level": 3,
+              "parentCode": "06 70 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 73 00",
+              "title": "Composite Decking",
+              "level": 3,
+              "parentCode": "06 70 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 74 00",
+              "title": "Composite Gratings",
+              "level": 3,
+              "parentCode": "06 70 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "06 80 00",
+          "title": "Composite Fabrications",
+          "level": 2,
+          "parentCode": "06",
+          "division": "06",
+          "children": [
+            {
+              "code": "06 81 00",
+              "title": "Composite Railings",
+              "level": 3,
+              "parentCode": "06 80 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 82 00",
+              "title": "Composite Trim",
+              "level": 3,
+              "parentCode": "06 80 00",
+              "division": "06",
+              "children": []
+            },
+            {
+              "code": "06 83 00",
+              "title": "Composite Paneling",
+              "level": 3,
+              "parentCode": "06 80 00",
+              "division": "06",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "07",
+      "title": "Thermal and Moisture Protection",
+      "level": 1,
+      "parentCode": null,
+      "division": "07",
+      "children": [
+        {
+          "code": "07 01 00",
+          "title": "Operation and Maintenance of Thermal and Moisture Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 03 00",
+          "title": "Conservation Treatment for Period Roofing",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 05 00",
+          "title": "Common Work Results for Thermal and Moisture Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 06 00",
+          "title": "Schedules for Thermal and Moisture Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 08 00",
+          "title": "Commissioning of Thermal and Moisture Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 10 00",
+          "title": "Dampproofing and Waterproofing",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 20 00",
+          "title": "Thermal Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 30 00",
+          "title": "Steep Slope Roofing",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 40 00",
+          "title": "Roofing and Siding Panels",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 50 00",
+          "title": "Membrane Roofing",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 60 00",
+          "title": "Flashing and Sheet Metal",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 70 00",
+          "title": "Roof and Wall Specialties and Accessories",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 80 00",
+          "title": "Fire and Smoke Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        },
+        {
+          "code": "07 90 00",
+          "title": "Joint Protection",
+          "level": 2,
+          "parentCode": "07",
+          "division": "07",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "08",
+      "title": "Openings",
+      "level": 1,
+      "parentCode": null,
+      "division": "08",
+      "children": [
+        {
+          "code": "08 01 00",
+          "title": "Operation and Maintenance of Openings",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": []
+        },
+        {
+          "code": "08 03 00",
+          "title": "Conservation Treatment for Period Openings",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": []
+        },
+        {
+          "code": "08 05 00",
+          "title": "Common Work Results for Openings",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": []
+        },
+        {
+          "code": "08 06 00",
+          "title": "Schedules for Openings",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": []
+        },
+        {
+          "code": "08 08 00",
+          "title": "Commissioning of Openings",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": []
+        },
+        {
+          "code": "08 10 00",
+          "title": "Doors and Frames",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 11 00",
+              "title": "Metal Doors and Frames",
+              "level": 3,
+              "parentCode": "08 10 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 12 00",
+              "title": "Wood Doors",
+              "level": 3,
+              "parentCode": "08 10 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 13 00",
+              "title": "Plastic Doors",
+              "level": 3,
+              "parentCode": "08 10 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 14 00",
+              "title": "Composite Doors",
+              "level": 3,
+              "parentCode": "08 10 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 15 00",
+              "title": "Integrated Door Opening Assemblies",
+              "level": 3,
+              "parentCode": "08 10 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 20 00",
+          "title": "Specialty Doors and Frames",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 31 00",
+              "title": "Access Doors and Panels",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 32 00",
+              "title": "Sliding Glass Doors",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 33 00",
+              "title": "Coiling Doors and Grilles",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 34 00",
+              "title": "Special Function Doors",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 35 00",
+              "title": "Folding Doors and Grilles",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 36 00",
+              "title": "Panel Doors",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 38 00",
+              "title": "Traffic Doors",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 39 00",
+              "title": "Pressure-Resistant Doors",
+              "level": 3,
+              "parentCode": "08 20 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 40 00",
+          "title": "Entrances, Storefronts, and Curtain Walls",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 41 00",
+              "title": "Entrances and Storefronts",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 42 00",
+              "title": "Entrances",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 43 00",
+              "title": "Storefronts",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 44 00",
+              "title": "Curtain Wall and Glazed Assemblies",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 45 00",
+              "title": "Translucent Wall and Roof Assemblies",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 46 00",
+              "title": "Window Wall Assemblies",
+              "level": 3,
+              "parentCode": "08 40 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 50 00",
+          "title": "Windows",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 51 00",
+              "title": "Metal Windows",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 52 00",
+              "title": "Wood Windows",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 53 00",
+              "title": "Plastic Windows",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 54 00",
+              "title": "Composite Windows",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 55 00",
+              "title": "Screens",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 56 00",
+              "title": "Storm Windows and Doors",
+              "level": 3,
+              "parentCode": "08 50 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 60 00",
+          "title": "Roof Windows and Skylights",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 61 00",
+              "title": "Roof Windows",
+              "level": 3,
+              "parentCode": "08 60 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 62 00",
+              "title": "Roof Hatches",
+              "level": 3,
+              "parentCode": "08 60 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 63 00",
+              "title": "Smoke Vents",
+              "level": 3,
+              "parentCode": "08 60 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 70 00",
+          "title": "Hardware",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 71 00",
+              "title": "Door Hardware",
+              "level": 3,
+              "parentCode": "08 70 00",
+              "division": "08",
+              "children": []
+            },
+            {
+              "code": "08 75 00",
+              "title": "Window Hardware",
+              "level": 3,
+              "parentCode": "08 70 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 80 00",
+          "title": "Glazing",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 81 00",
+              "title": "Glass Glazing",
+              "level": 3,
+              "parentCode": "08 80 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "08 90 00",
+          "title": "Louvers and Vents",
+          "level": 2,
+          "parentCode": "08",
+          "division": "08",
+          "children": [
+            {
+              "code": "08 91 00",
+              "title": "Louvers",
+              "level": 3,
+              "parentCode": "08 90 00",
+              "division": "08",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "09",
+      "title": "Finishes",
+      "level": 1,
+      "parentCode": null,
+      "division": "09",
+      "children": [
+        {
+          "code": "09 01 00",
+          "title": "Operation and Maintenance of Finishes",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 05 00",
+          "title": "Common Work Results for Finishes",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 06 00",
+          "title": "Schedules for Finishes",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 08 00",
+          "title": "Commissioning of Finishes",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 20 00",
+          "title": "Plaster and Gypsum Board",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 21 00",
+              "title": "Plaster",
+              "level": 3,
+              "parentCode": "09 20 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 22 00",
+              "title": "Gypsum Board",
+              "level": 3,
+              "parentCode": "09 20 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 23 00",
+              "title": "Installation Accessories for Plaster and Gypsum Board",
+              "level": 3,
+              "parentCode": "09 20 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 29 00",
+              "title": "Gypsum Board Assemblies",
+              "level": 3,
+              "parentCode": "09 20 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 25 00",
+          "title": "Ceilings",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 26 00",
+              "title": "Suspended Acoustic Ceilings",
+              "level": 3,
+              "parentCode": "09 25 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 27 00",
+              "title": "Special Ceilings",
+              "level": 3,
+              "parentCode": "09 25 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 28 00",
+          "title": "Access Flooring",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 30 00",
+          "title": "Tiling",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 31 00",
+              "title": "Ceramic Tiling",
+              "level": 3,
+              "parentCode": "09 30 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 32 00",
+              "title": "Stone Tiling",
+              "level": 3,
+              "parentCode": "09 30 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 33 00",
+              "title": "Glass Tiling",
+              "level": 3,
+              "parentCode": "09 30 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 34 00",
+              "title": "Unit Masonry Tiling",
+              "level": 3,
+              "parentCode": "09 30 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 35 00",
+          "title": "Terrazzo",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 40 00",
+          "title": "Flooring",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 41 00",
+              "title": "Resilient Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 42 00",
+              "title": "Wood Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 43 00",
+              "title": "Stone Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 44 00",
+              "title": "Unit Masonry Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 45 00",
+              "title": "Specialized Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 48 00",
+              "title": "Athletic Flooring",
+              "level": 3,
+              "parentCode": "09 40 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 50 00",
+          "title": "Cladding",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 51 00",
+              "title": "Acoustical Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 52 00",
+              "title": "Thin Stone Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 53 00",
+              "title": "Plastic Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 54 00",
+              "title": "Fiberglass-Reinforced Panels",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 55 00",
+              "title": "Laminate Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 57 00",
+              "title": "Baked Enamel Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 58 00",
+              "title": "Wood Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 59 00",
+              "title": "Metal Cladding",
+              "level": 3,
+              "parentCode": "09 50 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 60 00",
+          "title": "Flooring Treatment",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": []
+        },
+        {
+          "code": "09 65 00",
+          "title": "Wall Coverings",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 68 00",
+              "title": "Wallcovering",
+              "level": 3,
+              "parentCode": "09 65 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 70 00",
+          "title": "Flooring Specialties and Protections",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 72 00",
+              "title": "Flooring Protection",
+              "level": 3,
+              "parentCode": "09 70 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 73 00",
+              "title": "Flooring Specialties",
+              "level": 3,
+              "parentCode": "09 70 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 80 00",
+          "title": "Acoustic Treatment",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 81 00",
+              "title": "Acoustic Insulation",
+              "level": 3,
+              "parentCode": "09 80 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 84 00",
+              "title": "Acoustical Treatments",
+              "level": 3,
+              "parentCode": "09 80 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "09 90 00",
+          "title": "Painting and Coating",
+          "level": 2,
+          "parentCode": "09",
+          "division": "09",
+          "children": [
+            {
+              "code": "09 62 00",
+              "title": "Painting",
+              "level": 3,
+              "parentCode": "09 90 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 63 00",
+              "title": "Staining and Finishing",
+              "level": 3,
+              "parentCode": "09 90 00",
+              "division": "09",
+              "children": []
+            },
+            {
+              "code": "09 64 00",
+              "title": "Decorative Finishing",
+              "level": 3,
+              "parentCode": "09 90 00",
+              "division": "09",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10",
+      "title": "Specialties",
+      "level": 1,
+      "parentCode": null,
+      "division": "10",
+      "children": [
+        {
+          "code": "10 01 00",
+          "title": "Operation and Maintenance of Specialties",
+          "level": 2,
+          "parentCode": "10",
+          "division": "10",
+          "children": []
+        },
+        {
+          "code": "10 05 00",
+          "title": "Common Work Results for Specialties",
+          "level": 2,
+          "parentCode": "10",
+          "division": "10",
+          "children": []
+        },
+        {
+          "code": "10 06 00",
+          "title": "Schedules for Specialties",
+          "level": 2,
+          "parentCode": "10",
+          "division": "10",
+          "children": []
+        },
+        {
+          "code": "10 08 00",
+          "title": "Commissioning of Specialties",
+          "level": 2,
+          "parentCode": "10",
+          "division": "10",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "11",
+      "title": "Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "11",
+      "children": [
+        {
+          "code": "11 01 00",
+          "title": "Maintenance of Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 03 00",
+          "title": "Conservation Treatment for Period Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 05 00",
+          "title": "Common Work Results for Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 06 00",
+          "title": "Schedules for Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 08 00",
+          "title": "Commissioning of Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 10 00",
+          "title": "Maintenance Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 20 00",
+          "title": "Security and Safety Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 30 00",
+          "title": "Fluid Handling Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 40 00",
+          "title": "Fluid Heat-Exchanging Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 50 00",
+          "title": "Airflow and Air Cleaning Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 60 00",
+          "title": "Pumping Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 70 00",
+          "title": "Material Handling and Processing Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 80 00",
+          "title": "Facility Decontamination Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        },
+        {
+          "code": "11 90 00",
+          "title": "Other Specialized Equipment",
+          "level": 2,
+          "parentCode": "11",
+          "division": "11",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "12",
+      "title": "Furnishings",
+      "level": 1,
+      "parentCode": null,
+      "division": "12",
+      "children": [
+        {
+          "code": "12 01 00",
+          "title": "Operation and Maintenance of Furnishings",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 05 00",
+          "title": "Common Work Results for Furnishings",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 06 00",
+          "title": "Schedules for Furnishings",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 08 00",
+          "title": "Commissioning of Furnishings",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 20 00",
+          "title": "Window Treatments",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 30 00",
+          "title": "Casework",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 35 00",
+          "title": "Specialty Casework",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 40 00",
+          "title": "Fabrics",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 50 00",
+          "title": "Furniture and Accessories",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 56 00",
+          "title": "Systems Furniture",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 60 00",
+          "title": "Multiple Seating",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 70 00",
+          "title": "Institutional Furniture",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        },
+        {
+          "code": "12 80 00",
+          "title": "Rugs and Mats",
+          "level": 2,
+          "parentCode": "12",
+          "division": "12",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "13",
+      "title": "Special Construction",
+      "level": 1,
+      "parentCode": null,
+      "division": "13",
+      "children": []
+    },
+    {
+      "code": "14",
+      "title": "Conveying Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "14",
+      "children": []
+    },
+    {
+      "code": "21",
+      "title": "Fire Suppression",
+      "level": 1,
+      "parentCode": null,
+      "division": "21",
+      "children": []
+    },
+    {
+      "code": "22",
+      "title": "Plumbing",
+      "level": 1,
+      "parentCode": null,
+      "division": "22",
+      "children": [
+        {
+          "code": "22 01 00",
+          "title": "Operation and Maintenance of Plumbing",
+          "level": 2,
+          "parentCode": "22",
+          "division": "22",
+          "children": []
+        },
+        {
+          "code": "22 05 00",
+          "title": "Common Work Results for Plumbing",
+          "level": 2,
+          "parentCode": "22",
+          "division": "22",
+          "children": []
+        },
+        {
+          "code": "22 06 00",
+          "title": "Schedules for Plumbing",
+          "level": 2,
+          "parentCode": "22",
+          "division": "22",
+          "children": []
+        },
+        {
+          "code": "22 08 00",
+          "title": "Commissioning of Plumbing",
+          "level": 2,
+          "parentCode": "22",
+          "division": "22",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "23",
+      "title": "HVAC",
+      "level": 1,
+      "parentCode": null,
+      "division": "23",
+      "children": []
+    },
+    {
+      "code": "25",
+      "title": "Integrated Automation",
+      "level": 1,
+      "parentCode": null,
+      "division": "25",
+      "children": [
+        {
+          "code": "25 01 00",
+          "title": "Operation and Maintenance of Integrated Automation",
+          "level": 2,
+          "parentCode": "25",
+          "division": "25",
+          "children": []
+        },
+        {
+          "code": "25 05 00",
+          "title": "Common Work Results for Integrated Automation",
+          "level": 2,
+          "parentCode": "25",
+          "division": "25",
+          "children": []
+        },
+        {
+          "code": "25 06 00",
+          "title": "Schedules for Integrated Automation",
+          "level": 2,
+          "parentCode": "25",
+          "division": "25",
+          "children": [
+            {
+              "code": "25 06 11",
+              "title": "Schedules for Integrated Automation Network",
+              "level": 3,
+              "parentCode": "25 06 00",
+              "division": "25",
+              "children": []
+            },
+            {
+              "code": "25 06 12",
+              "title": "Schedules for Integrated Automation Network Gateways",
+              "level": 3,
+              "parentCode": "25 06 00",
+              "division": "25",
+              "children": []
+            },
+            {
+              "code": "25 06 13",
+              "title": "Schedules for Integrated Automation Control and Monitoring Network",
+              "level": 3,
+              "parentCode": "25 06 00",
+              "division": "25",
+              "children": []
+            },
+            {
+              "code": "25 06 14",
+              "title": "Schedules for Integrated Automation Local Control Units",
+              "level": 3,
+              "parentCode": "25 06 00",
+              "division": "25",
+              "children": []
+            },
+            {
+              "code": "25 06 30",
+              "title": "Schedules for Integrated Automation Instrumentation and Terminal Devices",
+              "level": 3,
+              "parentCode": "25 06 00",
+              "division": "25",
+              "children": []
+            }
+          ]
+        },
+        {
+          "code": "25 08 00",
+          "title": "Commissioning of Integrated Automation",
+          "level": 2,
+          "parentCode": "25",
+          "division": "25",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "26",
+      "title": "Electrical",
+      "level": 1,
+      "parentCode": null,
+      "division": "26",
+      "children": [
+        {
+          "code": "26 01 00",
+          "title": "Operation and Maintenance of Electrical",
+          "level": 2,
+          "parentCode": "26",
+          "division": "26",
+          "children": []
+        },
+        {
+          "code": "26 05 00",
+          "title": "Common Work Results for Electrical",
+          "level": 2,
+          "parentCode": "26",
+          "division": "26",
+          "children": []
+        },
+        {
+          "code": "26 06 00",
+          "title": "Schedules for Electrical",
+          "level": 2,
+          "parentCode": "26",
+          "division": "26",
+          "children": []
+        },
+        {
+          "code": "26 08 00",
+          "title": "Commissioning of Electrical",
+          "level": 2,
+          "parentCode": "26",
+          "division": "26",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "27",
+      "title": "Communications",
+      "level": 1,
+      "parentCode": null,
+      "division": "27",
+      "children": [
+        {
+          "code": "27 01 00",
+          "title": "Operation and Maintenance of Communications",
+          "level": 2,
+          "parentCode": "27",
+          "division": "27",
+          "children": []
+        },
+        {
+          "code": "27 05 00",
+          "title": "Common Work Results for Communications",
+          "level": 2,
+          "parentCode": "27",
+          "division": "27",
+          "children": []
+        },
+        {
+          "code": "27 06 00",
+          "title": "Schedules for Communications",
+          "level": 2,
+          "parentCode": "27",
+          "division": "27",
+          "children": []
+        },
+        {
+          "code": "27 08 00",
+          "title": "Commissioning of Communications",
+          "level": 2,
+          "parentCode": "27",
+          "division": "27",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "28",
+      "title": "Electronic Safety and Security",
+      "level": 1,
+      "parentCode": null,
+      "division": "28",
+      "children": [
+        {
+          "code": "28 01 00",
+          "title": "Operation and Maintenance of Electronic Safety and Security",
+          "level": 2,
+          "parentCode": "28",
+          "division": "28",
+          "children": []
+        },
+        {
+          "code": "28 05 00",
+          "title": "Common Work Results for Electronic Safety and Security",
+          "level": 2,
+          "parentCode": "28",
+          "division": "28",
+          "children": []
+        },
+        {
+          "code": "28 06 00",
+          "title": "Schedules for Electronic Safety and Security",
+          "level": 2,
+          "parentCode": "28",
+          "division": "28",
+          "children": []
+        },
+        {
+          "code": "28 08 00",
+          "title": "Commissioning of Electronic Safety and Security",
+          "level": 2,
+          "parentCode": "28",
+          "division": "28",
+          "children": []
+        }
+      ]
+    },
+    {
+      "code": "31",
+      "title": "Earthwork",
+      "level": 1,
+      "parentCode": null,
+      "division": "31",
+      "children": []
+    },
+    {
+      "code": "32",
+      "title": "Exterior Improvements",
+      "level": 1,
+      "parentCode": null,
+      "division": "32",
+      "children": []
+    },
+    {
+      "code": "33",
+      "title": "Utilities",
+      "level": 1,
+      "parentCode": null,
+      "division": "33",
+      "children": []
+    },
+    {
+      "code": "34",
+      "title": "Transportation",
+      "level": 1,
+      "parentCode": null,
+      "division": "34",
+      "children": [
+        {
+          "code": "34 01 00",
+          "title": "Operation and Maintenance of Transportation",
+          "level": 2,
+          "parentCode": "34",
+          "division": "34",
+          "children": []
+        },
+        {
+          "code": "34 05 00",
+          "title": "Common Work Results for Transportation",
+          "level": 2,
+          "parentCode": "34",
+          "division": "34",
+          "children": []
+        },
+        {
+          "code": "34 06 00",
+          "title": "Schedules for Transportation",
+          "level": 2,
+          "parentCode": "34",
+          "division": "34",
+          "children": []
+        },
+        {
+          "code": "34 08 00",
+          "title": "Commissioning of Transportation",
+          "level": 2,
+          "parentCode": "34",
+          "division": "34",
+          "children": [
+            {
+              "code": "34 08 13",
+              "title": "Commissioning of Roadways",
+              "level": 3,
+              "parentCode": "34 08 00",
+              "division": "34",
+              "children": []
+            },
+            {
+              "code": "34 08 23",
+              "title": "Commissioning of Railways",
+              "level": 3,
+              "parentCode": "34 08 00",
+              "division": "34",
+              "children": []
+            },
+            {
+              "code": "34 08 33",
+              "title": "Commissioning of Airfields",
+              "level": 3,
+              "parentCode": "34 08 00",
+              "division": "34",
+              "children": []
+            },
+            {
+              "code": "34 08 43",
+              "title": "Commissioning of Bridges",
+              "level": 3,
+              "parentCode": "34 08 00",
+              "division": "34",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "35",
+      "title": "Waterway and Marine Construction",
+      "level": 1,
+      "parentCode": null,
+      "division": "35",
+      "children": []
+    },
+    {
+      "code": "40",
+      "title": "Process Interconnections",
+      "level": 1,
+      "parentCode": null,
+      "division": "40",
+      "children": []
+    },
+    {
+      "code": "41",
+      "title": "Material Processing and Handling Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "41",
+      "children": []
+    },
+    {
+      "code": "42",
+      "title": "Process Heating, Cooling, and Drying Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "42",
+      "children": []
+    },
+    {
+      "code": "43",
+      "title": "Process Gas and Liquid Handling, Purification, and Storage Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "43",
+      "children": []
+    },
+    {
+      "code": "44",
+      "title": "Pollution and Waste Control Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "44",
+      "children": []
+    },
+    {
+      "code": "45",
+      "title": "Industry-Specific Manufacturing Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "45",
+      "children": []
+    },
+    {
+      "code": "46",
+      "title": "Water and Wastewater Equipment",
+      "level": 1,
+      "parentCode": null,
+      "division": "46",
+      "children": []
+    },
+    {
+      "code": "48",
+      "title": "Electrical Power Generation",
+      "level": 1,
+      "parentCode": null,
+      "division": "48",
+      "children": []
+    }
+  ]
+}

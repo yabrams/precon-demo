@@ -127,10 +127,10 @@ export default function MagnifyingGlass({
       }}
     >
       <div
-        className="rounded-lg border-2 border-violet-500 shadow-xl bg-slate-900/90 backdrop-blur-md overflow-hidden"
+        className="rounded-lg border-2 border-zinc-500 shadow-xl bg-white overflow-hidden"
         style={{
-          filter: 'drop-shadow(0 0 20px rgba(139, 92, 246, 0.3)) drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5))',
-          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2), 0 0 20px rgba(139, 92, 246, 0.15)',
+          filter: 'drop-shadow(0 0 20px rgba(113, 113, 122, 0.3)) drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2))',
+          boxShadow: '0 0 0 1px rgba(113, 113, 122, 0.2), 0 0 20px rgba(113, 113, 122, 0.15)',
         }}
       >
         <canvas
@@ -142,10 +142,7 @@ export default function MagnifyingGlass({
       </div>
       {/* Zoom level indicator */}
       <div
-        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-violet-600 text-white px-3 py-1 rounded text-xs font-bold whitespace-nowrap"
-        style={{
-          boxShadow: '0 0 15px rgba(139, 92, 246, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3)',
-        }}
+        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-zinc-900 text-white px-3 py-1 rounded text-xs font-bold whitespace-nowrap shadow-md"
       >
         {zoomFactor}x zoom
       </div>

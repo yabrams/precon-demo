@@ -34,7 +34,7 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/20 z-50"
           />
 
           {/* Widget Panel */}
@@ -43,12 +43,12 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full md:w-[600px] bg-slate-900/95 backdrop-blur-md border-l border-slate-800 rounded-l-xl shadow-2xl z-50 flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full md:w-[600px] bg-white border-l border-gray-200 shadow-2xl z-50 flex flex-col"
           >
             {/* Header */}
-            <div className="bg-slate-900/80 border-b border-slate-800 text-white p-4 flex items-center justify-between">
+            <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-r from-violet-600 to-cyan-600 p-2 rounded-lg">
+                <div className="bg-zinc-900 p-2 rounded-lg shadow-sm">
                   <svg
                     className="w-6 h-6 text-white"
                     fill="none"
@@ -64,13 +64,13 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white">CSI MasterFormat</h2>
-                  <p className="text-sm text-slate-400">2018 Edition</p>
+                  <h2 className="text-xl font-bold text-zinc-900">CSI MasterFormat</h2>
+                  <p className="text-sm text-gray-600">2018 Edition</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                className="p-2 text-gray-500 hover:text-zinc-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -84,13 +84,13 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-slate-800 bg-slate-900/60">
+            <div className="flex border-b border-gray-200 bg-gray-50">
               <button
                 onClick={() => setActiveTab('search')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === 'search'
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                    ? 'bg-zinc-900 text-white'
+                    : 'bg-white text-gray-600 hover:text-zinc-900 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -109,8 +109,8 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
                 onClick={() => setActiveTab('browse')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === 'browse'
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                    ? 'bg-zinc-900 text-white'
+                    : 'bg-white text-gray-600 hover:text-zinc-900 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -134,8 +134,8 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             </div>
 
             {/* Footer */}
-            <div className="border-t border-slate-800 bg-slate-900/80 px-4 py-3">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="border-t border-gray-200 bg-gray-50 px-4 py-3">
+              <div className="flex items-center justify-between text-xs text-gray-500">
                 <span className="font-mono">CSI MasterFormat 2018</span>
                 <span>Construction Specifications Institute</span>
               </div>
