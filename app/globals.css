@@ -14,6 +14,19 @@
   --primary-hover: #27272a;     /* zinc-800 */
   --secondary: #71717a;         /* zinc-500 */
 
+  /* Accent colors - From Amazon design (exact match) */
+  --accent-teal: #067D7D;       /* Teal accent for section headers */
+  --accent-blue: #007185;       /* Blue for links and interactive elements */
+  --accent-blue-hover: #C7511F; /* Orange-brown for link hover (Amazon style) */
+  --amazon-text: #0F1111;       /* Amazon primary text color */
+  --amazon-secondary: #565959;  /* Amazon secondary text color */
+  --amazon-border: #D5D9D9;     /* Amazon border color */
+  --amazon-bg-gray: #F0F2F2;    /* Amazon gray background */
+  --amazon-yellow: #FFD814;     /* Amazon button yellow */
+  --amazon-yellow-border: #FCD200; /* Amazon button yellow border */
+  --amazon-yellow-hover: #F7CA00; /* Amazon button yellow hover */
+  --amazon-hover-bg: #F7FAFA;   /* Amazon hover background */
+
   /* Fonts */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
@@ -28,6 +41,17 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-hover: var(--accent-blue-hover);
+  --color-amazon-text: var(--amazon-text);
+  --color-amazon-secondary: var(--amazon-secondary);
+  --color-amazon-border: var(--amazon-border);
+  --color-amazon-bg-gray: var(--amazon-bg-gray);
+  --color-amazon-yellow: var(--amazon-yellow);
+  --color-amazon-yellow-border: var(--amazon-yellow-border);
+  --color-amazon-yellow-hover: var(--amazon-yellow-hover);
+  --color-amazon-hover-bg: var(--amazon-hover-bg);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }

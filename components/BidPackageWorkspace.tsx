@@ -412,6 +412,7 @@ export default function BidPackageWorkspace({
                     setHoveredItemId(itemId);
                     setHoveredRowElement(rowElement);
                   }}
+                  onChatOpen={onChatToggle}
                 />
               )}
             </Panel>
