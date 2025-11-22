@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       email: user.email,
       userName: user.userName,
+      role: user.role,
     } as Omit<JWTPayload, 'iat' | 'exp'>)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt(now)
