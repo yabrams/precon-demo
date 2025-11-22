@@ -131,7 +131,7 @@ export default function BidPackageListView({
               </svg>
               Back to Projects
             </button>
-            <div className="h-4 w-px bg-gray-300" />
+            <div className="h-4 w-px bg-gray-200" />
             <div>
               <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
               {project.projectNumber && (
@@ -223,7 +223,7 @@ export default function BidPackageListView({
             </Panel>
 
             {/* Resize Handle */}
-            <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-zinc-500 transition-colors cursor-col-resize" />
+            <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize" />
 
             {/* Right Panel: Project Info */}
             <Panel defaultSize={65} minSize={30} className="bg-gray-50">
