@@ -96,14 +96,21 @@ export default function Home() {
     };
   }, [userMenuOpen]);
 
-  // Auto-collapse sidebar when navigating away from projects view
+  // Handle clicks outside the sidebar to minimize it
   useEffect(() => {
-    if (viewMode === 'projects') {
-      setSidebarCollapsed(false);
-    } else if (viewMode === 'packages' || viewMode === 'workspace' || viewMode === 'upload' || viewMode === 'reviewing') {
-      setSidebarCollapsed(true);
-    }
-  }, [viewMode]);
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // Check if click is outside the left menu panel
+      if (!target.closest('.left-menu-panel')) {
+        setSidebarCollapsed(true);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const checkAuth = async () => {
     try {
@@ -664,9 +671,9 @@ export default function Home() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-end">
+        <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10 h-[68px]">
+          <div className="px-6 h-full flex items-center">
+            <div className="flex items-center justify-end w-full">
               {/* User Menu */}
               <div className="relative user-menu-container">
               <button
