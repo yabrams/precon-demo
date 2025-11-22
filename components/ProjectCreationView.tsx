@@ -217,17 +217,9 @@ export default function ProjectCreationView({
     <div className="h-full bg-gray-50 overflow-auto flex flex-col">
       {/* Header */}
       <div className="px-6 py-4 bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto flex items-center space-x-4">
-          <button
-            onClick={onBack}
-            className="text-gray-600 hover:text-zinc-900 transition-colors"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">Create New Project</h1>
-            <p className="text-sm text-gray-600 mt-1">Upload documents and configure project settings</p>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl font-bold text-zinc-900">Create New Project</h1>
+          <p className="text-sm text-gray-600 mt-1">Upload documents and configure project settings</p>
         </div>
       </div>
 
@@ -427,12 +419,6 @@ export default function ProjectCreationView({
       {/* Footer */}
       <div className="px-6 py-4 bg-white border-t border-gray-200">
         <div className="max-w-4xl mx-auto flex items-center justify-end space-x-3">
-          <button
-            onClick={onBack}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-          >
-            Cancel
-          </button>
           <button
             onClick={handleContinue}
             disabled={uploadedDocuments.length === 0 || (loadFromPlatform && !selectedExternalProject)}

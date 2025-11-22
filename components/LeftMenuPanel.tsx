@@ -14,7 +14,7 @@ function MenuItem({ icon, label, isActive, onClick, collapsed }: MenuItemProps) 
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2.5 py-2 px-3 rounded-md transition-all group relative ${
+      className={`w-full flex items-center gap-2.5 py-2 px-3 rounded-md transition-all group relative cursor-pointer ${
         isActive
           ? 'bg-gray-100 text-zinc-900 font-medium'
           : 'text-gray-600 hover:bg-gray-50 hover:text-zinc-900'

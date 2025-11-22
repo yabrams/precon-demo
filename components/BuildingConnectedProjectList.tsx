@@ -71,7 +71,7 @@ export default function BuildingConnectedProjectList({
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900">BuildingConnected Projects</h1>
+            <h1 className="text-3xl font-bold text-zinc-900">Projects</h1>
             <p className="text-gray-600 mt-2">
               {projects.length} {projects.length === 1 ? 'project' : 'projects'}
             </p>
