@@ -166,27 +166,27 @@ export default function BidPackageWorkspace({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'bidding':
-        return 'bg-blue-500/10 text-blue-400 border border-blue-500/30';
+        return 'bg-zinc-50 text-zinc-800 border border-zinc-200';
       case 'active':
-        return 'bg-green-500/10 text-green-400 border border-green-500/30';
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
       case 'awarded':
-        return 'bg-purple-500/10 text-purple-400 border border-purple-500/30';
+        return 'bg-zinc-50 text-zinc-800 border border-zinc-200';
       case 'draft':
-        return 'bg-slate-500/10 text-slate-400 border border-slate-500/30';
+        return 'bg-gray-50 text-gray-600 border border-gray-200';
       default:
-        return 'bg-slate-500/10 text-slate-400 border border-slate-500/30';
+        return 'bg-gray-50 text-gray-600 border border-gray-200';
     }
   };
 
   return (
-    <div ref={workspaceRef} className="h-full flex flex-col bg-slate-950">
+    <div ref={workspaceRef} className="h-full flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-slate-900/60 backdrop-blur-md border-b border-slate-800 px-6 py-3 flex-shrink-0">
+      <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={onBack}
-              className="flex items-center text-sm text-slate-400 hover:text-white transition-colors"
+              className="flex items-center text-sm text-gray-600 hover:text-zinc-900 transition-colors"
             >
               <svg
                 className="h-4 w-4 mr-1"
@@ -203,10 +203,10 @@ export default function BidPackageWorkspace({
               </svg>
               Back
             </button>
-            <div className="h-4 w-px bg-slate-700" />
+            <div className="h-4 w-px bg-gray-300" />
             <div>
               <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-semibold text-white">{bidPackage.name}</h1>
+                <h1 className="text-lg font-semibold text-zinc-900">{bidPackage.name}</h1>
                 <span
                   className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(
                     bidPackage.status
@@ -215,7 +215,7 @@ export default function BidPackageWorkspace({
                   {bidPackage.status}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">{project.name}</p>
+              <p className="text-xs text-gray-600">{project.name}</p>
             </div>
           </div>
 
@@ -226,8 +226,8 @@ export default function BidPackageWorkspace({
                 onClick={() => setMagnifyingGlassEnabled(!magnifyingGlassEnabled)}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
                   magnifyingGlassEnabled
-                    ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
-                    : 'bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700'
+                    ? 'bg-zinc-50 text-zinc-800 border border-zinc-200'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
                 }`}
                 title={magnifyingGlassEnabled ? 'Disable Magnifier' : 'Enable Magnifier'}
               >
@@ -250,7 +250,7 @@ export default function BidPackageWorkspace({
             {/* Upload New Diagram */}
             <button
               onClick={onUploadNew}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 rounded-lg text-sm transition-colors"
+              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-900 rounded-lg text-sm transition-colors shadow-sm"
             >
               Upload Diagram
             </button>
@@ -259,13 +259,13 @@ export default function BidPackageWorkspace({
 
         {/* Progress Bar */}
         <div className="mt-3">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
             <span>Package Progress</span>
             <span className="font-medium font-mono">{bidPackage.progress}%</span>
           </div>
-          <div className="w-full bg-slate-800 rounded-full h-1.5">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div
-              className="bg-gradient-to-r from-violet-600 to-cyan-600 h-1.5 rounded-full transition-all"
+              className="bg-zinc-900 h-1.5 rounded-full transition-all"
               style={{ width: `${bidPackage.progress}%` }}
             />
           </div>
@@ -276,11 +276,11 @@ export default function BidPackageWorkspace({
       <div className="flex-1 min-h-0">
         {!diagramUrl && lineItems.length === 0 ? (
           // Empty state
-          <div className="h-full flex items-center justify-center bg-slate-950">
+          <div className="h-full flex items-center justify-center bg-gray-50">
             <div className="text-center">
               <div className="mb-4">
                 <svg
-                  className="mx-auto h-12 w-12 text-slate-400"
+                  className="mx-auto h-12 w-12 text-gray-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -293,8 +293,8 @@ export default function BidPackageWorkspace({
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">No Diagram Yet</h3>
-              <p className="text-slate-400 mb-6">
+              <h3 className="text-lg font-medium text-zinc-900 mb-2">No Diagram Yet</h3>
+              <p className="text-gray-600 mb-6">
                 Upload a construction diagram to start extracting bid items
               </p>
               <input
@@ -306,7 +306,7 @@ export default function BidPackageWorkspace({
               />
               <label
                 htmlFor="diagram-upload-workspace-empty"
-                className="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg shadow-lg shadow-violet-900/20 transition-colors cursor-pointer"
+                className="inline-flex items-center px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-md shadow-zinc-900/10 transition-colors cursor-pointer"
               >
                 <svg
                   className="h-5 w-5 mr-2"
@@ -329,17 +329,17 @@ export default function BidPackageWorkspace({
           // Workspace with panels
           <PanelGroup direction="horizontal" className="h-full">
             {/* Left Panel: Diagram Viewer */}
-            <Panel defaultSize={35} minSize={20} className="relative bg-slate-900/60 backdrop-blur-md border-r border-slate-800">
+            <Panel defaultSize={35} minSize={20} className="relative bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
                 {/* Diagram Info Bar */}
-                <div className="px-4 py-2 border-b border-slate-800 bg-slate-900/80 flex items-center justify-between">
+                <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                   <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-slate-300">Diagram</span>
+                    <span className="text-sm font-medium text-zinc-900">Diagram</span>
                     {relevantDiagrams.length > 1 && (
                       <select
                         value={selectedDiagramId || relevantDiagrams[0]?.id || ''}
                         onChange={(e) => setSelectedDiagramId(e.target.value)}
-                        className="text-xs border border-slate-700 rounded-lg px-2 py-1 bg-slate-800 text-slate-100 max-w-xs truncate"
+                        className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
                       >
                         {relevantDiagrams.map((diagram) => (
                           <option key={diagram.id} value={diagram.id}>
@@ -349,16 +349,16 @@ export default function BidPackageWorkspace({
                       </select>
                     )}
                     {relevantDiagrams.length === 1 && currentDiagram && (
-                      <span className="text-xs text-slate-400 truncate">
+                      <span className="text-xs text-gray-600 truncate">
                         {currentDiagram.fileName}
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-slate-400 ml-2 font-mono">Zoom: {zoomLevel}%</span>
+                  <span className="text-xs text-gray-600 ml-2 font-mono">Zoom: {zoomLevel}%</span>
                 </div>
 
                 {/* Diagram Container */}
-                <div className="flex-1 overflow-auto bg-slate-950 p-4 relative">
+                <div className="flex-1 overflow-auto bg-gray-50 p-4 relative">
                   {diagramUrl ? (
                     <>
                       <img
@@ -381,7 +381,7 @@ export default function BidPackageWorkspace({
                       )}
                     </>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-slate-400">
+                    <div className="h-full flex items-center justify-center text-gray-500">
                       No diagram available
                     </div>
                   )}
@@ -390,7 +390,7 @@ export default function BidPackageWorkspace({
             </Panel>
 
             {/* Resize Handle */}
-            <PanelResizeHandle className="w-1 bg-slate-800 hover:bg-violet-500 transition-colors cursor-col-resize" />
+            <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-zinc-500 transition-colors cursor-col-resize" />
 
             {/* Right Panel: Bid Form Table or Chat */}
             <Panel defaultSize={65} minSize={30}>
@@ -412,6 +412,7 @@ export default function BidPackageWorkspace({
                     setHoveredItemId(itemId);
                     setHoveredRowElement(rowElement);
                   }}
+                  onChatOpen={onChatToggle}
                 />
               )}
             </Panel>

@@ -137,10 +137,10 @@ export default function WorkspaceView({
     const toX = imageRect.left - workspaceRect.left + boxCenterX;
     const toY = imageRect.top - workspaceRect.top + boxCenterY;
 
-    // Get color
+    // Get color - zinc palette
     const HIGHLIGHT_COLORS = [
-      '#93c5fd', '#fca5a5', '#86efac', '#fcd34d', '#c4b5fd',
-      '#fdba74', '#f9a8d4', '#67e8f9', '#d8b4fe', '#a7f3d0',
+      '#71717a', '#a1a1aa', '#52525b', '#d4d4d8', '#27272a',
+      '#3f3f46', '#18181b', '#a1a1aa', '#52525b', '#71717a',
     ];
     const color = HIGHLIGHT_COLORS[itemIndex % HIGHLIGHT_COLORS.length];
 
@@ -213,10 +213,10 @@ export default function WorkspaceView({
       {/* Chat Toggle Overlay Button */}
       <button
         onClick={onChatToggle}
-        className={`fixed bottom-6 left-6 z-40 px-4 py-3 rounded-full shadow-lg transition-all flex items-center justify-center font-medium text-2xl ${
+        className={`fixed bottom-6 left-6 z-40 px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center font-medium text-2xl ${
           chatOpen
             ? 'bg-gray-600 hover:bg-gray-700'
-            : 'bg-blue-600 hover:bg-blue-700'
+            : 'bg-zinc-900 hover:bg-zinc-800'
         }`}
         title={chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
       >
@@ -274,7 +274,7 @@ export default function WorkspaceView({
                         onClick={() => setMagnifyingGlassEnabled(!magnifyingGlassEnabled)}
                         className={`px-3 py-1.5 rounded text-sm font-medium transition-all flex items-center gap-2 ${
                           magnifyingGlassEnabled
-                            ? 'bg-blue-600 bg-opacity-90 text-white hover:bg-opacity-100'
+                            ? 'bg-zinc-900 bg-opacity-90 text-white hover:bg-opacity-100'
                             : 'bg-black bg-opacity-70 text-white hover:bg-opacity-90'
                         }`}
                         title={magnifyingGlassEnabled ? 'Disable magnifying glass' : 'Enable magnifying glass'}
@@ -339,9 +339,9 @@ export default function WorkspaceView({
 
         {/* Resize Handle */}
         {diagramUrl && (
-          <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-blue-500 transition-colors cursor-col-resize relative group">
+          <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-zinc-500 transition-colors cursor-col-resize relative group">
             <div className="absolute inset-y-0 -left-1 -right-1 flex items-center justify-center">
-              <div className="w-1 h-12 bg-gray-400 rounded-full group-hover:bg-blue-600 transition-colors"></div>
+              <div className="w-1 h-12 bg-gray-400 rounded-full group-hover:bg-zinc-600 transition-colors"></div>
             </div>
           </PanelResizeHandle>
         )}
@@ -361,9 +361,9 @@ export default function WorkspaceView({
                     className="flex flex-col items-center justify-center h-full"
                   >
                     <div className="relative">
-                      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+                      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-zinc-900"></div>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="h-12 w-12 rounded-full bg-blue-100 animate-pulse"></div>
+                        <div className="h-12 w-12 rounded-full bg-gray-100 animate-pulse"></div>
                       </div>
                     </div>
                     <p className="mt-6 text-lg text-gray-700 font-medium">Processing diagram...</p>

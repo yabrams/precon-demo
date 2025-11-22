@@ -12,21 +12,21 @@ export default function InboxCard({ item, onClick }: InboxCardProps) {
   const statusConfig = {
     pending: {
       label: 'Pending',
-      bgColor: 'bg-gray-100',
-      textColor: 'text-gray-700',
-      dotColor: 'bg-gray-500',
+      bgColor: 'bg-zinc-50',
+      textColor: 'text-zinc-800',
+      dotColor: 'bg-zinc-500',
     },
     in_progress: {
       label: 'In Progress',
-      bgColor: 'bg-blue-100',
-      textColor: 'text-blue-700',
-      dotColor: 'bg-blue-500',
+      bgColor: 'bg-amber-50',
+      textColor: 'text-amber-700',
+      dotColor: 'bg-amber-500',
     },
     completed: {
       label: 'Completed',
-      bgColor: 'bg-green-100',
-      textColor: 'text-green-700',
-      dotColor: 'bg-green-500',
+      bgColor: 'bg-emerald-50',
+      textColor: 'text-emerald-700',
+      dotColor: 'bg-emerald-500',
     },
   };
 
@@ -54,7 +54,7 @@ export default function InboxCard({ item, onClick }: InboxCardProps) {
       whileHover={{ scale: 1.02, y: -4 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
-      className="w-full bg-white rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all p-4 text-left group"
+      className="w-full bg-white rounded-xl border-2 border-gray-200 hover:border-zinc-300 hover:shadow-md transition-all p-4 text-left group"
     >
       <div className="flex gap-4">
         {/* Thumbnail */}
@@ -70,7 +70,7 @@ export default function InboxCard({ item, onClick }: InboxCardProps) {
         <div className="flex-1 min-w-0">
           {/* Header with status */}
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-blue-600 transition-colors">
+            <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-zinc-900 transition-colors">
               {item.subject}
             </h3>
             <span className={`flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${config.bgColor} ${config.textColor}`}>
@@ -81,7 +81,7 @@ export default function InboxCard({ item, onClick }: InboxCardProps) {
 
           {/* Sender */}
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-zinc-900 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xs font-bold">
                 {item.sender.charAt(0).toUpperCase()}
               </span>
@@ -104,7 +104,7 @@ export default function InboxCard({ item, onClick }: InboxCardProps) {
 
       {/* Hover indicator */}
       <div className="mt-3 pt-3 border-t border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="flex items-center gap-2 text-sm text-blue-600 font-medium">
+        <div className="flex items-center gap-2 text-sm text-zinc-900 font-medium">
           <span>View and process</span>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
