@@ -56,6 +56,7 @@ interface BidPackageInfo {
   name: string;
   description: string;
   budgetAmount: number | null;
+  captainId: string | null;
 }
 
 interface ExternalProject {
@@ -120,6 +121,7 @@ export default function ProjectReviewView({
   });
   const [bidPackages, setBidPackages] = useState<BidPackageInfo[]>([]);
   const [confidence, setConfidence] = useState<any>(null);
+  const [users, setUsers] = useState<Array<{ id: string; firstName?: string; lastName?: string; userName: string }>>([]);
 
   // Get API endpoint for the platform
   const getPlatformEndpoint = (plat: Platform) => {
@@ -146,12 +148,30 @@ export default function ProjectReviewView({
   };
 
   useEffect(() => {
+    loadUsers();
     if (mode === 'manual') {
       extractProjectInfo();
     } else if (mode === 'platform-import' && selectedExternalProject && platform) {
       loadExternalProjectData();
     }
   }, []);
+
+  const loadUsers = async () => {
+    try {
+      console.log('Loading users...');
+      const response = await fetch('/api/users');
+      console.log('Users response status:', response.status);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Users data:', data);
+        setUsers(data.users || []);
+      } else {
+        console.error('Failed to load users, status:', response.status);
+      }
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    }
+  };
 
   const extractProjectInfo = async () => {
     setExtracting(true);
@@ -230,7 +250,8 @@ export default function ProjectReviewView({
           setBidPackages(proj.bidPackages.map((pkg: any) => ({
             name: pkg.name,
             description: pkg.description || '',
-            budgetAmount: pkg.budgetAmount || null
+            budgetAmount: pkg.budgetAmount || null,
+            captainId: pkg.captainId || null
           })));
         } else {
           setShowMissingPackagesPrompt(true);
@@ -259,7 +280,12 @@ export default function ProjectReviewView({
       });
       const data = await response.json();
       if (data.success && data.bidPackages) {
-        setBidPackages(data.bidPackages);
+        setBidPackages(data.bidPackages.map((pkg: any) => ({
+          name: pkg.name,
+          description: pkg.description || '',
+          budgetAmount: pkg.budgetAmount || null,
+          captainId: pkg.captainId || null
+        })));
       }
     } catch (error) {
       console.error('Bid package extraction error:', error);
@@ -273,8 +299,18 @@ export default function ProjectReviewView({
       alert('Project name is required');
       return;
     }
+
+    // Determine the correct ID field based on platform
+    const externalId = mode === 'platform-import' && selectedExternalProject
+      ? selectedExternalProject.id
+      : `manual-proj-${Date.now()}`;
+
+    const idField = mode === 'platform-import' && platform
+      ? getProjectIdField(platform)
+      : 'bcProjectId';
+
     const projectData = {
-      bcProjectId: mode === 'platform-import' && selectedExternalProject ? selectedExternalProject.id : `manual-proj-${Date.now()}`,
+      [idField]: externalId,
       ...projectInfo,
       status: mode === 'platform-import' ? selectedExternalProject?.status : 'bidding',
       uploadedDocuments,
@@ -297,8 +333,8 @@ export default function ProjectReviewView({
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      <div className="px-6 py-4 border-b border-gray-200 bg-white">
-        <div className="flex items-center space-x-4">
+      <div className="px-6 h-[68px] border-b border-gray-200 bg-white flex items-center">
+        <div className="flex items-center space-x-4 w-full">
           <button onClick={onCancel} className="text-gray-600 hover:text-zinc-900 transition-colors">
             <ChevronLeft className="h-6 w-6" />
           </button>
@@ -312,17 +348,6 @@ export default function ProjectReviewView({
           </div>
         </div>
       </div>
-
-      {extracting && (
-        <div className="bg-blue-50 border-b border-blue-200 px-6 py-3 flex items-center space-x-3">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-          <p className="text-blue-700 text-sm">
-            {mode === 'manual'
-              ? 'Extracting project information from documents...'
-              : `Loading ${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} project data...`}
-          </p>
-        </div>
-      )}
 
       {showMissingPackagesPrompt && (
         <div className="bg-amber-50 border-b border-amber-200 px-6 py-4">
@@ -375,17 +400,452 @@ export default function ProjectReviewView({
         </div>
 
         <div className="flex-1 overflow-y-auto bg-gray-50">
-          <div className="p-6 max-w-4xl">
-            <form className="space-y-8">
-              {/* Content continues but hitting char limit - see next message */}
-            </form>
-          </div>
+          {extracting ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
+                <p className="text-zinc-900 text-base font-medium">
+                  {mode === 'manual'
+                    ? 'Extracting project information from documents...'
+                    : `Loading ${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} project data...`}
+                </p>
+                <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>
+              </div>
+            </div>
+          ) : (
+            <div className="p-6 max-w-4xl">
+              <form className="space-y-8">
+                {/* Project Basic Information */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Information</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Project Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={projectInfo.name || ''}
+                        onChange={(e) => updateField('name', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter project name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Number</label>
+                      <input
+                        type="text"
+                        value={projectInfo.projectNumber || ''}
+                        onChange={(e) => updateField('projectNumber', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter project number"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                      value={projectInfo.description || ''}
+                      onChange={(e) => updateField('description', e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter project description"
+                    />
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Location</h2>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                    <input
+                      type="text"
+                      value={projectInfo.location.address || ''}
+                      onChange={(e) => updateField('location.address', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter street address"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                      <input
+                        type="text"
+                        value={projectInfo.location.city || ''}
+                        onChange={(e) => updateField('location.city', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="City"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                      <input
+                        type="text"
+                        value={projectInfo.location.state || ''}
+                        onChange={(e) => updateField('location.state', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="State"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                      <input
+                        type="text"
+                        value={projectInfo.location.zipCode || ''}
+                        onChange={(e) => updateField('location.zipCode', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="ZIP"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dates & Financial */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Schedule & Budget</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Bid Due Date</label>
+                      <input
+                        type="date"
+                        value={projectInfo.bidDueDate || ''}
+                        onChange={(e) => updateField('bidDueDate', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Value</label>
+                      <input
+                        type="number"
+                        value={projectInfo.projectValue || ''}
+                        onChange={(e) => updateField('projectValue', parseFloat(e.target.value) || null)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter project value"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Start Date</label>
+                      <input
+                        type="date"
+                        value={projectInfo.projectStartDate || ''}
+                        onChange={(e) => updateField('projectStartDate', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project End Date</label>
+                      <input
+                        type="date"
+                        value={projectInfo.projectEndDate || ''}
+                        onChange={(e) => updateField('projectEndDate', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Project Details */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Details</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Market Sector</label>
+                      <input
+                        type="text"
+                        value={projectInfo.marketSector || ''}
+                        onChange={(e) => updateField('marketSector', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Commercial, Healthcare"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
+                      <input
+                        type="text"
+                        value={projectInfo.projectType || ''}
+                        onChange={(e) => updateField('projectType', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., New Construction, Renovation"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Building Type</label>
+                      <input
+                        type="text"
+                        value={projectInfo.buildingType || ''}
+                        onChange={(e) => updateField('buildingType', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Office, Hospital"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Phase</label>
+                      <input
+                        type="text"
+                        value={projectInfo.projectPhase || ''}
+                        onChange={(e) => updateField('projectPhase', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Design, Bidding"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Square Footage</label>
+                      <input
+                        type="number"
+                        value={projectInfo.estimatedSquareFootage || ''}
+                        onChange={(e) => updateField('estimatedSquareFootage', parseFloat(e.target.value) || null)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Square feet"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Number of Floors</label>
+                      <input
+                        type="number"
+                        value={projectInfo.numberOfFloors || ''}
+                        onChange={(e) => updateField('numberOfFloors', parseInt(e.target.value) || null)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Number of floors"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stakeholders */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Team</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Owner</label>
+                      <input
+                        type="text"
+                        value={projectInfo.ownerName || ''}
+                        onChange={(e) => updateField('ownerName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Owner name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Architect</label>
+                      <input
+                        type="text"
+                        value={projectInfo.architectName || ''}
+                        onChange={(e) => updateField('architectName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Architect name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Engineer</label>
+                      <input
+                        type="text"
+                        value={projectInfo.engineerName || ''}
+                        onChange={(e) => updateField('engineerName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Engineer name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">General Contractor</label>
+                      <input
+                        type="text"
+                        value={projectInfo.generalContractorName || ''}
+                        onChange={(e) => updateField('generalContractorName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="GC name"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contract Details */}
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Contract Details</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Funding Type</label>
+                      <input
+                        type="text"
+                        value={projectInfo.fundingType || ''}
+                        onChange={(e) => updateField('fundingType', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Public, Private"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Method</label>
+                      <input
+                        type="text"
+                        value={projectInfo.deliveryMethod || ''}
+                        onChange={(e) => updateField('deliveryMethod', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Design-Bid-Build"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Contract Type</label>
+                      <input
+                        type="text"
+                        value={projectInfo.contractType || ''}
+                        onChange={(e) => updateField('contractType', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Lump Sum, Unit Price"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="bondingRequired"
+                        checked={projectInfo.bondingRequired || false}
+                        onChange={(e) => updateField('bondingRequired', e.target.checked)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="bondingRequired" className="text-sm font-medium text-gray-700">
+                        Bonding Required
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="prevailingWage"
+                        checked={projectInfo.prevailingWageRequired || false}
+                        onChange={(e) => updateField('prevailingWageRequired', e.target.checked)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="prevailingWage" className="text-sm font-medium text-gray-700">
+                        Prevailing Wage Required
+                      </label>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">MBE Goal (%)</label>
+                      <input
+                        type="number"
+                        value={projectInfo.minorityBusinessGoal || ''}
+                        onChange={(e) => updateField('minorityBusinessGoal', parseFloat(e.target.value) || null)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Percentage"
+                        min="0"
+                        max="100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">WBE Goal (%)</label>
+                      <input
+                        type="number"
+                        value={projectInfo.womenBusinessGoal || ''}
+                        onChange={(e) => updateField('womenBusinessGoal', parseFloat(e.target.value) || null)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Percentage"
+                        min="0"
+                        max="100"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bid Packages */}
+                {bidPackages.length > 0 && (
+                  <div className="space-y-4">
+                    <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Bid Packages</h2>
+                    <div className="space-y-3">
+                      {bidPackages.map((pkg, index) => (
+                        <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white">
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="col-span-2">
+                              <label className="block text-xs font-medium text-gray-500 mb-1">Package Name</label>
+                              <input
+                                type="text"
+                                value={pkg.name}
+                                onChange={(e) => {
+                                  const updated = [...bidPackages];
+                                  updated[index].name = e.target.value;
+                                  setBidPackages(updated);
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                placeholder="Package name"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-500 mb-1">Budget Amount</label>
+                              <input
+                                type="number"
+                                value={pkg.budgetAmount || ''}
+                                onChange={(e) => {
+                                  const updated = [...bidPackages];
+                                  updated[index].budgetAmount = parseFloat(e.target.value) || null;
+                                  setBidPackages(updated);
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                placeholder="Budget"
+                              />
+                            </div>
+                            <div className="col-span-3">
+                              <label className="block text-xs font-medium text-gray-500 mb-1">
+                                Captain {users.length > 0 && `(${users.length} available)`}
+                              </label>
+                              <select
+                                value={pkg.captainId || ''}
+                                onChange={(e) => {
+                                  const updated = [...bidPackages];
+                                  updated[index].captainId = e.target.value || null;
+                                  setBidPackages(updated);
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                              >
+                                <option value="">Select a captain...</option>
+                                {users.map((user) => {
+                                  console.log('Rendering user option:', user);
+                                  return (
+                                    <option key={user.id} value={user.id}>
+                                      {user.firstName && user.lastName
+                                        ? `${user.firstName} ${user.lastName} (${user.userName})`
+                                        : user.userName}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </div>
+                            <div className="col-span-3">
+                              <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
+                              <textarea
+                                value={pkg.description}
+                                onChange={(e) => {
+                                  const updated = [...bidPackages];
+                                  updated[index].description = e.target.value;
+                                  setBidPackages(updated);
+                                }}
+                                rows={2}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                placeholder="Package description"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setBidPackages([...bidPackages, { name: '', description: '', budgetAmount: null, captainId: null }])}
+                      className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      + Add Bid Package
+                    </button>
+                  </div>
+                )}
+              </form>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white">
         <button onClick={onCancel} className="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</button>
-        <button onClick={handleApprove} disabled={!projectInfo.name} className="px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed">Approve & Create Project</button>
+        <button onClick={handleApprove} disabled={!projectInfo.name} className="px-8 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed">Approve & Create Project</button>
       </div>
     </div>
   );

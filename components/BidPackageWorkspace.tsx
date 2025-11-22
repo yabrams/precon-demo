@@ -203,7 +203,7 @@ export default function BidPackageWorkspace({
               </svg>
               Back
             </button>
-            <div className="h-4 w-px bg-gray-300" />
+            <div className="h-4 w-px bg-gray-200" />
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-lg font-semibold text-zinc-900">{bidPackage.name}</h1>
@@ -390,7 +390,7 @@ export default function BidPackageWorkspace({
             </Panel>
 
             {/* Resize Handle */}
-            <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-zinc-500 transition-colors cursor-col-resize" />
+            <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize" />
 
             {/* Right Panel: Bid Form Table or Chat */}
             <Panel defaultSize={65} minSize={30}>

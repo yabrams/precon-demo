@@ -339,9 +339,9 @@ export default function WorkspaceView({
 
         {/* Resize Handle */}
         {diagramUrl && (
-          <PanelResizeHandle className="w-1 bg-gray-300 hover:bg-zinc-500 transition-colors cursor-col-resize relative group">
+          <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize relative group">
             <div className="absolute inset-y-0 -left-1 -right-1 flex items-center justify-center">
-              <div className="w-1 h-12 bg-gray-400 rounded-full group-hover:bg-zinc-600 transition-colors"></div>
+              <div className="w-1 h-12 bg-gray-300 rounded-full group-hover:bg-gray-400 transition-colors"></div>
             </div>
           </PanelResizeHandle>
         )}
