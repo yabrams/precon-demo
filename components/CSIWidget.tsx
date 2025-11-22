@@ -48,9 +48,9 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             {/* Header */}
             <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-zinc-900 p-2 rounded-lg shadow-sm">
+                <div className="border-2 border-gray-200 p-2 rounded-lg bg-gray-50">
                   <svg
-                    className="w-6 h-6 text-white"
+                    className="w-6 h-6 text-zinc-900"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -84,13 +84,13 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 bg-gray-50">
+            <div className="flex border-b border-gray-200 bg-white">
               <button
                 onClick={() => setActiveTab('search')}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
                   activeTab === 'search'
-                    ? 'bg-zinc-900 text-white'
-                    : 'bg-white text-gray-600 hover:text-zinc-900 hover:bg-gray-50'
+                    ? 'bg-white text-zinc-900 border-b-2 border-zinc-900'
+                    : 'bg-gray-50 text-gray-600 hover:text-zinc-900 hover:bg-gray-100'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -107,10 +107,10 @@ export default function CSIWidget({ isOpen, onClose, onSelectCode }: CSIWidgetPr
               </button>
               <button
                 onClick={() => setActiveTab('browse')}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
                   activeTab === 'browse'
-                    ? 'bg-zinc-900 text-white'
-                    : 'bg-white text-gray-600 hover:text-zinc-900 hover:bg-gray-50'
+                    ? 'bg-white text-zinc-900 border-b-2 border-zinc-900'
+                    : 'bg-gray-50 text-gray-600 hover:text-zinc-900 hover:bg-gray-100'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
