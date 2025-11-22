@@ -11,32 +11,29 @@ interface DiagramOverlayProps {
   imageHeight: number;
 }
 
-// Color palette for highlighting - vibrant colors optimized for dark backgrounds
+// Color palette for highlighting - zinc palette for monochrome design
 const HIGHLIGHT_COLORS = [
-  '#8b5cf6', // violet-500
-  '#06b6d4', // cyan-500
-  '#10b981', // emerald-500
-  '#f59e0b', // amber-500
-  '#ec4899', // pink-500
-  '#f97316', // orange-500
-  '#6366f1', // indigo-500
-  '#14b8a6', // teal-500
-  '#a855f7', // purple-500
-  '#22d3ee', // cyan-400
+  '#71717a', // zinc-500
+  '#a1a1aa', // zinc-400
+  '#52525b', // zinc-600
+  '#d4d4d8', // zinc-300
+  '#27272a', // zinc-800
+  '#3f3f46', // zinc-700
+  '#18181b', // zinc-900
+  '#a1a1aa', // zinc-400
+  '#52525b', // zinc-600
+  '#71717a', // zinc-500
 ];
 
-// Glow colors for active boxes - softer tones for the shadow effect
+// Glow colors for active boxes - zinc tones
 const GLOW_COLORS: { [key: string]: string } = {
-  '#8b5cf6': '139, 92, 246',    // violet
-  '#06b6d4': '6, 182, 212',      // cyan
-  '#10b981': '16, 185, 129',     // emerald
-  '#f59e0b': '245, 158, 11',     // amber
-  '#ec4899': '236, 72, 153',     // pink
-  '#f97316': '249, 115, 22',     // orange
-  '#6366f1': '99, 102, 241',     // indigo
-  '#14b8a6': '20, 184, 166',     // teal
-  '#a855f7': '168, 85, 247',     // purple
-  '#22d3ee': '34, 211, 238',     // cyan-400
+  '#71717a': '113, 113, 122',    // zinc-500
+  '#a1a1aa': '161, 161, 170',    // zinc-400
+  '#52525b': '82, 82, 91',       // zinc-600
+  '#d4d4d8': '212, 212, 216',    // zinc-300
+  '#27272a': '39, 39, 42',       // zinc-800
+  '#3f3f46': '63, 63, 70',       // zinc-700
+  '#18181b': '24, 24, 27',       // zinc-900
 };
 
 export default function DiagramOverlay({
@@ -140,7 +137,7 @@ export default function DiagramOverlay({
                   r={5}
                   fill={color}
                   fillOpacity={0.8}
-                  stroke="#1e293b"
+                  stroke="#ffffff"
                   strokeWidth={2}
                   style={{
                     pointerEvents: 'auto',

@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
-/* ConstructAI Design System - Deep Space Industrial Theme */
+/* ConstructAI Design System - Architectural Monochrome Theme */
 :root {
-  /* Dark mode only - Deep Space Industrial */
-  --background: #020617;        /* slate-950 */
-  --foreground: #f8fafc;        /* slate-50 */
-  --panel: #0f172a;             /* slate-900 */
-  --border: #1e293b;            /* slate-800 */
-  --muted: #94a3b8;             /* slate-400 */
+  /* Light mode only - Architectural Monochrome */
+  --background: #f9fafb;        /* gray-50 */
+  --foreground: #18181b;        /* zinc-900 */
+  --panel: #ffffff;             /* white */
+  --border: #e5e7eb;            /* gray-200 */
+  --muted: #6b7280;             /* gray-500 */
 
-  /* Brand colors */
-  --primary: #7c3aed;           /* violet-600 */
-  --primary-hover: #8b5cf6;     /* violet-500 */
-  --secondary: #06b6d4;         /* cyan-500 */
+  /* Brand colors - Zinc-based */
+  --primary: #18181b;           /* zinc-900 */
+  --primary-hover: #27272a;     /* zinc-800 */
+  --secondary: #71717a;         /* zinc-500 */
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -39,23 +39,23 @@ body {
   font-size: 0.875rem; /* text-sm baseline for UI density */
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar for light theme */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a; /* slate-900 */
+  background: #f9fafb; /* gray-50 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155; /* slate-700 */
+  background: #d1d5db; /* gray-300 */
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569; /* slate-600 */
+  background: #9ca3af; /* gray-400 */
 }
 
 /* Pulse animation for AI states */

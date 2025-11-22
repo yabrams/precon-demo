@@ -125,19 +125,19 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-xl shadow-xl shadow-violet-900/10 p-8 hover:border-violet-500/50 transition-all duration-300">
-      <h2 className="text-2xl font-bold text-white mb-6">Create Account</h2>
+    <div className="w-full max-w-md mx-auto bg-white border border-gray-200 rounded-xl shadow-sm p-8 hover:border-zinc-300 hover:shadow-md transition-all duration-300">
+      <h2 className="text-2xl font-bold text-zinc-900 mb-6">Create Account</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-          <p className="text-sm text-red-400">{error}</p>
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-700">{error}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="firstName" className="block text-sm font-medium text-zinc-900 mb-1">
               First Name
             </label>
             <input
@@ -145,14 +145,14 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
               placeholder="John"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="lastName" className="block text-sm font-medium text-zinc-900 mb-1">
               Last Name
             </label>
             <input
@@ -160,7 +160,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
               placeholder="Doe"
               disabled={loading}
             />
@@ -168,8 +168,8 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
         </div>
 
         {/* Avatar Upload Section */}
-        <div className="flex flex-col items-center py-4 border-y border-slate-800">
-          <label className="block text-sm font-medium text-slate-300 mb-3 text-center">
+        <div className="flex flex-col items-center py-4 border-y border-gray-200">
+          <label className="block text-sm font-medium text-zinc-900 mb-3 text-center">
             Profile Picture (Optional)
           </label>
 
@@ -204,19 +204,19 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
 
           <label
             htmlFor="avatar"
-            className="mt-3 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg cursor-pointer transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 px-4 py-2 bg-white hover:bg-gray-50 text-zinc-900 border border-gray-200 rounded-lg cursor-pointer transition-colors text-sm shadow-sm"
           >
             Choose Photo
           </label>
 
-          <p className="text-xs text-slate-500 mt-2 text-center">
+          <p className="text-xs text-gray-500 mt-2 text-center">
             JPG, PNG or GIF. Max 5MB
           </p>
         </div>
 
         <div>
-          <label htmlFor="userName" className="block text-sm font-medium text-slate-300 mb-1">
-            Username <span className="text-red-400">*</span>
+          <label htmlFor="userName" className="block text-sm font-medium text-zinc-900 mb-1">
+            Username <span className="text-red-700">*</span>
           </label>
           <input
             id="userName"
@@ -224,15 +224,15 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.userName}
             onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
             placeholder="johndoe"
             disabled={loading}
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
-            Email Address <span className="text-red-400">*</span>
+          <label htmlFor="email" className="block text-sm font-medium text-zinc-900 mb-1">
+            Email Address <span className="text-red-700">*</span>
           </label>
           <input
             id="email"
@@ -240,15 +240,15 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
             placeholder="you@example.com"
             disabled={loading}
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">
-            Password <span className="text-red-400">*</span>
+          <label htmlFor="password" className="block text-sm font-medium text-zinc-900 mb-1">
+            Password <span className="text-red-700">*</span>
           </label>
           <input
             id="password"
@@ -256,16 +256,16 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
             placeholder="••••••••"
             disabled={loading}
           />
-          <p className="text-xs text-slate-500 mt-1">Must be at least 8 characters</p>
+          <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-1">
-            Confirm Password <span className="text-red-400">*</span>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-900 mb-1">
+            Confirm Password <span className="text-red-700">*</span>
           </label>
           <input
             id="confirmPassword"
@@ -273,7 +273,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-lg focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-sm text-slate-100 placeholder:text-slate-500 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
             placeholder="••••••••"
             disabled={loading}
           />
@@ -282,7 +282,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-violet-600 hover:bg-violet-500 text-white py-2 px-4 rounded-lg shadow-lg shadow-violet-900/20 transition-all duration-200 disabled:bg-violet-600/50 disabled:cursor-not-allowed disabled:shadow-none"
+          className="w-full bg-zinc-900 hover:bg-zinc-800 text-white py-2 px-4 rounded-lg shadow-md shadow-zinc-900/10 transition-all duration-200 disabled:bg-zinc-600 disabled:cursor-not-allowed disabled:shadow-none"
         >
           {loading ? 'Creating Account...' : 'Create Account'}
         </button>
@@ -290,11 +290,11 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
 
       {onSwitchToLogin && (
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-gray-600">
             Already have an account?{' '}
             <button
               onClick={onSwitchToLogin}
-              className="text-violet-400 hover:text-violet-300 font-semibold underline transition-colors duration-200"
+              className="text-zinc-900 hover:text-zinc-800 font-semibold underline transition-colors duration-200"
             >
               Sign In
             </button>
