@@ -23,6 +23,7 @@ import ChatPanel from '@/components/ChatPanel';
 import ProjectCreationView from '@/components/ProjectCreationView';
 import ProjectReviewView from '@/components/ProjectReviewView';
 import UserManagementView from '@/components/UserManagementView';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { UserPublic } from '@/types/user';
@@ -726,9 +727,18 @@ export default function Home() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10 h-[68px]">
-          <div className="px-6 h-full flex items-center">
-            <div className="flex items-center justify-end w-full">
-              {/* User Menu */}
+          <div className="px-6 h-full flex items-center justify-between">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              viewMode={viewMode}
+              selectedProject={selectedProject}
+              selectedBidPackage={selectedBidPackage}
+              onNavigateToProjects={handleBackToProjects}
+              onNavigateToPackages={handleBackToPackages}
+            />
+
+            {/* User Menu */}
+            <div className="flex items-center">
               <div className="relative user-menu-container">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
