@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ConstructAI - AI-Powered Preconstruction Bidding",
+  title: "Cosmo - AI-Powered Preconstruction Bidding",
   description: "AI-powered preconstruction bidding application that converts construction diagrams into structured bid forms",
 };
 

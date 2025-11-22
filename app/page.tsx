@@ -64,6 +64,7 @@ export default function Home() {
   const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [globalChatOpen, setGlobalChatOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Project creation workflow state
   const [projectCreationData, setProjectCreationData] = useState<any>(null);
@@ -94,6 +95,15 @@ export default function Home() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [userMenuOpen]);
+
+  // Auto-collapse sidebar when navigating away from projects view
+  useEffect(() => {
+    if (viewMode === 'projects') {
+      setSidebarCollapsed(false);
+    } else if (viewMode === 'packages' || viewMode === 'workspace' || viewMode === 'upload' || viewMode === 'reviewing') {
+      setSidebarCollapsed(true);
+    }
+  }, [viewMode]);
 
   const checkAuth = async () => {
     try {
@@ -598,7 +608,7 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-                <h1 className="text-xl font-bold text-zinc-900">ConstructAI</h1>
+                <h1 className="text-xl font-bold text-zinc-900">Cosmo</h1>
               </div>
             </div>
           </div>
@@ -647,6 +657,8 @@ export default function Home() {
       <LeftMenuPanel
         activeItem={isChatActive ? 'chat' : 'projects'}
         onItemClick={handleMenuItemClick}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       {/* Main Content Area */}

@@ -7,25 +7,35 @@ interface MenuItemProps {
   label: string;
   isActive?: boolean;
   onClick?: () => void;
+  collapsed?: boolean;
 }
 
-function MenuItem({ icon, label, isActive, onClick }: MenuItemProps) {
+function MenuItem({ icon, label, isActive, onClick, collapsed }: MenuItemProps) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md transition-all ${
+      className={`w-full flex items-center gap-2.5 py-2 px-3 rounded-md transition-all group relative ${
         isActive
           ? 'bg-gray-50 text-zinc-900 font-medium'
           : 'text-gray-600 hover:bg-gray-50 hover:text-zinc-900'
       }`}
+      title={collapsed ? label : undefined}
     >
-      <span className={isActive ? 'text-zinc-900' : 'text-gray-500'}>{icon}</span>
-      <span className="text-[13px]">{label}</span>
+      <span className={`${isActive ? 'text-zinc-900' : 'text-gray-500'} flex-shrink-0`}>{icon}</span>
+      {!collapsed && <span className="text-[13px]">{label}</span>}
+
+      {/* Tooltip on hover when collapsed */}
+      {collapsed && (
+        <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+          {label}
+        </div>
+      )}
     </button>
   );
 }
 
-function SectionHeader({ children }: { children: React.ReactNode }) {
+function SectionHeader({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
+  if (collapsed) return null;
   return (
     <div className="px-3 py-1.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
       {children}
@@ -36,34 +46,58 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 interface LeftMenuPanelProps {
   activeItem?: string;
   onItemClick?: (item: string) => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export default function LeftMenuPanel({ activeItem = 'projects', onItemClick }: LeftMenuPanelProps) {
+export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, collapsed = false, onToggleCollapse }: LeftMenuPanelProps) {
   const [currentActive, setCurrentActive] = useState(activeItem);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleClick = (item: string) => {
     setCurrentActive(item);
     onItemClick?.(item);
   };
 
+  const handleMouseEnter = () => {
+    if (collapsed) {
+      setIsHovering(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+  // Determine if menu should be visually expanded
+  const isExpanded = !collapsed || isHovering;
+
   return (
-    <div className="h-full w-60 bg-white border-r border-gray-200 flex flex-col">
+    <div
+      className={`h-full bg-white border-r border-gray-200 flex flex-col overflow-x-hidden ${isExpanded ? 'w-60' : 'w-16'}`}
+      style={{
+        transition: 'width 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Header */}
-      <div className="flex items-center gap-2.5 px-3 py-4 border-b border-gray-200">
+      <div className={`flex items-center gap-2.5 py-4 border-b border-gray-200 px-3`}>
         <div className="w-9 h-9 bg-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <div>
-          <h1 className="text-base font-bold text-zinc-900">ConstructAI</h1>
-        </div>
+        {isExpanded && (
+          <div className="overflow-hidden">
+            <h1 className="text-base font-bold text-zinc-900 whitespace-nowrap">Cosmo</h1>
+          </div>
+        )}
       </div>
 
       {/* Main Navigation */}
-      <div className="flex-1 overflow-y-auto py-3">
-        <SectionHeader>Main Menu</SectionHeader>
-        <div className="px-2 space-y-0.5">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden py-3">
+        <div className="space-y-0.5 px-2">
           <MenuItem
             icon={
               <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,6 +107,7 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick }: 
             label="Projects"
             isActive={currentActive === 'projects'}
             onClick={() => handleClick('projects')}
+            collapsed={!isExpanded}
           />
           <MenuItem
             icon={
@@ -83,6 +118,7 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick }: 
             label="Users"
             isActive={currentActive === 'users'}
             onClick={() => handleClick('users')}
+            collapsed={!isExpanded}
           />
           <MenuItem
             icon={
@@ -94,12 +130,13 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick }: 
             label="Settings"
             isActive={currentActive === 'settings'}
             onClick={() => handleClick('settings')}
+            collapsed={!isExpanded}
           />
         </div>
       </div>
 
       {/* Bottom Chat Section */}
-      <div className="border-t border-gray-200 py-3">
+      <div className="border-t border-gray-200 py-3 overflow-x-hidden">
         <div className="px-2">
           <MenuItem
             icon={
@@ -110,21 +147,29 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick }: 
             label="Chat"
             isActive={currentActive === 'chat'}
             onClick={() => handleClick('chat')}
+            collapsed={!isExpanded}
           />
         </div>
       </div>
 
-      {/* Bottom Version Info */}
-      <div className="border-t border-gray-200 py-3">
+      {/* Bottom Account Info */}
+      <div className="border-t border-gray-200 py-3 overflow-x-hidden">
         <div className="px-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-zinc-50 rounded-md flex items-center justify-center">
-              <span className="text-xs font-bold text-zinc-900">V2</span>
+            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center group relative">
+              <span className="text-xs font-bold text-white">TC</span>
+              {!isExpanded && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  Turner Construction
+                </div>
+              )}
             </div>
-            <div className="text-[11px]">
-              <div className="font-semibold text-zinc-900">Design System</div>
-              <div className="text-gray-500">v2.5.0 • Light</div>
-            </div>
+            {isExpanded && (
+              <div className="text-[11px]">
+                <div className="font-semibold text-zinc-900">Turner Construction</div>
+                <div className="text-gray-500">Account</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
