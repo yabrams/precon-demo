@@ -46,7 +46,7 @@ export async function GET() {
 
 /**
  * POST /api/projects
- * Create a new BuildingConnected project
+ * Create a new BuildingConnected project with diagrams and bid packages
  */
 export async function POST(request: Request) {
   try {
@@ -61,8 +61,11 @@ export async function POST(request: Request) {
       description,
       status,
       bidDueDate,
+      projectStartDate,
+      projectEndDate,
       expectedStartDate,
       expectedEndDate,
+      location,
       address,
       city,
       state,
@@ -73,11 +76,29 @@ export async function POST(request: Request) {
       projectValue,
       marketSector,
       typeOfWork,
+      projectType,
+      buildingType,
       architect,
+      architectName,
       client,
+      ownerName,
+      engineerName,
+      generalContractorName,
       accountManager,
       owningOffice,
-      feePercentage
+      feePercentage,
+      estimatedSquareFootage,
+      numberOfFloors,
+      projectPhase,
+      fundingType,
+      deliveryMethod,
+      contractType,
+      bondingRequired,
+      prevailingWageRequired,
+      minorityBusinessGoal,
+      womenBusinessGoal,
+      uploadedDocuments,
+      bidPackages
     } = body;
 
     // Validate required fields
@@ -88,39 +109,104 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create project
-    const project = await prisma.buildingConnectedProject.create({
-      data: {
-        bcProjectId,
-        accProjectId,
-        accDocsFolderId,
-        name,
-        projectNumber,
-        description,
-        status: status || 'active',
-        bidDueDate: bidDueDate ? new Date(bidDueDate) : null,
-        expectedStartDate: expectedStartDate ? new Date(expectedStartDate) : null,
-        expectedEndDate: expectedEndDate ? new Date(expectedEndDate) : null,
-        address,
-        city,
-        state,
-        zipCode,
-        country,
-        projectSize,
-        projectSizeUnit,
-        projectValue,
-        marketSector,
-        typeOfWork,
-        architect,
-        client,
-        accountManager,
-        owningOffice,
-        feePercentage
-      },
-      include: {
-        diagrams: true,
-        bidPackages: true
+    // Handle location (can be nested object or flat fields)
+    const projectAddress = location?.address || address;
+    const projectCity = location?.city || city;
+    const projectState = location?.state || state;
+    const projectZipCode = location?.zipCode || zipCode;
+    const projectCountry = location?.country || country;
+
+    // Create project with diagrams and bid packages in a transaction
+    const project = await prisma.$transaction(async (tx) => {
+      // Create project
+      const newProject = await tx.buildingConnectedProject.create({
+        data: {
+          bcProjectId,
+          accProjectId,
+          accDocsFolderId,
+          name,
+          projectNumber,
+          description,
+          status: status || 'active',
+          bidDueDate: bidDueDate ? new Date(bidDueDate) :
+                      (projectStartDate ? new Date(projectStartDate) : null),
+          expectedStartDate: expectedStartDate ? new Date(expectedStartDate) :
+                            (projectStartDate ? new Date(projectStartDate) : null),
+          expectedEndDate: expectedEndDate ? new Date(expectedEndDate) :
+                          (projectEndDate ? new Date(projectEndDate) : null),
+          address: projectAddress,
+          city: projectCity,
+          state: projectState,
+          zipCode: projectZipCode,
+          country: projectCountry,
+          projectSize: projectSize || estimatedSquareFootage,
+          projectSizeUnit: projectSizeUnit || 'SF',
+          projectValue,
+          marketSector,
+          typeOfWork: typeOfWork || projectType,
+          architect: architect || architectName,
+          client: client || ownerName,
+          accountManager,
+          owningOffice,
+          feePercentage
+        }
+      });
+
+      // Create diagrams if provided
+      if (uploadedDocuments && uploadedDocuments.length > 0) {
+        await Promise.all(
+          uploadedDocuments.map((doc: any) =>
+            tx.diagram.create({
+              data: {
+                bcProjectId: newProject.id,
+                fileName: doc.fileName,
+                fileUrl: doc.url,
+                fileType: doc.fileType,
+                fileSize: doc.fileSize,
+                uploadedBy: doc.uploadedBy || null
+              }
+            })
+          )
+        );
       }
+
+      // Create bid packages if provided
+      if (bidPackages && bidPackages.length > 0) {
+        await Promise.all(
+          bidPackages.map((pkg: any) =>
+            tx.bidPackage.create({
+              data: {
+                bcBidPackageId: pkg.bcBidPackageId || `${bcProjectId}-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
+                bcProjectId: newProject.id,
+                name: pkg.name,
+                description: pkg.description,
+                scope: pkg.scope,
+                status: pkg.status || 'draft',
+                progress: pkg.progress || 0,
+                bidDueDate: pkg.bidDueDate ? new Date(pkg.bidDueDate) : null,
+                diagramIds: pkg.diagramIds ? JSON.stringify(pkg.diagramIds) : null
+              }
+            })
+          )
+        );
+      }
+
+      // Fetch complete project with relations
+      return await tx.buildingConnectedProject.findUnique({
+        where: { id: newProject.id },
+        include: {
+          diagrams: {
+            orderBy: {
+              uploadedAt: 'desc'
+            }
+          },
+          bidPackages: {
+            orderBy: {
+              createdAt: 'asc'
+            }
+          }
+        }
+      });
     });
 
     return NextResponse.json({ project }, { status: 201 });
@@ -136,7 +222,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: 'Failed to create project' },
+      { error: 'Failed to create project', details: error.message },
       { status: 500 }
     );
   } finally {

@@ -11,11 +11,13 @@ import { formatDistanceToNow } from 'date-fns';
 interface BuildingConnectedProjectListProps {
   projects: BuildingConnectedProject[];
   onProjectSelect: (project: BuildingConnectedProject) => void;
+  onNewProject?: () => void;
 }
 
 export default function BuildingConnectedProjectList({
   projects,
   onProjectSelect,
+  onNewProject,
 }: BuildingConnectedProjectListProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -67,11 +69,24 @@ export default function BuildingConnectedProjectList({
     <div className="h-full bg-gray-50 overflow-auto p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-zinc-900">BuildingConnected Projects</h1>
-          <p className="text-gray-600 mt-2">
-            {projects.length} {projects.length === 1 ? 'project' : 'projects'}
-          </p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-zinc-900">BuildingConnected Projects</h1>
+            <p className="text-gray-600 mt-2">
+              {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+            </p>
+          </div>
+          {onNewProject && (
+            <button
+              onClick={onNewProject}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg hover:shadow-xl flex items-center space-x-2"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              <span>New Project</span>
+            </button>
+          )}
         </div>
 
         {/* Projects Grid */}

@@ -19,6 +19,8 @@ import CSIFloatingButton from '@/components/CSIFloatingButton';
 import Avatar from '@/components/Avatar';
 import LeftMenuPanel from '@/components/LeftMenuPanel';
 import ChatPanel from '@/components/ChatPanel';
+import ProjectCreationView from '@/components/ProjectCreationView';
+import ProjectReviewView from '@/components/ProjectReviewView';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { UserPublic } from '@/types/user';
@@ -27,7 +29,7 @@ import { BidPackage } from '@/types/bidPackage';
 import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
 
-type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing';
+type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing' | 'creating' | 'project-review';
 type AuthMode = 'login' | 'register';
 
 // Extended BidPackage with workspace data
@@ -62,6 +64,9 @@ export default function Home() {
   const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [globalChatOpen, setGlobalChatOpen] = useState(false);
+
+  // Project creation workflow state
+  const [projectCreationData, setProjectCreationData] = useState<any>(null);
 
   // Check authentication on mount
   useEffect(() => {
@@ -532,6 +537,45 @@ export default function Home() {
     console.log('CSI code selected:', code, title);
   };
 
+  // Project creation handlers
+  const handleNewProject = () => {
+    setViewMode('creating');
+  };
+
+  const handleProjectCreationContinue = (data: any) => {
+    setProjectCreationData(data);
+    setViewMode('project-review');
+  };
+
+  const handleProjectCreationCancel = () => {
+    setProjectCreationData(null);
+    setViewMode('projects');
+  };
+
+  const handleProjectApprove = async (projectData: any) => {
+    try {
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projectData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        await loadProjects();
+        setProjectCreationData(null);
+        setViewMode('projects');
+        alert('Project created successfully!');
+      } else {
+        const error = await response.json();
+        alert(`Failed to create project: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Project creation error:', error);
+      alert('Failed to create project. Please try again.');
+    }
+  };
+
   // Loading state
   if (isCheckingAuth) {
     return (
@@ -687,6 +731,7 @@ export default function Home() {
               <BuildingConnectedProjectList
                 projects={bcProjects}
                 onProjectSelect={handleProjectSelect}
+                onNewProject={handleNewProject}
               />
             </motion.div>
           )}
@@ -777,6 +822,42 @@ export default function Home() {
               />
             </motion.div>
           )}
+
+          {viewMode === 'creating' && (
+            <motion.div
+              key="creating"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <ProjectCreationView
+                onBack={handleProjectCreationCancel}
+                onContinue={handleProjectCreationContinue}
+              />
+            </motion.div>
+          )}
+
+          {viewMode === 'project-review' && projectCreationData && (
+            <motion.div
+              key="project-review"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <ProjectReviewView
+                mode={projectCreationData.mode}
+                platform={projectCreationData.platform}
+                uploadedDocuments={projectCreationData.uploadedDocuments}
+                selectedExternalProject={projectCreationData.selectedExternalProject}
+                onApprove={handleProjectApprove}
+                onCancel={handleProjectCreationCancel}
+              />
+            </motion.div>
+          )}
         </AnimatePresence>
       </main>
 
@@ -809,6 +890,7 @@ export default function Home() {
             />
           </div>
         )}
+
       </div>
     </div>
   );
