@@ -18,23 +18,18 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!bcProjectId) {
-      return NextResponse.json(
-        { error: 'bcProjectId is required' },
-        { status: 400 }
-      );
-    }
+    // If bcProjectId provided, verify project exists
+    if (bcProjectId) {
+      const project = await prisma.buildingConnectedProject.findUnique({
+        where: { id: bcProjectId }
+      });
 
-    // Verify project exists
-    const project = await prisma.buildingConnectedProject.findUnique({
-      where: { id: bcProjectId }
-    });
-
-    if (!project) {
-      return NextResponse.json(
-        { error: 'Project not found' },
-        { status: 404 }
-      );
+      if (!project) {
+        return NextResponse.json(
+          { error: 'Project not found' },
+          { status: 404 }
+        );
+      }
     }
 
     // Check if we have Blob token for production
@@ -69,21 +64,24 @@ export async function POST(request: Request) {
       fileUrl = `/uploads/${filename}`;
     }
 
-    // Create diagram record in database
-    const diagram = await prisma.diagram.create({
-      data: {
-        bcProjectId,
-        fileName: file.name,
-        fileUrl,
-        fileType: file.type,
-        fileSize: file.size,
-        uploadedBy: uploadedBy || undefined
-      }
-    });
+    // Create diagram record in database only if bcProjectId provided
+    let diagram = null;
+    if (bcProjectId) {
+      diagram = await prisma.diagram.create({
+        data: {
+          bcProjectId,
+          fileName: file.name,
+          fileUrl,
+          fileType: file.type,
+          fileSize: file.size,
+          uploadedBy: uploadedBy || undefined
+        }
+      });
+    }
 
     return NextResponse.json({
       diagram,
-      // Legacy fields for backward compatibility
+      // File metadata for temporary storage (when no bcProjectId)
       url: fileUrl,
       fileName: file.name,
       fileSize: file.size,
