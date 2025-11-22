@@ -14,11 +14,15 @@ interface UploadedFile {
 interface DiagramUploadProps {
   onUploadSuccess: (file: UploadedFile) => void;
   onExtractStart: (url: string, instructions?: string) => void;
+  bcProjectId: string;
+  onCancel: () => void;
 }
 
 export default function DiagramUpload({
   onUploadSuccess,
   onExtractStart,
+  bcProjectId,
+  onCancel,
 }: DiagramUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
@@ -33,6 +37,7 @@ export default function DiagramUpload({
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('bcProjectId', bcProjectId);
 
       const uploadResponse = await fetch('/api/upload', {
         method: 'POST',
@@ -111,6 +116,7 @@ export default function DiagramUpload({
                 onClick={() => {
                   setUploadedFile(null);
                   setInstructions('');
+                  onCancel();
                 }}
                 className="px-6 py-3 bg-white hover:bg-gray-50 text-zinc-900 border border-gray-200 rounded-lg transition-colors font-medium shadow-sm"
               >
