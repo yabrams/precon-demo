@@ -1,15 +1,15 @@
 /**
  * Authentication Middleware and Utilities
  * Provides functions for verifying JWT tokens and protecting routes
+ * Updated to use organizational role-based access control
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
-import { PrismaClient } from '@prisma/client';
-import { JWTPayload, UserPublic } from '@/types/user';
-import { Permission, Role, ROLE_PERMISSIONS } from '@/types/rbac';
+import { JWTPayload, UserPublic, UserRole } from '@/types/user';
+import { Permission, hasPermission, canManageUsers } from '@/types/permissions';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 // JWT secret key
 const JWT_SECRET = new TextEncoder().encode(
@@ -35,7 +35,16 @@ export function getTokenFromRequest(request: NextRequest): string | null {
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as JWTPayload;
+    // Validate payload has required fields
+    if (
+      typeof payload.userId === 'string' &&
+      typeof payload.email === 'string' &&
+      typeof payload.userName === 'string' &&
+      typeof payload.role === 'string'
+    ) {
+      return payload as unknown as JWTPayload;
+    }
+    return null;
   } catch (error) {
     console.error('JWT verification failed:', error);
     return null;
@@ -81,15 +90,27 @@ export async function getCurrentUser(
   // Get user from database
   const user = await prisma.user.findUnique({
     where: { id: payload.userId },
+    select: {
+      id: true,
+      email: true,
+      userName: true,
+      firstName: true,
+      lastName: true,
+      avatarUrl: true,
+      role: true,
+      passwordResetRequired: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+      lastLoginAt: true,
+    },
   });
 
   if (!user || !user.isActive) {
     return null;
   }
 
-  // Return user without password hash
-  const { passwordHash: _, ...userPublic } = user;
-  return userPublic;
+  return user as UserPublic;
 }
 
 /**
@@ -105,114 +126,115 @@ export async function requireAuth(
 }
 
 /**
- * Check if user has permission for a specific action on a bid package
+ * Require specific roles for API routes
+ * Returns 403 error response if user doesn't have required role
  */
-export async function checkBidPackagePermission(
-  userId: string,
-  bidPackageId: string,
-  permission: Permission
-): Promise<{ hasPermission: boolean; role?: Role; message?: string }> {
-  try {
-    // Find user's assignment to this bid package
-    const assignment = await prisma.userAssignment.findFirst({
-      where: {
-        userId,
-        bidPackageId,
-      },
-    });
+export async function requireRole(
+  request: NextRequest,
+  allowedRoles: UserRole[]
+): Promise<{ user: UserPublic; response: null } | { user: null; response: NextResponse }> {
+  const user = await getCurrentUser(request);
 
-    if (!assignment) {
-      return {
-        hasPermission: false,
-        message: 'User not assigned to this bid package',
-      };
-    }
-
-    const role = assignment.role as Role;
-    const rolePermissions = ROLE_PERMISSIONS[role];
-
-    if (!rolePermissions) {
-      return {
-        hasPermission: false,
-        message: 'Invalid role',
-      };
-    }
-
-    const hasPermission = rolePermissions.includes(permission);
-
+  if (!user) {
     return {
-      hasPermission,
-      role,
-      message: hasPermission
-        ? undefined
-        : `Role '${role}' does not have permission '${permission}'`,
-    };
-  } catch (error) {
-    console.error('Permission check error:', error);
-    return {
-      hasPermission: false,
-      message: 'Error checking permissions',
+      user: null,
+      response: NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      ),
     };
   }
+
+  if (!allowedRoles.includes(user.role)) {
+    return {
+      user: null,
+      response: NextResponse.json(
+        { error: 'Forbidden - insufficient permissions' },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return { user, response: null };
 }
 
 /**
- * Check if user has permission for a specific action on a project
+ * Check if user has a specific permission based on their organizational role
  */
-export async function checkProjectPermission(
-  userId: string,
-  bcProjectId: string,
+export function checkUserPermission(
+  user: UserPublic,
   permission: Permission
-): Promise<{ hasPermission: boolean; role?: Role; message?: string }> {
+): boolean {
+  return hasPermission(user.role, permission);
+}
+
+/**
+ * Check if user can manage other users (Admin or Precon Lead only)
+ */
+export function checkCanManageUsers(user: UserPublic): boolean {
+  return canManageUsers(user.role);
+}
+
+/**
+ * Check if user is assigned to a specific project
+ * (Used for Scope Captain and Precon Analyst who can only access assigned projects)
+ */
+export async function isUserAssignedToProject(
+  userId: string,
+  bcProjectId: string
+): Promise<boolean> {
   try {
-    // Find user's assignment to this project
     const assignment = await prisma.userAssignment.findFirst({
       where: {
         userId,
         bcProjectId,
       },
     });
-
-    if (!assignment) {
-      return {
-        hasPermission: false,
-        message: 'User not assigned to this project',
-      };
-    }
-
-    const role = assignment.role as Role;
-    const rolePermissions = ROLE_PERMISSIONS[role];
-
-    if (!rolePermissions) {
-      return {
-        hasPermission: false,
-        message: 'Invalid role',
-      };
-    }
-
-    const hasPermission = rolePermissions.includes(permission);
-
-    return {
-      hasPermission,
-      role,
-      message: hasPermission
-        ? undefined
-        : `Role '${role}' does not have permission '${permission}'`,
-    };
+    return !!assignment;
   } catch (error) {
-    console.error('Permission check error:', error);
-    return {
-      hasPermission: false,
-      message: 'Error checking permissions',
-    };
+    console.error('Error checking project assignment:', error);
+    return false;
+  }
+}
+
+/**
+ * Check if user is assigned to a specific bid package
+ * (Used for Scope Captain and Precon Analyst who can only access assigned bid packages)
+ */
+export async function isUserAssignedToBidPackage(
+  userId: string,
+  bidPackageId: string
+): Promise<boolean> {
+  try {
+    const assignment = await prisma.userAssignment.findFirst({
+      where: {
+        userId,
+        bidPackageId,
+      },
+    });
+    return !!assignment;
+  } catch (error) {
+    console.error('Error checking bid package assignment:', error);
+    return false;
   }
 }
 
 /**
  * Get all bid packages the user has access to
+ * Admins and Precon Leads see all, others see only assigned packages
  */
-export async function getUserBidPackages(userId: string) {
+export async function getUserBidPackages(userId: string, userRole: UserRole) {
   try {
+    // Admins and Precon Leads can see all bid packages
+    if (userRole === UserRole.ADMIN || userRole === UserRole.PRECON_LEAD) {
+      return await prisma.bidPackage.findMany({
+        include: {
+          project: true,
+        },
+      });
+    }
+
+    // Other roles only see assigned bid packages
     const assignments = await prisma.userAssignment.findMany({
       where: {
         userId,
@@ -228,11 +250,8 @@ export async function getUserBidPackages(userId: string) {
     });
 
     return assignments
-      .filter((a) => a.bidPackage !== null)
-      .map((a) => ({
-        ...a.bidPackage!,
-        userRole: a.role as Role,
-      }));
+      .filter((a: typeof assignments[number]) => a.bidPackage !== null)
+      .map((a: typeof assignments[number]) => a.bidPackage!);
   } catch (error) {
     console.error('Error getting user bid packages:', error);
     return [];
@@ -241,9 +260,24 @@ export async function getUserBidPackages(userId: string) {
 
 /**
  * Get all projects the user has access to
+ * Admins and Precon Leads see all, Scope Captains see all, Analysts see only assigned
  */
-export async function getUserProjects(userId: string) {
+export async function getUserProjects(userId: string, userRole: UserRole) {
   try {
+    // Admins, Precon Leads, and Scope Captains can see all projects
+    if (
+      userRole === UserRole.ADMIN ||
+      userRole === UserRole.PRECON_LEAD ||
+      userRole === UserRole.SCOPE_CAPTAIN
+    ) {
+      return await prisma.buildingConnectedProject.findMany({
+        include: {
+          bidPackages: true,
+        },
+      });
+    }
+
+    // Precon Analysts only see assigned projects
     // Get projects the user is directly assigned to
     const directAssignments = await prisma.userAssignment.findMany({
       where: {
@@ -281,23 +315,15 @@ export async function getUserProjects(userId: string) {
     // Combine and deduplicate projects
     const projectsMap = new Map();
 
-    directAssignments.forEach((a) => {
+    directAssignments.forEach((a: typeof directAssignments[number]) => {
       if (a.project) {
-        projectsMap.set(a.project.id, {
-          ...a.project,
-          userRole: a.role as Role,
-          assignmentType: 'project',
-        });
+        projectsMap.set(a.project.id, a.project);
       }
     });
 
-    bidPackageAssignments.forEach((a) => {
+    bidPackageAssignments.forEach((a: typeof bidPackageAssignments[number]) => {
       if (a.bidPackage?.project && !projectsMap.has(a.bidPackage.project.id)) {
-        projectsMap.set(a.bidPackage.project.id, {
-          ...a.bidPackage.project,
-          userRole: a.role as Role,
-          assignmentType: 'bidPackage',
-        });
+        projectsMap.set(a.bidPackage.project.id, a.bidPackage.project);
       }
     });
 

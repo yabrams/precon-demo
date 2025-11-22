@@ -11,24 +11,35 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+// Organizational role enum
+enum UserRole {
+  ADMIN
+  PRECON_LEAD
+  SCOPE_CAPTAIN
+  PRECON_ANALYST
+}
+
 // User authentication model
 model User {
-  id              String           @id @default(cuid())
-  email           String           @unique
-  userName        String           @unique
-  firstName       String?
-  lastName        String?
-  avatarUrl       String?
-  passwordHash    String
-  isActive        Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  lastLoginAt     DateTime?
-  sessions        Session[]
-  userAssignments UserAssignment[]
+  id                    String           @id @default(cuid())
+  email                 String           @unique
+  userName              String           @unique
+  firstName             String?
+  lastName              String?
+  avatarUrl             String?
+  passwordHash          String
+  role                  UserRole         @default(PRECON_ANALYST)
+  passwordResetRequired Boolean          @default(false)
+  isActive              Boolean          @default(true)
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  lastLoginAt           DateTime?
+  sessions              Session[]
+  userAssignments       UserAssignment[]
 
   @@index([email])
   @@index([userName])
+  @@index([role])
 }
 
 // Session model for JWT tokens
@@ -132,14 +143,14 @@ model BidPackage {
   @@index([status])
 }
 
-// User assignment to bid packages with roles
+// User assignment to projects/bid packages (organizational roles determine permissions)
 model UserAssignment {
   id              String                      @id @default(cuid())
   userId          String
   user            User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userEmail       String
   userName        String
-  role            String                      // viewer, editor, owner
+  // Note: role field removed - permissions now based on User.role (organizational role)
 
   // Assignment can be to either a project OR a bid package
   bcProjectId     String?

@@ -7,6 +7,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import LoginForm from '@/components/LoginForm';
 import RegisterForm from '@/components/RegisterForm';
@@ -21,6 +22,7 @@ import LeftMenuPanel from '@/components/LeftMenuPanel';
 import ChatPanel from '@/components/ChatPanel';
 import ProjectCreationView from '@/components/ProjectCreationView';
 import ProjectReviewView from '@/components/ProjectReviewView';
+import UserManagementView from '@/components/UserManagementView';
 import { LineItem } from '@/components/BidFormTable';
 import { ChatMessage } from '@/types/chat';
 import { UserPublic } from '@/types/user';
@@ -29,7 +31,7 @@ import { BidPackage } from '@/types/bidPackage';
 import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
 
-type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing' | 'creating' | 'project-review';
+type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing' | 'creating' | 'project-review' | 'users';
 type AuthMode = 'login' | 'register';
 
 // Extended BidPackage with workspace data
@@ -40,6 +42,9 @@ interface BidPackageWorkspaceData extends BidPackage {
 }
 
 export default function Home() {
+  // Router for navigation
+  const router = useRouter();
+
   // Authentication state
   const [currentUser, setCurrentUser] = useState<UserPublic | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>('login');
@@ -152,13 +157,45 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      console.log('Logging out...');
+
+      // Call logout API
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Logout API failed:', await response.text());
+      } else {
+        console.log('Logout API succeeded');
+      }
+
+      // Clear all application state
       setCurrentUser(null);
       setSelectedProject(null);
       setSelectedBidPackage(null);
       setViewMode('projects');
+      setBcProjects([]);
+      setUserMenuOpen(false);
+      setIsCheckingAuth(false);
+      setAuthMode('login');
+
+      console.log('Logged out successfully - state cleared');
+
+      // Use router to refresh the page (better for Next.js)
+      router.refresh();
     } catch (error) {
       console.error('Logout failed:', error);
+      // Still clear local state even if API fails
+      setCurrentUser(null);
+      setUserMenuOpen(false);
+      setIsCheckingAuth(false);
+      setAuthMode('login');
+      router.refresh();
     }
   };
 
@@ -649,6 +686,16 @@ export default function Home() {
         // Otherwise toggle global chat
         setGlobalChatOpen(!globalChatOpen);
       }
+    } else if (item === 'users') {
+      // Show user management view
+      setViewMode('users');
+      setSelectedProject(null);
+      setSelectedBidPackage(null);
+    } else if (item === 'projects') {
+      // Return to projects view
+      setViewMode('projects');
+      setSelectedProject(null);
+      setSelectedBidPackage(null);
     } else {
       console.log('Menu item clicked:', item);
     }
@@ -657,12 +704,19 @@ export default function Home() {
   // Determine if chat should be shown as active
   const isChatActive = selectedBidPackage?.chatOpen || globalChatOpen;
 
+  // Determine active menu item
+  const getActiveMenuItem = () => {
+    if (isChatActive) return 'chat';
+    if (viewMode === 'users') return 'users';
+    return 'projects';
+  };
+
   // Main application
   return (
     <div className="h-screen flex bg-gray-50">
       {/* Left Menu Panel */}
       <LeftMenuPanel
-        activeItem={isChatActive ? 'chat' : 'projects'}
+        activeItem={getActiveMenuItem()}
         onItemClick={handleMenuItemClick}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -752,6 +806,19 @@ export default function Home() {
                 onProjectSelect={handleProjectSelect}
                 onNewProject={handleNewProject}
               />
+            </motion.div>
+          )}
+
+          {viewMode === 'users' && (
+            <motion.div
+              key="users"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <UserManagementView currentUser={currentUser} />
             </motion.div>
           )}
 
