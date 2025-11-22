@@ -33,9 +33,9 @@ export default function CSIFloatingButton({ onClick }: CSIFloatingButtonProps) {
       </svg>
 
       {/* Tooltip */}
-      <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-zinc-900 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-md">
+      <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-white border border-gray-200 text-zinc-900 text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
         CSI MasterFormat
-        <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-zinc-900" />
+        <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white" />
       </div>
     </motion.button>
   );
