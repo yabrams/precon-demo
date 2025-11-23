@@ -157,18 +157,6 @@ export default function BidFormTable({
         {/* Header */}
         <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
           <h2 className="text-base font-semibold text-zinc-900">Bid Form</h2>
-          {onChatOpen && (
-            <button
-              onClick={onChatOpen}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-zinc-900 hover:bg-gray-50 rounded-md transition-colors border border-gray-200"
-              title="Open AI Chat Assistant"
-            >
-              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <span>Chat</span>
-            </button>
-          )}
         </div>
 
         {/* Table Container */}
