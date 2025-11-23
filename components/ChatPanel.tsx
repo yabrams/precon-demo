@@ -118,12 +118,12 @@ export default function ChatPanel({
       <div className="border-b border-gray-200 bg-gray-50 px-5 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center shadow-sm">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 border border-gray-300 flex items-center justify-center shadow-sm">
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
-            <h3 className="text-base font-bold text-zinc-900">AI Assistant</h3>
+            <h3 className="text-base font-bold text-gray-900">AI Assistant</h3>
           </div>
           {onClose && (
             <button
@@ -155,7 +155,7 @@ export default function ChatPanel({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-zinc-900 mb-2">
+              <p className="text-sm font-semibold text-gray-900 mb-2">
                 Ask anything or request updates
               </p>
               <p className="text-xs text-gray-500">
@@ -179,11 +179,11 @@ export default function ChatPanel({
                 animate={{ opacity: 1 }}
                 className="flex justify-start mb-4"
               >
-                <div className="bg-zinc-50 border border-zinc-200 rounded-2xl px-5 py-3.5 shadow-sm animate-pulse">
+                <div className="bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3.5 shadow-sm animate-pulse">
                   <div className="flex gap-1.5">
-                    <div className="w-2 h-2 bg-zinc-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-zinc-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
               </motion.div>
@@ -208,7 +208,7 @@ export default function ChatPanel({
                 key={idx}
                 onClick={() => handleQuickReply(reply.value)}
                 disabled={isLoading}
-                className="px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-lg hover:bg-white hover:border-zinc-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-sm"
+                className="px-3 py-2 text-sm bg-gray-50 border border-gray-200 text-gray-800 rounded-lg hover:bg-white hover:border-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-sm"
               >
                 {reply.text}
               </button>
@@ -224,13 +224,13 @@ export default function ChatPanel({
             onKeyDown={handleKeyDown}
             placeholder="Ask a question or request an update..."
             disabled={isLoading}
-            className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 focus:outline-none text-sm text-zinc-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-600 shadow-sm transition-all"
+            className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 focus:outline-none text-sm text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-600 shadow-sm transition-all"
             rows={3}
           />
           <button
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
-            className="px-4 bg-zinc-900 text-white rounded-xl hover:bg-zinc-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center self-end shadow-md shadow-zinc-900/10 disabled:shadow-none"
+            className="px-4 bg-gray-700 text-white rounded-xl hover:bg-gray-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center self-end shadow-md disabled:shadow-none"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

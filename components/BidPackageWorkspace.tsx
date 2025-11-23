@@ -6,7 +6,7 @@
  * Similar to WorkspaceView but with bid package context
  */
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import BidFormTable, { LineItem } from './BidFormTable';
@@ -179,7 +179,42 @@ export default function BidPackageWorkspace({
   };
 
   return (
-    <div ref={workspaceRef} className="h-full flex flex-col bg-gray-50">
+    <div ref={workspaceRef} className="h-full flex flex-col bg-gray-50 relative">
+      {/* Chat Overlay */}
+      <AnimatePresence>
+        {chatOpen && (
+          <motion.div
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed left-0 top-0 bottom-0 w-[400px] bg-white shadow-2xl z-50"
+          >
+            <ChatPanel
+              messages={chatMessages}
+              onSendMessage={onSendChatMessage}
+              onAcceptChanges={onAcceptChatChanges}
+              onRejectChanges={onRejectChatChanges}
+              isLoading={isChatLoading}
+              onClose={onChatToggle}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Chat Toggle Overlay Button */}
+      <button
+        onClick={onChatToggle}
+        className={`fixed bottom-6 left-6 z-40 px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center font-medium text-2xl ${
+          chatOpen
+            ? 'bg-gray-600 hover:bg-gray-700 text-white'
+            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+        }`}
+        title={chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
+      >
+        💬
+      </button>
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -374,29 +409,17 @@ export default function BidPackageWorkspace({
             {/* Resize Handle */}
             <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize" />
 
-            {/* Right Panel: Bid Form Table or Chat */}
+            {/* Right Panel: Bid Form Table */}
             <Panel defaultSize={65} minSize={30}>
-              {chatOpen ? (
-                <ChatPanel
-                  messages={chatMessages}
-                  onSendMessage={onSendChatMessage}
-                  onAcceptChanges={onAcceptChatChanges}
-                  onRejectChanges={onRejectChatChanges}
-                  onClose={onChatToggle}
-                  isLoading={isChatLoading}
-                />
-              ) : (
-                <BidFormTable
-                  initialLineItems={lineItems}
-                  onUpdate={onLineItemsUpdate}
-                  hoveredItemId={hoveredItemId}
-                  onHoverChange={(itemId, rowElement) => {
-                    setHoveredItemId(itemId);
-                    setHoveredRowElement(rowElement);
-                  }}
-                  onChatOpen={onChatToggle}
-                />
-              )}
+              <BidFormTable
+                initialLineItems={lineItems}
+                onUpdate={onLineItemsUpdate}
+                hoveredItemId={hoveredItemId}
+                onHoverChange={(itemId, rowElement) => {
+                  setHoveredItemId(itemId);
+                  setHoveredRowElement(rowElement);
+                }}
+              />
             </Panel>
           </PanelGroup>
         )}

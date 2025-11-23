@@ -36,6 +36,9 @@ export interface BidPackage {
   // Diagram references (diagrams are owned by parent project)
   diagramIds?: string[]; // IDs of diagrams from parent project to use for this package
 
+  // Workspace data (flexible JSON storage)
+  workspaceData?: string; // JSON string containing lineItems, chatMessages, etc.
+
   // Relations (will be populated by database queries)
   bidForms?: any[]; // Will be BidForm[] when imported
   userAssignments?: any[]; // Will be UserAssignment[] when imported

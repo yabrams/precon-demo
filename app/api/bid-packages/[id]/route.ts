@@ -84,8 +84,19 @@ export async function PUT(
       diagramIds,
       captainName,
       budgetAmount,
-      location
+      location,
+      lineItems,
+      chatMessages
     } = body;
+
+    // Prepare workspace data if lineItems or chatMessages are provided
+    let workspaceData = undefined;
+    if (lineItems !== undefined || chatMessages !== undefined) {
+      workspaceData = JSON.stringify({
+        lineItems: lineItems || [],
+        chatMessages: chatMessages || []
+      });
+    }
 
     const bidPackage = await prisma.bidPackage.update({
       where: { id },
@@ -98,6 +109,7 @@ export async function PUT(
         ...(progress !== undefined && { progress }),
         ...(diagramIds !== undefined && { diagramIds: diagramIds ? JSON.stringify(diagramIds) : null }),
         ...(captainName !== undefined && { captainName }),
+        ...(workspaceData !== undefined && { workspaceData }),
         ...(budgetAmount !== undefined && { budgetAmount }),
         ...(location !== undefined && { location })
       },
