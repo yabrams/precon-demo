@@ -14,11 +14,15 @@ import { BuildingConnectedProject } from '@/types/buildingconnected';
 interface ProjectInformationPanelProps {
   project: BuildingConnectedProject;
   isEditMode: boolean;
+  onUpdateField?: (field: string, value: any) => void;
+  onUpdateLocation?: (field: string, value: any) => void;
 }
 
 export default function ProjectInformationPanel({
   project,
   isEditMode,
+  onUpdateField,
+  onUpdateLocation,
 }: ProjectInformationPanelProps) {
   const formatDate = (date?: Date) => {
     if (!date) return 'N/A';
@@ -79,7 +83,8 @@ export default function ProjectInformationPanel({
                 </label>
                 <input
                   type="text"
-                  defaultValue={project.name}
+                  value={project.name}
+                  onChange={(e) => onUpdateField?.('name', e.target.value)}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -89,7 +94,8 @@ export default function ProjectInformationPanel({
                 </label>
                 <input
                   type="text"
-                  defaultValue={project.projectNumber || ''}
+                  value={project.projectNumber || ''}
+                  onChange={(e) => onUpdateField?.('projectNumber', e.target.value)}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -98,7 +104,8 @@ export default function ProjectInformationPanel({
                   Description
                 </label>
                 <textarea
-                  defaultValue={project.description || ''}
+                  value={project.description || ''}
+                  onChange={(e) => onUpdateField?.('description', e.target.value)}
                   rows={2}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Project description..."
@@ -142,7 +149,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Address</label>
                   <input
                     type="text"
-                    defaultValue={project.location?.address || ''}
+                    value={project.location?.address || ''}
+                    onChange={(e) => onUpdateLocation?.('address', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Street address"
                   />
@@ -152,7 +160,8 @@ export default function ProjectInformationPanel({
                     <label className="block text-xs font-medium text-gray-700 mb-1">City</label>
                     <input
                       type="text"
-                      defaultValue={project.location?.city || ''}
+                      value={project.location?.city || ''}
+                      onChange={(e) => onUpdateLocation?.('city', e.target.value)}
                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -160,7 +169,8 @@ export default function ProjectInformationPanel({
                     <label className="block text-xs font-medium text-gray-700 mb-1">State</label>
                     <input
                       type="text"
-                      defaultValue={project.location?.state || ''}
+                      value={project.location?.state || ''}
+                      onChange={(e) => onUpdateLocation?.('state', e.target.value)}
                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -168,7 +178,8 @@ export default function ProjectInformationPanel({
                     <label className="block text-xs font-medium text-gray-700 mb-1">Zip</label>
                     <input
                       type="text"
-                      defaultValue={project.location?.zipCode || ''}
+                      value={project.location?.zipCode || ''}
+                      onChange={(e) => onUpdateLocation?.('zipCode', e.target.value)}
                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -179,11 +190,12 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Bid Due Date</label>
                   <input
                     type="date"
-                    defaultValue={
+                    value={
                       project.bidDueDate
                         ? new Date(project.bidDueDate).toISOString().split('T')[0]
                         : ''
                     }
+                    onChange={(e) => onUpdateField?.('bidDueDate', e.target.value ? new Date(e.target.value) : null)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -191,7 +203,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Budget</label>
                   <input
                     type="number"
-                    defaultValue={project.estimatedBudget || ''}
+                    value={project.estimatedBudget || ''}
+                    onChange={(e) => onUpdateField?.('estimatedBudget', parseFloat(e.target.value) || null)}
                     placeholder="0.00"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -200,11 +213,12 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Start Date</label>
                   <input
                     type="date"
-                    defaultValue={
+                    value={
                       project.estimatedStartDate
                         ? new Date(project.estimatedStartDate).toISOString().split('T')[0]
                         : ''
                     }
+                    onChange={(e) => onUpdateField?.('estimatedStartDate', e.target.value ? new Date(e.target.value) : null)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -212,11 +226,12 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Completion Date</label>
                   <input
                     type="date"
-                    defaultValue={
+                    value={
                       project.estimatedCompletionDate
                         ? new Date(project.estimatedCompletionDate).toISOString().split('T')[0]
                         : ''
                     }
+                    onChange={(e) => onUpdateField?.('estimatedCompletionDate', e.target.value ? new Date(e.target.value) : null)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -284,7 +299,8 @@ export default function ProjectInformationPanel({
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Construction Type</label>
                   <select
-                    defaultValue={project.constructionType || ''}
+                    value={project.constructionType || ''}
+                    onChange={(e) => onUpdateField?.('constructionType', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Select...</option>
@@ -297,7 +313,8 @@ export default function ProjectInformationPanel({
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Project Type</label>
                   <select
-                    defaultValue={project.projectType || ''}
+                    value={project.projectType || ''}
+                    onChange={(e) => onUpdateField?.('projectType', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Select...</option>
@@ -312,7 +329,8 @@ export default function ProjectInformationPanel({
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Scope of Work</label>
                 <textarea
-                  defaultValue={project.scope || ''}
+                  value={project.scope || ''}
+                  onChange={(e) => onUpdateField?.('scope', e.target.value)}
                   rows={2}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Project scope..."
@@ -323,7 +341,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Owner</label>
                   <input
                     type="text"
-                    defaultValue={project.owner || ''}
+                    value={project.owner || ''}
+                    onChange={(e) => onUpdateField?.('owner', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Owner name"
                   />
@@ -332,7 +351,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Architect</label>
                   <input
                     type="text"
-                    defaultValue={project.architect || ''}
+                    value={project.architect || ''}
+                    onChange={(e) => onUpdateField?.('architect', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Architect name"
                   />
@@ -341,7 +361,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Engineer</label>
                   <input
                     type="text"
-                    defaultValue={project.engineer || ''}
+                    value={project.engineer || ''}
+                    onChange={(e) => onUpdateField?.('engineer', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Engineer name"
                   />
@@ -350,7 +371,8 @@ export default function ProjectInformationPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">General Contractor</label>
                   <input
                     type="text"
-                    defaultValue={project.generalContractor || ''}
+                    value={project.generalContractor || ''}
+                    onChange={(e) => onUpdateField?.('generalContractor', e.target.value)}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="GC name"
                   />
@@ -426,7 +448,8 @@ export default function ProjectInformationPanel({
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Contract Type</label>
                 <select
-                  defaultValue={project.contractType || ''}
+                  value={project.contractType || ''}
+                  onChange={(e) => onUpdateField?.('contractType', e.target.value)}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select...</option>
@@ -439,7 +462,8 @@ export default function ProjectInformationPanel({
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Bonding Required</label>
                 <select
-                  defaultValue={project.bondingRequired ? 'true' : 'false'}
+                  value={project.bondingRequired ? 'true' : 'false'}
+                  onChange={(e) => onUpdateField?.('bondingRequired', e.target.value === 'true')}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="false">No</option>
@@ -449,7 +473,8 @@ export default function ProjectInformationPanel({
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Prevailing Wage</label>
                 <select
-                  defaultValue={project.prevailingWage ? 'true' : 'false'}
+                  value={project.prevailingWage ? 'true' : 'false'}
+                  onChange={(e) => onUpdateField?.('prevailingWage', e.target.value === 'true')}
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="false">No</option>
