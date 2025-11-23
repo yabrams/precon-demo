@@ -36,6 +36,7 @@ model User {
   lastLoginAt           DateTime?
   sessions              Session[]
   userAssignments       UserAssignment[]
+  captainBidPackages    BidPackage[]     @relation("BidPackageCaptain")
 
   @@index([email])
   @@index([userName])
@@ -137,7 +138,9 @@ model BidPackage {
   progress          Int                          @default(0) // 0-100 percentage
 
   // Additional fields
-  captainName       String?                      // Captain assigned to this bid package
+  captainId         String?                      // Captain assigned to this bid package
+  captain           User?                        @relation("BidPackageCaptain", fields: [captainId], references: [id], onDelete: SetNull)
+  captainName       String?                      // Legacy field - kept for backward compatibility
   budgetAmount      Float?                       // Budget amount for this package
   location          String?                      // Location of the work
 
@@ -211,6 +214,7 @@ model Diagram {
   fileUrl       String
   fileType      String
   fileSize      Int
+  fileHash      String?                      @unique // SHA-256 hash for duplicate detection
   uploadedAt    DateTime                     @default(now())
   uploadedBy    String?                      // User ID who uploaded
 
@@ -225,6 +229,7 @@ model Diagram {
 
   @@index([bcProjectId])
   @@index([projectId])
+  @@index([fileHash])
 }
 
 // Updated BidForm model - can belong to either BidPackage or legacy Project

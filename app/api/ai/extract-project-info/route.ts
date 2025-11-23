@@ -30,47 +30,75 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare image content for Claude Vision API
-    const imageContents = await Promise.all(
-      documentUrls.map(async (imageUrl, index) => {
-        let imageData: string;
-        let mediaType: string;
+    // Note: Claude Vision API only supports image formats, not PDFs
+    const imageContents = [];
+    const skippedFiles = [];
 
-        if (imageUrl.startsWith('/uploads/')) {
-          // Read local file
-          const filepath = path.join(process.cwd(), 'public', imageUrl);
-          const buffer = await readFile(filepath);
-          imageData = buffer.toString('base64');
-          
-          // Determine media type from file extension
-          const ext = path.extname(imageUrl).toLowerCase();
-          mediaType = ext === '.png' ? 'image/png' : 
-                     ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 
-                     ext === '.webp' ? 'image/webp' : 
-                     ext === '.gif' ? 'image/gif' : 
-                     'application/pdf';
-        } else {
-          // Fetch remote URL
-          const response = await fetch(imageUrl);
-          const buffer = await response.arrayBuffer();
-          imageData = Buffer.from(buffer).toString('base64');
-          
-          // Get media type from response headers
-          const contentType = response.headers.get('content-type');
-          mediaType = contentType?.startsWith('image/') || contentType === 'application/pdf'
-            ? contentType
-            : 'image/jpeg';
+    for (let i = 0; i < documentUrls.length; i++) {
+      const imageUrl = documentUrls[i];
+      const fileName = documentNames[i];
+      let imageData: string;
+      let mediaType: string;
+
+      if (imageUrl.startsWith('/uploads/')) {
+        // Read local file
+        const ext = path.extname(imageUrl).toLowerCase();
+
+        // Skip PDF files as Claude Vision doesn't support them
+        if (ext === '.pdf') {
+          skippedFiles.push(fileName);
+          continue;
         }
 
-        return {
-          type: 'image' as const,
-          source: {
-            type: 'base64' as const,
-            media_type: mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' | 'application/pdf',
-            data: imageData,
-          },
-        };
-      })
-    );
+        const filepath = path.join(process.cwd(), 'public', imageUrl);
+        const buffer = await readFile(filepath);
+        imageData = buffer.toString('base64');
+
+        // Determine media type from file extension
+        mediaType = ext === '.png' ? 'image/png' :
+                   ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' :
+                   ext === '.webp' ? 'image/webp' :
+                   ext === '.gif' ? 'image/gif' :
+                   'image/jpeg'; // Default to JPEG
+      } else {
+        // Fetch remote URL
+        const response = await fetch(imageUrl);
+        const buffer = await response.arrayBuffer();
+
+        // Get media type from response headers
+        const contentType = response.headers.get('content-type');
+
+        // Skip PDF files
+        if (contentType === 'application/pdf' || imageUrl.toLowerCase().endsWith('.pdf')) {
+          skippedFiles.push(fileName);
+          continue;
+        }
+
+        imageData = Buffer.from(buffer).toString('base64');
+        mediaType = contentType && contentType.startsWith('image/')
+          ? contentType
+          : 'image/jpeg'; // Default to JPEG
+      }
+
+      imageContents.push({
+        type: 'image' as const,
+        source: {
+          type: 'base64' as const,
+          media_type: mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
+          data: imageData,
+        },
+      });
+    }
+
+    // If no valid images found (e.g., all PDFs), return an appropriate message
+    if (imageContents.length === 0) {
+      return NextResponse.json({
+        success: false,
+        error: 'No supported image files found',
+        message: 'PDF files are not currently supported for project info extraction. Please upload image files (PNG, JPG, WebP, GIF) instead.',
+        skippedFiles
+      });
+    }
 
     // Construct AI prompt for project info extraction
     const documentList = documentNames.map((name, idx) => `${idx + 1}. ${name}`).join('\n');

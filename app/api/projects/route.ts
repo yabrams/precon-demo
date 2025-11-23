@@ -16,6 +16,7 @@ export async function GET() {
         },
         bidPackages: {
           include: {
+            captain: true,
             bidForms: {
               include: {
                 lineItems: true
@@ -184,7 +185,9 @@ export async function POST(request: Request) {
                 status: pkg.status || 'draft',
                 progress: pkg.progress || 0,
                 bidDueDate: pkg.bidDueDate ? new Date(pkg.bidDueDate) : null,
-                diagramIds: pkg.diagramIds ? JSON.stringify(pkg.diagramIds) : null
+                diagramIds: pkg.diagramIds ? JSON.stringify(pkg.diagramIds) : null,
+                captainId: pkg.captainId || null,
+                budgetAmount: pkg.budgetAmount || null
               }
             })
           )
@@ -201,6 +204,9 @@ export async function POST(request: Request) {
             }
           },
           bidPackages: {
+            include: {
+              captain: true
+            },
             orderBy: {
               createdAt: 'asc'
             }

@@ -82,6 +82,7 @@ export async function PUT(
       status,
       progress,
       diagramIds,
+      captainId,
       captainName,
       budgetAmount,
       location,
@@ -108,12 +109,14 @@ export async function PUT(
         ...(status && { status }),
         ...(progress !== undefined && { progress }),
         ...(diagramIds !== undefined && { diagramIds: diagramIds ? JSON.stringify(diagramIds) : null }),
+        ...(captainId !== undefined && { captainId }),
         ...(captainName !== undefined && { captainName }),
         ...(workspaceData !== undefined && { workspaceData }),
         ...(budgetAmount !== undefined && { budgetAmount }),
         ...(location !== undefined && { location })
       },
       include: {
+        captain: true,
         bidForms: {
           include: {
             lineItems: true

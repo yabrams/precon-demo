@@ -27,7 +27,14 @@ export interface BidPackage {
 
   // Assignment
   captainId?: string; // User ID of the package captain
-  captainName?: string; // Captain's display name (populated from user lookup)
+  captain?: { // Captain user object (populated from relation)
+    id: string;
+    userName: string;
+    firstName?: string;
+    lastName?: string;
+    email: string;
+  };
+  captainName?: string; // Legacy field - kept for backward compatibility
   location?: string; // Package location or work area
 
   // Budget
