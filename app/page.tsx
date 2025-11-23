@@ -207,25 +207,45 @@ export default function Home() {
 
   const handleBidPackageSelect = (bidPackage: BidPackage) => {
     // Initialize workspace data for bid package
-    // Load line items from bid forms
-    const allLineItems = bidPackage.bidForms?.flatMap(bf =>
-      bf.lineItems?.map(li => ({
-        id: li.id,
-        item_number: li.itemNumber,
-        description: li.description,
-        quantity: li.quantity,
-        unit: li.unit,
-        unit_price: li.unitPrice,
-        total_price: li.totalPrice,
-        notes: li.notes,
-        verified: li.verified
-      })) || []
-    ) || [];
+    let lineItems: LineItem[] = [];
+    let chatMessages: ChatMessage[] = [];
+
+    // Try to load workspace data if it exists
+    if (bidPackage.workspaceData) {
+      try {
+        const parsed = JSON.parse(bidPackage.workspaceData as string);
+        if (parsed.lineItems) {
+          lineItems = parsed.lineItems;
+        }
+        if (parsed.chatMessages) {
+          chatMessages = parsed.chatMessages;
+        }
+      } catch (e) {
+        console.error('Failed to parse workspace data:', e);
+      }
+    }
+
+    // If no workspace data, load line items from bid forms
+    if (lineItems.length === 0) {
+      lineItems = bidPackage.bidForms?.flatMap(bf =>
+        bf.lineItems?.map(li => ({
+          id: li.id,
+          item_number: li.itemNumber,
+          description: li.description,
+          quantity: li.quantity,
+          unit: li.unit,
+          unit_price: li.unitPrice,
+          total_price: li.totalPrice,
+          notes: li.notes,
+          verified: li.verified
+        })) || []
+      ) || [];
+    }
 
     const workspaceData: BidPackageWorkspaceData = {
       ...bidPackage,
-      lineItems: allLineItems,
-      chatMessages: [],
+      lineItems,
+      chatMessages,
       chatOpen: false,
     };
     setSelectedBidPackage(workspaceData);
@@ -465,12 +485,32 @@ export default function Home() {
     }
   };
 
-  const handleLineItemsUpdate = (updatedItems: LineItem[]) => {
+  const handleLineItemsUpdate = async (updatedItems: LineItem[]) => {
     if (selectedBidPackage) {
+      // Update local state immediately
       setSelectedBidPackage({
         ...selectedBidPackage,
         lineItems: updatedItems,
       });
+
+      // Persist to database - only send workspace data
+      try {
+        const response = await fetch(`/api/bid-packages/${selectedBidPackage.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lineItems: updatedItems,
+            chatMessages: selectedBidPackage.chatMessages,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.text();
+          console.error('Failed to save bid package updates:', errorData);
+        }
+      } catch (error) {
+        console.error('Error saving bid package:', error);
+      }
     }
   };
 
@@ -559,7 +599,7 @@ export default function Home() {
     }
   };
 
-  const handleAcceptChatChanges = (messageId: string) => {
+  const handleAcceptChatChanges = async (messageId: string) => {
     if (!selectedBidPackage) return;
 
     const message = selectedBidPackage.chatMessages.find((m) => m.id === messageId);
@@ -569,24 +609,46 @@ export default function Home() {
     let updatedItems = [...selectedBidPackage.lineItems];
 
     message.proposedChanges.forEach((change) => {
-      if (change.type === 'add') {
-        updatedItems.push({ ...change.item, id: change.item.id || generateId() });
-      } else if (change.type === 'update' && change.itemId) {
+      if (change.type === 'add' && change.newItem) {
+        updatedItems.push({ ...change.newItem, id: change.newItem.id || generateId() });
+      } else if (change.type === 'update' && change.itemId && change.newItem) {
         updatedItems = updatedItems.map((item) =>
-          item.id === change.itemId ? { ...item, ...change.item } : item
+          item.id === change.itemId ? { ...item, ...change.newItem } : item
         );
       } else if (change.type === 'delete' && change.itemId) {
         updatedItems = updatedItems.filter((item) => item.id !== change.itemId);
       }
     });
 
-    setSelectedBidPackage({
+    // Update local state
+    const updatedPackage = {
       ...selectedBidPackage,
       lineItems: updatedItems,
       chatMessages: selectedBidPackage.chatMessages.map((m) =>
         m.id === messageId ? { ...m, changesAccepted: true } : m
       ),
-    });
+    };
+
+    setSelectedBidPackage(updatedPackage);
+
+    // Persist to database - only send workspace data
+    try {
+      const response = await fetch(`/api/bid-packages/${selectedBidPackage.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lineItems: updatedItems,
+          chatMessages: updatedPackage.chatMessages,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Failed to save bid package after accepting chat changes:', errorData);
+      }
+    } catch (error) {
+      console.error('Error saving bid package:', error);
+    }
   };
 
   const handleRejectChatChanges = (messageId: string) => {

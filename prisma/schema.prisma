@@ -137,6 +137,9 @@ model BidPackage {
   // Diagram references (stored as JSON array of diagram IDs from parent project)
   diagramIds        String?                      @db.Text // JSON array of diagram IDs
 
+  // Workspace data (stored as JSON for flexible schema)
+  workspaceData     String?                      @db.Text // JSON object with lineItems, chatMessages, etc.
+
   // Relations
   bidForms          BidForm[]
   userAssignments   UserAssignment[]
