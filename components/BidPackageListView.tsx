@@ -554,15 +554,47 @@ export default function BidPackageListView({
                                 <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
                               )}
 
-                              {/* Progress Bar */}
-                              <div className="flex items-center space-x-2">
-                                <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                                  <div
-                                    className="bg-zinc-900 h-1.5 rounded-full transition-all"
-                                    style={{ width: `${bidPackage.progress}%` }}
-                                  />
-                                </div>
-                                <span className="text-xs font-mono text-gray-600">{bidPackage.progress}%</span>
+                              {/* Progress Steps */}
+                              <div>
+                                {(() => {
+                                  const steps = [
+                                    { key: 'to do', label: 'To Do' },
+                                    { key: 'assigned', label: 'Assigned' },
+                                    { key: 'in progress', label: 'In Progress' },
+                                    { key: 'in review', label: 'Pending Review' },
+                                    { key: 'bidding', label: 'Bidding' },
+                                    { key: 'bidding leveling', label: 'Bidding Leveling' },
+                                    { key: 'completed', label: 'Completed' }
+                                  ];
+                                  const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
+
+                                  return (
+                                    <div className="flex items-center gap-0.5">
+                                      {steps.map((step, index) => {
+                                        const isCompleted = index < currentStepIndex;
+                                        const isCurrent = index === currentStepIndex;
+
+                                        return (
+                                          <div key={step.key} className="flex-1">
+                                            <div
+                                              className={`h-1.5 transition-all ${
+                                                isCompleted || isCurrent
+                                                  ? 'bg-zinc-900'
+                                                  : 'bg-gray-200'
+                                              }`}
+                                              style={{
+                                                borderTopLeftRadius: index === 0 ? '9999px' : '0',
+                                                borderBottomLeftRadius: index === 0 ? '9999px' : '0',
+                                                borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
+                                                borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
+                                              }}
+                                            />
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             </div>
                           ))}
@@ -677,15 +709,47 @@ export default function BidPackageListView({
                           <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
                         )}
 
-                        {/* Progress Bar */}
-                        <div className="flex items-center space-x-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-zinc-900 h-2 rounded-full transition-all"
-                              style={{ width: `${bidPackage.progress}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-mono text-gray-600">{bidPackage.progress}%</span>
+                        {/* Progress Steps */}
+                        <div>
+                          {(() => {
+                            const steps = [
+                              { key: 'to do', label: 'To Do' },
+                              { key: 'assigned', label: 'Assigned' },
+                              { key: 'in progress', label: 'In Progress' },
+                              { key: 'in review', label: 'Pending Review' },
+                              { key: 'bidding', label: 'Bidding' },
+                              { key: 'bidding leveling', label: 'Bidding Leveling' },
+                              { key: 'completed', label: 'Completed' }
+                            ];
+                            const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
+
+                            return (
+                              <div className="flex items-center gap-0.5">
+                                {steps.map((step, index) => {
+                                  const isCompleted = index < currentStepIndex;
+                                  const isCurrent = index === currentStepIndex;
+
+                                  return (
+                                    <div key={step.key} className="flex-1">
+                                      <div
+                                        className={`h-1.5 transition-all ${
+                                          isCompleted || isCurrent
+                                            ? 'bg-zinc-900'
+                                            : 'bg-gray-200'
+                                        }`}
+                                        style={{
+                                          borderTopLeftRadius: index === 0 ? '9999px' : '0',
+                                          borderBottomLeftRadius: index === 0 ? '9999px' : '0',
+                                          borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
+                                          borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()}
                         </div>
                       </div>
                     ))}

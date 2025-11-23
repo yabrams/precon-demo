@@ -199,55 +199,57 @@ export default function BidPackageWorkspace({
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            {/* Magnifying Glass Toggle */}
-            {diagramUrl && (
-              <button
-                onClick={() => setMagnifyingGlassEnabled(!magnifyingGlassEnabled)}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
-                  magnifyingGlassEnabled
-                    ? 'bg-zinc-50 text-zinc-800 border border-zinc-200'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                }`}
-                title={magnifyingGlassEnabled ? 'Disable Magnifier' : 'Enable Magnifier'}
-              >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                  />
-                </svg>
-              </button>
-            )}
+          {/* Progress Steps - moved to top-right */}
+          <div className="min-w-[600px]">
+            {(() => {
+              const steps = [
+                { key: 'draft', label: 'To Do' },
+                { key: 'assigned', label: 'Assigned' },
+                { key: 'active', label: 'In Progress' },
+                { key: 'pending-review', label: 'Pending Review' },
+                { key: 'bidding', label: 'Bidding' },
+                { key: 'bidding-leveling', label: 'Bidding Leveling' },
+                { key: 'awarded', label: 'Completed' }
+              ];
+              const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
 
-            {/* Upload New Diagram */}
-            <button
-              onClick={onUploadNew}
-              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-900 rounded-lg text-sm transition-colors shadow-sm"
-            >
-              Upload Diagram
-            </button>
-          </div>
-        </div>
+              return (
+                <div className="flex items-center gap-1">
+                  {steps.map((step, index) => {
+                    const isCompleted = index < currentStepIndex;
+                    const isCurrent = index === currentStepIndex;
+                    const isPending = index > currentStepIndex;
 
-        {/* Progress Bar */}
-        <div className="mt-3">
-          <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-            <span>Package Progress</span>
-            <span className="font-medium font-mono">{bidPackage.progress}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-1.5">
-            <div
-              className="bg-zinc-900 h-1.5 rounded-full transition-all"
-              style={{ width: `${bidPackage.progress}%` }}
-            />
+                    return (
+                      <div key={step.key} className="flex items-center flex-1">
+                        <div className="relative flex-1">
+                          <div
+                            className={`h-1.5 transition-all ${
+                              isCompleted || isCurrent
+                                ? 'bg-zinc-900'
+                                : 'bg-gray-200'
+                            }`}
+                            style={{
+                              borderTopLeftRadius: index === 0 ? '9999px' : '0',
+                              borderBottomLeftRadius: index === 0 ? '9999px' : '0',
+                              borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
+                              borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
+                            }}
+                          />
+                          {isCurrent && (
+                            <div className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                              <span className="text-[10px] font-medium text-zinc-900 bg-white px-1.5 py-0.5 rounded border border-zinc-200">
+                                {step.label}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
