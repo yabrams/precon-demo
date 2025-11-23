@@ -10,6 +10,7 @@ import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronDown, ChevronRight, Edit2, Eye } from 'lucide-react';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
+import ProjectInformationPanel from './ProjectInformationPanel';
 
 interface UploadedFile {
   url: string;
@@ -70,6 +71,17 @@ export default function BidPackageListView({
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  const getCaptainInitials = (captainName?: string) => {
+    if (!captainName) return '?';
+    const parts = captainName.trim().split(' ').filter(Boolean);
+    if (parts.length === 0) return '?';
+    if (parts.length === 1) {
+      const name = parts[0];
+      return name.length >= 2 ? `${name[0]}${name[name.length - 1]}`.toUpperCase() : name[0].toUpperCase();
+    }
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
   };
 
   // Direct file upload handler
@@ -149,7 +161,7 @@ export default function BidPackageListView({
         {project.diagrams && project.diagrams.length > 0 ? (
           <PanelGroup direction="horizontal" className="h-full">
             {/* Left Panel: Documents */}
-            <Panel defaultSize={35} minSize={20} className="bg-white border-r border-gray-200">
+            <Panel defaultSize={50} minSize={20} className="bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
                 {/* Diagram Selector */}
                 <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
@@ -206,363 +218,11 @@ export default function BidPackageListView({
             <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize" />
 
             {/* Right Panel: Project Info */}
-            <Panel defaultSize={65} minSize={30} className="bg-gray-50">
+            <Panel defaultSize={50} minSize={30} className="bg-gray-50">
               <div className="h-full overflow-auto p-6">
                 <div className="max-w-4xl mx-auto space-y-4">
-                  {/* Project Information Card */}
-                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                    <h3 className="text-sm font-semibold text-zinc-900 mb-3">Project Information</h3>
-                    {isEditMode ? (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Project Name</label>
-                          <input
-                            type="text"
-                            defaultValue={project.name}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
-                          <textarea
-                            defaultValue={project.description || ''}
-                            rows={3}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-sm">
-                        {project.description && (
-                          <div>
-                            <span className="text-gray-600">Description:</span>
-                            <p className="text-zinc-900 mt-1">{project.description}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Location & Schedule Card */}
-                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                    <h3 className="text-sm font-semibold text-zinc-900 mb-3">Location & Schedule</h3>
-                    {isEditMode ? (
-                      <div className="space-y-4">
-                        <div className="space-y-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Address</label>
-                            <input
-                              type="text"
-                              defaultValue={project.location?.address || ''}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                          </div>
-                          <div className="grid grid-cols-3 gap-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">City</label>
-                              <input
-                                type="text"
-                                defaultValue={project.location?.city || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">State</label>
-                              <input
-                                type="text"
-                                defaultValue={project.location?.state || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Zip Code</label>
-                              <input
-                                type="text"
-                                defaultValue={project.location?.zipCode || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="pt-3 border-t border-gray-200 space-y-3">
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Bid Due Date</label>
-                              <input
-                                type="date"
-                                defaultValue={project.bidDueDate ? new Date(project.bidDueDate).toISOString().split('T')[0] : ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Estimated Budget</label>
-                              <input
-                                type="number"
-                                defaultValue={project.estimatedBudget || ''}
-                                placeholder="0.00"
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Estimated Start Date</label>
-                              <input
-                                type="date"
-                                defaultValue={project.estimatedStartDate ? new Date(project.estimatedStartDate).toISOString().split('T')[0] : ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Estimated Completion Date</label>
-                              <input
-                                type="date"
-                                defaultValue={project.estimatedCompletionDate ? new Date(project.estimatedCompletionDate).toISOString().split('T')[0] : ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="text-sm text-zinc-900">
-                          {project.location?.address && <p className="text-gray-900">{project.location.address}</p>}
-                          {(project.location?.city || project.location?.state || project.location?.zipCode) && (
-                            <p className="text-gray-600">
-                              {[project.location?.city, project.location?.state, project.location?.zipCode]
-                                .filter(Boolean)
-                                .join(', ')}
-                            </p>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm pt-3 border-t border-gray-200">
-                          {project.bidDueDate && (
-                            <div>
-                              <span className="text-gray-600">Bid Due:</span>
-                              <p className="text-zinc-900 mt-1">{formatDate(project.bidDueDate)}</p>
-                            </div>
-                          )}
-                          {project.estimatedBudget && (
-                            <div>
-                              <span className="text-gray-600">Budget:</span>
-                              <p className="text-zinc-900 mt-1">${project.estimatedBudget.toLocaleString()}</p>
-                            </div>
-                          )}
-                          {project.estimatedStartDate && (
-                            <div>
-                              <span className="text-gray-600">Start:</span>
-                              <p className="text-zinc-900 mt-1">{formatDate(project.estimatedStartDate)}</p>
-                            </div>
-                          )}
-                          {project.estimatedCompletionDate && (
-                            <div>
-                              <span className="text-gray-600">Completion:</span>
-                              <p className="text-zinc-900 mt-1">{formatDate(project.estimatedCompletionDate)}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Project Details & Team Card */}
-                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                    <h3 className="text-sm font-semibold text-zinc-900 mb-3">Project Details & Team</h3>
-                    {isEditMode ? (
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Scope of Work</label>
-                          <textarea
-                            defaultValue={project.scope || ''}
-                            rows={3}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Construction Type</label>
-                            <select
-                              defaultValue={project.constructionType || ''}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                              <option value="">Select type...</option>
-                              <option value="new">New Construction</option>
-                              <option value="renovation">Renovation</option>
-                              <option value="addition">Addition</option>
-                              <option value="tenant-improvement">Tenant Improvement</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Project Type</label>
-                            <select
-                              defaultValue={project.projectType || ''}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                              <option value="">Select type...</option>
-                              <option value="commercial">Commercial</option>
-                              <option value="residential">Residential</option>
-                              <option value="industrial">Industrial</option>
-                              <option value="institutional">Institutional</option>
-                              <option value="infrastructure">Infrastructure</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="pt-3 border-t border-gray-200 space-y-3">
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Owner</label>
-                              <input
-                                type="text"
-                                defaultValue={project.owner || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Architect</label>
-                              <input
-                                type="text"
-                                defaultValue={project.architect || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Engineer</label>
-                              <input
-                                type="text"
-                                defaultValue={project.engineer || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">General Contractor</label>
-                              <input
-                                type="text"
-                                defaultValue={project.generalContractor || ''}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          {project.scope && (
-                            <div className="col-span-2">
-                              <span className="text-gray-600">Scope:</span>
-                              <p className="text-zinc-900 mt-1">{project.scope}</p>
-                            </div>
-                          )}
-                          {project.constructionType && (
-                            <div>
-                              <span className="text-gray-600">Construction Type:</span>
-                              <p className="text-zinc-900 mt-1 capitalize">{project.constructionType}</p>
-                            </div>
-                          )}
-                          {project.projectType && (
-                            <div>
-                              <span className="text-gray-600">Project Type:</span>
-                              <p className="text-zinc-900 mt-1 capitalize">{project.projectType}</p>
-                            </div>
-                          )}
-                        </div>
-                        {(project.owner || project.architect || project.engineer || project.generalContractor) && (
-                          <div className="grid grid-cols-2 gap-4 text-sm pt-3 border-t border-gray-200">
-                            {project.owner && (
-                              <div>
-                                <span className="text-gray-600">Owner:</span>
-                                <p className="text-zinc-900 mt-1">{project.owner}</p>
-                              </div>
-                            )}
-                            {project.architect && (
-                              <div>
-                                <span className="text-gray-600">Architect:</span>
-                                <p className="text-zinc-900 mt-1">{project.architect}</p>
-                              </div>
-                            )}
-                            {project.engineer && (
-                              <div>
-                                <span className="text-gray-600">Engineer:</span>
-                                <p className="text-zinc-900 mt-1">{project.engineer}</p>
-                              </div>
-                            )}
-                            {project.generalContractor && (
-                              <div>
-                                <span className="text-gray-600">General Contractor:</span>
-                                <p className="text-zinc-900 mt-1">{project.generalContractor}</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Contract Details Card */}
-                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                    <h3 className="text-sm font-semibold text-zinc-900 mb-3">Contract Details</h3>
-                    {isEditMode ? (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Contract Type</label>
-                          <select
-                            defaultValue={project.contractType || ''}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          >
-                            <option value="">Select type...</option>
-                            <option value="lump-sum">Lump Sum</option>
-                            <option value="cost-plus">Cost Plus</option>
-                            <option value="time-and-materials">Time and Materials</option>
-                            <option value="unit-price">Unit Price</option>
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Bonding Required</label>
-                            <select
-                              defaultValue={project.bondingRequired ? 'true' : 'false'}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                              <option value="false">No</option>
-                              <option value="true">Yes</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Prevailing Wage</label>
-                            <select
-                              defaultValue={project.prevailingWage ? 'true' : 'false'}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                              <option value="false">No</option>
-                              <option value="true">Yes</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        {project.contractType && (
-                          <div>
-                            <span className="text-gray-600">Contract Type:</span>
-                            <p className="text-zinc-900 mt-1 capitalize">{project.contractType.replace('-', ' ')}</p>
-                          </div>
-                        )}
-                        {project.bondingRequired !== undefined && (
-                          <div>
-                            <span className="text-gray-600">Bonding Required:</span>
-                            <p className="text-zinc-900 mt-1">{project.bondingRequired ? 'Yes' : 'No'}</p>
-                          </div>
-                        )}
-                        {project.prevailingWage !== undefined && (
-                          <div>
-                            <span className="text-gray-600">Prevailing Wage:</span>
-                            <p className="text-zinc-900 mt-1">{project.prevailingWage ? 'Yes' : 'No'}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  {/* Consolidated Project Information */}
+                  <ProjectInformationPanel project={project} isEditMode={isEditMode} />
 
                   {/* Bid Packages Card */}
                   <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
@@ -640,6 +300,26 @@ export default function BidPackageListView({
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                   />
                                 </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-700 mb-1">Captain Name</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={bidPackage.captainName || ''}
+                                      placeholder="Captain name"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={bidPackage.location || ''}
+                                      placeholder="Package location"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    />
+                                  </div>
+                                </div>
                                 <div className="pt-2 border-t border-gray-300">
                                   <button
                                     onClick={() => onBidPackageSelect(bidPackage)}
@@ -652,27 +332,58 @@ export default function BidPackageListView({
                           ))}
                         </div>
                       ) : (
-                        <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {bidPackages.map((bidPackage) => (
                             <div
                               key={bidPackage.id}
                               onClick={() => onBidPackageSelect(bidPackage)}
-                              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                              className="p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-gray-300 cursor-pointer transition-all bg-white"
                             >
-                              <div className="flex items-start justify-between mb-2">
-                                <h4 className="text-sm font-medium text-zinc-900">{bidPackage.name}</h4>
-                                <span
-                                  className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
-                                    bidPackage.status
-                                  )}`}
-                                >
-                                  {bidPackage.status}
-                                </span>
+                              {/* Header with Status and Avatar */}
+                              <div className="flex items-start justify-between mb-3">
+                                <h4 className="text-sm font-semibold text-zinc-900 line-clamp-1 flex-1 pr-2">
+                                  {bidPackage.name}
+                                </h4>
+                                <div className="flex items-center space-x-2 flex-shrink-0">
+                                  <span
+                                    className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
+                                      bidPackage.status
+                                    )}`}
+                                  >
+                                    {bidPackage.status}
+                                  </span>
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                                    bidPackage.captainName
+                                      ? 'bg-zinc-900 text-white'
+                                      : 'bg-gray-200 text-gray-500'
+                                  }`}>
+                                    {getCaptainInitials(bidPackage.captainName)}
+                                  </div>
+                                </div>
                               </div>
-                              {bidPackage.description && (
-                                <p className="text-xs text-gray-600 mb-2 line-clamp-1">{bidPackage.description}</p>
+
+                              {/* Captain Name */}
+                              {bidPackage.captainName && (
+                                <div className="mb-2">
+                                  <span className="text-xs text-gray-500">Captain:</span>
+                                  <p className="text-xs font-medium text-zinc-900">{bidPackage.captainName}</p>
+                                </div>
                               )}
-                              {/* Compact Progress Bar */}
+
+                              {/* Location */}
+                              {bidPackage.location && (
+                                <div className="mb-3">
+                                  <span className="text-xs text-gray-500">Location:</span>
+                                  <p className="text-xs text-zinc-900 line-clamp-1">{bidPackage.location}</p>
+                                </div>
+                              )}
+
+                              {/* Description */}
+                              {bidPackage.description && (
+                                <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
+                              )}
+
+                              {/* Progress Bar */}
                               <div className="flex items-center space-x-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-1.5">
                                   <div
@@ -751,26 +462,58 @@ export default function BidPackageListView({
                 {bidPackages.length === 0 ? (
                   <p className="text-sm text-gray-600 text-center py-8">No bid packages yet</p>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {bidPackages.map((bidPackage) => (
                       <div
                         key={bidPackage.id}
                         onClick={() => onBidPackageSelect(bidPackage)}
-                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer bg-white"
                       >
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-medium text-zinc-900">{bidPackage.name}</h4>
-                          <span
-                            className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
-                              bidPackage.status
-                            )}`}
-                          >
-                            {bidPackage.status}
-                          </span>
+                        {/* Header with Status and Avatar */}
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-zinc-900 line-clamp-1 flex-1 pr-2">
+                            {bidPackage.name}
+                          </h4>
+                          <div className="flex items-center space-x-2 flex-shrink-0">
+                            <span
+                              className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
+                                bidPackage.status
+                              )}`}
+                            >
+                              {bidPackage.status}
+                            </span>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                              bidPackage.captainName
+                                ? 'bg-zinc-900 text-white'
+                                : 'bg-gray-200 text-gray-500'
+                            }`}>
+                              {getCaptainInitials(bidPackage.captainName)}
+                            </div>
+                          </div>
                         </div>
-                        {bidPackage.description && (
-                          <p className="text-sm text-gray-600 mb-3">{bidPackage.description}</p>
+
+                        {/* Captain Name */}
+                        {bidPackage.captainName && (
+                          <div className="mb-2">
+                            <span className="text-xs text-gray-500">Captain:</span>
+                            <p className="text-xs font-medium text-zinc-900">{bidPackage.captainName}</p>
+                          </div>
                         )}
+
+                        {/* Location */}
+                        {bidPackage.location && (
+                          <div className="mb-3">
+                            <span className="text-xs text-gray-500">Location:</span>
+                            <p className="text-xs text-zinc-900 line-clamp-1">{bidPackage.location}</p>
+                          </div>
+                        )}
+
+                        {/* Description */}
+                        {bidPackage.description && (
+                          <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
+                        )}
+
+                        {/* Progress Bar */}
                         <div className="flex items-center space-x-2">
                           <div className="flex-1 bg-gray-200 rounded-full h-2">
                             <div
