@@ -126,7 +126,7 @@ model BidPackage {
   bidDueDate        DateTime?
 
   // Status tracking
-  status            String                       @default("draft") // draft, active, bidding, awarded, closed
+  status            String                       @default("to do") // to do, assigned, in progress, in review, bidding, bidding leveling, completed
   progress          Int                          @default(0) // 0-100 percentage
 
   // Additional fields

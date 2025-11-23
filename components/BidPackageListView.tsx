@@ -184,16 +184,20 @@ export default function BidPackageListView({
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'to do':
+        return 'bg-gray-50 text-gray-600 border-gray-200';
+      case 'assigned':
+        return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'in progress':
+        return 'bg-amber-50 text-amber-700 border-amber-200';
+      case 'in review':
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       case 'bidding':
-        return 'bg-zinc-50 text-zinc-800 border-zinc-200';
-      case 'active':
+        return 'bg-orange-50 text-orange-700 border-orange-200';
+      case 'bidding leveling':
+        return 'bg-rose-50 text-rose-700 border-rose-200';
+      case 'completed':
         return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-      case 'awarded':
-        return 'bg-zinc-50 text-zinc-800 border-zinc-200';
-      case 'closed':
-        return 'bg-gray-50 text-gray-600 border-gray-200';
-      case 'draft':
-        return 'bg-gray-50 text-gray-600 border-gray-200';
       default:
         return 'bg-gray-50 text-gray-600 border-gray-200';
     }
@@ -446,11 +450,13 @@ export default function BidPackageListView({
                                       onChange={(e) => updateBidPackage(index, 'status', e.target.value)}
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                     >
-                                      <option value="draft">Draft</option>
-                                      <option value="active">Active</option>
+                                      <option value="to do">To Do</option>
+                                      <option value="assigned">Assigned</option>
+                                      <option value="in progress">In Progress</option>
+                                      <option value="in review">In Review</option>
                                       <option value="bidding">Bidding</option>
-                                      <option value="awarded">Awarded</option>
-                                      <option value="closed">Closed</option>
+                                      <option value="bidding leveling">Bidding Leveling</option>
+                                      <option value="completed">Completed</option>
                                     </select>
                                   </div>
                                 </div>
@@ -534,13 +540,6 @@ export default function BidPackageListView({
                                 </div>
                               </div>
 
-                              {/* Captain Name */}
-                              {bidPackage.captainName && (
-                                <div className="mb-2">
-                                  <span className="text-xs text-gray-500">Captain:</span>
-                                  <p className="text-xs font-medium text-zinc-900">{bidPackage.captainName}</p>
-                                </div>
-                              )}
 
                               {/* Location */}
                               {bidPackage.location && (
@@ -664,13 +663,6 @@ export default function BidPackageListView({
                           </div>
                         </div>
 
-                        {/* Captain Name */}
-                        {bidPackage.captainName && (
-                          <div className="mb-2">
-                            <span className="text-xs text-gray-500">Captain:</span>
-                            <p className="text-xs font-medium text-zinc-900">{bidPackage.captainName}</p>
-                          </div>
-                        )}
 
                         {/* Location */}
                         {bidPackage.location && (
