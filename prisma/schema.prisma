@@ -129,6 +129,11 @@ model BidPackage {
   status            String                       @default("draft") // draft, active, bidding, awarded, closed
   progress          Int                          @default(0) // 0-100 percentage
 
+  // Additional fields
+  captainName       String?                      // Captain assigned to this bid package
+  budgetAmount      Float?                       // Budget amount for this package
+  location          String?                      // Location of the work
+
   // Diagram references (stored as JSON array of diagram IDs from parent project)
   diagramIds        String?                      @db.Text // JSON array of diagram IDs
 

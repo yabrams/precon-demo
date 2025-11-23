@@ -243,6 +243,18 @@ export default function Home() {
     setViewMode('packages');
   };
 
+  const handleProjectUpdate = (updatedProject: BuildingConnectedProject, updatedBidPackages: BidPackage[]) => {
+    // Update the project in bcProjects array
+    setBcProjects(prev => prev.map(p =>
+      p.id === updatedProject.id
+        ? { ...updatedProject, bidPackages: updatedBidPackages }
+        : p
+    ));
+
+    // Update selectedProject
+    setSelectedProject({ ...updatedProject, bidPackages: updatedBidPackages });
+  };
+
   const handleUploadNew = () => {
     setViewMode('upload');
   };
@@ -848,6 +860,8 @@ export default function Home() {
                 onBack={handleBackToProjects}
                 onUploadDiagrams={handleUploadNew}
                 onUploadSuccess={handleUploadSuccess}
+                onProjectUpdate={handleProjectUpdate}
+                onSaveComplete={loadProjects}
               />
             </motion.div>
           )}

@@ -5,12 +5,21 @@
  * Displays bid packages for a selected BuildingConnected project
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronDown, ChevronRight, Edit2, Eye } from 'lucide-react';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
 import ProjectInformationPanel from './ProjectInformationPanel';
+
+interface User {
+  id: string;
+  email: string;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  role: string;
+}
 
 interface UploadedFile {
   url: string;
@@ -26,6 +35,8 @@ interface BidPackageListViewProps {
   onBack: () => void;
   onUploadDiagrams?: () => void;
   onUploadSuccess?: (file: UploadedFile) => void;
+  onProjectUpdate?: (updatedProject: BuildingConnectedProject, updatedBidPackages: BidPackage[]) => void;
+  onSaveComplete?: () => Promise<void>;
 }
 
 export default function BidPackageListView({
@@ -35,12 +46,137 @@ export default function BidPackageListView({
   onBack,
   onUploadDiagrams,
   onUploadSuccess,
+  onProjectUpdate,
+  onSaveComplete,
 }: BidPackageListViewProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(
     project.diagrams?.[0]?.id || null
   );
   const imageRef = useRef<HTMLImageElement>(null);
+
+  // State for tracking edits
+  const [editedBidPackages, setEditedBidPackages] = useState<BidPackage[]>([]);
+  const [editedProject, setEditedProject] = useState<BuildingConnectedProject>(project);
+
+  // State for users list
+  const [users, setUsers] = useState<User[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+
+  // Fetch users when component mounts
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        const response = await fetch('/api/admin/users');
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data.users || []);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  // Initialize edit state when entering edit mode
+  const handleEditModeToggle = async () => {
+    if (!isEditMode) {
+      // Entering edit mode - initialize state
+      setEditedBidPackages(JSON.parse(JSON.stringify(bidPackages)));
+      setEditedProject(JSON.parse(JSON.stringify(project)));
+      setIsEditMode(true);
+    } else {
+      // Saving changes
+      console.log('Saving changes...', { editedProject, editedBidPackages });
+
+      // Update parent component's state immediately
+      if (onProjectUpdate) {
+        onProjectUpdate(editedProject, editedBidPackages);
+      }
+
+      // Persist to database
+      try {
+        let allSuccess = true;
+
+        // Update each bid package that was modified
+        for (const bidPackage of editedBidPackages) {
+          console.log('Updating bid package:', bidPackage.id, bidPackage);
+          const response = await fetch(`/api/bid-packages/${bidPackage.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bidPackage),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Failed to update bid package:', bidPackage.id, errorData);
+            allSuccess = false;
+          } else {
+            const data = await response.json();
+            console.log('Bid package updated successfully:', data);
+          }
+        }
+
+        // Update project information
+        console.log('Updating project:', editedProject.id);
+        const projectResponse = await fetch(`/api/projects/${editedProject.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(editedProject),
+        });
+
+        if (!projectResponse.ok) {
+          const errorData = await projectResponse.json();
+          console.error('Failed to update project:', errorData);
+          allSuccess = false;
+        } else {
+          const data = await projectResponse.json();
+          console.log('Project updated successfully:', data);
+        }
+
+        if (allSuccess) {
+          console.log('All changes saved successfully');
+          // Reload projects from database
+          if (onSaveComplete) {
+            await onSaveComplete();
+          }
+        } else {
+          alert('Some changes failed to save. Please check the console and try again.');
+        }
+      } catch (error) {
+        console.error('Error saving changes:', error);
+        alert('Failed to save changes. Please try again.');
+      }
+
+      setIsEditMode(false);
+    }
+  };
+
+  // Update bid package field
+  const updateBidPackage = (index: number, field: string, value: any) => {
+    setEditedBidPackages(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  // Update project field
+  const updateProjectField = (field: string, value: any) => {
+    setEditedProject(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Update nested project location field
+  const updateProjectLocation = (field: string, value: any) => {
+    setEditedProject(prev => ({
+      ...prev,
+      location: { ...prev.location, [field]: value }
+    }));
+  };
 
   const currentDiagram = selectedDiagramId
     ? project.diagrams?.find(d => d.id === selectedDiagramId)
@@ -82,6 +218,14 @@ export default function BidPackageListView({
       return name.length >= 2 ? `${name[0]}${name[name.length - 1]}`.toUpperCase() : name[0].toUpperCase();
     }
     return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  };
+
+  // Helper to format user display name
+  const formatUserName = (user: User) => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return user.userName;
   };
 
   // Direct file upload handler
@@ -126,25 +270,35 @@ export default function BidPackageListView({
           <div className="flex items-center space-x-4">
             <div>
               <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
-              {project.projectNumber && (
-                <p className="text-xs text-gray-600 font-mono">#{project.projectNumber}</p>
-              )}
+              <div className="flex items-center space-x-3">
+                {project.projectNumber && (
+                  <p className="text-xs text-gray-600 font-mono">#{project.projectNumber}</p>
+                )}
+                {project.bidDueDate && (
+                  <div className="flex items-center space-x-1">
+                    {project.projectNumber && <span className="text-gray-300">•</span>}
+                    <p className="text-xs text-gray-600">Due: {formatDate(project.bidDueDate)}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Edit/View Mode Toggle */}
+          {/* Edit/Save Toggle */}
           <button
-            onClick={() => setIsEditMode(!isEditMode)}
+            onClick={handleEditModeToggle}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               isEditMode
-                ? 'bg-zinc-900 text-white hover:bg-zinc-800'
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
             }`}
           >
             {isEditMode ? (
               <>
-                <Eye className="h-4 w-4" />
-                <span>View Mode</span>
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Save Changes</span>
               </>
             ) : (
               <>
@@ -222,7 +376,12 @@ export default function BidPackageListView({
               <div className="h-full overflow-auto p-6">
                 <div className="max-w-4xl mx-auto space-y-4">
                   {/* Consolidated Project Information */}
-                  <ProjectInformationPanel project={project} isEditMode={isEditMode} />
+                  <ProjectInformationPanel
+                    project={isEditMode ? editedProject : project}
+                    isEditMode={isEditMode}
+                    onUpdateField={updateProjectField}
+                    onUpdateLocation={updateProjectLocation}
+                  />
 
                   {/* Bid Packages Card */}
                   <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
@@ -236,7 +395,7 @@ export default function BidPackageListView({
                         </div>
                       ) : isEditMode ? (
                         <div className="space-y-4">
-                            {bidPackages.map((bidPackage, index) => (
+                            {editedBidPackages.map((bidPackage, index) => (
                               <div
                                 key={bidPackage.id}
                                 className="p-4 border border-gray-200 rounded-lg bg-gray-50 space-y-3"
@@ -255,14 +414,16 @@ export default function BidPackageListView({
                                   <label className="block text-xs font-medium text-gray-700 mb-1">Package Name</label>
                                   <input
                                     type="text"
-                                    defaultValue={bidPackage.name}
+                                    value={bidPackage.name}
+                                    onChange={(e) => updateBidPackage(index, 'name', e.target.value)}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                   />
                                 </div>
                                 <div>
                                   <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
                                   <textarea
-                                    defaultValue={bidPackage.description || ''}
+                                    value={bidPackage.description || ''}
+                                    onChange={(e) => updateBidPackage(index, 'description', e.target.value)}
                                     rows={2}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                   />
@@ -272,7 +433,8 @@ export default function BidPackageListView({
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Budget Amount</label>
                                     <input
                                       type="number"
-                                      defaultValue={bidPackage.budgetAmount || ''}
+                                      value={bidPackage.budgetAmount || ''}
+                                      onChange={(e) => updateBidPackage(index, 'budgetAmount', parseFloat(e.target.value) || null)}
                                       placeholder="0.00"
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                     />
@@ -280,7 +442,8 @@ export default function BidPackageListView({
                                   <div>
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
                                     <select
-                                      defaultValue={bidPackage.status}
+                                      value={bidPackage.status}
+                                      onChange={(e) => updateBidPackage(index, 'status', e.target.value)}
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                     >
                                       <option value="draft">Draft</option>
@@ -294,7 +457,8 @@ export default function BidPackageListView({
                                 <div>
                                   <label className="block text-xs font-medium text-gray-700 mb-1">Scope</label>
                                   <textarea
-                                    defaultValue={bidPackage.scope || ''}
+                                    value={bidPackage.scope || ''}
+                                    onChange={(e) => updateBidPackage(index, 'scope', e.target.value)}
                                     rows={2}
                                     placeholder="Detailed scope of work for this package..."
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
@@ -302,19 +466,27 @@ export default function BidPackageListView({
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                   <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Captain Name</label>
-                                    <input
-                                      type="text"
-                                      defaultValue={bidPackage.captainName || ''}
-                                      placeholder="Captain name"
+                                    <label className="block text-xs font-medium text-gray-700 mb-1">Captain</label>
+                                    <select
+                                      value={bidPackage.captainName || ''}
+                                      onChange={(e) => updateBidPackage(index, 'captainName', e.target.value)}
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                    />
+                                      disabled={loadingUsers}
+                                    >
+                                      <option value="">Select captain...</option>
+                                      {users.map((user) => (
+                                        <option key={user.id} value={formatUserName(user)}>
+                                          {formatUserName(user)} ({user.role})
+                                        </option>
+                                      ))}
+                                    </select>
                                   </div>
                                   <div>
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
                                     <input
                                       type="text"
-                                      defaultValue={bidPackage.location || ''}
+                                      value={bidPackage.location || ''}
+                                      onChange={(e) => updateBidPackage(index, 'location', e.target.value)}
                                       placeholder="Package location"
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                     />

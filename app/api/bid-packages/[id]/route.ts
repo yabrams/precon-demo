@@ -81,7 +81,10 @@ export async function PUT(
       bidDueDate,
       status,
       progress,
-      diagramIds
+      diagramIds,
+      captainName,
+      budgetAmount,
+      location
     } = body;
 
     const bidPackage = await prisma.bidPackage.update({
@@ -93,7 +96,10 @@ export async function PUT(
         ...(bidDueDate !== undefined && { bidDueDate: bidDueDate ? new Date(bidDueDate) : null }),
         ...(status && { status }),
         ...(progress !== undefined && { progress }),
-        ...(diagramIds !== undefined && { diagramIds: diagramIds ? JSON.stringify(diagramIds) : null })
+        ...(diagramIds !== undefined && { diagramIds: diagramIds ? JSON.stringify(diagramIds) : null }),
+        ...(captainName !== undefined && { captainName }),
+        ...(budgetAmount !== undefined && { budgetAmount }),
+        ...(location !== undefined && { location })
       },
       include: {
         bidForms: {
