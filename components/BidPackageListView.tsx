@@ -148,13 +148,13 @@ export default function BidPackageListView({
       <div className="flex-1 min-h-0">
         {project.diagrams && project.diagrams.length > 0 ? (
           <PanelGroup direction="horizontal" className="h-full">
-            {/* Left Panel: Diagrams */}
+            {/* Left Panel: Documents */}
             <Panel defaultSize={35} minSize={20} className="bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
                 {/* Diagram Selector */}
                 <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                   <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-zinc-900">Diagrams</span>
+                    <span className="text-sm font-medium text-zinc-900">Documents</span>
                     {project.diagrams.length > 1 && (
                       <select
                         value={selectedDiagramId || project.diagrams[0]?.id || ''}
@@ -713,8 +713,8 @@ export default function BidPackageListView({
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-zinc-900 mb-2">No Diagrams Yet</h3>
-                <p className="text-gray-600 mb-4">Upload construction diagrams for this project</p>
+                <h3 className="text-lg font-medium text-zinc-900 mb-2">No Documents Yet</h3>
+                <p className="text-gray-600 mb-4">Upload construction documents for this project</p>
                 <input
                   type="file"
                   id="diagram-upload-empty"
