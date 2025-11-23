@@ -413,8 +413,8 @@ export default function ProjectReviewView({
               </div>
             </div>
           ) : (
-            <div className="p-6 max-w-4xl">
-              <form className="space-y-8">
+            <div className="p-5 max-w-4xl">
+              <form className="space-y-6">
                 {/* Project Basic Information */}
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Information</h2>
