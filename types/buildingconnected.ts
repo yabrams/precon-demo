@@ -49,6 +49,12 @@ export interface BuildingConnectedProject {
   owningOffice?: string;
   feePercentage?: number;
 
+  // Precon Lead (user with PRECON_LEAD or ADMIN role)
+  preconLeadId?: string;
+  preconLeadEmail?: string;
+  preconLeadName?: string;
+  preconLeadAvatar?: string;
+
   // Sync metadata
   lastSyncedAt?: Date;
   syncStatus: 'pending' | 'syncing' | 'synced' | 'error';
@@ -105,6 +111,10 @@ export interface BuildingConnectedProjectUpdateInput {
   accountManager?: string;
   owningOffice?: string;
   feePercentage?: number;
+  preconLeadId?: string;
+  preconLeadEmail?: string;
+  preconLeadName?: string;
+  preconLeadAvatar?: string;
   syncStatus?: 'pending' | 'syncing' | 'synced' | 'error';
   syncError?: string;
 }

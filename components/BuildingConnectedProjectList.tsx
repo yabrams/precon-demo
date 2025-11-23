@@ -126,11 +126,28 @@ export default function BuildingConnectedProjectList({
                   {/* Project Header */}
                   <div className="p-5 border-b border-gray-200">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-zinc-900 text-lg leading-tight flex-1 pr-2">
-                        {project.name}
-                      </h3>
+                      <div className="flex items-start gap-3 flex-1 pr-2">
+                        {/* Precon Lead Avatar */}
+                        {project.preconLeadAvatar ? (
+                          <img
+                            src={project.preconLeadAvatar}
+                            alt={project.preconLeadName}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 flex-shrink-0"
+                            title={`Precon Lead: ${project.preconLeadName}`}
+                          />
+                        ) : project.preconLeadName ? (
+                          <div className="w-10 h-10 rounded-full bg-emerald-100 border-2 border-emerald-200 flex items-center justify-center flex-shrink-0" title={`Precon Lead: ${project.preconLeadName}`}>
+                            <span className="text-emerald-700 font-bold text-sm">
+                              {project.preconLeadName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </span>
+                          </div>
+                        ) : null}
+                        <h3 className="font-semibold text-zinc-900 text-lg leading-tight">
+                          {project.name}
+                        </h3>
+                      </div>
                       <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                        className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStatusColor(
                           project.status
                         )}`}
                       >
@@ -255,6 +272,44 @@ export default function BuildingConnectedProjectList({
                             </span>
                           )}
                         </span>
+                      </div>
+                    )}
+
+                    {/* Precon Lead */}
+                    {project.preconLeadName && (
+                      <div className="flex items-center">
+                        <svg
+                          className="h-5 w-5 text-emerald-600 mr-2 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-600">Lead:</span>
+                          {project.preconLeadAvatar ? (
+                            <img
+                              src={project.preconLeadAvatar}
+                              alt={project.preconLeadName}
+                              className="w-5 h-5 rounded-full object-cover border border-gray-300"
+                            />
+                          ) : (
+                            <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center">
+                              <span className="text-emerald-700 font-bold text-[10px]">
+                                {project.preconLeadName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                          <span className="text-sm font-medium text-emerald-700">
+                            {project.preconLeadName}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>

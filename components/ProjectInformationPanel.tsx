@@ -10,12 +10,24 @@
  */
 
 import { BuildingConnectedProject } from '@/types/buildingconnected';
+import { UserRole } from '@/types/user';
+
+interface User {
+  id: string;
+  email: string;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+  role: UserRole;
+}
 
 interface ProjectInformationPanelProps {
   project: BuildingConnectedProject;
   isEditMode: boolean;
   onUpdateField?: (field: string, value: any) => void;
   onUpdateLocation?: (field: string, value: any) => void;
+  users?: User[];
 }
 
 export default function ProjectInformationPanel({
@@ -23,7 +35,37 @@ export default function ProjectInformationPanel({
   isEditMode,
   onUpdateField,
   onUpdateLocation,
+  users = [],
 }: ProjectInformationPanelProps) {
+  // Filter users to show only Precon Leads and Admins
+  const preconLeads = users.filter(u => u.role === UserRole.PRECON_LEAD || u.role === UserRole.ADMIN);
+
+  // Helper to format user display name
+  const formatUserName = (user: User) => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return user.userName;
+  };
+
+  // Handle precon lead selection
+  const handlePreconLeadChange = (userId: string) => {
+    if (!userId) {
+      onUpdateField?.('preconLeadId', null);
+      onUpdateField?.('preconLeadEmail', null);
+      onUpdateField?.('preconLeadName', null);
+      onUpdateField?.('preconLeadAvatar', null);
+      return;
+    }
+
+    const selectedUser = users.find(u => u.id === userId);
+    if (selectedUser) {
+      onUpdateField?.('preconLeadId', selectedUser.id);
+      onUpdateField?.('preconLeadEmail', selectedUser.email);
+      onUpdateField?.('preconLeadName', formatUserName(selectedUser));
+      onUpdateField?.('preconLeadAvatar', selectedUser.avatarUrl || null);
+    }
+  };
   const formatDate = (date?: Date) => {
     if (!date) return 'N/A';
     const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -378,6 +420,23 @@ export default function ProjectInformationPanel({
                   />
                 </div>
               </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Precon Lead <span className="text-emerald-600">(Precon Lead or Admin)</span>
+                </label>
+                <select
+                  value={project.preconLeadId || ''}
+                  onChange={(e) => handlePreconLeadChange(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select a precon lead...</option>
+                  {preconLeads.map(user => (
+                    <option key={user.id} value={user.id}>
+                      {formatUserName(user)} ({user.role === UserRole.ADMIN ? 'Admin' : 'Precon Lead'})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -404,8 +463,29 @@ export default function ProjectInformationPanel({
                 </div>
               )}
               {/* Team Members */}
-              {(project.owner || project.architect || project.engineer || project.generalContractor) && (
+              {(project.owner || project.architect || project.engineer || project.generalContractor || project.preconLeadName) && (
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                  {project.preconLeadName && (
+                    <div>
+                      <span className="text-gray-600 text-xs">Precon Lead:</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        {project.preconLeadAvatar ? (
+                          <img
+                            src={project.preconLeadAvatar}
+                            alt={project.preconLeadName}
+                            className="w-6 h-6 rounded-full object-cover border border-gray-200"
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center">
+                            <span className="text-emerald-700 font-bold text-xs">
+                              {project.preconLeadName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                        <p className="text-emerald-700 font-medium">{project.preconLeadName}</p>
+                      </div>
+                    </div>
+                  )}
                   {project.owner && (
                     <div>
                       <span className="text-gray-600 text-xs">Owner:</span>

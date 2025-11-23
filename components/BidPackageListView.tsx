@@ -272,6 +272,24 @@ export default function BidPackageListView({
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+            {/* Precon Lead Avatar */}
+            {(isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar) && (
+              <div className="flex-shrink-0">
+                <img
+                  src={isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar}
+                  alt={isEditMode ? editedProject.preconLeadName : project.preconLeadName}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                  title={`Precon Lead: ${isEditMode ? editedProject.preconLeadName : project.preconLeadName}`}
+                />
+              </div>
+            )}
+            {!(isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar) && (isEditMode ? editedProject.preconLeadName : project.preconLeadName) && (
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 border-2 border-emerald-200 flex items-center justify-center">
+                <span className="text-emerald-700 font-bold text-sm">
+                  {getCaptainInitials(isEditMode ? editedProject.preconLeadName : project.preconLeadName)}
+                </span>
+              </div>
+            )}
             <div>
               <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
               <div className="flex items-center space-x-3">
@@ -284,6 +302,14 @@ export default function BidPackageListView({
                     <p className="text-xs text-gray-600">Due: {formatDate(project.bidDueDate)}</p>
                   </div>
                 )}
+                {(isEditMode ? editedProject.preconLeadName : project.preconLeadName) && (
+                  <div className="flex items-center space-x-1">
+                    <span className="text-gray-300">•</span>
+                    <p className="text-xs text-emerald-700 font-medium">
+                      Lead: {isEditMode ? editedProject.preconLeadName : project.preconLeadName}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -291,22 +317,22 @@ export default function BidPackageListView({
           {/* Edit/Save Toggle */}
           <button
             onClick={handleEditModeToggle}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
               isEditMode
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                ? 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md shadow-zinc-900/10 hover:shadow-lg'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
             }`}
           >
             {isEditMode ? (
               <>
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Save Changes</span>
               </>
             ) : (
               <>
-                <Edit2 className="h-4 w-4" />
+                <Edit2 className="h-5 w-5" />
                 <span>Edit</span>
               </>
             )}
@@ -385,6 +411,7 @@ export default function BidPackageListView({
                     isEditMode={isEditMode}
                     onUpdateField={updateProjectField}
                     onUpdateLocation={updateProjectLocation}
+                    users={users}
                   />
 
                   {/* Bid Packages Card */}
