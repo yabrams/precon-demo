@@ -523,6 +523,82 @@ export default function Home() {
     }
   };
 
+  const handleSubmitToReview = () => {
+    if (!selectedBidPackage || !selectedProject) return;
+
+    // Update the bid package status to pending-review and assign to precon leader
+    const updatedBidPackage: BidPackageWorkspaceData = {
+      ...selectedBidPackage,
+      status: 'pending-review',
+      assignedTo: 'Precon Leader', // Assigning to precon leader
+    };
+
+    // Update the selected bid package
+    setSelectedBidPackage(updatedBidPackage);
+
+    // Update the bid package in the project's bid packages array
+    const updatedBidPackages = selectedProject.bidPackages?.map(bp =>
+      bp.id === selectedBidPackage.id
+        ? { ...bp, status: 'pending-review', assignedTo: 'Precon Leader' }
+        : bp
+    ) || [];
+
+    // Update the project with the modified bid packages
+    const updatedProject: BuildingConnectedProject = {
+      ...selectedProject,
+      bidPackages: updatedBidPackages,
+    };
+
+    // Update the project in the projects list
+    setBcProjects(prev => prev.map(p =>
+      p.id === selectedProject.id ? updatedProject : p
+    ));
+
+    // Update the selected project
+    setSelectedProject(updatedProject);
+
+    // Show a success message (could be a toast notification in the future)
+    console.log('Bid package submitted for review and assigned to Precon Leader');
+  };
+
+  const handleRecall = () => {
+    if (!selectedBidPackage || !selectedProject) return;
+
+    // Update the bid package status to active (In Progress) and clear assignment
+    const updatedBidPackage: BidPackageWorkspaceData = {
+      ...selectedBidPackage,
+      status: 'active',
+      assignedTo: undefined, // Clear assignment
+    };
+
+    // Update the selected bid package
+    setSelectedBidPackage(updatedBidPackage);
+
+    // Update the bid package in the project's bid packages array
+    const updatedBidPackages = selectedProject.bidPackages?.map(bp =>
+      bp.id === selectedBidPackage.id
+        ? { ...bp, status: 'active', assignedTo: undefined }
+        : bp
+    ) || [];
+
+    // Update the project with the modified bid packages
+    const updatedProject: BuildingConnectedProject = {
+      ...selectedProject,
+      bidPackages: updatedBidPackages,
+    };
+
+    // Update the project in the projects list
+    setBcProjects(prev => prev.map(p =>
+      p.id === selectedProject.id ? updatedProject : p
+    ));
+
+    // Update the selected project
+    setSelectedProject(updatedProject);
+
+    // Show a success message (could be a toast notification in the future)
+    console.log('Bid package recalled from review and returned to In Progress');
+  };
+
   const handleSendChatMessage = async (message: string) => {
     if (!selectedBidPackage) return;
 
@@ -954,6 +1030,8 @@ export default function Home() {
                 onAcceptChatChanges={handleAcceptChatChanges}
                 onRejectChatChanges={handleRejectChatChanges}
                 isChatLoading={chatLoading}
+                onSubmitToReview={handleSubmitToReview}
+                onRecall={handleRecall}
               />
             </motion.div>
           )}
