@@ -42,6 +42,8 @@ interface BidPackageWorkspaceProps {
   onAcceptChatChanges: (messageId: string) => void;
   onRejectChatChanges: (messageId: string) => void;
   isChatLoading?: boolean;
+  onSubmitToReview?: () => void;
+  onRecall?: () => void;
 }
 
 export default function BidPackageWorkspace({
@@ -61,6 +63,8 @@ export default function BidPackageWorkspace({
   onAcceptChatChanges,
   onRejectChatChanges,
   isChatLoading = false,
+  onSubmitToReview,
+  onRecall,
 }: BidPackageWorkspaceProps) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
@@ -234,57 +238,65 @@ export default function BidPackageWorkspace({
             </div>
           </div>
 
-          {/* Progress Steps - moved to top-right */}
-          <div className="min-w-[600px]">
-            {(() => {
-              const steps = [
-                { key: 'draft', label: 'To Do' },
-                { key: 'assigned', label: 'Assigned' },
-                { key: 'active', label: 'In Progress' },
-                { key: 'pending-review', label: 'Pending Review' },
-                { key: 'bidding', label: 'Bidding' },
-                { key: 'bidding-leveling', label: 'Bidding Leveling' },
-                { key: 'awarded', label: 'Completed' }
-              ];
-              const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
+          {/* Submit to Review Button */}
+          <div className="flex items-center gap-3">
+            {bidPackage.status !== 'pending-review' && bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' && (
+              <>
+                {(() => {
+                  const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
+                  return (
+                    <button
+                      onClick={onSubmitToReview}
+                      disabled={!allItemsApproved}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
+                        allItemsApproved
+                          ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
+                          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      }`}
+                      title={!allItemsApproved ? 'All items must be approved before submitting to review' : 'Submit to Review'}
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Submit to Review
+                    </button>
+                  );
+                })()}
+              </>
+            )}
 
-              return (
-                <div className="flex items-center gap-1">
-                  {steps.map((step, index) => {
-                    const isCompleted = index < currentStepIndex;
-                    const isCurrent = index === currentStepIndex;
-                    const isPending = index > currentStepIndex;
-
-                    return (
-                      <div key={step.key} className="flex items-center flex-1">
-                        <div className="relative flex-1">
-                          <div
-                            className={`h-1.5 transition-all ${
-                              isCompleted || isCurrent
-                                ? 'bg-zinc-900'
-                                : 'bg-gray-200'
-                            }`}
-                            style={{
-                              borderTopLeftRadius: index === 0 ? '9999px' : '0',
-                              borderBottomLeftRadius: index === 0 ? '9999px' : '0',
-                              borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
-                              borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
-                            }}
-                          />
-                          {isCurrent && (
-                            <div className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                              <span className="text-[10px] font-medium text-zinc-900 bg-white px-1.5 py-0.5 rounded border border-zinc-200">
-                                {step.label}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })()}
+            {bidPackage.status === 'pending-review' && (
+              <button
+                onClick={onRecall}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg shadow-md shadow-amber-900/10 transition-colors flex items-center gap-2"
+                title="Recall from review and return to In Progress"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                  />
+                </svg>
+                Recall
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -419,6 +431,7 @@ export default function BidPackageWorkspace({
                   setHoveredItemId(itemId);
                   setHoveredRowElement(rowElement);
                 }}
+                readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
               />
             </Panel>
           </PanelGroup>

@@ -64,6 +64,7 @@ export interface LineItem {
   total_price?: number | null;
   notes?: string | null;
   verified?: boolean;
+  approved?: boolean; // New field for approval status
   confidence?: number | null; // 0-100 percentage
   boundingBox?: {
     x: number;
@@ -91,15 +92,17 @@ export default function BidFormTable({
   onChatOpen
 }: BidFormTableProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
+  const [editingCell, setEditingCell] = useState<{ rowIndex: number; field: string } | null>(null);
 
   useEffect(() => {
     console.log('BidFormTable: initialLineItems changed, count:', initialLineItems.length);
     console.log('BidFormTable: First item:', initialLineItems[0]);
 
-    // Migration: Assign random confidence values to items without one
+    // Migration: Assign random confidence values to items without one and set approved status
     const itemsWithConfidence = initialLineItems.map(item => ({
       ...item,
       confidence: item.confidence ?? Math.floor(Math.random() * 101), // 0-100
+      approved: item.approved ?? false, // Default to not approved
     }));
 
     // Sort by confidence (ascending - lowest first)
@@ -126,6 +129,12 @@ export default function BidFormTable({
     onUpdate(updated);
   };
 
+  const handleApproveAll = () => {
+    const updated = lineItems.map(item => ({ ...item, approved: true }));
+    setLineItems(updated);
+    onUpdate(updated);
+  };
+
   const handlePlaceholderChange = (field: keyof LineItem, value: any) => {
     // When user starts typing in the placeholder row, create a new item
     const newItem: LineItem = {
@@ -137,6 +146,7 @@ export default function BidFormTable({
       notes: field === 'notes' ? value : '',
       confidence: field === 'confidence' ? parseFloat(value) : 50, // Default to 50% confidence
       verified: false,
+      approved: false, // Default to not approved
     };
     const updated = [...lineItems, newItem];
 
@@ -151,12 +161,48 @@ export default function BidFormTable({
     onUpdate(updated);
   };
 
+  const isEditing = (rowIndex: number, field: string) => {
+    return editingCell?.rowIndex === rowIndex && editingCell?.field === field;
+  };
+
+  const startEditing = (rowIndex: number, field: string) => {
+    if (!readOnly) {
+      setEditingCell({ rowIndex, field });
+    }
+  };
+
+  const stopEditing = () => {
+    setEditingCell(null);
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
           <h2 className="text-base font-semibold text-zinc-900">Bid Form</h2>
+          {!readOnly && lineItems.length > 0 && (
+            <button
+              onClick={handleApproveAll}
+              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2"
+              title="Approve all items"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Approve All
+            </button>
+          )}
         </div>
 
         {/* Table Container */}
@@ -165,6 +211,7 @@ export default function BidFormTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
+              <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">Approved</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Item #</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-64">Description</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Quantity</th>
@@ -191,66 +238,143 @@ export default function BidFormTable({
                     onMouseEnter={(e) => hasBoundingBox && onHoverChange?.(item.id || null, e.currentTarget)}
                     onMouseLeave={() => hasBoundingBox && onHoverChange?.(null, null)}
                   >
-                  <td className="px-3 py-3">
-                    <input
-                      type="text"
-                      value={item.item_number || ''}
-                      onChange={(e) => handleChange(index, 'item_number', e.target.value)}
+                  <td className="px-3 py-3 text-center">
+                    <button
+                      onClick={() => handleChange(index, 'approved', !item.approved)}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder="#"
-                    />
-                  </td>
-                  <td className="px-3 py-3">
-                    <input
-                      type="text"
-                      value={item.description || ''}
-                      onChange={(e) => handleChange(index, 'description', e.target.value)}
-                      disabled={readOnly}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder="Description"
-                    />
-                  </td>
-                  <td className="px-3 py-3">
-                    <input
-                      type="number"
-                      value={item.quantity || ''}
-                      onChange={(e) => handleChange(index, 'quantity', e.target.value)}
-                      disabled={readOnly}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder="0"
-                      step="1"
-                      min="0"
-                    />
-                  </td>
-                  <td className="px-3 py-3">
-                    <select
-                      value={item.unit || ''}
-                      onChange={(e) => handleChange(index, 'unit', e.target.value)}
-                      disabled={readOnly}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className={`inline-flex items-center justify-center w-10 h-10 text-lg rounded-full transition-all ${
+                        item.approved
+                          ? 'bg-green-50 hover:bg-green-100 border border-green-300'
+                          : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      title={item.approved ? 'Approved' : 'Click to approve'}
                     >
-                      <option value="">Select...</option>
-                      <option value="EA">EA</option>
-                      <option value="SF">SF</option>
-                      <option value="LF">LF</option>
-                      <option value="CY">CY</option>
-                      <option value="SY">SY</option>
-                      <option value="TON">TON</option>
-                      <option value="LS">LS</option>
-                      <option value="HR">HR</option>
-                      <option value="DAY">DAY</option>
-                    </select>
+                      {item.approved ? '✅' : '⭕'}
+                    </button>
                   </td>
                   <td className="px-3 py-3">
-                    <input
-                      type="text"
-                      value={item.notes || ''}
-                      onChange={(e) => handleChange(index, 'notes', e.target.value)}
-                      disabled={readOnly}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder="Notes"
-                    />
+                    {isEditing(index, 'item_number') && !readOnly ? (
+                      <input
+                        type="text"
+                        value={item.item_number || ''}
+                        onChange={(e) => handleChange(index, 'item_number', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
+                        placeholder="#"
+                      />
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'item_number')}
+                        className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.item_number || <span className="text-gray-400">#</span>}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    {isEditing(index, 'description') && !readOnly ? (
+                      <input
+                        type="text"
+                        value={item.description || ''}
+                        onChange={(e) => handleChange(index, 'description', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                        placeholder="Description"
+                      />
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'description')}
+                        className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.description || <span className="text-gray-400">Description</span>}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    {isEditing(index, 'quantity') && !readOnly ? (
+                      <input
+                        type="number"
+                        value={item.quantity || ''}
+                        onChange={(e) => handleChange(index, 'quantity', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
+                        placeholder="0"
+                        step="1"
+                        min="0"
+                      />
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'quantity')}
+                        className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.quantity !== null && item.quantity !== undefined ? item.quantity : <span className="text-gray-400">0</span>}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    {isEditing(index, 'unit') && !readOnly ? (
+                      <select
+                        value={item.unit || ''}
+                        onChange={(e) => {
+                          handleChange(index, 'unit', e.target.value);
+                          stopEditing();
+                        }}
+                        onBlur={stopEditing}
+                        autoFocus
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900"
+                      >
+                        <option value="">Select...</option>
+                        <option value="EA">EA</option>
+                        <option value="SF">SF</option>
+                        <option value="LF">LF</option>
+                        <option value="CY">CY</option>
+                        <option value="SY">SY</option>
+                        <option value="TON">TON</option>
+                        <option value="LS">LS</option>
+                        <option value="HR">HR</option>
+                        <option value="DAY">DAY</option>
+                      </select>
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'unit')}
+                        className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.unit || <span className="text-gray-400">Select...</span>}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    {isEditing(index, 'notes') && !readOnly ? (
+                      <input
+                        type="text"
+                        value={item.notes || ''}
+                        onChange={(e) => handleChange(index, 'notes', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                        placeholder="Notes"
+                      />
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'notes')}
+                        className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.notes || <span className="text-gray-400">Notes</span>}
+                      </div>
+                    )}
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex items-center gap-1">
@@ -283,6 +407,10 @@ export default function BidFormTable({
             {/* Placeholder row for adding new items (always visible when not read-only) */}
             {!readOnly && (
               <tr className="opacity-60 hover:opacity-100 transition-opacity bg-gray-50/30">
+                <td className="px-3 py-3 text-center">
+                  {/* Empty cell for approved column in placeholder row */}
+                  <span className="text-xs text-gray-400">-</span>
+                </td>
                 <td className="px-3 py-3">
                   <input
                     type="text"
