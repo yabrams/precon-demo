@@ -25,6 +25,14 @@ export interface BidPackage {
   status: 'draft' | 'active' | 'bidding' | 'awarded' | 'closed';
   progress: number; // 0-100 percentage
 
+  // Assignment
+  captainId?: string; // User ID of the package captain
+  captainName?: string; // Captain's display name (populated from user lookup)
+  location?: string; // Package location or work area
+
+  // Budget
+  budgetAmount?: number; // Estimated budget for this package
+
   // Diagram references (diagrams are owned by parent project)
   diagramIds?: string[]; // IDs of diagrams from parent project to use for this package
 
