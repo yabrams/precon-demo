@@ -191,7 +191,12 @@ export default function ProjectReviewView({
         setConfidence(data.confidence);
         setExtractionComplete(true);
       } else {
-        alert('Failed to extract project information. Please fill in manually.');
+        // Check if it's a PDF-specific error
+        if (data.message && data.message.includes('PDF files are not currently supported')) {
+          alert(data.message + '\n\nNote: For PDF extraction, please use the regular extraction workflow which supports PDF processing.');
+        } else {
+          alert(data.error || 'Failed to extract project information. Please fill in manually.');
+        }
         setExtractionComplete(true);
       }
     } catch (error) {
@@ -406,7 +411,7 @@ export default function ProjectReviewView({
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
                 <p className="text-zinc-900 text-base font-medium">
                   {mode === 'manual'
-                    ? 'Extracting project information from documents...'
+                    ? 'Extracting project information and bidding packages...'
                     : `Loading ${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} project data...`}
                 </p>
                 <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>

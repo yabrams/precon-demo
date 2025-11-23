@@ -129,26 +129,40 @@ export default function ProjectCreationView({
     setUploading(true);
 
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
-        const formData = new FormData();
+      // Upload all files at once for better efficiency
+      const formData = new FormData();
+      Array.from(files).forEach(file => {
         formData.append('file', file);
+      });
 
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-        const data = await response.json();
-        return {
+      const data = await response.json();
+
+      // Handle both single and multiple file responses
+      let uploadedFiles: any[] = [];
+      if (data.files) {
+        // Multiple files response
+        uploadedFiles = data.files.map((file: any) => ({
+          fileName: file.fileName,
+          url: file.url,
+          fileSize: file.fileSize,
+          fileType: file.fileType || 'application/octet-stream'
+        }));
+      } else {
+        // Single file response
+        uploadedFiles = [{
           fileName: data.fileName,
           url: data.url,
           fileSize: data.fileSize,
-          fileType: data.fileType
-        };
-      });
+          fileType: data.fileType || 'application/octet-stream'
+        }];
+      }
 
-      const uploaded = await Promise.all(uploadPromises);
-      setUploadedDocuments(prev => [...prev, ...uploaded]);
+      setUploadedDocuments(prev => [...prev, ...uploadedFiles]);
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Failed to upload files. Please try again.');
@@ -386,7 +400,10 @@ export default function ProjectCreationView({
                       <div className="flex-shrink-0">
                         <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
                           <span className="text-blue-600 font-semibold text-xs">
-                            {doc.fileType.split('/')[1]?.toUpperCase().slice(0, 3)}
+                            {doc.fileType ?
+                              doc.fileType.split('/')[1]?.toUpperCase().slice(0, 3) || 'FILE' :
+                              doc.fileName?.split('.').pop()?.toUpperCase().slice(0, 3) || 'FILE'
+                            }
                           </span>
                         </div>
                       </div>

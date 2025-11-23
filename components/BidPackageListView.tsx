@@ -213,7 +213,18 @@ export default function BidPackageListView({
     });
   };
 
-  const getCaptainInitials = (captainName?: string) => {
+  const getCaptainInitials = (bidPackage?: any) => {
+    // Try to get name from captain object first, then fall back to captainName
+    let captainName = '';
+    if (bidPackage?.captain) {
+      const captain = bidPackage.captain;
+      captainName = captain.firstName && captain.lastName
+        ? `${captain.firstName} ${captain.lastName}`
+        : captain.userName || '';
+    } else if (bidPackage?.captainName) {
+      captainName = bidPackage.captainName;
+    }
+
     if (!captainName) return '?';
     const parts = captainName.trim().split(' ').filter(Boolean);
     if (parts.length === 0) return '?';
@@ -222,6 +233,17 @@ export default function BidPackageListView({
       return name.length >= 2 ? `${name[0]}${name[name.length - 1]}`.toUpperCase() : name[0].toUpperCase();
     }
     return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  };
+
+  const getCaptainName = (bidPackage?: any) => {
+    // Helper to get captain display name
+    if (bidPackage?.captain) {
+      const captain = bidPackage.captain;
+      return captain.firstName && captain.lastName
+        ? `${captain.firstName} ${captain.lastName}`
+        : captain.userName || '';
+    }
+    return bidPackage?.captainName || '';
   };
 
   // Helper to format user display name
@@ -501,14 +523,31 @@ export default function BidPackageListView({
                                   <div>
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Captain</label>
                                     <select
-                                      value={bidPackage.captainName || ''}
-                                      onChange={(e) => updateBidPackage(index, 'captainName', e.target.value)}
+                                      value={bidPackage.captainId || ''}
+                                      onChange={(e) => {
+                                        const selectedUser = users.find(u => u.id === e.target.value);
+                                        updateBidPackage(index, 'captainId', e.target.value);
+                                        // Also update captainName for backward compatibility
+                                        if (selectedUser) {
+                                          updateBidPackage(index, 'captainName', formatUserName(selectedUser));
+                                          updateBidPackage(index, 'captain', {
+                                            id: selectedUser.id,
+                                            userName: selectedUser.userName,
+                                            firstName: selectedUser.firstName,
+                                            lastName: selectedUser.lastName,
+                                            email: selectedUser.email
+                                          });
+                                        } else {
+                                          updateBidPackage(index, 'captainName', '');
+                                          updateBidPackage(index, 'captain', null);
+                                        }
+                                      }}
                                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                       disabled={loadingUsers}
                                     >
                                       <option value="">Select captain...</option>
                                       {users.map((user) => (
-                                        <option key={user.id} value={formatUserName(user)}>
+                                        <option key={user.id} value={user.id}>
                                           {formatUserName(user)} ({user.role})
                                         </option>
                                       ))}
@@ -558,11 +597,11 @@ export default function BidPackageListView({
                                     {bidPackage.status}
                                   </span>
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                                    bidPackage.captainName
+                                    bidPackage.captainId || bidPackage.captainName
                                       ? 'bg-zinc-900 text-white'
                                       : 'bg-gray-200 text-gray-500'
                                   }`}>
-                                    {getCaptainInitials(bidPackage.captainName)}
+                                    {getCaptainInitials(bidPackage)}
                                   </div>
                                 </div>
                               </div>
@@ -713,11 +752,11 @@ export default function BidPackageListView({
                               {bidPackage.status}
                             </span>
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                              bidPackage.captainName
+                              bidPackage.captainId || bidPackage.captainName
                                 ? 'bg-zinc-900 text-white'
                                 : 'bg-gray-200 text-gray-500'
                             }`}>
-                              {getCaptainInitials(bidPackage.captainName)}
+                              {getCaptainInitials(bidPackage)}
                             </div>
                           </div>
                         </div>
