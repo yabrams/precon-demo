@@ -241,66 +241,8 @@ export default function BidPackageWorkspace({
             </div>
           </div>
 
-          {/* Submit to Review Button */}
+          {/* Recall Button */}
           <div className="flex items-center gap-3">
-            {bidPackage.status !== 'pending-review' && bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' && (
-              <>
-                {(() => {
-                  const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
-                  return (
-                    <button
-                      onClick={onSubmitToReview}
-                      disabled={!allItemsApproved}
-                      className={`px-4 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
-                        allItemsApproved
-                          ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
-                          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      }`}
-                      title={!allItemsApproved ? 'All items must be approved before submitting to review' : 'Submit to Review'}
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Submit to Review
-                    </button>
-                  );
-                })()}
-                {/* Delete Project Button (only in edit mode) */}
-                {/*{onDeleteProject && (*/}
-                {/*  <button*/}
-                {/*    onClick={() => setShowDeleteConfirm(true)}*/}
-                {/*    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow-md shadow-red-900/10 transition-colors flex items-center gap-2"*/}
-                {/*    title="Delete Project"*/}
-                {/*  >*/}
-                {/*    <svg*/}
-                {/*      className="w-4 h-4"*/}
-                {/*      fill="none"*/}
-                {/*      stroke="currentColor"*/}
-                {/*      viewBox="0 0 24 24"*/}
-                {/*    >*/}
-                {/*      <path*/}
-                {/*        strokeLinecap="round"*/}
-                {/*        strokeLinejoin="round"*/}
-                {/*        strokeWidth={2}*/}
-                {/*        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"*/}
-                {/*      />*/}
-                {/*    </svg>*/}
-                {/*    Delete Project*/}
-                {/*  </button>*/}
-                {/*)}*/}
-              </>
-            )}
-
             {bidPackage.status === 'pending-review' && (
               <button
                 onClick={onRecall}
@@ -389,7 +331,7 @@ export default function BidPackageWorkspace({
                 {/* Diagram Info Bar */}
                 <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                   <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-zinc-900">Diagram</span>
+                    <span className="text-sm font-medium text-zinc-900">Documents</span>
                     {relevantDiagrams.length > 1 && (
                       <select
                         value={selectedDiagramId || relevantDiagrams[0]?.id || ''}
@@ -409,7 +351,6 @@ export default function BidPackageWorkspace({
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-600 ml-2 font-mono">Zoom: {zoomLevel}%</span>
                 </div>
 
                 {/* Diagram Container */}
@@ -463,6 +404,44 @@ export default function BidPackageWorkspace({
           </PanelGroup>
         )}
       </div>
+
+      {/* Bottom Panel / Footer */}
+      {bidPackage.status !== 'pending-review' && bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' && (
+        <div className="px-6 py-4 bg-white border-t border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-end">
+            {(() => {
+              const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
+              return (
+                <button
+                  onClick={onSubmitToReview}
+                  disabled={!allItemsApproved}
+                  className={`px-6 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
+                    allItemsApproved
+                      ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                  title={!allItemsApproved ? 'All items must be approved before submitting to review' : 'Submit to Review'}
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Submit to Review
+                </button>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirm && (

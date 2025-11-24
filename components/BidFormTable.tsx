@@ -135,6 +135,12 @@ export default function BidFormTable({
     onUpdate(updated);
   };
 
+  const handleUnapproveAll = () => {
+    const updated = lineItems.map(item => ({ ...item, approved: false }));
+    setLineItems(updated);
+    onUpdate(updated);
+  };
+
   const handlePlaceholderChange = (field: keyof LineItem, value: any) => {
     // When user starts typing in the placeholder row, create a new item
     const newItem: LineItem = {
@@ -182,26 +188,48 @@ export default function BidFormTable({
         <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
           <h2 className="text-base font-semibold text-zinc-900">Bid Form</h2>
           {!readOnly && lineItems.length > 0 && (
-            <button
-              onClick={handleApproveAll}
-              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2"
-              title="Approve all items"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleApproveAll}
+                className="px-3 py-1.5 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+                title="Approve all items"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Approve All
-            </button>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Approve All
+              </button>
+              <button
+                onClick={handleUnapproveAll}
+                className="px-3 py-1.5 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+                title="Unapprove all items"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Unapprove All
+              </button>
+            </div>
           )}
         </div>
 
