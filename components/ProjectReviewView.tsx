@@ -398,13 +398,18 @@ export default function ProjectReviewView({
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      <div className="px-6 h-[68px] border-b border-gray-200 bg-white flex items-center">
-        <div className="flex items-center space-x-4 w-full">
-          <button onClick={onCancel} className="text-gray-600 hover:text-zinc-900 transition-colors">
-            <ChevronLeft className="h-6 w-6" />
+      <div className="px-6 py-3 border-b border-gray-200 bg-white flex items-center">
+        <div className="flex items-center space-x-3 w-full">
+          <button
+            onClick={onCancel}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Back"
+          >
+            <ChevronLeft className="h-5 w-5 text-gray-600" />
           </button>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-zinc-900">Review Project Information</h1>
+          <div>
+            <h1 className="text-lg font-semibold text-zinc-900">Review Project Information</h1>
+            <p className="text-xs text-gray-600">Verify and edit project details before creating</p>
           </div>
         </div>
       </div>

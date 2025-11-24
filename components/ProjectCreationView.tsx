@@ -208,16 +208,11 @@ export default function ProjectCreationView({
       return;
     }
 
-    if (loadFromPlatform && !selectedExternalProject) {
-      alert('Please select a project from the external platform');
-      return;
-    }
-
     onContinue({
-      mode: loadFromPlatform ? 'platform-import' : 'manual',
-      platform: loadFromPlatform ? selectedPlatform : undefined,
+      mode: 'manual',
+      platform: undefined,
       uploadedDocuments,
-      selectedExternalProject: selectedExternalProject || undefined
+      selectedExternalProject: undefined
     });
   };
 
@@ -230,123 +225,25 @@ export default function ProjectCreationView({
   return (
     <div className="h-full bg-gray-50 overflow-auto flex flex-col">
       {/* Header */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold text-zinc-900">Create New Project</h1>
-          <p className="text-sm text-gray-600 mt-1">Upload documents and configure project settings</p>
+      <div className="px-6 py-3 bg-white border-b border-gray-200">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={onBack}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Back"
+          >
+            <ChevronLeft className="h-5 w-5 text-gray-600" />
+          </button>
+          <div>
+            <h1 className="text-lg font-semibold text-zinc-900">Create New Project</h1>
+            <p className="text-xs text-gray-600">Upload documents and configure project settings</p>
+          </div>
         </div>
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-6 space-y-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-zinc-900">
-                  Load project from an external platform
-                </h3>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loadFromPlatform}
-                  onChange={(e) => handleTogglePlatform(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-
-          {loadFromPlatform && (
-            <div className="space-y-4">
-              {/* Platform Selector */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Platform
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  <button
-                    onClick={() => handlePlatformChange('buildingconnected')}
-                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${
-                      selectedPlatform === 'buildingconnected'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                    }`}
-                  >
-                    BuildingConnected
-                  </button>
-                  <button
-                    onClick={() => handlePlatformChange('planhub')}
-                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${
-                      selectedPlatform === 'planhub'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                    }`}
-                  >
-                    PlanHub
-                  </button>
-                  <button
-                    onClick={() => handlePlatformChange('constructconnect')}
-                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${
-                      selectedPlatform === 'constructconnect'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                    }`}
-                  >
-                    ConstructConnect
-                  </button>
-                </div>
-              </div>
-
-              {/* Project Selector */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Project
-                </label>
-                {loadingExternalProjects ? (
-                  <div className="border border-gray-300 rounded-lg p-4 text-center text-gray-500">
-                    Loading projects...
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <select
-                      value={selectedExternalProject?.id || ''}
-                      onChange={(e) => {
-                        const project = externalProjects.find(p => p.id === e.target.value);
-                        setSelectedExternalProject(project || null);
-                      }}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none bg-white pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="">Choose a project...</option>
-                      {externalProjects.map((project) => (
-                        <option key={project.id} value={project.id}>
-                          {project.name} {project.projectNumber ? `(${project.projectNumber})` : ''}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-                  </div>
-                )}
-
-                {selectedExternalProject && (
-                  <div className="mt-3 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                    <div className="text-sm space-y-1">
-                      <p><span className="font-medium">Status:</span> {selectedExternalProject.status}</p>
-                      {selectedExternalProject.description && (
-                        <p><span className="font-medium">Description:</span> {selectedExternalProject.description}</p>
-                      )}
-                      {selectedExternalProject.location && (
-                        <p><span className="font-medium">Location:</span> {selectedExternalProject.location.city}, {selectedExternalProject.location.state}</p>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Upload Documents
@@ -438,8 +335,8 @@ export default function ProjectCreationView({
         <div className="max-w-4xl mx-auto flex items-center justify-end space-x-3">
           <button
             onClick={handleContinue}
-            disabled={uploadedDocuments.length === 0 || (loadFromPlatform && !selectedExternalProject)}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={uploadedDocuments.length === 0}
+            className="px-6 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Continue to Review
           </button>

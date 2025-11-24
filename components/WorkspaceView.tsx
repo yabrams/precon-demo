@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
+import { ChevronLeft } from 'lucide-react';
 import BidFormTable, { LineItem } from './BidFormTable';
 import DiagramOverlay from './DiagramOverlay';
 import ChatPanel from './ChatPanel';
@@ -24,6 +25,7 @@ interface WorkspaceViewProps {
   onAcceptChatChanges: (messageId: string) => void;
   onRejectChatChanges: (messageId: string) => void;
   isChatLoading?: boolean;
+  onBack?: () => void;
 }
 
 export default function WorkspaceView({
@@ -41,6 +43,7 @@ export default function WorkspaceView({
   onAcceptChatChanges,
   onRejectChatChanges,
   isChatLoading = false,
+  onBack,
 }: WorkspaceViewProps) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
@@ -150,7 +153,27 @@ export default function WorkspaceView({
   const connectionLineProps = getConnectionLineProps();
 
   return (
-    <div ref={workspaceRef} className="h-screen overflow-hidden bg-gray-50 relative">
+    <div className="h-screen overflow-hidden flex flex-col bg-gray-50">
+      {/* Header */}
+      {onBack && (
+        <div className="px-6 py-3 bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onBack}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Back"
+            >
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
+            </button>
+            <div>
+              <h1 className="text-lg font-semibold text-zinc-900">{projectName || 'Project Workspace'}</h1>
+              <p className="text-xs text-gray-600">Edit and review bid form</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div ref={workspaceRef} className="flex-1 overflow-hidden bg-gray-50 relative">
       {/* Connection Line Overlay */}
       <AnimatePresence>
         {connectionLineProps && (
@@ -414,6 +437,7 @@ export default function WorkspaceView({
           </Panel>
         )}
       </PanelGroup>
+      </div>
     </div>
   );
 }
