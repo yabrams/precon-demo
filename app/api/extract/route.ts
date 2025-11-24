@@ -231,8 +231,8 @@ function combineExtractionResults(results: any[]) {
             const csiMatch = matchLineItemToCSI(item.description, pkg.csi_division);
             return {
               ...item,
-              csiCode: csiMatch?.code || null,
-              csiTitle: csiMatch?.title || null,
+              csiCode: csiMatch?.code || 'N/A',
+              csiTitle: csiMatch?.title || 'N/A',
             };
           });
         }
@@ -285,8 +285,8 @@ function combineExtractionResults(results: any[]) {
               ...item,
               source_page: pageNumber,
               notes: item.notes ? `${item.notes} (Page ${pageNumber})` : `Page ${pageNumber}`,
-              csiCode: csiMatch?.code || null,
-              csiTitle: csiMatch?.title || null,
+              csiCode: csiMatch?.code || 'N/A',
+              csiTitle: csiMatch?.title || 'N/A',
             });
           });
         }

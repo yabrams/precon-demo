@@ -356,10 +356,14 @@ export default function BidFormTable({
                         }`}
                       >
                         {item.csiCode && item.csiTitle ? (
-                          <span className="text-zinc-900">
-                            <span className="font-mono font-semibold">{item.csiCode}</span>
-                            <span className="text-zinc-600 ml-2">{item.csiTitle}</span>
-                          </span>
+                          item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
+                            <span className="text-gray-400 italic">N/A</span>
+                          ) : (
+                            <span className="text-zinc-900">
+                              <span className="font-mono font-semibold">{item.csiCode}</span>
+                              <span className="text-zinc-600 ml-2">{item.csiTitle}</span>
+                            </span>
+                          )
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
