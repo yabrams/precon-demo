@@ -196,12 +196,22 @@ export default function ProjectReviewView({
           alert(data.message + '\n\nNote: For PDF extraction, please use the regular extraction workflow which supports PDF processing.');
         } else {
           alert(data.error || 'Failed to extract project information. Please fill in manually.');
+          // Set a default project name so the user can proceed
+          setProjectInfo(prev => ({
+            ...prev,
+            name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
+          }));
         }
         setExtractionComplete(true);
       }
     } catch (error) {
       console.error('Extraction error:', error);
       alert('Failed to extract project information. Please fill in manually.');
+      // Set a default project name so the user can proceed
+      setProjectInfo(prev => ({
+        ...prev,
+        name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
+      }));
       setExtractionComplete(true);
     } finally {
       setExtracting(false);

@@ -110,7 +110,7 @@ IMPORTANT RULES:
   let result;
   try {
     if (responseText.includes('```json')) {
-      const jsonStart = responseText.indexOf('```json') + 7;
+      const jsonStart = responseText.indexOf('```json') + '```json'.length;
       const jsonEnd = responseText.indexOf('```', jsonStart);
       const jsonStr = responseText.substring(jsonStart, jsonEnd).trim();
       result = JSON.parse(jsonStr);
@@ -146,17 +146,6 @@ IMPORTANT RULES:
       extraction_confidence: 'low',
       raw_text: responseText,
     };
-  }
-
-  // Convert old format to new format if needed (backwards compatibility)
-  if (result.line_items && !result.bid_packages) {
-    result.bid_packages = [{
-      name: 'GENERAL',
-      csi_division: '00',
-      description: 'General bid items',
-      line_items: result.line_items
-    }];
-    delete result.line_items;
   }
 
   // Ensure at least one bid package exists
@@ -269,7 +258,7 @@ function combineExtractionResults(results: any[]) {
 
 export async function POST(request: Request) {
   try {
-    const { imageUrl, instructions, bidPackageId, diagramId } = await request.json();
+    const { imageUrl, instructions, projectId, diagramId } = await request.json();
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -278,15 +267,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // If bidPackageId is provided, verify it exists
-    if (bidPackageId) {
-      const bidPackage = await prisma.bidPackage.findUnique({
-        where: { id: bidPackageId }
+    // If projectId is provided, verify it exists
+    if (projectId) {
+      const project = await prisma.buildingConnectedProject.findUnique({
+        where: { id: projectId }
       });
 
-      if (!bidPackage) {
+      if (!project) {
         return NextResponse.json(
-          { error: 'Bid package not found' },
+          { error: 'Project not found' },
           { status: 404 }
         );
       }
@@ -402,50 +391,90 @@ export async function POST(request: Request) {
     const combinedResult = combineExtractionResults(extractionResults);
 
     console.log('Extraction result:', JSON.stringify(combinedResult, null, 2));
-    console.log('Line items count:', combinedResult.line_items?.length || 0);
+    console.log('Bid packages count:', combinedResult.bid_packages?.length || 0);
+
+    // Log total line items across all packages
+    const totalLineItems = combinedResult.bid_packages?.reduce((sum: number, pkg: any) =>
+      sum + (pkg.line_items?.length || 0), 0) || 0;
+    console.log('Total line items across all packages:', totalLineItems);
 
     const result = combinedResult;
 
-    // If bidPackageId is provided, create BidForm and save line items to database
-    if (bidPackageId && result.line_items && result.line_items.length > 0) {
+    // If projectId is provided, create bid packages and forms
+    if (projectId && result.bid_packages && result.bid_packages.length > 0) {
       try {
-        const bidForm = await prisma.bidForm.create({
-          data: {
-            bidPackageId,
-            diagramId: diagramId || null,
-            extractionConfidence: result.extraction_confidence || 'unknown',
-            rawExtractedText: result.raw_text || null,
-            status: 'draft',
-            lineItems: {
-              create: result.line_items.map((item: any, index: number) => ({
-                itemNumber: item.item_number || null,
-                description: item.description,
-                quantity: item.quantity || null,
-                unit: item.unit || null,
-                unitPrice: item.unit_price || null,
-                totalPrice: item.total_price || null,
-                notes: item.notes || null,
-                order: index,
-                verified: false
-              }))
+        // Create bid packages and forms for each identified package
+        const createdPackages = await Promise.all(
+          result.bid_packages.map(async (pkg: any) => {
+            // Check if package has any line items
+            if (!pkg.line_items || pkg.line_items.length === 0) {
+              console.log(`Skipping empty package: ${pkg.name}`);
+              return null;
             }
-          },
-          include: {
-            lineItems: {
-              orderBy: {
-                order: 'asc'
-              }
-            }
-          }
-        });
 
-        console.log('Created BidForm:', bidForm.id);
+            // Create or find the bid package
+            const bidPackage = await prisma.bidPackage.create({
+              data: {
+                bcBidPackageId: `${projectId}-${pkg.csi_division}-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
+                bcProjectId: projectId,
+                name: pkg.name,
+                description: pkg.description || `${pkg.name} scope of work`,
+                scope: pkg.description,
+                status: 'draft',
+                progress: 0,
+                diagramIds: diagramId ? JSON.stringify([diagramId]) : null,
+              }
+            });
+
+            // Create bid form with line items for this package
+            const bidForm = await prisma.bidForm.create({
+              data: {
+                bidPackageId: bidPackage.id,
+                diagramId: diagramId || null,
+                extractionConfidence: result.extraction_confidence || 'unknown',
+                rawExtractedText: result.raw_text || null,
+                status: 'draft',
+                lineItems: {
+                  create: pkg.line_items.map((item: any, index: number) => ({
+                    itemNumber: item.item_number || null,
+                    description: item.description,
+                    quantity: item.quantity || null,
+                    unit: item.unit || null,
+                    unitPrice: item.unit_price || null,
+                    totalPrice: item.total_price || null,
+                    notes: item.notes || null,
+                    order: index,
+                    verified: false
+                  }))
+                }
+              },
+              include: {
+                lineItems: {
+                  orderBy: {
+                    order: 'asc'
+                  }
+                }
+              }
+            });
+
+            console.log(`Created BidPackage: ${bidPackage.id} (${pkg.name}) with BidForm: ${bidForm.id}`);
+
+            return {
+              bidPackage,
+              bidForm
+            };
+          })
+        );
+
+        // Filter out null values (empty packages)
+        const validPackages = createdPackages.filter(p => p !== null);
 
         return NextResponse.json({
           ...result,
-          bidFormId: bidForm.id,
-          bidForm: bidForm
+          createdPackages: validPackages,
+          message: `Successfully created ${validPackages.length} bid packages with forms`
         });
+
       } catch (dbError) {
         console.error('Error saving to database:', dbError);
         // Return extraction result even if DB save fails
@@ -458,6 +487,7 @@ export async function POST(request: Request) {
       }
     }
 
+    // Return extraction result without saving to database
     return NextResponse.json(result);
   } catch (error) {
     console.error('Extraction error:', error);
