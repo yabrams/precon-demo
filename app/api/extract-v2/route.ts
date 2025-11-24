@@ -15,7 +15,7 @@ async function processImageWithClaude(
 ) {
   const message = await client.messages.create({
     model: 'claude-sonnet-4-5-20250929',
-    max_tokens: 4096,
+    max_tokens: 8000,
     messages: [
       {
         role: 'user',
@@ -30,52 +30,67 @@ async function processImageWithClaude(
           },
           {
             type: 'text',
-            text: `Analyze this construction/preconstruction diagram or work drawing and extract bid packages and items.
+            text: `Analyze this construction/preconstruction diagram or work drawing and extract ALL bid packages and items.
 ${contextNote ? `\nCONTEXT: ${contextNote}\n` : ''}
 ${userInstructions ? `\nADDITIONAL INSTRUCTIONS FROM USER:\n${userInstructions}\n` : ''}
 
-IMPORTANT: Follow this TWO-STEP process:
+CRITICAL: You MUST extract EVERY SINGLE numbered item visible in this document. Do not skip any items.
 
-STEP 1: IDENTIFY BID PACKAGES
-First, identify all the different bid packages needed based on CSI MasterFormat divisions visible in the document:
-- Division 02: Site Construction (excavation, grading, utilities)
-- Division 03: Concrete (foundations, slabs, structural)
-- Division 04: Masonry (brick, block, stone)
-- Division 05: Metals (structural steel, metal deck, misc metals)
-- Division 06: Wood & Plastics (framing, millwork)
-- Division 07: Thermal & Moisture (roofing, insulation, waterproofing)
-- Division 08: Doors & Windows (doors, frames, glazing)
-- Division 09: Finishes (drywall, painting, flooring, ceilings)
-- Division 10: Specialties (toilet partitions, signage, accessories)
-- Division 11: Equipment (kitchen, lab, medical equipment)
-- Division 12: Furnishings (furniture, window treatments)
-- Division 13: Special Construction (clean rooms, vaults)
-- Division 14: Conveying (elevators, escalators)
-- Division 15: Mechanical (HVAC, plumbing, fire protection)
-- Division 16: Electrical (power, lighting, communications)
+STEP 1: IDENTIFY ALL SECTIONS AND ITEMS
+Look for:
+- Numbered items (e.g., 2.1, 2.2, 3.1, 8.1, etc.)
+- Section headers (e.g., "2. Partitions, Door, Glazing", "3. Millwork Notes", "8. Site Notes")
+- Legend items or note callouts
+- Any text that describes work to be done
 
-STEP 2: EXTRACT AND ASSIGN ITEMS
-Extract all line items and assign each to the appropriate bid package:
-- Item number (if present)
-- Description of work/material
-- Quantity (if specified)
-- Unit of measurement (e.g., LF, SF, EA, CY, etc.)
-- CSI division it belongs to
-- Any relevant notes or specifications
-- Bounding box coordinates (normalized 0.0-1.0)
+Common document structures:
+- Notes sections organized by number (2.x, 3.x, 4.x, etc.)
+- CSI MasterFormat divisions (02-16)
+- General notes or specifications
+
+STEP 2: ORGANIZE INTO BID PACKAGES
+Group items by their section or trade:
+- If items are numbered (e.g., 2.1, 2.2), group them by the first number (all 2.x items together)
+- Use the section header as the package name (e.g., "Partitions, Door, Glazing, Structural")
+- If no clear sections exist, group by CSI division or create logical trade packages
+- Map to CSI divisions when possible:
+  * Division 02: Site Construction
+  * Division 03: Concrete
+  * Division 04: Masonry
+  * Division 05: Metals
+  * Division 06: Wood & Plastics
+  * Division 07: Thermal & Moisture
+  * Division 08: Doors & Windows
+  * Division 09: Finishes
+  * Division 10: Specialties
+  * Division 11: Equipment
+  * Division 12: Furnishings
+  * Division 13: Special Construction
+  * Division 14: Conveying
+  * Division 15: Mechanical
+  * Division 16: Electrical
+
+STEP 3: EXTRACT EACH ITEM
+For every item, extract:
+- item_number: The exact number shown (e.g., "2.1", "8.3", "A1")
+- description: The complete text describing the work
+- quantity: Number if specified (can be null)
+- unit: Unit of measurement if specified (LF, SF, EA, CY, etc.) (can be null)
+- notes: Any additional specifications or context
+- boundingBox: Approximate location on the image (normalized 0.0-1.0 coordinates)
 
 Format your response as a JSON object:
 {
   "project_name": "string or null",
   "bid_packages": [
     {
-      "name": "Division XX - Description",
-      "csi_division": "XX",
+      "name": "Section name or Division XX - Description",
+      "csi_division": "XX" or "00" if unknown,
       "description": "Brief description of scope",
       "line_items": [
         {
-          "item_number": "string or null",
-          "description": "string",
+          "item_number": "string",
+          "description": "string (complete work description)",
           "quantity": number or null,
           "unit": "string or null",
           "notes": "string or null",
@@ -93,11 +108,15 @@ Format your response as a JSON object:
 }
 
 IMPORTANT RULES:
-1. Create separate bid packages for each CSI division that has items
-2. If you cannot determine specific CSI divisions, create a single "GENERAL" package
-3. Always assign every item to a bid package
-4. Use standard CSI division naming (e.g., "Division 09 - Finishes")
-5. Do not extract pricing information`,
+1. Extract EVERY numbered item - do not skip any
+2. Preserve the exact item numbers as they appear
+3. Include complete descriptions - do not truncate
+4. Group items logically by section or trade
+5. If an item has no quantity/unit, that's OK - extract it anyway
+6. If you see 20+ items, you should extract 20+ line items
+7. Do not extract pricing information
+8. Do not invent items that aren't there
+9. Each item should appear exactly once in exactly one bid package`,
           },
         ],
       },
@@ -108,18 +127,81 @@ IMPORTANT RULES:
 
   // Parse JSON response
   let result;
+  let jsonStr = '';
   try {
+
     if (responseText.includes('```json')) {
-      const jsonStart = responseText.indexOf('```json') + '```json'.length;
+      // Extract JSON from markdown code fence
+      const jsonStart = responseText.indexOf('```json') + 7; // '```json'.length = 7
       const jsonEnd = responseText.indexOf('```', jsonStart);
-      const jsonStr = responseText.substring(jsonStart, jsonEnd).trim();
-      result = JSON.parse(jsonStr);
+
+      if (jsonEnd === -1) {
+        // No closing fence found, try to find the last complete JSON object
+        const firstBrace = responseText.indexOf('{', jsonStart);
+        if (firstBrace !== -1) {
+          // Find the last closing brace
+          const lastBrace = responseText.lastIndexOf('}');
+          if (lastBrace > firstBrace) {
+            jsonStr = responseText.substring(firstBrace, lastBrace + 1).trim();
+          }
+        }
+      } else {
+        jsonStr = responseText.substring(jsonStart, jsonEnd).trim();
+      }
     } else if (responseText.includes('{')) {
+      // Try to extract JSON directly
       const jsonStart = responseText.indexOf('{');
       const jsonEnd = responseText.lastIndexOf('}') + 1;
-      const jsonStr = responseText.substring(jsonStart, jsonEnd);
+      jsonStr = responseText.substring(jsonStart, jsonEnd).trim();
+    }
+
+    if (jsonStr) {
       result = JSON.parse(jsonStr);
+      console.log('Successfully parsed JSON with', result.bid_packages?.length || 0, 'bid packages');
     } else {
+      throw new Error('No valid JSON found in response');
+    }
+  } catch (parseError: any) {
+    console.error('JSON parse error:', parseError.message);
+    console.error('Attempted to parse length:', jsonStr?.length, 'characters');
+
+    // Try to repair truncated JSON
+    try {
+      let repairedJson = jsonStr;
+
+      // If JSON is truncated mid-object, try to close it
+      if (repairedJson && !repairedJson.trim().endsWith('}')) {
+        console.log('Attempting to repair truncated JSON...');
+
+        // Count open braces and brackets
+        const openBraces = (repairedJson.match(/\{/g) || []).length;
+        const closeBraces = (repairedJson.match(/\}/g) || []).length;
+        const openBrackets = (repairedJson.match(/\[/g) || []).length;
+        const closeBrackets = (repairedJson.match(/\]/g) || []).length;
+
+        // Remove any incomplete string at the end
+        repairedJson = repairedJson.replace(/,?\s*"[^"]*$/, '');
+        repairedJson = repairedJson.replace(/,?\s*\{[^}]*$/, '');
+
+        // Close missing brackets and braces
+        for (let i = 0; i < (openBrackets - closeBrackets); i++) {
+          repairedJson += ']';
+        }
+        for (let i = 0; i < (openBraces - closeBraces); i++) {
+          repairedJson += '}';
+        }
+
+        result = JSON.parse(repairedJson);
+        console.log('Successfully repaired and parsed truncated JSON');
+      } else {
+        throw new Error('Could not repair JSON');
+      }
+    } catch (repairError: any) {
+      console.error('Failed to repair JSON:', repairError.message);
+      console.error('Response was likely truncated due to max_tokens limit');
+      console.error('First 500 chars:', jsonStr?.substring(0, 500));
+      console.error('Last 500 chars:', jsonStr?.substring(jsonStr.length - 500));
+
       result = {
         project_name: null,
         bid_packages: [{
@@ -129,23 +211,10 @@ IMPORTANT RULES:
           line_items: []
         }],
         extraction_confidence: 'low',
-        raw_text: responseText,
+        raw_text: responseText.substring(0, 1000), // Store first 1000 chars for debugging
+        error: 'Response truncated - increase max_tokens'
       };
     }
-  } catch (parseError) {
-    console.error('JSON parse error:', parseError);
-    console.error('Response text:', responseText);
-    result = {
-      project_name: null,
-      bid_packages: [{
-        name: 'GENERAL',
-        csi_division: '00',
-        description: 'General bid items',
-        line_items: []
-      }],
-      extraction_confidence: 'low',
-      raw_text: responseText,
-    };
   }
 
   // Ensure at least one bid package exists
@@ -397,6 +466,26 @@ export async function POST(request: Request) {
     const totalLineItems = combinedResult.bid_packages?.reduce((sum: number, pkg: any) =>
       sum + (pkg.line_items?.length || 0), 0) || 0;
     console.log('Total line items across all packages:', totalLineItems);
+
+    // Log details of each package
+    if (combinedResult.bid_packages && combinedResult.bid_packages.length > 0) {
+      console.log('\n========== EXTRACTION RESULTS ==========');
+      combinedResult.bid_packages.forEach((pkg: any, idx: number) => {
+        console.log(`\nPackage ${idx + 1}: ${pkg.name}`);
+        console.log(`  CSI Division: ${pkg.csi_division}`);
+        console.log(`  Description: ${pkg.description}`);
+        console.log(`  Line Items Count: ${pkg.line_items?.length || 0}`);
+
+        if (pkg.line_items && pkg.line_items.length > 0) {
+          pkg.line_items.forEach((item: any, itemIdx: number) => {
+            console.log(`    ${itemIdx + 1}. [${item.item_number || 'N/A'}] ${item.description?.substring(0, 60)}...`);
+          });
+        } else {
+          console.log('    (No line items)');
+        }
+      });
+      console.log('\n========================================\n');
+    }
 
     const result = combinedResult;
 
