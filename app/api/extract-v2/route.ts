@@ -30,22 +30,10 @@ async function processImageWithClaude(
           },
           {
             type: 'text',
-            text: `Analyze this construction/preconstruction diagram or work drawing and extract BOTH project information AND all bid packages/items.
+            text: `Analyze this construction/preconstruction diagram or work drawing and extract ALL bid packages and items.
 ${contextNote ? `\nCONTEXT: ${contextNote}\n` : ''}
 ${userInstructions ? `\nADDITIONAL INSTRUCTIONS FROM USER:\n${userInstructions}\n` : ''}
 
-PART A: EXTRACT PROJECT INFORMATION
-Look for and extract:
-- Project name
-- Project location (address, city, state, zip)
-- Owner/client name
-- Architect name
-- Any dates mentioned (bid due, start, completion)
-- Project value/budget (if mentioned)
-- Market sector (Commercial, Healthcare, Education, etc.)
-- Project type (New Construction, Renovation, etc.)
-
-PART B: EXTRACT BID PACKAGES AND ITEMS
 CRITICAL: You MUST extract EVERY SINGLE numbered item visible in this document. Do not skip any items.
 
 STEP 1: IDENTIFY ALL SECTIONS AND ITEMS
@@ -93,30 +81,11 @@ For every item, extract:
 
 Format your response as a JSON object:
 {
-  "projectInfo": {
-    "name": "string or null",
-    "projectNumber": "string or null",
-    "description": "string or null",
-    "location": {
-      "address": "string or null",
-      "city": "string or null",
-      "state": "string or null",
-      "zipCode": "string or null",
-      "country": "USA"
-    },
-    "ownerName": "string or null",
-    "architectName": "string or null",
-    "engineerName": "string or null",
-    "bidDueDate": "ISO date string or null",
-    "projectStartDate": "ISO date string or null",
-    "projectEndDate": "ISO date string or null",
-    "projectValue": number or null,
-    "marketSector": "string or null",
-    "projectType": "string or null"
-  },
+  "project_name": "string or null (extracted from document header, title, or project identification)",
+  "project_description": "string or null (1-2 sentence summary of the overall project scope and type)",
   "bid_packages": [
     {
-      "name": "Division XX - Description",
+      "name": "Section name or Division XX - Description",
       "csi_division": "XX" or "00" if unknown,
       "description": "Brief description of scope",
       "line_items": [
@@ -284,15 +253,21 @@ function combineExtractionResults(results: any[]) {
   // Combine results from multiple pages
   const combined = {
     project_name: null as string | null,
+    project_description: null as string | null,
     bid_packages: new Map<string, any>(),
     extraction_confidence: 'medium' as string,
     page_count: results.length
   };
 
-  // Use the first non-null project name found
+  // Use the first non-null project name and description found
   for (const result of results) {
-    if (result.project_name) {
+    if (result.project_name && !combined.project_name) {
       combined.project_name = result.project_name;
+    }
+    if (result.project_description && !combined.project_description) {
+      combined.project_description = result.project_description;
+    }
+    if (combined.project_name && combined.project_description) {
       break;
     }
   }
@@ -351,6 +326,7 @@ function combineExtractionResults(results: any[]) {
 
   return {
     project_name: combined.project_name,
+    project_description: combined.project_description,
     bid_packages: packagesArray,
     extraction_confidence: combined.extraction_confidence,
     page_count: combined.page_count

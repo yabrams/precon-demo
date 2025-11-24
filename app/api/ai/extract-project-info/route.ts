@@ -145,6 +145,21 @@ Please analyze these documents and extract as much of the following information 
 - Contract type (e.g., Lump Sum, Cost Plus, GMP)
 - Any special requirements (bonding, prevailing wage, minority/women business goals, etc.)
 
+**Bid Packages / Scope Categories:**
+Identify distinct bid packages or scope categories mentioned in the documents. Common categories include:
+- CONCRETE
+- STRUCTURAL STEEL
+- MEP (Mechanical, Electrical, Plumbing)
+- SITE WORK
+- ARCHITECTURAL FINISHES
+- SPECIALTY ITEMS
+- GENERAL REQUIREMENTS
+
+For each bid package you identify, provide:
+- Name (category)
+- Description (brief scope description)
+- Estimated budget (if mentioned)
+
 Return your analysis as a JSON object with this structure:
 
 {
@@ -181,6 +196,13 @@ Return your analysis as a JSON object with this structure:
     "minorityBusinessGoal": number or null,
     "womenBusinessGoal": number or null
   },
+  "bidPackages": [
+    {
+      "name": "CATEGORY NAME",
+      "description": "scope description",
+      "budgetAmount": number or null
+    }
+  ],
   "confidence": {
     "overall": number between 0-1,
     "reasoning": "explanation of confidence level"

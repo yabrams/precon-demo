@@ -7,7 +7,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 type Platform = 'buildingconnected' | 'planhub' | 'constructconnect';
 
@@ -91,7 +91,6 @@ export default function ProjectReviewView({
   const [currentDocIndex, setCurrentDocIndex] = useState(0);
   const [extracting, setExtracting] = useState(false);
   const [extractionComplete, setExtractionComplete] = useState(false);
-  const [showMissingPackagesPrompt, setShowMissingPackagesPrompt] = useState(false);
   const [projectInfo, setProjectInfo] = useState<ExtractedProjectInfo>({
     name: null,
     projectNumber: null,
@@ -177,65 +176,11 @@ export default function ProjectReviewView({
 
   const extractProjectInfo = async () => {
     setExtracting(true);
-    setIsBidPackageExtractionComplete(false);
     try {
-      console.log('=== UNIFIED EXTRACTION START ===');
-      console.log('Number of documents to process:', uploadedDocuments.length);
-
-      const extractionResults = [];
-
-      // Extract project info AND bid packages from each document using unified API
-      for (const doc of uploadedDocuments) {
-        try {
-          console.log('Processing document:', doc.fileName, 'URL:', doc.url);
-          const response = await fetch('/api/extract-v2', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageUrl: doc.url,
-            })
-          });
-
-          console.log('Extract response status:', response.status);
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Extract data received:', {
-              projectName: data.projectInfo?.name,
-              bidPackagesCount: data.bid_packages?.length || 0,
-              totalLineItems: data.bid_packages?.reduce((sum: number, pkg: any) => sum + (pkg.line_items?.length || 0), 0) || 0
-            });
-            extractionResults.push({
-              documentUrl: doc.url,
-              diagramId: doc.diagramId,
-              extractionData: data
-            });
-          } else {
-            console.error('Extract API failed with status:', response.status);
-          }
-        } catch (error) {
-          console.error('Failed to extract from document:', doc.fileName, error);
-        }
-      }
-
-      // Use project info from first successful extraction
-      if (extractionResults.length > 0 && extractionResults[0].extractionData.projectInfo) {
-        const firstProjectInfo = extractionResults[0].extractionData.projectInfo;
-        console.log('Setting project info:', firstProjectInfo);
-        setProjectInfo(firstProjectInfo);
-      } else {
-        // Set a default project name so the user can proceed
-        setProjectInfo(prev => ({
-          ...prev,
-          name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
-        }));
-      }
-
-      // Store extraction results for bid packages
-      console.log('Total extraction results:', extractionResults.length);
-      setExtractedBidPackagesData(extractionResults);
+      // Extract bid packages and line items from documents
+      // This now also extracts project name and description
+      await extractBidPackagesFromDocuments();
       setExtractionComplete(true);
-      setIsBidPackageExtractionComplete(true);
-      console.log('=== UNIFIED EXTRACTION COMPLETE ===');
     } catch (error) {
       console.error('Extraction error:', error);
       alert('Failed to extract project information. Please fill in manually.');
@@ -245,9 +190,90 @@ export default function ProjectReviewView({
         name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
       }));
       setExtractionComplete(true);
-      setIsBidPackageExtractionComplete(true);
     } finally {
       setExtracting(false);
+    }
+  };
+
+  const extractBidPackagesFromDocuments = async () => {
+    try {
+      setIsBidPackageExtractionComplete(false);
+      console.log('Pre-extracting bid packages and line items from documents...');
+      const extractionResults = [];
+      let extractedProjectName: string | null = null;
+      let extractedProjectDescription: string | null = null;
+
+      // Extract from each document
+      for (const doc of uploadedDocuments) {
+        try {
+          const extractResponse = await fetch('/api/extract-v2', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageUrl: doc.url,
+              // Don't pass projectId - we just want the extraction data, not to save to DB yet
+            })
+          });
+
+          if (extractResponse.ok) {
+            const extractData = await extractResponse.json();
+            extractionResults.push({
+              documentUrl: doc.url,
+              diagramId: doc.diagramId,
+              extractionData: extractData
+            });
+
+            // Extract project name and description from the first document that has them
+            if (!extractedProjectName && extractData.project_name) {
+              extractedProjectName = extractData.project_name;
+            }
+            if (!extractedProjectDescription && extractData.project_description) {
+              extractedProjectDescription = extractData.project_description;
+            }
+          }
+        } catch (error) {
+          console.error('Failed to extract from document:', doc.fileName, error);
+        }
+      }
+
+      // Store the extraction results to use when project is approved
+      setExtractedBidPackagesData(extractionResults);
+
+      // Set project name and description from extracted data
+      if (extractedProjectName || extractedProjectDescription) {
+        setProjectInfo(prev => ({
+          ...prev,
+          name: extractedProjectName || prev.name || 'New Project ' + new Date().toISOString().split('T')[0],
+          description: extractedProjectDescription || prev.description
+        }));
+      }
+
+      // Extract bid package summaries from extractedBidPackagesData for display
+      const allBidPackages: BidPackageInfo[] = [];
+      extractionResults.forEach((result: any) => {
+        if (result.extractionData?.bid_packages) {
+          result.extractionData.bid_packages.forEach((pkg: any) => {
+            if (pkg.line_items && pkg.line_items.length > 0) {
+              allBidPackages.push({
+                name: pkg.name,
+                description: pkg.description || `${pkg.line_items.length} items`,
+                budgetAmount: null,
+                captainId: null
+              });
+            }
+          });
+        }
+      });
+      setBidPackages(allBidPackages);
+
+      setIsBidPackageExtractionComplete(true);
+      console.log('Pre-extraction complete. Data ready for project creation.');
+      console.log('Extracted project name:', extractedProjectName);
+      console.log('Extracted project description:', extractedProjectDescription);
+      console.log('Extracted bid packages count:', allBidPackages.length);
+    } catch (error) {
+      console.error('Error during pre-extraction:', error);
+      setIsBidPackageExtractionComplete(true); // Allow user to proceed even if extraction fails
     }
   };
 
@@ -301,8 +327,6 @@ export default function ProjectReviewView({
             budgetAmount: pkg.budgetAmount || null,
             captainId: pkg.captainId || null
           })));
-        } else {
-          setShowMissingPackagesPrompt(true);
         }
         setExtractionComplete(true);
       }
@@ -314,33 +338,6 @@ export default function ProjectReviewView({
     }
   };
 
-  const handleExtractBidPackages = async () => {
-    setShowMissingPackagesPrompt(false);
-    setExtracting(true);
-    try {
-      const response = await fetch('/api/ai/extract-project-info', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          documentUrls: uploadedDocuments.map(d => d.url),
-          documentNames: uploadedDocuments.map(d => d.fileName)
-        })
-      });
-      const data = await response.json();
-      if (data.success && data.bidPackages) {
-        setBidPackages(data.bidPackages.map((pkg: any) => ({
-          name: pkg.name,
-          description: pkg.description || '',
-          budgetAmount: pkg.budgetAmount || null,
-          captainId: pkg.captainId || null
-        })));
-      }
-    } catch (error) {
-      console.error('Bid package extraction error:', error);
-    } finally {
-      setExtracting(false);
-    }
-  };
 
   const handleApprove = () => {
     if (!projectInfo.name) {
@@ -359,30 +356,14 @@ export default function ProjectReviewView({
 
     const projectData = {
       [idField]: externalId,
-      ...projectInfo,
+      name: projectInfo.name,
+      description: projectInfo.description,
       status: mode === 'platform-import' ? selectedExternalProject?.status : 'bidding',
       uploadedDocuments,
+      bidPackages: bidPackages.map(pkg => ({ ...pkg, status: 'draft', progress: 0 })),
       platform: mode === 'platform-import' ? platform : undefined,
       extractedBidPackagesData // Pass the pre-extracted bid packages data
     };
-
-    console.log('=== PROJECT APPROVAL ===');
-    console.log('Project name:', projectInfo.name);
-    console.log('Extracted bid packages data:', extractedBidPackagesData);
-    console.log('Has extractedBidPackagesData?', !!extractedBidPackagesData);
-    console.log('extractedBidPackagesData length:', extractedBidPackagesData?.length || 0);
-    if (extractedBidPackagesData && extractedBidPackagesData.length > 0) {
-      console.log('First extraction result:', {
-        url: extractedBidPackagesData[0].documentUrl,
-        packagesCount: extractedBidPackagesData[0].extractionData.bid_packages?.length || 0,
-        packages: extractedBidPackagesData[0].extractionData.bid_packages?.map((p: any) => ({
-          name: p.name,
-          itemsCount: p.line_items?.length || 0
-        }))
-      });
-    }
-    console.log('========================');
-
     onApprove(projectData);
   };
 
@@ -415,26 +396,8 @@ export default function ProjectReviewView({
         </div>
       </div>
 
-      {showMissingPackagesPrompt && (
-        <div className="bg-amber-50 border-b border-amber-200 px-6 py-4">
-          <div className="flex items-start space-x-3">
-            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-amber-900 font-medium">
-                No bid packages found in {platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'}
-              </p>
-              <p className="text-amber-700 text-sm mt-1">Would you like to extract bid packages from the uploaded documents?</p>
-              <div className="mt-3 flex space-x-3">
-                <button onClick={handleExtractBidPackages} className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium">Extract from Documents</button>
-                <button onClick={() => setShowMissingPackagesPrompt(false)} className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">Skip</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-1/3 border-r border-gray-200 flex flex-col bg-white">
+        <div className="w-3/5 border-r border-gray-200 flex flex-col bg-white">
           <div className="p-4 border-b border-gray-200">
             <h3 className="font-semibold text-zinc-900">Documents</h3>
             <p className="text-sm text-gray-600 mt-1">{currentDocIndex + 1} of {uploadedDocuments.length}</p>
@@ -465,14 +428,14 @@ export default function ProjectReviewView({
           )}
         </div>
 
-        <div className="flex-1 overflow-y-auto bg-gray-50">
+        <div className="w-2/5 overflow-y-auto bg-gray-50">
           {extracting ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
                 <p className="text-zinc-900 text-base font-medium">
                   {mode === 'manual'
-                    ? 'Extracting project information and bid packages...'
+                    ? 'Extracting project information and bidding packages...'
                     : `Loading ${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} project data...`}
                 </p>
                 <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>
@@ -484,29 +447,17 @@ export default function ProjectReviewView({
                 {/* Project Basic Information */}
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Information</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Project Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={projectInfo.name || ''}
-                        onChange={(e) => updateField('name', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter project name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Number</label>
-                      <input
-                        type="text"
-                        value={projectInfo.projectNumber || ''}
-                        onChange={(e) => updateField('projectNumber', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter project number"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Project Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={projectInfo.name || ''}
+                      onChange={(e) => updateField('name', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter project name"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -517,300 +468,6 @@ export default function ProjectReviewView({
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter project description"
                     />
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Location</h2>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                    <input
-                      type="text"
-                      value={projectInfo.location.address || ''}
-                      onChange={(e) => updateField('location.address', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter street address"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                      <input
-                        type="text"
-                        value={projectInfo.location.city || ''}
-                        onChange={(e) => updateField('location.city', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="City"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-                      <input
-                        type="text"
-                        value={projectInfo.location.state || ''}
-                        onChange={(e) => updateField('location.state', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="State"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
-                      <input
-                        type="text"
-                        value={projectInfo.location.zipCode || ''}
-                        onChange={(e) => updateField('location.zipCode', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="ZIP"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dates & Financial */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Schedule & Budget</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Bid Due Date</label>
-                      <input
-                        type="date"
-                        value={projectInfo.bidDueDate || ''}
-                        onChange={(e) => updateField('bidDueDate', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Value</label>
-                      <input
-                        type="number"
-                        value={projectInfo.projectValue || ''}
-                        onChange={(e) => updateField('projectValue', parseFloat(e.target.value) || null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter project value"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Start Date</label>
-                      <input
-                        type="date"
-                        value={projectInfo.projectStartDate || ''}
-                        onChange={(e) => updateField('projectStartDate', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project End Date</label>
-                      <input
-                        type="date"
-                        value={projectInfo.projectEndDate || ''}
-                        onChange={(e) => updateField('projectEndDate', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project Details */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Details</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Market Sector</label>
-                      <input
-                        type="text"
-                        value={projectInfo.marketSector || ''}
-                        onChange={(e) => updateField('marketSector', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Commercial, Healthcare"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
-                      <input
-                        type="text"
-                        value={projectInfo.projectType || ''}
-                        onChange={(e) => updateField('projectType', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., New Construction, Renovation"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Building Type</label>
-                      <input
-                        type="text"
-                        value={projectInfo.buildingType || ''}
-                        onChange={(e) => updateField('buildingType', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Office, Hospital"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Project Phase</label>
-                      <input
-                        type="text"
-                        value={projectInfo.projectPhase || ''}
-                        onChange={(e) => updateField('projectPhase', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Design, Bidding"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Square Footage</label>
-                      <input
-                        type="number"
-                        value={projectInfo.estimatedSquareFootage || ''}
-                        onChange={(e) => updateField('estimatedSquareFootage', parseFloat(e.target.value) || null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Square feet"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Number of Floors</label>
-                      <input
-                        type="number"
-                        value={projectInfo.numberOfFloors || ''}
-                        onChange={(e) => updateField('numberOfFloors', parseInt(e.target.value) || null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Number of floors"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stakeholders */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Project Team</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Owner</label>
-                      <input
-                        type="text"
-                        value={projectInfo.ownerName || ''}
-                        onChange={(e) => updateField('ownerName', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Owner name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Architect</label>
-                      <input
-                        type="text"
-                        value={projectInfo.architectName || ''}
-                        onChange={(e) => updateField('architectName', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Architect name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Engineer</label>
-                      <input
-                        type="text"
-                        value={projectInfo.engineerName || ''}
-                        onChange={(e) => updateField('engineerName', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Engineer name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">General Contractor</label>
-                      <input
-                        type="text"
-                        value={projectInfo.generalContractorName || ''}
-                        onChange={(e) => updateField('generalContractorName', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="GC name"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contract Details */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-zinc-900 border-b pb-2">Contract Details</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Funding Type</label>
-                      <input
-                        type="text"
-                        value={projectInfo.fundingType || ''}
-                        onChange={(e) => updateField('fundingType', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Public, Private"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Method</label>
-                      <input
-                        type="text"
-                        value={projectInfo.deliveryMethod || ''}
-                        onChange={(e) => updateField('deliveryMethod', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Design-Bid-Build"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Contract Type</label>
-                      <input
-                        type="text"
-                        value={projectInfo.contractType || ''}
-                        onChange={(e) => updateField('contractType', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="e.g., Lump Sum, Unit Price"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="bondingRequired"
-                        checked={projectInfo.bondingRequired || false}
-                        onChange={(e) => updateField('bondingRequired', e.target.checked)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="bondingRequired" className="text-sm font-medium text-gray-700">
-                        Bonding Required
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="prevailingWage"
-                        checked={projectInfo.prevailingWageRequired || false}
-                        onChange={(e) => updateField('prevailingWageRequired', e.target.checked)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="prevailingWage" className="text-sm font-medium text-gray-700">
-                        Prevailing Wage Required
-                      </label>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">MBE Goal (%)</label>
-                      <input
-                        type="number"
-                        value={projectInfo.minorityBusinessGoal || ''}
-                        onChange={(e) => updateField('minorityBusinessGoal', parseFloat(e.target.value) || null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Percentage"
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">WBE Goal (%)</label>
-                      <input
-                        type="number"
-                        value={projectInfo.womenBusinessGoal || ''}
-                        onChange={(e) => updateField('womenBusinessGoal', parseFloat(e.target.value) || null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Percentage"
-                        min="0"
-                        max="100"
-                      />
-                    </div>
                   </div>
                 </div>
 

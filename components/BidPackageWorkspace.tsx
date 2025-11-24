@@ -245,7 +245,10 @@ export default function BidPackageWorkspace({
                   {bidPackage.status}
                 </span>
               </div>
-              <p className="text-xs text-gray-600">{project.name}</p>
+              <p className="text-xs font-medium text-gray-700">{project.name}</p>
+              {project.description && (
+                <p className="text-xs text-gray-500 mt-0.5">{project.description}</p>
+              )}
             </div>
           </div>
         </div>
