@@ -81,7 +81,8 @@ For every item, extract:
 
 Format your response as a JSON object:
 {
-  "project_name": "string or null",
+  "project_name": "string or null (extracted from document header, title, or project identification)",
+  "project_description": "string or null (1-2 sentence summary of the overall project scope and type)",
   "bid_packages": [
     {
       "name": "Section name or Division XX - Description",
@@ -252,15 +253,21 @@ function combineExtractionResults(results: any[]) {
   // Combine results from multiple pages
   const combined = {
     project_name: null as string | null,
+    project_description: null as string | null,
     bid_packages: new Map<string, any>(),
     extraction_confidence: 'medium' as string,
     page_count: results.length
   };
 
-  // Use the first non-null project name found
+  // Use the first non-null project name and description found
   for (const result of results) {
-    if (result.project_name) {
+    if (result.project_name && !combined.project_name) {
       combined.project_name = result.project_name;
+    }
+    if (result.project_description && !combined.project_description) {
+      combined.project_description = result.project_description;
+    }
+    if (combined.project_name && combined.project_description) {
       break;
     }
   }
@@ -319,6 +326,7 @@ function combineExtractionResults(results: any[]) {
 
   return {
     project_name: combined.project_name,
+    project_description: combined.project_description,
     bid_packages: packagesArray,
     extraction_confidence: combined.extraction_confidence,
     page_count: combined.page_count
