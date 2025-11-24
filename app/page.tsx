@@ -808,7 +808,16 @@ export default function Home() {
 
   const handleProjectApprove = async (projectData: any) => {
     try {
-      console.log('Creating project with data:', projectData);
+      console.log('=== HANDLE PROJECT APPROVE ===');
+      console.log('Project data received:', {
+        name: projectData.name,
+        hasExtractedData: !!projectData.extractedBidPackagesData,
+        extractedDataLength: projectData.extractedBidPackagesData?.length || 0
+      });
+      if (projectData.extractedBidPackagesData) {
+        console.log('Extracted bid packages data:', projectData.extractedBidPackagesData);
+      }
+      console.log('==============================');
 
       const response = await fetch('/api/projects', {
         method: 'POST',
@@ -824,6 +833,7 @@ export default function Home() {
         // If project has pre-extracted bid packages data, create them directly in DB
         if (createdProjectId && projectData.extractedBidPackagesData && projectData.extractedBidPackagesData.length > 0) {
           console.log('Using pre-extracted bid packages data. Creating bid packages in database...');
+          console.log('Number of extraction results:', projectData.extractedBidPackagesData.length);
 
           let firstCreatedBidPackageId: string | null = null;
 

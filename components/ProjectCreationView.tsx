@@ -338,7 +338,7 @@ export default function ProjectCreationView({
             disabled={uploadedDocuments.length === 0}
             className="px-6 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Continue to Review
+            Process Documents
           </button>
         </div>
       </div>

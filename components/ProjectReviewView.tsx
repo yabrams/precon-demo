@@ -190,7 +190,6 @@ export default function ProjectReviewView({
       const data = await response.json();
       if (data.success) {
         setProjectInfo(data.projectInfo);
-        setBidPackages(data.bidPackages || []);
         setConfidence(data.confidence);
 
         // Also extract bid packages and line items from documents
@@ -230,11 +229,13 @@ export default function ProjectReviewView({
     try {
       setIsBidPackageExtractionComplete(false);
       console.log('Pre-extracting bid packages and line items from documents...');
+      console.log('Number of documents to process:', uploadedDocuments.length);
       const extractionResults = [];
 
       // Extract from each document
       for (const doc of uploadedDocuments) {
         try {
+          console.log('Processing document:', doc.fileName, 'URL:', doc.url);
           const extractResponse = await fetch('/api/extract-v2', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -244,13 +245,21 @@ export default function ProjectReviewView({
             })
           });
 
+          console.log('Extract response status:', extractResponse.status);
           if (extractResponse.ok) {
             const extractData = await extractResponse.json();
+            console.log('Extract data received:', {
+              projectName: extractData.project_name,
+              bidPackagesCount: extractData.bid_packages?.length || 0,
+              totalLineItems: extractData.bid_packages?.reduce((sum: number, pkg: any) => sum + (pkg.line_items?.length || 0), 0) || 0
+            });
             extractionResults.push({
               documentUrl: doc.url,
               diagramId: doc.diagramId,
               extractionData: extractData
             });
+          } else {
+            console.error('Extract API failed with status:', extractResponse.status);
           }
         } catch (error) {
           console.error('Failed to extract from document:', doc.fileName, error);
@@ -258,6 +267,11 @@ export default function ProjectReviewView({
       }
 
       // Store the extraction results to use when project is approved
+      console.log('Total extraction results:', extractionResults.length);
+      console.log('Extraction results summary:', extractionResults.map(r => ({
+        url: r.documentUrl,
+        packagesCount: r.extractionData.bid_packages?.length || 0
+      })));
       setExtractedBidPackagesData(extractionResults);
       setIsBidPackageExtractionComplete(true);
       console.log('Pre-extraction complete. Data ready for project creation.');
@@ -378,10 +392,27 @@ export default function ProjectReviewView({
       ...projectInfo,
       status: mode === 'platform-import' ? selectedExternalProject?.status : 'bidding',
       uploadedDocuments,
-      bidPackages: bidPackages.map(pkg => ({ ...pkg, status: 'draft', progress: 0 })),
       platform: mode === 'platform-import' ? platform : undefined,
       extractedBidPackagesData // Pass the pre-extracted bid packages data
     };
+
+    console.log('=== PROJECT APPROVAL ===');
+    console.log('Project name:', projectInfo.name);
+    console.log('Extracted bid packages data:', extractedBidPackagesData);
+    console.log('Has extractedBidPackagesData?', !!extractedBidPackagesData);
+    console.log('extractedBidPackagesData length:', extractedBidPackagesData?.length || 0);
+    if (extractedBidPackagesData && extractedBidPackagesData.length > 0) {
+      console.log('First extraction result:', {
+        url: extractedBidPackagesData[0].documentUrl,
+        packagesCount: extractedBidPackagesData[0].extractionData.bid_packages?.length || 0,
+        packages: extractedBidPackagesData[0].extractionData.bid_packages?.map((p: any) => ({
+          name: p.name,
+          itemsCount: p.line_items?.length || 0
+        }))
+      });
+    }
+    console.log('========================');
+
     onApprove(projectData);
   };
 
