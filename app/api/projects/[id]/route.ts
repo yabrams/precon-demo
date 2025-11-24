@@ -163,17 +163,18 @@ export async function PUT(
 
 /**
  * DELETE /api/projects/[id]
- * Delete a BuildingConnected project (cascades to diagrams and bid packages)
+ * Soft delete a BuildingConnected project (sets deletedAt timestamp)
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
-    await prisma.buildingConnectedProject.delete({
-      where: { id }
+    await prisma.buildingConnectedProject.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
 
     return NextResponse.json({ success: true });

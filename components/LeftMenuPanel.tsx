@@ -131,21 +131,21 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, co
       </div>
 
       {/* Bottom Chat Section */}
-      <div className="border-t border-gray-200 py-3 overflow-x-hidden">
-        <div className="px-2">
-          <MenuItem
-            icon={
-              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            }
-            label="Chat"
-            isActive={currentActive === 'chat'}
-            onClick={() => handleClick('chat')}
-            collapsed={!isExpanded}
-          />
-        </div>
-      </div>
+      {/*<div className="border-t border-gray-200 py-3 overflow-x-hidden">*/}
+      {/*  <div className="px-2">*/}
+      {/*    <MenuItem*/}
+      {/*      icon={*/}
+      {/*        <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">*/}
+      {/*          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />*/}
+      {/*        </svg>*/}
+      {/*      }*/}
+      {/*      label="Chat"*/}
+      {/*      isActive={currentActive === 'chat'}*/}
+      {/*      onClick={() => handleClick('chat')}*/}
+      {/*      collapsed={!isExpanded}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       {/* Bottom Account Info */}
       <div className="border-t border-gray-200 py-3 overflow-x-hidden">
