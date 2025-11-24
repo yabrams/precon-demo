@@ -139,12 +139,14 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setBcProjects(data.projects || []);
+        return data.projects || []; // Return the projects data
       }
     } catch (error) {
       console.error('Failed to load projects:', error);
     } finally {
       setIsLoadingProjects(false);
     }
+    return []; // Return empty array on error
   };
 
   const handleLogin = async (user: UserPublic) => {
@@ -411,13 +413,14 @@ export default function Home() {
     setViewMode('workspace');
 
     try {
-      const response = await fetch('/api/extract', {
+      // Use new extraction API that identifies bid packages based on CSI divisions
+      const response = await fetch('/api/extract-v2', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           imageUrl: url,
           instructions,
-          bidPackageId,
+          projectId: selectedProject?.id, // Pass project ID to create multiple bid packages
           diagramId
         }),
       });
@@ -428,51 +431,74 @@ export default function Home() {
 
       const data = await response.json();
 
-      // If bidPackageId was provided, extraction was saved to database
-      // Reload projects to get the latest data
-      if (bidPackageId) {
-        await loadProjects();
+      // If projectId was provided, bid packages were created in the database
+      if (selectedProject?.id && data.createdPackages) {
+        const freshProjects = await loadProjects();
 
         // Update selectedProject with fresh data
-        const updatedProject = bcProjects.find(p => p.id === selectedProject?.id);
+        const updatedProject = freshProjects.find(p => p.id === selectedProject?.id);
         if (updatedProject) {
           setSelectedProject(updatedProject);
 
-          // Update selectedBidPackage with the new bid form data
-          const updatedBidPackage = updatedProject.bidPackages?.find(bp => bp.id === bidPackageId);
-          if (updatedBidPackage) {
-            // Get line items from the bid forms
-            const allLineItems = updatedBidPackage.bidForms?.flatMap(bf =>
-              bf.lineItems?.map(li => ({
-                id: li.id,
-                item_number: li.itemNumber,
-                description: li.description,
-                quantity: li.quantity,
-                unit: li.unit,
-                unit_price: li.unitPrice,
-                total_price: li.totalPrice,
-                notes: li.notes,
-                verified: li.verified
-              })) || []
-            ) || [];
+          // If only one package was created, select it automatically
+          if (data.createdPackages.length === 1 && data.createdPackages[0].bidPackage) {
+            const createdPackageId = data.createdPackages[0].bidPackage.id;
+            const updatedBidPackage = updatedProject.bidPackages?.find(bp => bp.id === createdPackageId);
 
-            setSelectedBidPackage({
-              ...selectedBidPackage!,
-              ...updatedBidPackage,
-              lineItems: allLineItems,
-            });
+            if (updatedBidPackage) {
+              // Get line items from the bid forms
+              const allLineItems = updatedBidPackage.bidForms?.flatMap(bf =>
+                bf.lineItems?.map(li => ({
+                  id: li.id,
+                  item_number: li.itemNumber,
+                  description: li.description,
+                  quantity: li.quantity,
+                  unit: li.unit,
+                  unit_price: li.unitPrice,
+                  total_price: li.totalPrice,
+                  notes: li.notes,
+                  verified: li.verified
+                })) || []
+              ) || [];
+
+              setSelectedBidPackage({
+                ...updatedBidPackage,
+                lineItems: allLineItems,
+              });
+
+              // Ensure we're in workspace mode to see the bid form
+              setViewMode('workspace');
+            }
+          } else if (data.createdPackages.length > 1) {
+            // Multiple packages created - show package selection view
+            setViewMode('packages');
           }
-        }
-      } else {
-        // Legacy path - just update local state with extracted data
-        const lineItemsWithIds = (data.line_items || []).map((item: LineItem) => ({
-          ...item,
-          id: item.id || generateId(),
-        }));
 
-        if (selectedBidPackage) {
+          // Show success message with package count
+          console.log(data.message || `Created ${data.createdPackages.length} bid packages`);
+        }
+      } else if (data.bid_packages) {
+        // No database save - just display the extracted bid packages
+        console.log('Extraction complete:', data);
+        console.log('Bid packages identified:', data.bid_packages.length);
+
+        // For now, if we have bid packages but no database save, just log them
+        data.bid_packages.forEach((pkg: any) => {
+          console.log(`- ${pkg.name}: ${pkg.line_items?.length || 0} items`);
+        });
+
+        // If you want to display the first package locally (without saving to DB):
+        if (data.bid_packages.length > 0 && selectedBidPackage) {
+          const firstPackage = data.bid_packages[0];
+          const lineItemsWithIds = (firstPackage.line_items || []).map((item: LineItem) => ({
+            ...item,
+            id: item.id || generateId(),
+          }));
+
           setSelectedBidPackage({
             ...selectedBidPackage,
+            name: firstPackage.name,
+            description: firstPackage.description,
             lineItems: lineItemsWithIds,
           });
         }
@@ -782,6 +808,8 @@ export default function Home() {
 
   const handleProjectApprove = async (projectData: any) => {
     try {
+      console.log('Creating project with data:', projectData);
+
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -790,12 +818,66 @@ export default function Home() {
 
       if (response.ok) {
         const data = await response.json();
+        const createdProjectId = data.project?.id;
+        console.log('Project created with ID:', createdProjectId);
+
+        // If project has uploaded documents, extract bid packages and line items
+        if (createdProjectId && projectData.uploadedDocuments && projectData.uploadedDocuments.length > 0) {
+          console.log('Starting extraction for', projectData.uploadedDocuments.length, 'documents');
+          alert('Project created! Now extracting bid packages and line items...');
+
+          let extractionErrors = [];
+          let successCount = 0;
+
+          // Process each uploaded document
+          for (const doc of projectData.uploadedDocuments) {
+            try {
+              console.log('Extracting from:', doc.url);
+
+              const extractResponse = await fetch('/api/extract-v2', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  imageUrl: doc.url,
+                  projectId: createdProjectId,
+                  diagramId: doc.diagramId // if available
+                })
+              });
+
+              if (extractResponse.ok) {
+                const extractData = await extractResponse.json();
+                console.log('Extraction result:', extractData);
+                successCount++;
+              } else {
+                const errorText = await extractResponse.text();
+                console.error('Extraction failed:', errorText);
+                extractionErrors.push(`${doc.fileName}: ${errorText}`);
+              }
+            } catch (extractError) {
+              console.error('Extraction error for document:', doc.fileName, extractError);
+              extractionErrors.push(`${doc.fileName}: ${extractError}`);
+            }
+          }
+
+          // Report extraction results
+          if (successCount > 0) {
+            alert(`Successfully extracted bid packages from ${successCount} document(s)!`);
+          }
+          if (extractionErrors.length > 0) {
+            console.error('Extraction errors:', extractionErrors);
+            alert(`Warning: Some extractions failed:\n${extractionErrors.join('\n')}`);
+          }
+        } else {
+          console.log('No documents to extract or no project ID');
+        }
+
+        // Reload projects and navigate
         await loadProjects();
         setProjectCreationData(null);
         setViewMode('projects');
-        alert('Project created successfully!');
       } else {
         const error = await response.json();
+        console.error('Project creation failed:', error);
         alert(`Failed to create project: ${error.error}`);
       }
     } catch (error) {
