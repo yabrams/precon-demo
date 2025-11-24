@@ -9,6 +9,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
+import { ChevronLeft } from 'lucide-react';
 import BidFormTable, { LineItem } from './BidFormTable';
 import DiagramOverlay from './DiagramOverlay';
 import ChatPanel from './ChatPanel';
@@ -225,7 +226,14 @@ export default function BidPackageWorkspace({
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onBack}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Back"
+            >
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
+            </button>
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-lg font-semibold text-zinc-900">{bidPackage.name}</h1>
