@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import CSIInlineSearch from './CSIInlineSearch';
 
 type Platform = 'buildingconnected' | 'planhub' | 'constructconnect';
 
@@ -55,7 +56,8 @@ interface ExtractedProjectInfo {
 interface BidPackageInfo {
   name: string;
   description: string;
-  budgetAmount: number | null;
+  csiCode: string | null;
+  csiTitle: string | null;
   captainId: string | null;
 }
 
@@ -123,6 +125,7 @@ export default function ProjectReviewView({
   const [users, setUsers] = useState<Array<{ id: string; firstName?: string; lastName?: string; userName: string }>>([]);
   const [extractedBidPackagesData, setExtractedBidPackagesData] = useState<any>(null);
   const [isBidPackageExtractionComplete, setIsBidPackageExtractionComplete] = useState(false);
+  const [editingCSIIndex, setEditingCSIIndex] = useState<number | null>(null);
 
   // Get API endpoint for the platform
   const getPlatformEndpoint = (plat: Platform) => {
@@ -257,7 +260,8 @@ export default function ProjectReviewView({
               allBidPackages.push({
                 name: pkg.name,
                 description: pkg.description || `${pkg.line_items.length} items`,
-                budgetAmount: null,
+                csiCode: null,
+                csiTitle: null,
                 captainId: null
               });
             }
@@ -324,7 +328,8 @@ export default function ProjectReviewView({
           setBidPackages(proj.bidPackages.map((pkg: any) => ({
             name: pkg.name,
             description: pkg.description || '',
-            budgetAmount: pkg.budgetAmount || null,
+            csiCode: pkg.csiCode || null,
+            csiTitle: pkg.csiTitle || null,
             captainId: pkg.captainId || null
           })));
         }
@@ -478,8 +483,8 @@ export default function ProjectReviewView({
                     <div className="space-y-3">
                       {bidPackages.map((pkg, index) => (
                         <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white">
-                          <div className="grid grid-cols-3 gap-4">
-                            <div className="col-span-2">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
                               <label className="block text-xs font-medium text-gray-500 mb-1">Package Name</label>
                               <input
                                 type="text"
@@ -494,20 +499,37 @@ export default function ProjectReviewView({
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-medium text-gray-500 mb-1">Budget Amount</label>
-                              <input
-                                type="number"
-                                value={pkg.budgetAmount || ''}
-                                onChange={(e) => {
-                                  const updated = [...bidPackages];
-                                  updated[index].budgetAmount = parseFloat(e.target.value) || null;
-                                  setBidPackages(updated);
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                placeholder="Budget"
-                              />
+                              <label className="block text-xs font-medium text-gray-500 mb-1">CSI Division</label>
+                              {editingCSIIndex === index ? (
+                                <CSIInlineSearch
+                                  initialValue={pkg.csiCode || pkg.csiTitle || ''}
+                                  onSelect={(code, title) => {
+                                    const updated = [...bidPackages];
+                                    updated[index].csiCode = code;
+                                    updated[index].csiTitle = title;
+                                    setBidPackages(updated);
+                                    setEditingCSIIndex(null);
+                                  }}
+                                  onBlur={() => setEditingCSIIndex(null)}
+                                  placeholder="Search CSI code..."
+                                />
+                              ) : (
+                                <div
+                                  onClick={() => setEditingCSIIndex(index)}
+                                  className="w-full px-3 py-2 text-sm rounded-lg min-h-[2.5rem] flex items-center cursor-pointer hover:bg-gray-50 border border-gray-300"
+                                >
+                                  {pkg.csiCode ? (
+                                    <span className="text-zinc-900">
+                                      <span className="font-mono font-semibold">{pkg.csiCode}</span>
+                                      {pkg.csiTitle && <span className="text-zinc-600 ml-2">{pkg.csiTitle}</span>}
+                                    </span>
+                                  ) : (
+                                    <span className="text-gray-400">Click to add CSI code...</span>
+                                  )}
+                                </div>
+                              )}
                             </div>
-                            <div className="col-span-3">
+                            <div className="col-span-2">
                               <label className="block text-xs font-medium text-gray-500 mb-1">
                                 Captain {users.length > 0 && `(${users.length} available)`}
                               </label>
@@ -533,7 +555,7 @@ export default function ProjectReviewView({
                                 })}
                               </select>
                             </div>
-                            <div className="col-span-3">
+                            <div className="col-span-2">
                               <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
                               <textarea
                                 value={pkg.description}
@@ -553,7 +575,7 @@ export default function ProjectReviewView({
                     </div>
                     <button
                       type="button"
-                      onClick={() => setBidPackages([...bidPackages, { name: '', description: '', budgetAmount: null, captainId: null }])}
+                      onClick={() => setBidPackages([...bidPackages, { name: '', description: '', csiCode: null, csiTitle: null, captainId: null }])}
                       className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                     >
                       + Add Bid Package
