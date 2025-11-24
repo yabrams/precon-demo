@@ -8,6 +8,9 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const projects = await prisma.buildingConnectedProject.findMany({
+      where: {
+        deletedAt: null // Only fetch non-deleted projects
+      },
       include: {
         diagrams: {
           orderBy: {

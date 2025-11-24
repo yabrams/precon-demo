@@ -111,6 +111,7 @@ model BuildingConnectedProject {
 
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?        // Soft delete timestamp
 
   @@index([bcProjectId])
   @@index([status])

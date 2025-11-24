@@ -44,6 +44,7 @@ interface BidPackageWorkspaceProps {
   isChatLoading?: boolean;
   onSubmitToReview?: () => void;
   onRecall?: () => void;
+  onDeleteProject?: () => void;
 }
 
 export default function BidPackageWorkspace({
@@ -65,6 +66,7 @@ export default function BidPackageWorkspace({
   isChatLoading = false,
   onSubmitToReview,
   onRecall,
+  onDeleteProject,
 }: BidPackageWorkspaceProps) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
@@ -72,6 +74,7 @@ export default function BidPackageWorkspace({
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [magnifyingGlassEnabled, setMagnifyingGlassEnabled] = useState(false);
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
 
@@ -272,6 +275,29 @@ export default function BidPackageWorkspace({
                     </button>
                   );
                 })()}
+                {/* Delete Project Button (only in edit mode) */}
+                {/*{onDeleteProject && (*/}
+                {/*  <button*/}
+                {/*    onClick={() => setShowDeleteConfirm(true)}*/}
+                {/*    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow-md shadow-red-900/10 transition-colors flex items-center gap-2"*/}
+                {/*    title="Delete Project"*/}
+                {/*  >*/}
+                {/*    <svg*/}
+                {/*      className="w-4 h-4"*/}
+                {/*      fill="none"*/}
+                {/*      stroke="currentColor"*/}
+                {/*      viewBox="0 0 24 24"*/}
+                {/*    >*/}
+                {/*      <path*/}
+                {/*        strokeLinecap="round"*/}
+                {/*        strokeLinejoin="round"*/}
+                {/*        strokeWidth={2}*/}
+                {/*        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"*/}
+                {/*      />*/}
+                {/*    </svg>*/}
+                {/*    Delete Project*/}
+                {/*  </button>*/}
+                {/*)}*/}
               </>
             )}
 
@@ -437,6 +463,62 @@ export default function BidPackageWorkspace({
           </PanelGroup>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+                    Delete Project
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Are you sure you want to delete this project? This action cannot be undone.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        if (onDeleteProject) {
+                          onDeleteProject();
+                        }
+                      }}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

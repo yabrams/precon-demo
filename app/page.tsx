@@ -738,6 +738,29 @@ export default function Home() {
     });
   };
 
+  const handleDeleteProject = async () => {
+    if (!selectedProject) return;
+
+    try {
+      const response = await fetch(`/api/projects/${selectedProject.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete project');
+      }
+
+      // Navigate back to projects list
+      handleBackToProjects();
+
+      // Reload projects to remove the deleted one
+      await loadProjects();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Failed to delete project. Please try again.');
+    }
+  };
+
   const handleCSICodeSelect = (code: string, title: string) => {
     console.log('CSI code selected:', code, title);
   };
@@ -1032,6 +1055,7 @@ export default function Home() {
                 isChatLoading={chatLoading}
                 onSubmitToReview={handleSubmitToReview}
                 onRecall={handleRecall}
+                onDeleteProject={handleDeleteProject}
               />
             </motion.div>
           )}
