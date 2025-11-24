@@ -65,7 +65,8 @@ export async function POST(request: Request) {
       bidDueDate,
       status,
       progress,
-      diagramIds
+      diagramIds,
+      lineItems // NEW: Support creating line items in same call
     } = body;
 
     // Validate required fields
@@ -106,7 +107,47 @@ export async function POST(request: Request) {
       }
     });
 
-    return NextResponse.json({ bidPackage }, { status: 201 });
+    // If line items are provided, create a bid form with them
+    if (lineItems && lineItems.length > 0) {
+      const diagramId = diagramIds && diagramIds.length > 0 ? diagramIds[0] : null;
+
+      await prisma.bidForm.create({
+        data: {
+          bidPackageId: bidPackage.id,
+          diagramId,
+          extractionConfidence: 'high',
+          status: 'draft',
+          lineItems: {
+            create: lineItems
+          }
+        },
+        include: {
+          lineItems: {
+            orderBy: {
+              order: 'asc'
+            }
+          }
+        }
+      });
+    }
+
+    // Fetch the complete bid package with forms and line items
+    const completeBidPackage = await prisma.bidPackage.findUnique({
+      where: { id: bidPackage.id },
+      include: {
+        bidForms: {
+          include: {
+            lineItems: {
+              orderBy: {
+                order: 'asc'
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return NextResponse.json({ bidPackage: completeBidPackage }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating bid package:', error);
 

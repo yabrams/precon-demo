@@ -122,6 +122,8 @@ export default function ProjectReviewView({
   const [bidPackages, setBidPackages] = useState<BidPackageInfo[]>([]);
   const [confidence, setConfidence] = useState<any>(null);
   const [users, setUsers] = useState<Array<{ id: string; firstName?: string; lastName?: string; userName: string }>>([]);
+  const [extractedBidPackagesData, setExtractedBidPackagesData] = useState<any>(null);
+  const [isBidPackageExtractionComplete, setIsBidPackageExtractionComplete] = useState(false);
 
   // Get API endpoint for the platform
   const getPlatformEndpoint = (plat: Platform) => {
@@ -176,6 +178,7 @@ export default function ProjectReviewView({
   const extractProjectInfo = async () => {
     setExtracting(true);
     try {
+      // Extract project info
       const response = await fetch('/api/ai/extract-project-info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -189,6 +192,11 @@ export default function ProjectReviewView({
         setProjectInfo(data.projectInfo);
         setBidPackages(data.bidPackages || []);
         setConfidence(data.confidence);
+
+        // Also extract bid packages and line items from documents
+        // This happens in parallel so everything is ready when user approves
+        await extractBidPackagesFromDocuments();
+
         setExtractionComplete(true);
       } else {
         // Check if it's a PDF-specific error
@@ -215,6 +223,47 @@ export default function ProjectReviewView({
       setExtractionComplete(true);
     } finally {
       setExtracting(false);
+    }
+  };
+
+  const extractBidPackagesFromDocuments = async () => {
+    try {
+      setIsBidPackageExtractionComplete(false);
+      console.log('Pre-extracting bid packages and line items from documents...');
+      const extractionResults = [];
+
+      // Extract from each document
+      for (const doc of uploadedDocuments) {
+        try {
+          const extractResponse = await fetch('/api/extract-v2', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageUrl: doc.url,
+              // Don't pass projectId - we just want the extraction data, not to save to DB yet
+            })
+          });
+
+          if (extractResponse.ok) {
+            const extractData = await extractResponse.json();
+            extractionResults.push({
+              documentUrl: doc.url,
+              diagramId: doc.diagramId,
+              extractionData: extractData
+            });
+          }
+        } catch (error) {
+          console.error('Failed to extract from document:', doc.fileName, error);
+        }
+      }
+
+      // Store the extraction results to use when project is approved
+      setExtractedBidPackagesData(extractionResults);
+      setIsBidPackageExtractionComplete(true);
+      console.log('Pre-extraction complete. Data ready for project creation.');
+    } catch (error) {
+      console.error('Error during pre-extraction:', error);
+      setIsBidPackageExtractionComplete(true); // Allow user to proceed even if extraction fails
     }
   };
 
@@ -330,7 +379,8 @@ export default function ProjectReviewView({
       status: mode === 'platform-import' ? selectedExternalProject?.status : 'bidding',
       uploadedDocuments,
       bidPackages: bidPackages.map(pkg => ({ ...pkg, status: 'draft', progress: 0 })),
-      platform: mode === 'platform-import' ? platform : undefined
+      platform: mode === 'platform-import' ? platform : undefined,
+      extractedBidPackagesData // Pass the pre-extracted bid packages data
     };
     onApprove(projectData);
   };
@@ -355,11 +405,6 @@ export default function ProjectReviewView({
           </button>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-zinc-900">Review Project Information</h1>
-            <p className="text-gray-600 text-sm mt-1">
-              {mode === 'platform-import'
-                ? `${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} Import`
-                : 'Manual Creation'} • {uploadedDocuments.length} document(s)
-            </p>
           </div>
         </div>
       </div>
@@ -860,7 +905,21 @@ export default function ProjectReviewView({
 
       <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white">
         <button onClick={onCancel} className="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</button>
-        <button onClick={handleApprove} disabled={!projectInfo.name} className="px-8 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed">Approve & Create Project</button>
+        <div className="flex items-center space-x-4">
+          {!isBidPackageExtractionComplete && extractionComplete && (
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+              <span>Extracting bid packages...</span>
+            </div>
+          )}
+          <button
+            onClick={handleApprove}
+            disabled={!projectInfo.name || !isBidPackageExtractionComplete}
+            className="px-8 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Approve & Create Project
+          </button>
+        </div>
       </div>
     </div>
   );
