@@ -4,6 +4,39 @@ import { readFile } from 'fs/promises';
 import path from 'path';
 import { prisma } from '@/lib/prisma';
 import { isPDFFile, processPDFForExtraction } from '@/lib/pdf-utils';
+import { searchCSICodes } from '@/lib/csi/csiLookup';
+
+// Helper function to match a line item description to CSI codes using search only
+function matchLineItemToCSI(description: string, csiDivision?: string): { code: string; title: string } | null {
+  if (!description || description.trim().length === 0) {
+    return null;
+  }
+
+  // Search for CSI codes matching the description
+  const searchOptions: any = {
+    query: description,
+    limit: 3,
+    caseSensitive: false,
+  };
+
+  // If we have a CSI division hint, filter by it
+  if (csiDivision && csiDivision !== '00') {
+    searchOptions.divisions = [csiDivision];
+  }
+
+  const results = searchCSICodes(searchOptions);
+
+  // Return the best match if found
+  if (results.length > 0) {
+    const bestMatch = results[0];
+    return {
+      code: bestMatch.code.code,
+      title: bestMatch.code.title,
+    };
+  }
+
+  return null;
+}
 
 // Helper function to process a single image with Claude
 async function processImageWithClaude(
@@ -188,7 +221,25 @@ function combineExtractionResults(results: any[]) {
   }
 
   if (results.length === 1) {
-    return results[0];
+    const result = results[0];
+
+    // Apply CSI matching to single-page result
+    if (result.bid_packages && Array.isArray(result.bid_packages)) {
+      result.bid_packages.forEach((pkg: any) => {
+        if (pkg.line_items && Array.isArray(pkg.line_items)) {
+          pkg.line_items = pkg.line_items.map((item: any) => {
+            const csiMatch = matchLineItemToCSI(item.description, pkg.csi_division);
+            return {
+              ...item,
+              csiCode: csiMatch?.code || null,
+              csiTitle: csiMatch?.title || null,
+            };
+          });
+        }
+      });
+    }
+
+    return result;
   }
 
   // Combine results from multiple pages
@@ -227,10 +278,15 @@ function combineExtractionResults(results: any[]) {
         const existingPkg = combined.bid_packages.get(key);
         if (pkg.line_items && Array.isArray(pkg.line_items)) {
           pkg.line_items.forEach((item: any) => {
+            // Match line item to CSI code using search
+            const csiMatch = matchLineItemToCSI(item.description, pkg.csi_division);
+
             existingPkg.line_items.push({
               ...item,
               source_page: pageNumber,
-              notes: item.notes ? `${item.notes} (Page ${pageNumber})` : `Page ${pageNumber}`
+              notes: item.notes ? `${item.notes} (Page ${pageNumber})` : `Page ${pageNumber}`,
+              csiCode: csiMatch?.code || null,
+              csiTitle: csiMatch?.title || null,
             });
           });
         }

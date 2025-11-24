@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import CSIInlineSearch from './CSIInlineSearch';
 
 // Color palette for highlighting - must match DiagramOverlay
 // Architectural Monochrome: Zinc-scale variations
@@ -72,6 +73,8 @@ export interface LineItem {
     width: number;
     height: number;
   } | null;
+  csiCode?: string | null; // CSI MasterFormat code (e.g., "03 30 00")
+  csiTitle?: string | null; // CSI MasterFormat title (e.g., "Cast-in-Place Concrete")
 }
 
 interface BidFormTableProps {
@@ -181,6 +184,18 @@ export default function BidFormTable({
     setEditingCell(null);
   };
 
+  const handleCSISelect = (index: number, code: string, title: string) => {
+    const updated = [...lineItems];
+    updated[index] = {
+      ...updated[index],
+      csiCode: code,
+      csiTitle: title,
+    };
+    setLineItems(updated);
+    onUpdate(updated);
+    stopEditing();
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm flex-1 flex flex-col overflow-hidden">
@@ -242,6 +257,7 @@ export default function BidFormTable({
               <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">Approved</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Item #</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-64">Description</th>
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-80">CSI MasterFormat</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Quantity</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Unit</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-32">Notes</th>
@@ -321,6 +337,32 @@ export default function BidFormTable({
                         }`}
                       >
                         {item.description || <span className="text-gray-400">Description</span>}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    {isEditing(index, 'csiCode') && !readOnly ? (
+                      <CSIInlineSearch
+                        initialValue={item.csiCode || item.csiTitle || ''}
+                        onSelect={(code, title) => handleCSISelect(index, code, title)}
+                        onBlur={stopEditing}
+                        placeholder="Search CSI code or description..."
+                      />
+                    ) : (
+                      <div
+                        onClick={() => !readOnly && startEditing(index, 'csiCode')}
+                        className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.5rem] flex items-center ${
+                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.csiCode && item.csiTitle ? (
+                          <span className="text-zinc-900">
+                            <span className="font-mono font-semibold">{item.csiCode}</span>
+                            <span className="text-zinc-600 ml-2">{item.csiTitle}</span>
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
                       </div>
                     )}
                   </td>
@@ -456,6 +498,9 @@ export default function BidFormTable({
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
                     placeholder="Description"
                   />
+                </td>
+                <td className="px-3 py-3">
+                  <span className="text-xs text-gray-400 italic">Auto-matched on extraction</span>
                 </td>
                 <td className="px-3 py-3">
                   <input
