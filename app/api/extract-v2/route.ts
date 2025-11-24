@@ -30,10 +30,22 @@ async function processImageWithClaude(
           },
           {
             type: 'text',
-            text: `Analyze this construction/preconstruction diagram or work drawing and extract ALL bid packages and items.
+            text: `Analyze this construction/preconstruction diagram or work drawing and extract BOTH project information AND all bid packages/items.
 ${contextNote ? `\nCONTEXT: ${contextNote}\n` : ''}
 ${userInstructions ? `\nADDITIONAL INSTRUCTIONS FROM USER:\n${userInstructions}\n` : ''}
 
+PART A: EXTRACT PROJECT INFORMATION
+Look for and extract:
+- Project name
+- Project location (address, city, state, zip)
+- Owner/client name
+- Architect name
+- Any dates mentioned (bid due, start, completion)
+- Project value/budget (if mentioned)
+- Market sector (Commercial, Healthcare, Education, etc.)
+- Project type (New Construction, Renovation, etc.)
+
+PART B: EXTRACT BID PACKAGES AND ITEMS
 CRITICAL: You MUST extract EVERY SINGLE numbered item visible in this document. Do not skip any items.
 
 STEP 1: IDENTIFY ALL SECTIONS AND ITEMS
@@ -81,10 +93,30 @@ For every item, extract:
 
 Format your response as a JSON object:
 {
-  "project_name": "string or null",
+  "projectInfo": {
+    "name": "string or null",
+    "projectNumber": "string or null",
+    "description": "string or null",
+    "location": {
+      "address": "string or null",
+      "city": "string or null",
+      "state": "string or null",
+      "zipCode": "string or null",
+      "country": "USA"
+    },
+    "ownerName": "string or null",
+    "architectName": "string or null",
+    "engineerName": "string or null",
+    "bidDueDate": "ISO date string or null",
+    "projectStartDate": "ISO date string or null",
+    "projectEndDate": "ISO date string or null",
+    "projectValue": number or null,
+    "marketSector": "string or null",
+    "projectType": "string or null"
+  },
   "bid_packages": [
     {
-      "name": "Section name or Division XX - Description",
+      "name": "Division XX - Description",
       "csi_division": "XX" or "00" if unknown,
       "description": "Brief description of scope",
       "line_items": [

@@ -177,40 +177,65 @@ export default function ProjectReviewView({
 
   const extractProjectInfo = async () => {
     setExtracting(true);
+    setIsBidPackageExtractionComplete(false);
     try {
-      // Extract project info
-      const response = await fetch('/api/ai/extract-project-info', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          documentUrls: uploadedDocuments.map(d => d.url),
-          documentNames: uploadedDocuments.map(d => d.fileName)
-        })
-      });
-      const data = await response.json();
-      if (data.success) {
-        setProjectInfo(data.projectInfo);
-        setConfidence(data.confidence);
+      console.log('=== UNIFIED EXTRACTION START ===');
+      console.log('Number of documents to process:', uploadedDocuments.length);
 
-        // Also extract bid packages and line items from documents
-        // This happens in parallel so everything is ready when user approves
-        await extractBidPackagesFromDocuments();
+      const extractionResults = [];
 
-        setExtractionComplete(true);
-      } else {
-        // Check if it's a PDF-specific error
-        if (data.message && data.message.includes('PDF files are not currently supported')) {
-          alert(data.message + '\n\nNote: For PDF extraction, please use the regular extraction workflow which supports PDF processing.');
-        } else {
-          alert(data.error || 'Failed to extract project information. Please fill in manually.');
-          // Set a default project name so the user can proceed
-          setProjectInfo(prev => ({
-            ...prev,
-            name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
-          }));
+      // Extract project info AND bid packages from each document using unified API
+      for (const doc of uploadedDocuments) {
+        try {
+          console.log('Processing document:', doc.fileName, 'URL:', doc.url);
+          const response = await fetch('/api/extract-v2', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageUrl: doc.url,
+            })
+          });
+
+          console.log('Extract response status:', response.status);
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Extract data received:', {
+              projectName: data.projectInfo?.name,
+              bidPackagesCount: data.bid_packages?.length || 0,
+              totalLineItems: data.bid_packages?.reduce((sum: number, pkg: any) => sum + (pkg.line_items?.length || 0), 0) || 0
+            });
+            extractionResults.push({
+              documentUrl: doc.url,
+              diagramId: doc.diagramId,
+              extractionData: data
+            });
+          } else {
+            console.error('Extract API failed with status:', response.status);
+          }
+        } catch (error) {
+          console.error('Failed to extract from document:', doc.fileName, error);
         }
-        setExtractionComplete(true);
       }
+
+      // Use project info from first successful extraction
+      if (extractionResults.length > 0 && extractionResults[0].extractionData.projectInfo) {
+        const firstProjectInfo = extractionResults[0].extractionData.projectInfo;
+        console.log('Setting project info:', firstProjectInfo);
+        setProjectInfo(firstProjectInfo);
+      } else {
+        // Set a default project name so the user can proceed
+        setProjectInfo(prev => ({
+          ...prev,
+          name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
+        }));
+      }
+
+      // Store extraction results for bid packages
+      console.log('Total extraction results:', extractionResults.length);
+      setExtractedBidPackagesData(extractionResults);
+      setExtractionComplete(true);
+      setIsBidPackageExtractionComplete(true);
+      console.log('=== UNIFIED EXTRACTION COMPLETE ===');
     } catch (error) {
       console.error('Extraction error:', error);
       alert('Failed to extract project information. Please fill in manually.');
@@ -220,64 +245,9 @@ export default function ProjectReviewView({
         name: prev.name || 'New Project ' + new Date().toISOString().split('T')[0]
       }));
       setExtractionComplete(true);
+      setIsBidPackageExtractionComplete(true);
     } finally {
       setExtracting(false);
-    }
-  };
-
-  const extractBidPackagesFromDocuments = async () => {
-    try {
-      setIsBidPackageExtractionComplete(false);
-      console.log('Pre-extracting bid packages and line items from documents...');
-      console.log('Number of documents to process:', uploadedDocuments.length);
-      const extractionResults = [];
-
-      // Extract from each document
-      for (const doc of uploadedDocuments) {
-        try {
-          console.log('Processing document:', doc.fileName, 'URL:', doc.url);
-          const extractResponse = await fetch('/api/extract-v2', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageUrl: doc.url,
-              // Don't pass projectId - we just want the extraction data, not to save to DB yet
-            })
-          });
-
-          console.log('Extract response status:', extractResponse.status);
-          if (extractResponse.ok) {
-            const extractData = await extractResponse.json();
-            console.log('Extract data received:', {
-              projectName: extractData.project_name,
-              bidPackagesCount: extractData.bid_packages?.length || 0,
-              totalLineItems: extractData.bid_packages?.reduce((sum: number, pkg: any) => sum + (pkg.line_items?.length || 0), 0) || 0
-            });
-            extractionResults.push({
-              documentUrl: doc.url,
-              diagramId: doc.diagramId,
-              extractionData: extractData
-            });
-          } else {
-            console.error('Extract API failed with status:', extractResponse.status);
-          }
-        } catch (error) {
-          console.error('Failed to extract from document:', doc.fileName, error);
-        }
-      }
-
-      // Store the extraction results to use when project is approved
-      console.log('Total extraction results:', extractionResults.length);
-      console.log('Extraction results summary:', extractionResults.map(r => ({
-        url: r.documentUrl,
-        packagesCount: r.extractionData.bid_packages?.length || 0
-      })));
-      setExtractedBidPackagesData(extractionResults);
-      setIsBidPackageExtractionComplete(true);
-      console.log('Pre-extraction complete. Data ready for project creation.');
-    } catch (error) {
-      console.error('Error during pre-extraction:', error);
-      setIsBidPackageExtractionComplete(true); // Allow user to proceed even if extraction fails
     }
   };
 
@@ -502,7 +472,7 @@ export default function ProjectReviewView({
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
                 <p className="text-zinc-900 text-base font-medium">
                   {mode === 'manual'
-                    ? 'Extracting project information and bidding packages...'
+                    ? 'Extracting project information and bid packages...'
                     : `Loading ${platform === 'buildingconnected' ? 'BuildingConnected' : platform === 'planhub' ? 'PlanHub' : 'ConstructConnect'} project data...`}
                 </p>
                 <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>
