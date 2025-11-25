@@ -67,7 +67,8 @@ export default function UserManagementView({ currentUser }: UserManagementViewPr
           setUsers(fetchedUsers);
           setFilteredUsers(fetchedUsers);
         } else {
-          console.error('Failed to fetch users');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Failed to fetch users:', response.status, errorData);
         }
       } catch (error) {
         console.error('Error fetching users:', error);

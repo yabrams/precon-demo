@@ -1013,6 +1013,7 @@ export default function Home() {
         onItemClick={handleMenuItemClick}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        userRole={currentUser?.role}
       />
 
       {/* Main Content Area */}
