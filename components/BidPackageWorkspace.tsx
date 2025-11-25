@@ -82,7 +82,7 @@ export default function BidPackageWorkspace({
   const [magnifyingGlassEnabled, setMagnifyingGlassEnabled] = useState(false);
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>('single');
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [diagramContainerSize, setDiagramContainerSize] = useState({ width: 0, height: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
