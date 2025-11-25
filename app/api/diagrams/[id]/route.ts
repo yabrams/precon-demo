@@ -9,10 +9,10 @@ import path from 'path';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const diagram = await prisma.diagram.findUnique({
       where: { id },
@@ -43,8 +43,6 @@ export async function GET(
       { error: 'Failed to fetch diagram' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -54,10 +52,10 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     const { category, description, tags } = body;
@@ -86,8 +84,6 @@ export async function PUT(
       { error: 'Failed to update diagram' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -97,10 +93,10 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Get diagram to access file path
     const diagram = await prisma.diagram.findUnique({
@@ -145,7 +141,5 @@ export async function DELETE(
       { error: 'Failed to delete diagram' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

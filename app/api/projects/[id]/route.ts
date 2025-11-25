@@ -7,10 +7,10 @@ import { prisma } from '@/lib/prisma';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const project = await prisma.buildingConnectedProject.findUnique({
       where: { id },
@@ -67,8 +67,6 @@ export async function GET(
       { error: 'Failed to fetch project' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -156,8 +154,6 @@ export async function PUT(
       { error: 'Failed to update project' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -192,7 +188,5 @@ export async function DELETE(
       { error: 'Failed to delete project' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

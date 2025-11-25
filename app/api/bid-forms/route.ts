@@ -91,7 +91,5 @@ export async function POST(request: Request) {
       { error: 'Failed to create bid form' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

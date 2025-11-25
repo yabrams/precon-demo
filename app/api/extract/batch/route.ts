@@ -436,8 +436,6 @@ export async function POST(request: Request) {
       { error: 'Failed to process batch extraction' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

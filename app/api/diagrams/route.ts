@@ -63,8 +63,6 @@ export async function POST(request: Request) {
       { error: 'Failed to create diagram' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -105,7 +103,5 @@ export async function GET(request: Request) {
       { error: 'Failed to fetch diagrams' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

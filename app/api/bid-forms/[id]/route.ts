@@ -7,10 +7,10 @@ import { prisma } from '@/lib/prisma';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const bidForm = await prisma.bidForm.findUnique({
       where: { id },
@@ -39,8 +39,6 @@ export async function GET(
       { error: 'Failed to fetch bid form' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -50,10 +48,10 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     const {
@@ -125,8 +123,6 @@ export async function PUT(
       { error: 'Failed to update bid form' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -136,10 +132,10 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     await prisma.bidForm.delete({
       where: { id }
@@ -160,7 +156,5 @@ export async function DELETE(
       { error: 'Failed to delete bid form' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

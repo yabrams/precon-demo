@@ -43,8 +43,6 @@ export async function GET() {
       { error: 'Failed to fetch projects' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -234,7 +232,5 @@ export async function POST(request: Request) {
       { error: 'Failed to create project', details: error.message },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
