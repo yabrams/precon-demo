@@ -39,6 +39,7 @@ interface ProjectCreationViewProps {
     platform?: Platform;
     uploadedDocuments: UploadedDocument[];
     selectedExternalProject?: ExternalProject;
+    projectName?: string;
   }) => void;
 }
 
@@ -54,6 +55,7 @@ export default function ProjectCreationView({
   const [uploadedDocuments, setUploadedDocuments] = useState<UploadedDocument[]>([]);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [projectName, setProjectName] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get API endpoint for selected platform
@@ -212,7 +214,8 @@ export default function ProjectCreationView({
       mode: 'manual',
       platform: undefined,
       uploadedDocuments,
-      selectedExternalProject: undefined
+      selectedExternalProject: undefined,
+      projectName: projectName.trim() || undefined
     });
   };
 
@@ -244,6 +247,21 @@ export default function ProjectCreationView({
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-6 space-y-6">
+          {/* Project Name (Optional) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Project Name <span className="text-gray-400 font-normal">(Optional)</span>
+            </label>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder="Enter project name or leave blank to extract from documents"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 focus:outline-none text-zinc-900 placeholder:text-gray-400"
+            />
+          </div>
+
+          {/* Upload Documents */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Upload Documents
@@ -277,7 +295,7 @@ export default function ProjectCreationView({
               ) : (
                 <div>
                   <p className="text-gray-600 font-medium mb-2">
-                    Drop files here or click to browse
+                    Drop documents here or click to browse
                   </p>
                   <p className="text-sm text-gray-500">
                     Supports PDF, JPG, PNG
@@ -332,7 +350,7 @@ export default function ProjectCreationView({
 
       {/* Footer */}
       <div className="px-6 py-4 bg-white border-t border-gray-200">
-        <div className="max-w-4xl mx-auto flex items-center justify-end space-x-3">
+        <div className="flex items-center justify-end">
           <button
             onClick={handleContinue}
             disabled={uploadedDocuments.length === 0}

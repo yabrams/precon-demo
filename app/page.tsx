@@ -1260,6 +1260,7 @@ export default function Home() {
                 platform={projectCreationData.platform}
                 uploadedDocuments={projectCreationData.uploadedDocuments}
                 selectedExternalProject={projectCreationData.selectedExternalProject}
+                initialProjectName={projectCreationData.projectName}
                 onApprove={handleProjectApprove}
                 onCancel={handleProjectCreationCancel}
               />
