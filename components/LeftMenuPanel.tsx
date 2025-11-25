@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { UserRole } from '@/types/user';
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -48,10 +49,14 @@ interface LeftMenuPanelProps {
   onItemClick?: (item: string) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  userRole?: UserRole;
 }
 
-export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, collapsed = false, onToggleCollapse }: LeftMenuPanelProps) {
+export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, collapsed = false, onToggleCollapse, userRole }: LeftMenuPanelProps) {
   const [currentActive, setCurrentActive] = useState(activeItem);
+
+  // Check if user can manage users (Admin or Precon Lead only)
+  const canManageUsers = userRole === UserRole.ADMIN || userRole === UserRole.PRECON_LEAD;
 
   const handleClick = (item: string) => {
     setCurrentActive(item);
@@ -104,17 +109,19 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, co
             onClick={() => handleClick('projects')}
             collapsed={!isExpanded}
           />
-          <MenuItem
-            icon={
-              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            }
-            label="Users"
-            isActive={currentActive === 'users'}
-            onClick={() => handleClick('users')}
-            collapsed={!isExpanded}
-          />
+          {canManageUsers && (
+            <MenuItem
+              icon={
+                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              }
+              label="Users"
+              isActive={currentActive === 'users'}
+              onClick={() => handleClick('users')}
+              collapsed={!isExpanded}
+            />
+          )}
           <MenuItem
             icon={
               <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
