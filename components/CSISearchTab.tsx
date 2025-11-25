@@ -132,16 +132,43 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
     return 'bg-gray-100 text-gray-700 border-gray-300';
   };
 
+  // Calculate CSI level based on code structure (not just counting parts)
+  const getCSILevelFromCode = (code: string): number => {
+    const parts = code.split(' ').filter(Boolean);
+
+    if (parts.length === 1) {
+      // Just "14" format - Division level
+      return 1;
+    }
+
+    if (parts.length >= 3) {
+      // Format: "14 81 13" - check which parts are "00"
+      const [, second, third] = parts;
+      if (second === '00' && third === '00') return 1; // Division level (e.g., 14 00 00)
+      if (third === '00') return 2; // Level 2 (e.g., 14 81 00)
+      return 3; // Level 3 (e.g., 14 81 13)
+    }
+
+    if (parts.length === 2) {
+      // Format: "14 81"
+      const [, second] = parts;
+      if (second === '00') return 1;
+      return 2;
+    }
+
+    return 1;
+  };
+
   const renderEnhancedBreadcrumb = (breadcrumb: string[]) => {
     if (!breadcrumb || breadcrumb.length === 0) return null;
 
     return (
       <div className="flex flex-wrap items-center gap-1 mt-2">
         {breadcrumb.map((item, index) => {
-          // Extract level from breadcrumb item (assumes format like "03 - Concrete" or "03 30 00 - Cast-in-Place Concrete")
+          // Extract code from breadcrumb item (assumes format like "03 - Concrete" or "03 30 00 - Cast-in-Place Concrete")
           const codeMatch = item.match(/^([\d\s]+)/);
           const code = codeMatch ? codeMatch[1].trim() : '';
-          const level = code.includes(' ') ? code.split(' ').filter(Boolean).length : 1;
+          const level = getCSILevelFromCode(code);
           const levelColor = getLevelColor(level);
 
           return (
@@ -180,7 +207,7 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
 
   return (
     <div className="p-4 space-y-4">
-      {/* Search Input */}
+      {/* Search Controls Row */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-sm font-medium text-zinc-900">
@@ -226,97 +253,96 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
             </button>
           </div>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter keyword or code (e.g., concrete, 03 30 00)..."
-            className="w-full px-4 py-2 pr-10 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 text-zinc-900 placeholder-gray-400"
-          />
-          {query && !isSearching && (
-            <button
-              onClick={() => {
-                setQuery('');
-                setAIMatches([]);
-                setAIError(null);
-              }}
-              className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 transition-colors"
-              aria-label="Clear search"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+
+        {/* Search Input and Division Filter Row */}
+        <div className="flex gap-3">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Enter keyword or code (e.g., concrete, 03 30 00)..."
+              className="w-full px-4 py-2 pr-10 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 text-zinc-900 placeholder-gray-400"
+            />
+            {query && !isSearching && (
+              <button
+                onClick={() => {
+                  setQuery('');
+                  setAIMatches([]);
+                  setAIError(null);
+                }}
+                className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700 transition-colors"
+                aria-label="Clear search"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          )}
-          {isSearching && (
-            <div className="absolute right-3 top-3">
-              <svg
-                className="animate-spin h-5 w-5 text-zinc-900"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
                   stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            </div>
-          )}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+            {isSearching && (
+              <div className="absolute right-3 top-2.5">
+                <svg
+                  className="animate-spin h-5 w-5 text-zinc-900"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {/* Division Filter */}
+          <select
+            value={division}
+            onChange={(e) => setDivision(e.target.value)}
+            className="w-64 px-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 text-zinc-900"
+          >
+            <option value="">All Divisions</option>
+            <option value="00">00 - Procurement</option>
+            <option value="01">01 - General Req.</option>
+            <option value="03">03 - Concrete</option>
+            <option value="04">04 - Masonry</option>
+            <option value="05">05 - Metals</option>
+            <option value="06">06 - Wood/Plastics</option>
+            <option value="07">07 - Thermal/Moisture</option>
+            <option value="08">08 - Openings</option>
+            <option value="09">09 - Finishes</option>
+            <option value="10">10 - Specialties</option>
+            <option value="21">21 - Fire Suppression</option>
+            <option value="22">22 - Plumbing</option>
+            <option value="23">23 - HVAC</option>
+            <option value="26">26 - Electrical</option>
+            <option value="27">27 - Communications</option>
+            <option value="28">28 - Safety/Security</option>
+            <option value="31">31 - Earthwork</option>
+            <option value="32">32 - Exterior Improv.</option>
+            <option value="33">33 - Utilities</option>
+          </select>
         </div>
         <p className="mt-1 text-xs text-gray-500">Minimum 2 characters required</p>
-      </div>
-
-      {/* Division Filter */}
-      <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
-          Filter by Division (Optional)
-        </label>
-        <select
-          value={division}
-          onChange={(e) => setDivision(e.target.value)}
-          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 text-zinc-900"
-        >
-          <option value="">All Divisions</option>
-          <option value="00">00 - Procurement and Contracting</option>
-          <option value="01">01 - General Requirements</option>
-          <option value="03">03 - Concrete</option>
-          <option value="04">04 - Masonry</option>
-          <option value="05">05 - Metals</option>
-          <option value="06">06 - Wood, Plastics, and Composites</option>
-          <option value="07">07 - Thermal and Moisture Protection</option>
-          <option value="08">08 - Openings</option>
-          <option value="09">09 - Finishes</option>
-          <option value="10">10 - Specialties</option>
-          <option value="21">21 - Fire Suppression</option>
-          <option value="22">22 - Plumbing</option>
-          <option value="23">23 - HVAC</option>
-          <option value="26">26 - Electrical</option>
-          <option value="27">27 - Communications</option>
-          <option value="28">28 - Electronic Safety and Security</option>
-          <option value="31">31 - Earthwork</option>
-          <option value="32">32 - Exterior Improvements</option>
-          <option value="33">33 - Utilities</option>
-        </select>
       </div>
 
       {/* Results */}

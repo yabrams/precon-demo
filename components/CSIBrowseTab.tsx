@@ -176,11 +176,6 @@ export default function CSIBrowseTab({ onSelectCode }: CSIBrowseTabProps) {
           {categories.map((category) => renderNode(category, 0))}
         </div>
       </div>
-
-      {/* Help Text */}
-      <div className="text-xs text-gray-500 text-center">
-        Click on any code to select it • Use expand/collapse buttons to navigate
-      </div>
     </div>
   );
 }
