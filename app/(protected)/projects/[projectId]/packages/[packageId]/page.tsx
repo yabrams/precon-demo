@@ -296,10 +296,10 @@ export default function WorkspacePage({ params }: PageProps) {
   const handleSubmitToReview = useCallback(async () => {
     if (!bidPackage) return;
 
-    // Note: 'pending-review' is a valid status in the API but not in the TypeScript type
+    // Update local state immediately to 'pending-review'
     setBidPackage(prev => prev ? {
       ...prev,
-      status: 'bidding' as const, // Use 'bidding' for local state, API accepts 'pending-review'
+      status: 'pending-review' as any, // TypeScript workaround for status
     } : null);
 
     try {

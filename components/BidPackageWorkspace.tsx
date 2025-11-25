@@ -353,7 +353,31 @@ export default function BidPackageWorkspace({
             </div>
           </div>
 
-          {/* Right side: View toggles and Submit button */}
+          {/* Center: Progress Bar */}
+          {lineItems.length > 0 && (() => {
+            const approvedItems = lineItems.filter(item => item.approved === true).length;
+            const totalItems = lineItems.length;
+            const percentage = totalItems > 0 ? Math.round((approvedItems / totalItems) * 100) : 0;
+
+            return (
+              <div className="flex-1 max-w-xs mx-8">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600">Progress</span>
+                    <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="h-full bg-zinc-900 transition-all duration-300 rounded-full"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Right side: View toggles */}
           <div className="flex items-center gap-3">
             {/* View Mode Toggle */}
             {lineItems.length > 0 && (
@@ -382,61 +406,6 @@ export default function BidPackageWorkspace({
                 </button>
               </div>
             )}
-
-            {/* Submit/Recall Buttons */}
-            {bidPackage.status === 'pending-review' ? (
-              <button
-                onClick={onRecall}
-                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg shadow-md shadow-amber-900/10 transition-colors flex items-center gap-2"
-                title="Recall from review and return to In Progress"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                  />
-                </svg>
-                Recall
-              </button>
-            ) : bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' ? (
-              (() => {
-                const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
-                return (
-                  <button
-                    onClick={onSubmitToReview}
-                    disabled={!allItemsApproved}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
-                      allItemsApproved
-                        ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }`}
-                    title={!allItemsApproved ? 'All items must be approved before submitting' : 'Submit'}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Submit
-                  </button>
-                );
-              })()
-            ) : null}
           </div>
         </div>
       </div>
@@ -656,6 +625,17 @@ export default function BidPackageWorkspace({
                 onPrevious={handlePreviousItem}
                 onNext={handleNextItem}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
+                allLineItems={lineItems}
+                bidPackageStatus={bidPackage.status}
+                onCompleted={
+                  bidPackage.status !== 'pending-review' &&
+                  bidPackage.status !== 'bidding' &&
+                  bidPackage.status !== 'bidding-leveling' &&
+                  bidPackage.status !== 'awarded'
+                    ? onSubmitToReview
+                    : undefined
+                }
+                onRecall={bidPackage.status === 'pending-review' ? onRecall : undefined}
               />
             )}
           </div>

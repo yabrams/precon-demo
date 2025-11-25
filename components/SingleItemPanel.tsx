@@ -44,6 +44,10 @@ interface SingleItemPanelProps {
   onPrevious: () => void;
   onNext: () => void;
   readOnly?: boolean;
+  allLineItems?: LineItem[];
+  onCompleted?: () => void;
+  bidPackageStatus?: string;
+  onRecall?: () => void;
 }
 
 export interface SingleItemPanelRef {
@@ -60,6 +64,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   onPrevious,
   onNext,
   readOnly = false,
+  allLineItems = [],
+  onCompleted,
+  bidPackageStatus,
+  onRecall,
 }, ref) {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [fieldIndex, setFieldIndex] = useState(0);
@@ -216,43 +224,81 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Unapprove Button - only shown for approved items */}
-          {item.approved && !readOnly && (
+          {/* Show Recall button when status is pending-review */}
+          {bidPackageStatus === 'pending-review' && onRecall ? (
             <button
-              onClick={onApprove}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
-              title="Unapprove (A)"
-            >
-              ✅ Unapprove
-            </button>
-          )}
-
-          {/* Approve Button - only shown for unapproved items */}
-          {!item.approved && !readOnly && (
-            <button
-              onClick={onApprove}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
-              title="Approve (A)"
+              onClick={onRecall}
+              className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+              title="Recall from review and return to In Progress"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
               </svg>
-              Approve
+              Recall
             </button>
-          )}
+          ) : (
+            <>
+              {/* Unapprove Button - only shown for approved items */}
+              {item.approved && !readOnly && (
+                <button
+                  onClick={onApprove}
+                  className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
+                  title="Unapprove (A)"
+                >
+                  ✅ Unapprove
+                </button>
+              )}
 
-          {/* Approve & Next Button - Primary Action */}
-          {!readOnly && (
-            <button
-              onClick={onApproveAndNext}
-              className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-              title="Approve and move to next (Enter)"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Approve & Next
-            </button>
+              {/* Approve Button - only shown for unapproved items */}
+              {!item.approved && !readOnly && (
+                <button
+                  onClick={onApprove}
+                  className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+                  title="Approve (A)"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Approve
+                </button>
+              )}
+
+              {/* Approve & Next Button - Primary Action */}
+              {!readOnly && (
+                <button
+                  onClick={onApproveAndNext}
+                  className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+                  title="Approve and move to next (Enter)"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Approve & Next
+                </button>
+              )}
+
+              {/* Completed Button - Only visible when onCompleted is provided */}
+              {!readOnly && onCompleted && (() => {
+                const allItemsApproved = allLineItems.length > 0 && allLineItems.every(item => item.approved === true);
+                return (
+                  <button
+                    onClick={onCompleted}
+                    disabled={!allItemsApproved}
+                    className={`px-3 py-1 text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5 ${
+                      allItemsApproved
+                        ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                    title={!allItemsApproved ? 'All items must be approved before marking as completed' : 'Mark as completed'}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Completed
+                  </button>
+                );
+              })()}
+            </>
           )}
         </div>
       </div>
