@@ -7,10 +7,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-import { ChevronDown, ChevronRight, Edit2, Eye } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, Edit2, Eye } from 'lucide-react';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
-import ProjectInformationPanel from './ProjectInformationPanel';
 
 interface User {
   id: string;
@@ -321,6 +320,14 @@ export default function BidPackageListView({
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Back to Projects"
+            >
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
+            </button>
             {/* Precon Lead Avatar */}
             {(isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar) && (
               <div className="flex-shrink-0">
@@ -339,8 +346,17 @@ export default function BidPackageListView({
                 </span>
               </div>
             )}
-            <div>
-              <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
+            <div className="flex-1 min-w-0">
+              {isEditMode ? (
+                <input
+                  type="text"
+                  value={editedProject.name}
+                  onChange={(e) => updateProjectField('name', e.target.value)}
+                  className="text-lg font-bold text-zinc-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none w-full max-w-md"
+                />
+              ) : (
+                <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
+              )}
               <div className="flex items-center space-x-3">
                 {project.projectNumber && (
                   <p className="text-xs text-gray-600 font-mono">#{project.projectNumber}</p>
@@ -360,6 +376,20 @@ export default function BidPackageListView({
                   </div>
                 )}
               </div>
+              {/* Project Description */}
+              {isEditMode ? (
+                <textarea
+                  value={editedProject.description || ''}
+                  onChange={(e) => updateProjectField('description', e.target.value)}
+                  placeholder="Project description..."
+                  rows={2}
+                  className="mt-1 text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 focus:border-blue-500 focus:outline-none w-full max-w-lg resize-none"
+                />
+              ) : (
+                (project.description) && (
+                  <p className="mt-1 text-sm text-gray-600 line-clamp-2 max-w-lg">{project.description}</p>
+                )
+              )}
             </div>
           </div>
 
@@ -468,19 +498,10 @@ export default function BidPackageListView({
             {/* Resize Handle */}
             <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-gray-300 transition-colors cursor-col-resize" />
 
-            {/* Right Panel: Project Info */}
+            {/* Right Panel: Bid Packages */}
             <Panel defaultSize={50} minSize={30} className="bg-gray-50">
               <div className="h-full overflow-auto p-6">
                 <div className="max-w-4xl mx-auto space-y-4">
-                  {/* Consolidated Project Information */}
-                  <ProjectInformationPanel
-                    project={isEditMode ? editedProject : project}
-                    isEditMode={isEditMode}
-                    onUpdateField={updateProjectField}
-                    onUpdateLocation={updateProjectLocation}
-                    users={users}
-                  />
-
                   {/* Bid Packages Card */}
                   <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
                     <h3 className="text-sm font-semibold text-zinc-900 mb-3">
