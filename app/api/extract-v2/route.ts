@@ -4,6 +4,39 @@ import { readFile } from 'fs/promises';
 import path from 'path';
 import { prisma } from '@/lib/prisma';
 import { isPDFFile, processPDFForExtraction } from '@/lib/pdf-utils';
+import { searchCSICodes } from '@/lib/csi/csiLookup';
+
+// Helper function to match a line item description to CSI codes using search
+function matchLineItemToCSI(description: string, csiDivision?: string): { code: string; title: string } | null {
+  if (!description || description.trim().length === 0) {
+    return null;
+  }
+
+  // Search for CSI codes matching the description
+  const searchOptions: any = {
+    query: description,
+    limit: 3,
+    caseSensitive: false,
+  };
+
+  // If we have a CSI division hint, filter by it
+  if (csiDivision && csiDivision !== '00') {
+    searchOptions.divisions = [csiDivision];
+  }
+
+  const results = searchCSICodes(searchOptions);
+
+  // Return the best match if found
+  if (results.length > 0) {
+    const bestMatch = results[0];
+    return {
+      code: bestMatch.code.code,
+      title: bestMatch.code.title,
+    };
+  }
+
+  return null;
+}
 
 // Helper function to process a single image with Claude
 async function processImageWithClaude(
@@ -495,6 +528,24 @@ export async function POST(request: Request) {
       console.log('\n========================================\n');
     }
 
+    // Apply CSI matching to all line items in the extraction result
+    // This ensures CSI codes are always populated, regardless of whether we're saving to DB
+    if (combinedResult.bid_packages && Array.isArray(combinedResult.bid_packages)) {
+      combinedResult.bid_packages = combinedResult.bid_packages.map((pkg: any) => {
+        if (pkg.line_items && Array.isArray(pkg.line_items)) {
+          pkg.line_items = pkg.line_items.map((item: any) => {
+            const csiMatch = matchLineItemToCSI(item.description, pkg.csi_division);
+            return {
+              ...item,
+              csiCode: csiMatch?.code || 'N/A',
+              csiTitle: csiMatch?.title || 'N/A',
+            };
+          });
+        }
+        return pkg;
+      });
+    }
+
     const result = combinedResult;
 
     // If projectId is provided, create bid packages and forms
@@ -524,6 +575,21 @@ export async function POST(request: Request) {
             });
 
             // Create bid form with line items for this package
+            // CSI codes are already computed above, so we just use them
+            const lineItemsForDB = pkg.line_items.map((item: any, index: number) => ({
+              itemNumber: item.item_number || null,
+              description: item.description,
+              quantity: item.quantity || null,
+              unit: item.unit || null,
+              unitPrice: item.unit_price || null,
+              totalPrice: item.total_price || null,
+              notes: item.notes || null,
+              order: index,
+              verified: false,
+              csiCode: item.csiCode || 'N/A',
+              csiTitle: item.csiTitle || 'N/A',
+            }));
+
             const bidForm = await prisma.bidForm.create({
               data: {
                 bidPackageId: bidPackage.id,
@@ -532,17 +598,7 @@ export async function POST(request: Request) {
                 rawExtractedText: result.raw_text || null,
                 status: 'draft',
                 lineItems: {
-                  create: pkg.line_items.map((item: any, index: number) => ({
-                    itemNumber: item.item_number || null,
-                    description: item.description,
-                    quantity: item.quantity || null,
-                    unit: item.unit || null,
-                    unitPrice: item.unit_price || null,
-                    totalPrice: item.total_price || null,
-                    notes: item.notes || null,
-                    order: index,
-                    verified: false
-                  }))
+                  create: lineItemsForDB
                 }
               },
               include: {

@@ -239,7 +239,9 @@ export default function Home() {
           unit_price: li.unitPrice,
           total_price: li.totalPrice,
           notes: li.notes,
-          verified: li.verified
+          verified: li.verified,
+          csiCode: li.csiCode,
+          csiTitle: li.csiTitle,
         })) || []
       ) || [];
     }
@@ -457,7 +459,9 @@ export default function Home() {
                   unit_price: li.unitPrice,
                   total_price: li.totalPrice,
                   notes: li.notes,
-                  verified: li.verified
+                  verified: li.verified,
+                  csiCode: li.csiCode,
+                  csiTitle: li.csiTitle,
                 })) || []
               ) || [];
 
@@ -864,7 +868,9 @@ export default function Home() {
                         totalPrice: item.total_price || null,
                         notes: item.notes || null,
                         order: index,
-                        verified: false
+                        verified: false,
+                        csiCode: item.csiCode || 'N/A',
+                        csiTitle: item.csiTitle || 'N/A',
                       }))
                     })
                   });

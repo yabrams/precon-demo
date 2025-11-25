@@ -274,6 +274,8 @@ model LineItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   verified    Boolean  @default(false)
+  csiCode     String?  // CSI MasterFormat code (e.g., "03 30 00")
+  csiTitle    String?  // CSI MasterFormat title (e.g., "Cast-in-Place Concrete")
 }
 
 model VerificationRecord {
