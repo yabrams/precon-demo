@@ -368,7 +368,9 @@ export default function BidPackageWorkspace({
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className="h-full bg-zinc-900 transition-all duration-300 rounded-full"
+                      className={`h-full transition-all duration-300 rounded-full ${
+                        percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
+                      }`}
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
