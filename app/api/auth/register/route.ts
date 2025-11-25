@@ -96,7 +96,5 @@ export async function POST(request: NextRequest) {
       { error: 'Internal server error during registration' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -635,8 +635,6 @@ export async function POST(request: Request) {
           ...result,
           warning: 'Extraction successful but failed to save to database'
         });
-      } finally {
-        await prisma.$disconnect();
       }
     }
 

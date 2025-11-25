@@ -43,8 +43,6 @@ export async function GET(request: Request) {
       { error: 'Failed to fetch bid packages' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -163,7 +161,5 @@ export async function POST(request: Request) {
       { error: 'Failed to create bid package' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
