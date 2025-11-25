@@ -7,17 +7,22 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronLeft } from 'lucide-react';
 import BidFormTable, { LineItem } from './BidFormTable';
 import DiagramOverlay from './DiagramOverlay';
 import ChatPanel from './ChatPanel';
 import MagnifyingGlass from './MagnifyingGlass';
+import SingleItemPanel, { SingleItemPanelRef } from './SingleItemPanel';
 import { ChatMessage } from '@/types/chat';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
 import { Diagram } from '@/types/diagram';
+import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
+import { useDiagramAutoFocus, getTransformStyle } from '@/hooks/useDiagramAutoFocus';
+
+type ViewMode = 'grid' | 'single';
 
 interface UploadedFile {
   url: string;
@@ -72,12 +77,18 @@ export default function BidPackageWorkspace({
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const [imageNaturalSize, setImageNaturalSize] = useState({ width: 0, height: 0 });
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [magnifyingGlassEnabled, setMagnifyingGlassEnabled] = useState(false);
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [diagramContainerSize, setDiagramContainerSize] = useState({ width: 0, height: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
+  const diagramContainerRef = useRef<HTMLDivElement>(null);
+  const singleItemPanelRef = useRef<SingleItemPanelRef>(null);
 
   // All project diagrams are available to all bid packages
   // diagramIds can be used in the future for ordering or pinning specific diagrams
@@ -99,6 +110,7 @@ export default function BidPackageWorkspace({
 
         const naturalWidth = imageRef.current.naturalWidth;
         const naturalHeight = imageRef.current.naturalHeight;
+        setImageNaturalSize({ width: naturalWidth, height: naturalHeight });
 
         if (naturalWidth > 0 && naturalHeight > 0) {
           const scaleX = width / naturalWidth;
@@ -135,6 +147,95 @@ export default function BidPackageWorkspace({
       }
     };
   }, [diagramUrl]);
+
+  // Track diagram container size for auto-focus calculations
+  useEffect(() => {
+    if (!diagramContainerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        setDiagramContainerSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+      }
+    });
+
+    resizeObserver.observe(diagramContainerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [viewMode]);
+
+  // Get current item for single view
+  const currentItem = lineItems[currentItemIndex];
+  const currentItemBoundingBox = currentItem?.boundingBox || null;
+
+  // Auto-focus transform for single view
+  const diagramTransform = useDiagramAutoFocus({
+    boundingBox: currentItemBoundingBox,
+    containerSize: diagramContainerSize,
+    imageNaturalSize,
+    enabled: viewMode === 'single',
+  });
+
+  // Navigation handlers for single view
+  const handlePreviousItem = useCallback(() => {
+    setCurrentItemIndex((prev) => Math.max(0, prev - 1));
+  }, []);
+
+  const handleNextItem = useCallback(() => {
+    setCurrentItemIndex((prev) => Math.min(lineItems.length - 1, prev + 1));
+  }, [lineItems.length]);
+
+  const handleApproveItem = useCallback(() => {
+    if (!currentItem || lineItems.length === 0) return;
+    const updated = [...lineItems];
+    updated[currentItemIndex] = { ...updated[currentItemIndex], approved: !updated[currentItemIndex].approved };
+    onLineItemsUpdate(updated);
+  }, [currentItem, currentItemIndex, lineItems, onLineItemsUpdate]);
+
+  const handleApproveAndNext = useCallback(() => {
+    if (!currentItem || lineItems.length === 0) return;
+    const updated = [...lineItems];
+    updated[currentItemIndex] = { ...updated[currentItemIndex], approved: true };
+    onLineItemsUpdate(updated);
+    // Move to next item if not at the end
+    if (currentItemIndex < lineItems.length - 1) {
+      setCurrentItemIndex((prev) => prev + 1);
+    }
+  }, [currentItem, currentItemIndex, lineItems, onLineItemsUpdate]);
+
+  const handleUpdateItem = useCallback((updatedItem: LineItem) => {
+    const updated = [...lineItems];
+    updated[currentItemIndex] = updatedItem;
+    onLineItemsUpdate(updated);
+  }, [currentItemIndex, lineItems, onLineItemsUpdate]);
+
+  const handleExitSingleView = useCallback(() => {
+    setViewMode('grid');
+  }, []);
+
+  const handleEnterFieldMode = useCallback(() => {
+    singleItemPanelRef.current?.enterFieldMode();
+  }, []);
+
+  // Keyboard navigation for single view
+  useKeyboardNavigation({
+    enabled: viewMode === 'single',
+    onPrevious: handlePreviousItem,
+    onNext: handleNextItem,
+    onApprove: handleApproveItem,
+    onApproveAndNext: handleApproveAndNext,
+    onExitSingleView: handleExitSingleView,
+    onEnterFieldMode: handleEnterFieldMode,
+  });
+
+  // Reset current item index when switching to single view or when items change
+  useEffect(() => {
+    if (currentItemIndex >= lineItems.length && lineItems.length > 0) {
+      setCurrentItemIndex(lineItems.length - 1);
+    }
+  }, [lineItems.length, currentItemIndex]);
 
   const hoveredItem = lineItems.find((item) => item.id === hoveredItemId);
 
@@ -247,9 +348,95 @@ export default function BidPackageWorkspace({
               </div>
               <p className="text-xs font-medium text-gray-700">{project.name}</p>
               {project.description && (
-                <p className="text-xs text-gray-500 mt-0.5">{project.description}</p>
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 max-w-md">{project.description}</p>
               )}
             </div>
+          </div>
+
+          {/* Right side: View toggles and Submit button */}
+          <div className="flex items-center gap-3">
+            {/* View Mode Toggle */}
+            {lineItems.length > 0 && (
+              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-3 py-2 text-lg transition-colors ${
+                    viewMode === 'grid'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                  title="Grid view"
+                >
+                  ▦
+                </button>
+                <button
+                  onClick={() => setViewMode('single')}
+                  className={`px-3 py-2 text-lg transition-colors ${
+                    viewMode === 'single'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                  title="Single item view"
+                >
+                  ◻️
+                </button>
+              </div>
+            )}
+
+            {/* Submit/Recall Buttons */}
+            {bidPackage.status === 'pending-review' ? (
+              <button
+                onClick={onRecall}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg shadow-md shadow-amber-900/10 transition-colors flex items-center gap-2"
+                title="Recall from review and return to In Progress"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                  />
+                </svg>
+                Recall
+              </button>
+            ) : bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' ? (
+              (() => {
+                const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
+                return (
+                  <button
+                    onClick={onSubmitToReview}
+                    disabled={!allItemsApproved}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
+                      allItemsApproved
+                        ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                    title={!allItemsApproved ? 'All items must be approved before submitting' : 'Submit'}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Submit
+                  </button>
+                );
+              })()
+            ) : null}
           </div>
         </div>
       </div>
@@ -307,8 +494,8 @@ export default function BidPackageWorkspace({
               </label>
             </div>
           </div>
-        ) : (
-          // Workspace with panels
+        ) : viewMode === 'grid' ? (
+          // Grid View: Workspace with panels
           <PanelGroup direction="horizontal" className="h-full">
             {/* Left Panel: Diagram Viewer */}
             <Panel defaultSize={35} minSize={20} className="relative bg-white border-r border-gray-200">
@@ -349,16 +536,18 @@ export default function BidPackageWorkspace({
                         className="max-w-full h-auto mx-auto object-contain"
                       />
                       {/* Bounding Box Overlay */}
-                      {hoveredItem?.boundingBox && (
+                      {lineItems.some(item => item.boundingBox) && imageDimensions.width > 0 && (
                         <DiagramOverlay
-                          imageRef={imageRef}
-                          boundingBox={hoveredItem.boundingBox}
-                          isHovered={true}
+                          lineItems={lineItems}
+                          hoveredItemId={hoveredItemId}
+                          onHoverChange={(id) => setHoveredItemId(id)}
+                          imageWidth={imageDimensions.width}
+                          imageHeight={imageDimensions.height}
                         />
                       )}
                       {/* Magnifying Glass */}
-                      {magnifyingGlassEnabled && (
-                        <MagnifyingGlass imageRef={imageRef} imageUrl={diagramUrl} />
+                      {magnifyingGlassEnabled && diagramUrl && (
+                        <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
                       )}
                     </>
                   ) : (
@@ -381,75 +570,98 @@ export default function BidPackageWorkspace({
                 hoveredItemId={hoveredItemId}
                 onHoverChange={(itemId, rowElement) => {
                   setHoveredItemId(itemId);
-                  setHoveredRowElement(rowElement);
+                  setHoveredRowElement(rowElement ?? null);
                 }}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
               />
             </Panel>
           </PanelGroup>
+        ) : (
+          // Single Item View: Full-width diagram + bottom panel
+          <div className="h-full flex flex-col">
+            {/* Full-width Diagram Area */}
+            <div className="flex-1 min-h-0 flex flex-col bg-white">
+              {/* Diagram Info Bar */}
+              <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center space-x-2 flex-1 min-w-0">
+                  <span className="text-sm font-medium text-zinc-900">Documents</span>
+                  {relevantDiagrams.length > 1 && (
+                    <select
+                      value={selectedDiagramId || relevantDiagrams[0]?.id || ''}
+                      onChange={(e) => setSelectedDiagramId(e.target.value)}
+                      className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+                    >
+                      {relevantDiagrams.map((diagram) => (
+                        <option key={diagram.id} value={diagram.id}>
+                          {diagram.fileName}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {relevantDiagrams.length === 1 && currentDiagram && (
+                    <span className="text-xs text-gray-600 truncate">
+                      {currentDiagram.fileName}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Diagram Container - Full Width with Auto-Zoom */}
+              <div
+                ref={diagramContainerRef}
+                className="flex-1 overflow-hidden bg-gray-50 relative flex items-center justify-center p-4"
+              >
+                {diagramUrl ? (
+                  <div
+                    className="relative w-full h-full flex items-center justify-center"
+                    style={getTransformStyle(diagramTransform)}
+                  >
+                    <img
+                      ref={imageRef}
+                      src={diagramUrl}
+                      alt="Construction diagram"
+                      className="w-full h-full object-contain"
+                    />
+                    {/* Bounding Box Overlay for current item */}
+                    {currentItem?.boundingBox && imageDimensions.width > 0 && (
+                      <DiagramOverlay
+                        lineItems={[currentItem]}
+                        hoveredItemId={currentItem.id || null}
+                        onHoverChange={() => {}}
+                        imageWidth={imageDimensions.width}
+                        imageHeight={imageDimensions.height}
+                      />
+                    )}
+                    {/* Magnifying Glass */}
+                    {magnifyingGlassEnabled && diagramUrl && (
+                      <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-gray-500">No diagram available</div>
+                )}
+              </div>
+            </div>
+
+            {/* Single Item Panel at Bottom */}
+            {currentItem && (
+              <SingleItemPanel
+                ref={singleItemPanelRef}
+                item={currentItem}
+                itemIndex={currentItemIndex}
+                totalItems={lineItems.length}
+                onUpdate={handleUpdateItem}
+                onApprove={handleApproveItem}
+                onApproveAndNext={handleApproveAndNext}
+                onPrevious={handlePreviousItem}
+                onNext={handleNextItem}
+                readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
+              />
+            )}
+          </div>
         )}
       </div>
 
-      {/* Bottom Panel / Footer */}
-      <div className="px-6 py-4 bg-white border-t border-gray-200 flex-shrink-0">
-        <div className="flex items-center justify-end">
-          {bidPackage.status === 'pending-review' ? (
-            // Recall button for pending-review state
-            <button
-              onClick={onRecall}
-              className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg shadow-md shadow-amber-900/10 transition-colors flex items-center gap-2"
-              title="Recall from review and return to In Progress"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                />
-              </svg>
-              Recall
-            </button>
-          ) : bidPackage.status !== 'bidding' && bidPackage.status !== 'bidding-leveling' && bidPackage.status !== 'awarded' ? (
-            // Submit to Review button for other eligible states
-            (() => {
-              const allItemsApproved = lineItems.length > 0 && lineItems.every(item => item.approved === true);
-              return (
-                <button
-                  onClick={onSubmitToReview}
-                  disabled={!allItemsApproved}
-                  className={`px-6 py-2 text-sm font-medium rounded-lg shadow-md shadow-zinc-900/10 transition-colors flex items-center gap-2 ${
-                    allItemsApproved
-                      ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
-                  title={!allItemsApproved ? 'All items must be approved before submitting to review' : 'Submit to Review'}
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Submit to Review
-                </button>
-              );
-            })()
-          ) : null}
-        </div>
-      </div>
 
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirm && (
