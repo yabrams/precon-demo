@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 /**
+ * Calculate approval percentage from line items
+ */
+function calculateApprovalPercentage(lineItems: any[]): number {
+  if (!lineItems || lineItems.length === 0) {
+    return 0;
+  }
+
+  const approvedCount = lineItems.filter(item => item.approved === true).length;
+  return Math.round((approvedCount / lineItems.length) * 100);
+}
+
+/**
  * GET /api/bid-packages/[id]
  * Fetch a single bid package by ID with all relations
  */
@@ -48,6 +60,27 @@ export async function GET(
         { error: 'Bid package not found' },
         { status: 404 }
       );
+    }
+
+    // Calculate progress from workspaceData if not already set
+    if (bidPackage.workspaceData && (bidPackage.progress === null || bidPackage.progress === undefined)) {
+      try {
+        const workspaceData = JSON.parse(bidPackage.workspaceData);
+        if (workspaceData.lineItems && Array.isArray(workspaceData.lineItems)) {
+          const calculatedProgress = calculateApprovalPercentage(workspaceData.lineItems);
+
+          // Update in database
+          await prisma.bidPackage.update({
+            where: { id: bidPackage.id },
+            data: { progress: calculatedProgress }
+          });
+
+          // Update returned object
+          bidPackage.progress = calculatedProgress;
+        }
+      } catch (error) {
+        console.error('Error calculating progress from workspaceData:', error);
+      }
     }
 
     return NextResponse.json({ bidPackage });
@@ -97,6 +130,13 @@ export async function PUT(
       });
     }
 
+    // Auto-calculate progress from line items if provided (unless explicitly set)
+    let calculatedProgress = progress;
+    if (lineItems !== undefined && progress === undefined) {
+      calculatedProgress = calculateApprovalPercentage(lineItems);
+      console.log(`Auto-calculated progress: ${calculatedProgress}% (${lineItems.filter((i: any) => i.approved).length}/${lineItems.length} approved)`);
+    }
+
     const bidPackage = await prisma.bidPackage.update({
       where: { id },
       data: {
@@ -105,7 +145,7 @@ export async function PUT(
         ...(scope !== undefined && { scope }),
         ...(bidDueDate !== undefined && { bidDueDate: bidDueDate ? new Date(bidDueDate) : null }),
         ...(status && { status }),
-        ...(progress !== undefined && { progress }),
+        ...(calculatedProgress !== undefined && { progress: calculatedProgress }),
         ...(diagramIds !== undefined && { diagramIds: diagramIds ? JSON.stringify(diagramIds) : null }),
         ...(captainId !== undefined && { captainId }),
         ...(captainName !== undefined && { captainName }),
