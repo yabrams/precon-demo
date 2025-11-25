@@ -9,6 +9,8 @@ interface CSIInlineSearchProps {
   onSelect: (code: string, title: string) => void;
   onBlur: () => void;
   placeholder?: string;
+  dropdownDirection?: 'up' | 'down';
+  onFieldKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 interface SearchResult {
@@ -24,11 +26,13 @@ export default function CSIInlineSearch({
   onSelect,
   onBlur,
   placeholder = 'Search CSI code...',
+  dropdownDirection = 'down',
+  onFieldKeyDown,
 }: CSIInlineSearchProps) {
   const [query, setQuery] = useState(initialValue);
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0, bottom: 0 });
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -47,6 +51,7 @@ export default function CSIInlineSearch({
           top: rect.bottom + window.scrollY,
           left: rect.left + window.scrollX,
           width: rect.width,
+          bottom: window.innerHeight - rect.top + window.scrollY,
         });
       }
     };
@@ -92,10 +97,15 @@ export default function CSIInlineSearch({
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!showResults) {
-      if (e.key === 'Escape') {
-        onBlur();
+    // Handle Tab and Escape for field navigation (delegate to parent)
+    if (e.key === 'Tab' || e.key === 'Escape') {
+      if (onFieldKeyDown) {
+        onFieldKeyDown(e);
       }
+      return;
+    }
+
+    if (!showResults) {
       return;
     }
 
@@ -113,11 +123,6 @@ export default function CSIInlineSearch({
         if (results[selectedIndex]) {
           handleSelect(results[selectedIndex]);
         }
-        break;
-      case 'Escape':
-        e.preventDefault();
-        setShowResults(false);
-        onBlur();
         break;
     }
   };
@@ -154,7 +159,9 @@ export default function CSIInlineSearch({
             ref={dropdownRef}
             className="fixed bg-white border-2 border-blue-500 rounded-lg shadow-2xl max-h-80 overflow-y-auto"
             style={{
-              top: `${dropdownPosition.top}px`,
+              ...(dropdownDirection === 'up'
+                ? { bottom: `${dropdownPosition.bottom}px` }
+                : { top: `${dropdownPosition.top}px` }),
               left: `${dropdownPosition.left}px`,
               width: `${Math.max(dropdownPosition.width, 300)}px`,
               zIndex: 9999,
@@ -191,7 +198,9 @@ export default function CSIInlineSearch({
           <div
             className="fixed bg-white border-2 border-blue-500 rounded-lg shadow-2xl p-3"
             style={{
-              top: `${dropdownPosition.top}px`,
+              ...(dropdownDirection === 'up'
+                ? { bottom: `${dropdownPosition.bottom}px` }
+                : { top: `${dropdownPosition.top}px` }),
               left: `${dropdownPosition.left}px`,
               width: `${Math.max(dropdownPosition.width, 300)}px`,
               zIndex: 9999,

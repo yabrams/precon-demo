@@ -258,8 +258,6 @@ export default function BidFormTable({
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Item #</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-64">Description</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-80">CSI MasterFormat</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Quantity</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Unit</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-32">Notes</th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Confidence</th>
               {!readOnly && <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Actions</th>}
@@ -371,64 +369,6 @@ export default function BidFormTable({
                     )}
                   </td>
                   <td className="px-3 py-3">
-                    {isEditing(index, 'quantity') && !readOnly ? (
-                      <input
-                        type="number"
-                        value={item.quantity || ''}
-                        onChange={(e) => handleChange(index, 'quantity', e.target.value)}
-                        onBlur={stopEditing}
-                        autoFocus
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
-                        placeholder="0"
-                        step="1"
-                        min="0"
-                      />
-                    ) : (
-                      <div
-                        onClick={() => !readOnly && startEditing(index, 'quantity')}
-                        className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg min-h-[2.5rem] flex items-center ${
-                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
-                        }`}
-                      >
-                        {item.quantity !== null && item.quantity !== undefined ? item.quantity : <span className="text-gray-400">0</span>}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-3 py-3">
-                    {isEditing(index, 'unit') && !readOnly ? (
-                      <select
-                        value={item.unit || ''}
-                        onChange={(e) => {
-                          handleChange(index, 'unit', e.target.value);
-                          stopEditing();
-                        }}
-                        onBlur={stopEditing}
-                        autoFocus
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900"
-                      >
-                        <option value="">Select...</option>
-                        <option value="EA">EA</option>
-                        <option value="SF">SF</option>
-                        <option value="LF">LF</option>
-                        <option value="CY">CY</option>
-                        <option value="SY">SY</option>
-                        <option value="TON">TON</option>
-                        <option value="LS">LS</option>
-                        <option value="HR">HR</option>
-                        <option value="DAY">DAY</option>
-                      </select>
-                    ) : (
-                      <div
-                        onClick={() => !readOnly && startEditing(index, 'unit')}
-                        className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.5rem] flex items-center ${
-                          readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
-                        }`}
-                      >
-                        {item.unit || <span className="text-gray-400">Select...</span>}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-3 py-3">
                     {isEditing(index, 'notes') && !readOnly ? (
                       <input
                         type="text"
@@ -505,35 +445,6 @@ export default function BidFormTable({
                 </td>
                 <td className="px-3 py-3">
                   <span className="text-xs text-gray-400 italic">Auto-matched on extraction</span>
-                </td>
-                <td className="px-3 py-3">
-                  <input
-                    type="number"
-                    value=""
-                    onChange={(e) => handlePlaceholderChange('quantity', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
-                    placeholder="0"
-                    step="1"
-                    min="0"
-                  />
-                </td>
-                <td className="px-3 py-3">
-                  <select
-                    value=""
-                    onChange={(e) => handlePlaceholderChange('unit', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900"
-                  >
-                    <option value="">Select...</option>
-                    <option value="EA">EA</option>
-                    <option value="SF">SF</option>
-                    <option value="LF">LF</option>
-                    <option value="CY">CY</option>
-                    <option value="SY">SY</option>
-                    <option value="TON">TON</option>
-                    <option value="LS">LS</option>
-                    <option value="HR">HR</option>
-                    <option value="DAY">DAY</option>
-                  </select>
                 </td>
                 <td className="px-3 py-3">
                   <input
