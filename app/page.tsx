@@ -15,8 +15,7 @@ import BuildingConnectedProjectList from '@/components/BuildingConnectedProjectL
 import BidPackageListView from '@/components/BidPackageListView';
 import BidPackageWorkspace from '@/components/BidPackageWorkspace';
 import DiagramUpload from '@/components/DiagramUpload';
-import CSIWidget from '@/components/CSIWidget';
-import CSIFloatingButton from '@/components/CSIFloatingButton';
+import CSIMasterFormatView from '@/components/CSIMasterFormatView';
 import Avatar from '@/components/Avatar';
 import LeftMenuPanel from '@/components/LeftMenuPanel';
 import ChatPanel from '@/components/ChatPanel';
@@ -32,7 +31,7 @@ import { BidPackage } from '@/types/bidPackage';
 import { Diagram } from '@/types/diagram';
 import { generateId } from '@/lib/generateId';
 
-type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing' | 'creating' | 'project-review' | 'users';
+type ViewMode = 'projects' | 'packages' | 'workspace' | 'upload' | 'reviewing' | 'creating' | 'project-review' | 'users' | 'csi';
 type AuthMode = 'login' | 'register';
 
 // Extended BidPackage with workspace data
@@ -67,7 +66,6 @@ export default function Home() {
   // Workspace state
   const [extracting, setExtracting] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
-  const [csiWidgetOpen, setCsiWidgetOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [globalChatOpen, setGlobalChatOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -791,10 +789,6 @@ export default function Home() {
     }
   };
 
-  const handleCSICodeSelect = (code: string, title: string) => {
-    console.log('CSI code selected:', code, title);
-  };
-
   // Project creation handlers
   const handleNewProject = () => {
     setViewMode('creating');
@@ -984,6 +978,11 @@ export default function Home() {
       setViewMode('users');
       setSelectedProject(null);
       setSelectedBidPackage(null);
+    } else if (item === 'csi') {
+      // Show CSI MasterFormat view
+      setViewMode('csi');
+      setSelectedProject(null);
+      setSelectedBidPackage(null);
     } else if (item === 'projects') {
       // Return to projects view
       setViewMode('projects');
@@ -1001,6 +1000,7 @@ export default function Home() {
   const getActiveMenuItem = () => {
     if (isChatActive) return 'chat';
     if (viewMode === 'users') return 'users';
+    if (viewMode === 'csi') return 'csi';
     return 'projects';
   };
 
@@ -1121,6 +1121,19 @@ export default function Home() {
               className="h-full"
             >
               <UserManagementView currentUser={currentUser} />
+            </motion.div>
+          )}
+
+          {viewMode === 'csi' && (
+            <motion.div
+              key="csi"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <CSIMasterFormatView />
             </motion.div>
           )}
 
@@ -1253,16 +1266,6 @@ export default function Home() {
           )}
         </AnimatePresence>
       </main>
-
-        {/* CSI Floating Button */}
-        {currentUser && <CSIFloatingButton onClick={() => setCsiWidgetOpen(true)} />}
-
-        {/* CSI Widget */}
-        <CSIWidget
-          isOpen={csiWidgetOpen}
-          onClose={() => setCsiWidgetOpen(false)}
-          onSelectCode={handleCSICodeSelect}
-        />
 
         {/* Global Chat Panel */}
         {globalChatOpen && (
