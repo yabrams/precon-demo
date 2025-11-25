@@ -65,15 +65,21 @@ export default function BidPackageListView({
   const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
+  // State for captain selector dropdown
+  const [captainSelectorOpen, setCaptainSelectorOpen] = useState<string | null>(null);
+
   // Fetch users when component mounts
   useEffect(() => {
     const fetchUsers = async () => {
       setLoadingUsers(true);
       try {
-        const response = await fetch('/api/admin/users');
+        const response = await fetch('/api/users');
         if (response.ok) {
           const data = await response.json();
+          console.log('Fetched users:', data);
           setUsers(data.users || []);
+        } else {
+          console.error('Failed to fetch users, status:', response.status);
         }
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -256,6 +262,33 @@ export default function BidPackageListView({
     return user.userName;
   };
 
+  // Calculate approval percentage from bid package
+  const getApprovalPercentage = (bidPackage: BidPackage): number => {
+    // If progress field exists and is set, use it
+    if (bidPackage.progress !== undefined && bidPackage.progress !== null) {
+      return Math.max(0, Math.min(100, bidPackage.progress));
+    }
+
+    // Try to calculate from line items if available
+    try {
+      const workspaceData = bidPackage.workspaceData
+        ? JSON.parse(bidPackage.workspaceData)
+        : null;
+
+      if (workspaceData?.lineItems && Array.isArray(workspaceData.lineItems)) {
+        const totalItems = workspaceData.lineItems.length;
+        if (totalItems === 0) return 0;
+
+        const approvedItems = workspaceData.lineItems.filter((item: any) => item.approved === true).length;
+        return Math.round((approvedItems / totalItems) * 100);
+      }
+    } catch (error) {
+      console.error('Error calculating approval percentage:', error);
+    }
+
+    return 0;
+  };
+
   // Direct file upload handler
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -311,6 +344,72 @@ export default function BidPackageListView({
     } catch (error) {
       console.error('Error deleting project:', error);
       alert('Failed to delete project. Please try again.');
+    }
+  };
+
+  // Handle captain assignment in non-edit mode
+  const handleCaptainAssignment = async (bidPackageId: string, userId: string) => {
+    try {
+      console.log('Assigning captain:', { bidPackageId, userId, availableUsers: users });
+
+      const selectedUser = users.find(u => u.id === userId);
+      if (!selectedUser) {
+        console.error('User not found:', userId);
+        alert('Selected user not found');
+        return;
+      }
+
+      // Find the current bid package to get all its data
+      const currentBidPackage = bidPackages.find(bp => bp.id === bidPackageId);
+      if (!currentBidPackage) {
+        console.error('Bid package not found:', bidPackageId);
+        alert('Bid package not found');
+        return;
+      }
+
+      // Merge captain data with existing bid package data
+      const updatedBidPackage = {
+        ...currentBidPackage,
+        captainId: userId,
+        captainName: formatUserName(selectedUser),
+        captain: {
+          id: selectedUser.id,
+          userName: selectedUser.userName,
+          firstName: selectedUser.firstName,
+          lastName: selectedUser.lastName,
+          email: selectedUser.email,
+          role: selectedUser.role
+        }
+      };
+
+      console.log('Updating bid package with captain:', updatedBidPackage);
+
+      const response = await fetch(`/api/bid-packages/${bidPackageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedBidPackage),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Failed to update captain:', errorData);
+        throw new Error('Failed to update captain');
+      }
+
+      console.log('Captain assigned successfully');
+
+      // Update local state without full page reload
+      if (onProjectUpdate) {
+        const updatedBidPackages = bidPackages.map(bp =>
+          bp.id === bidPackageId ? updatedBidPackage : bp
+        );
+        onProjectUpdate(project, updatedBidPackages);
+      }
+
+      setCaptainSelectorOpen(null);
+    } catch (error) {
+      console.error('Error updating captain:', error);
+      alert('Failed to assign captain. Please try again.');
     }
   };
 
@@ -398,9 +497,9 @@ export default function BidPackageListView({
             {isEditMode && (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="flex items-center space-x-2 px-4 py-3 rounded-lg font-semibold transition-all duration-200 bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-900/10 hover:shadow-lg"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-900/10 hover:shadow-lg"
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -413,7 +512,7 @@ export default function BidPackageListView({
             )}
             <button
               onClick={handleEditModeToggle}
-              className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isEditMode
                   ? 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md shadow-zinc-900/10 hover:shadow-lg'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -421,14 +520,14 @@ export default function BidPackageListView({
             >
               {isEditMode ? (
                 <>
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Save Changes</span>
                 </>
               ) : (
                 <>
-                  <Edit2 className="h-5 w-5" />
+                  <Edit2 className="h-4 w-4" />
                   <span>Edit</span>
                 </>
               )}
@@ -444,38 +543,22 @@ export default function BidPackageListView({
             {/* Left Panel: Documents */}
             <Panel defaultSize={50} minSize={20} className="bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
-                {/* Diagram Selector */}
-                <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                  <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-zinc-900">Documents</span>
-                    {project.diagrams.length > 1 && (
-                      <select
-                        value={selectedDiagramId || project.diagrams[0]?.id || ''}
-                        onChange={(e) => setSelectedDiagramId(e.target.value)}
-                        className="text-xs border border-gray-200 rounded px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
-                      >
-                        {project.diagrams.map((diagram) => (
-                          <option key={diagram.id} value={diagram.id}>
-                            {diagram.fileName}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+                {/* Diagram Selector - only show if multiple diagrams */}
+                {project.diagrams.length > 1 && (
+                  <div className="px-4 py-2 border-b border-gray-200 bg-gray-50">
+                    <select
+                      value={selectedDiagramId || project.diagrams[0]?.id || ''}
+                      onChange={(e) => setSelectedDiagramId(e.target.value)}
+                      className="text-xs border border-gray-200 rounded px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+                    >
+                      {project.diagrams.map((diagram) => (
+                        <option key={diagram.id} value={diagram.id}>
+                          {diagram.fileName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <input
-                    type="file"
-                    id="diagram-upload-panel"
-                    className="hidden"
-                    accept="image/*,.pdf"
-                    onChange={handleFileSelect}
-                  />
-                  <label
-                    htmlFor="diagram-upload-panel"
-                    className="text-xs px-2 py-1 bg-zinc-900 hover:bg-zinc-800 text-white rounded cursor-pointer transition-colors"
-                  >
-                    + Upload
-                  </label>
-                </div>
+                )}
 
                 {/* Diagram Viewer */}
                 <div className="flex-1 overflow-auto bg-gray-50 p-4">
@@ -662,12 +745,52 @@ export default function BidPackageListView({
                                   >
                                     {bidPackage.status}
                                   </span>
-                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                                    bidPackage.captainId || bidPackage.captainName
-                                      ? 'bg-zinc-900 text-white'
-                                      : 'bg-gray-200 text-gray-500'
-                                  }`}>
-                                    {getCaptainInitials(bidPackage)}
+                                  <div className="relative">
+                                    <div
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCaptainSelectorOpen(captainSelectorOpen === bidPackage.id ? null : bidPackage.id);
+                                      }}
+                                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all ${
+                                        bidPackage.captainId || bidPackage.captainName
+                                          ? 'bg-zinc-900 text-white'
+                                          : 'bg-gray-200 text-gray-500'
+                                      }`}
+                                      title={getCaptainName(bidPackage) || 'Click to assign captain'}
+                                    >
+                                      {getCaptainInitials(bidPackage)}
+                                    </div>
+                                    {captainSelectorOpen === bidPackage.id && (
+                                      <div className="absolute right-0 top-10 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-auto">
+                                        <div className="py-1">
+                                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-b border-gray-200">
+                                            Assign Captain
+                                          </div>
+                                          {loadingUsers ? (
+                                            <div className="px-3 py-4 text-center">
+                                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-zinc-900 mx-auto"></div>
+                                              <p className="text-xs text-gray-500 mt-2">Loading users...</p>
+                                            </div>
+                                          ) : users.length > 0 ? (
+                                            users.map((user) => (
+                                              <button
+                                                key={user.id}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleCaptainAssignment(bidPackage.id, user.id);
+                                                }}
+                                                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                              >
+                                                <div className="font-medium text-zinc-900">{formatUserName(user)}</div>
+                                                <div className="text-xs text-gray-500">{user.role}</div>
+                                              </button>
+                                            ))
+                                          ) : (
+                                            <div className="px-3 py-2 text-sm text-gray-500">No users available</div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -686,44 +809,22 @@ export default function BidPackageListView({
                                 <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
                               )}
 
-                              {/* Progress Steps */}
+                              {/* Progress Percentage */}
                               <div>
                                 {(() => {
-                                  const steps = [
-                                    { key: 'to do', label: 'To Do' },
-                                    { key: 'assigned', label: 'Assigned' },
-                                    { key: 'in progress', label: 'In Progress' },
-                                    { key: 'in review', label: 'Pending Review' },
-                                    { key: 'bidding', label: 'Bidding' },
-                                    { key: 'bidding leveling', label: 'Bidding Leveling' },
-                                    { key: 'completed', label: 'Completed' }
-                                  ];
-                                  const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
-
+                                  const percentage = getApprovalPercentage(bidPackage);
                                   return (
-                                    <div className="flex items-center gap-0.5">
-                                      {steps.map((step, index) => {
-                                        const isCompleted = index < currentStepIndex;
-                                        const isCurrent = index === currentStepIndex;
-
-                                        return (
-                                          <div key={step.key} className="flex-1">
-                                            <div
-                                              className={`h-1.5 transition-all ${
-                                                isCompleted || isCurrent
-                                                  ? 'bg-zinc-900'
-                                                  : 'bg-gray-200'
-                                              }`}
-                                              style={{
-                                                borderTopLeftRadius: index === 0 ? '9999px' : '0',
-                                                borderBottomLeftRadius: index === 0 ? '9999px' : '0',
-                                                borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
-                                                borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
-                                              }}
-                                            />
-                                          </div>
-                                        );
-                                      })}
+                                    <div className="space-y-1">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-xs text-gray-600">Progress</span>
+                                        <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                        <div
+                                          className="h-full bg-zinc-900 transition-all duration-300 rounded-full"
+                                          style={{ width: `${percentage}%` }}
+                                        />
+                                      </div>
                                     </div>
                                   );
                                 })()}
@@ -817,12 +918,52 @@ export default function BidPackageListView({
                             >
                               {bidPackage.status}
                             </span>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                              bidPackage.captainId || bidPackage.captainName
-                                ? 'bg-zinc-900 text-white'
-                                : 'bg-gray-200 text-gray-500'
-                            }`}>
-                              {getCaptainInitials(bidPackage)}
+                            <div className="relative">
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setCaptainSelectorOpen(captainSelectorOpen === bidPackage.id ? null : bidPackage.id);
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all ${
+                                  bidPackage.captainId || bidPackage.captainName
+                                    ? 'bg-zinc-900 text-white'
+                                    : 'bg-gray-200 text-gray-500'
+                                }`}
+                                title={getCaptainName(bidPackage) || 'Click to assign captain'}
+                              >
+                                {getCaptainInitials(bidPackage)}
+                              </div>
+                              {captainSelectorOpen === bidPackage.id && (
+                                <div className="absolute right-0 top-10 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-auto">
+                                  <div className="py-1">
+                                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-b border-gray-200">
+                                      Assign Captain
+                                    </div>
+                                    {loadingUsers ? (
+                                      <div className="px-3 py-4 text-center">
+                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-zinc-900 mx-auto"></div>
+                                        <p className="text-xs text-gray-500 mt-2">Loading users...</p>
+                                      </div>
+                                    ) : users.length > 0 ? (
+                                      users.map((user) => (
+                                        <button
+                                          key={user.id}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCaptainAssignment(bidPackage.id, user.id);
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                        >
+                                          <div className="font-medium text-zinc-900">{formatUserName(user)}</div>
+                                          <div className="text-xs text-gray-500">{user.role}</div>
+                                        </button>
+                                      ))
+                                    ) : (
+                                      <div className="px-3 py-2 text-sm text-gray-500">No users available</div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -841,44 +982,22 @@ export default function BidPackageListView({
                           <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
                         )}
 
-                        {/* Progress Steps */}
+                        {/* Progress Percentage */}
                         <div>
                           {(() => {
-                            const steps = [
-                              { key: 'to do', label: 'To Do' },
-                              { key: 'assigned', label: 'Assigned' },
-                              { key: 'in progress', label: 'In Progress' },
-                              { key: 'in review', label: 'Pending Review' },
-                              { key: 'bidding', label: 'Bidding' },
-                              { key: 'bidding leveling', label: 'Bidding Leveling' },
-                              { key: 'completed', label: 'Completed' }
-                            ];
-                            const currentStepIndex = steps.findIndex(s => s.key === bidPackage.status);
-
+                            const percentage = getApprovalPercentage(bidPackage);
                             return (
-                              <div className="flex items-center gap-0.5">
-                                {steps.map((step, index) => {
-                                  const isCompleted = index < currentStepIndex;
-                                  const isCurrent = index === currentStepIndex;
-
-                                  return (
-                                    <div key={step.key} className="flex-1">
-                                      <div
-                                        className={`h-1.5 transition-all ${
-                                          isCompleted || isCurrent
-                                            ? 'bg-zinc-900'
-                                            : 'bg-gray-200'
-                                        }`}
-                                        style={{
-                                          borderTopLeftRadius: index === 0 ? '9999px' : '0',
-                                          borderBottomLeftRadius: index === 0 ? '9999px' : '0',
-                                          borderTopRightRadius: index === steps.length - 1 ? '9999px' : '0',
-                                          borderBottomRightRadius: index === steps.length - 1 ? '9999px' : '0'
-                                        }}
-                                      />
-                                    </div>
-                                  );
-                                })}
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-600">Progress</span>
+                                  <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                  <div
+                                    className="h-full bg-zinc-900 transition-all duration-300 rounded-full"
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
                               </div>
                             );
                           })()}
