@@ -110,7 +110,9 @@ For every item, extract:
 - quantity: Number if specified (can be null)
 - unit: Unit of measurement if specified (LF, SF, EA, CY, etc.) (can be null)
 - notes: Any additional specifications or context
-- boundingBox: Approximate location on the image (normalized 0.0-1.0 coordinates)
+- boundingBoxes: An array of locations where this item appears on the image. Include:
+  1. "callout" type: The callout/marker on the floor plan drawing (e.g., "8.1" label on the diagram)
+  2. "description" type: The text description in the notes/legend area
 
 Format your response as a JSON object:
 {
@@ -128,12 +130,22 @@ Format your response as a JSON object:
           "quantity": number or null,
           "unit": "string or null",
           "notes": "string or null",
-          "boundingBox": {
-            "x": number (0.0-1.0),
-            "y": number (0.0-1.0),
-            "width": number (0.0-1.0),
-            "height": number (0.0-1.0)
-          } or null
+          "boundingBoxes": [
+            {
+              "type": "callout",
+              "x": number (0.0-1.0),
+              "y": number (0.0-1.0),
+              "width": number (0.0-1.0),
+              "height": number (0.0-1.0)
+            },
+            {
+              "type": "description",
+              "x": number (0.0-1.0),
+              "y": number (0.0-1.0),
+              "width": number (0.0-1.0),
+              "height": number (0.0-1.0)
+            }
+          ]
         }
       ]
     }
@@ -150,7 +162,9 @@ IMPORTANT RULES:
 6. If you see 20+ items, you should extract 20+ line items
 7. Do not extract pricing information
 8. Do not invent items that aren't there
-9. Each item should appear exactly once in exactly one bid package`,
+9. Each item should appear exactly once in exactly one bid package
+10. ALL boundingBox coordinates MUST be within 0.0-1.0 range. Never use values > 1.0
+11. For boundingBoxes: "callout" is where the number marker appears ON THE DRAWING/PLAN. "description" is where the text explanation appears in the legend/notes area.`,
           },
         ],
       },
@@ -588,6 +602,8 @@ export async function POST(request: Request) {
               verified: false,
               csiCode: item.csiCode || 'N/A',
               csiTitle: item.csiTitle || 'N/A',
+              boundingBox: item.boundingBox || null,
+              boundingBoxes: item.boundingBoxes || null,
             }));
 
             const bidForm = await prisma.bidForm.create({

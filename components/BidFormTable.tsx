@@ -55,6 +55,14 @@ const getConfidenceBarColor = (confidence: number | null | undefined): string =>
   return 'bg-red-500';
 };
 
+export interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  type?: 'callout' | 'description'; // callout = marker on floor plan, description = text area
+}
+
 export interface LineItem {
   id?: string;
   item_number?: string | null;
@@ -67,12 +75,8 @@ export interface LineItem {
   verified?: boolean;
   approved?: boolean; // New field for approval status
   confidence?: number | null; // 0-100 percentage
-  boundingBox?: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  } | null;
+  boundingBox?: BoundingBox | null; // Legacy single box (for backward compatibility)
+  boundingBoxes?: BoundingBox[] | null; // Multiple boxes (callout + description)
   csiCode?: string | null; // CSI MasterFormat code (e.g., "03 30 00")
   csiTitle?: string | null; // CSI MasterFormat title (e.g., "Cast-in-Place Concrete")
 }

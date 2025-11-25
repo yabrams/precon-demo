@@ -171,11 +171,12 @@ export default function BidPackageWorkspace({
   const currentItemBoundingBox = currentItem?.boundingBox || null;
 
   // Auto-focus transform for single view
+  // Disabled for now - the transform calculation was pushing the diagram off screen
   const diagramTransform = useDiagramAutoFocus({
     boundingBox: currentItemBoundingBox,
     containerSize: diagramContainerSize,
     imageNaturalSize,
-    enabled: viewMode === 'single',
+    enabled: false, // Disabled until transform calculation is fixed
   });
 
   // Navigation handlers for single view
@@ -247,6 +248,7 @@ export default function BidPackageWorkspace({
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('bcProjectId', project.id); // Associate with project
 
       const uploadResponse = await fetch('/api/upload', {
         method: 'POST',
@@ -526,30 +528,30 @@ export default function BidPackageWorkspace({
                 </div>
 
                 {/* Diagram Container */}
-                <div className="flex-1 overflow-auto bg-gray-50 p-4 relative">
+                <div className="flex-1 overflow-auto bg-gray-50 p-4 flex items-center justify-center">
                   {diagramUrl ? (
-                    <>
+                    <div className="relative inline-block">
                       <img
                         ref={imageRef}
                         src={diagramUrl}
                         alt="Construction diagram"
-                        className="max-w-full h-auto mx-auto object-contain"
+                        className="max-w-full max-h-full object-contain"
                       />
                       {/* Bounding Box Overlay */}
-                      {lineItems.some(item => item.boundingBox) && imageDimensions.width > 0 && (
+                      {imageNaturalSize.width > 0 && (
                         <DiagramOverlay
                           lineItems={lineItems}
                           hoveredItemId={hoveredItemId}
                           onHoverChange={(id) => setHoveredItemId(id)}
-                          imageWidth={imageDimensions.width}
-                          imageHeight={imageDimensions.height}
+                          imageWidth={imageNaturalSize.width}
+                          imageHeight={imageNaturalSize.height}
                         />
                       )}
                       {/* Magnifying Glass */}
-                      {magnifyingGlassEnabled && diagramUrl && (
+                      {magnifyingGlassEnabled && (
                         <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
                       )}
-                    </>
+                    </div>
                   ) : (
                     <div className="h-full flex items-center justify-center text-gray-500">
                       No diagram available
@@ -613,29 +615,31 @@ export default function BidPackageWorkspace({
               >
                 {diagramUrl ? (
                   <div
-                    className="relative w-full h-full flex items-center justify-center"
+                    className="flex items-center justify-center"
                     style={getTransformStyle(diagramTransform)}
                   >
-                    <img
-                      ref={imageRef}
-                      src={diagramUrl}
-                      alt="Construction diagram"
-                      className="w-full h-full object-contain"
-                    />
-                    {/* Bounding Box Overlay for current item */}
-                    {currentItem?.boundingBox && imageDimensions.width > 0 && (
-                      <DiagramOverlay
-                        lineItems={[currentItem]}
-                        hoveredItemId={currentItem.id || null}
-                        onHoverChange={() => {}}
-                        imageWidth={imageDimensions.width}
-                        imageHeight={imageDimensions.height}
+                    <div className="relative inline-block">
+                      <img
+                        ref={imageRef}
+                        src={diagramUrl}
+                        alt="Construction diagram"
+                        className="max-w-full max-h-full object-contain"
                       />
-                    )}
-                    {/* Magnifying Glass */}
-                    {magnifyingGlassEnabled && diagramUrl && (
-                      <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
-                    )}
+                      {/* Bounding Box Overlay for current item */}
+                      {currentItem && imageNaturalSize.width > 0 && currentItem.boundingBox && (
+                        <DiagramOverlay
+                          lineItems={[currentItem]}
+                          hoveredItemId={currentItem.id || null}
+                          onHoverChange={() => {}}
+                          imageWidth={imageNaturalSize.width}
+                          imageHeight={imageNaturalSize.height}
+                        />
+                      )}
+                      {/* Magnifying Glass */}
+                      {magnifyingGlassEnabled && (
+                        <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-gray-500">No diagram available</div>

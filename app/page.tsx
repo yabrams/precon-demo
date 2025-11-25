@@ -240,6 +240,8 @@ export default function Home() {
           verified: li.verified,
           csiCode: li.csiCode,
           csiTitle: li.csiTitle,
+          boundingBox: li.boundingBox,
+          boundingBoxes: li.boundingBoxes,
         })) || []
       ) || [];
     }
@@ -287,10 +289,10 @@ export default function Home() {
     const diagram = uploadResult.diagram;
 
     // Reload project to get updated diagrams from database
-    await loadProjects();
+    const freshProjects = await loadProjects();
 
-    // Update selected project with new data
-    const updatedProject = bcProjects.find(p => p.id === selectedProject.id);
+    // Update selected project with new data from the fresh projects array
+    const updatedProject = freshProjects.find((p: BuildingConnectedProject) => p.id === selectedProject.id);
     if (updatedProject) {
       setSelectedProject(updatedProject);
     }
@@ -388,11 +390,16 @@ export default function Home() {
       setPendingDiagram(null);
       setCategorization(null);
 
-      // Reload projects to get updated data
-      await loadProjects();
+      // Reload projects to get updated data and update selectedProject
+      const freshProjects = await loadProjects();
+      const updatedProject = freshProjects.find((p: BuildingConnectedProject) => p.id === selectedProject.id);
+      if (updatedProject) {
+        setSelectedProject(updatedProject);
+      }
 
-      // Navigate to packages view to show the new/updated bid package
-      setViewMode('packages');
+      // Note: Don't override viewMode here - handleExtractStart manages it
+      // If extraction created a single package, it sets workspace mode
+      // If multiple packages, it sets packages mode
 
     } catch (error) {
       console.error('Error processing category:', error);
@@ -460,6 +467,8 @@ export default function Home() {
                   verified: li.verified,
                   csiCode: li.csiCode,
                   csiTitle: li.csiTitle,
+                  boundingBox: li.boundingBox,
+                  boundingBoxes: li.boundingBoxes,
                 })) || []
               ) || [];
 
@@ -865,6 +874,8 @@ export default function Home() {
                         verified: false,
                         csiCode: item.csiCode || 'N/A',
                         csiTitle: item.csiTitle || 'N/A',
+                        boundingBox: item.boundingBox || null,
+                        boundingBoxes: item.boundingBoxes || null,
                       }))
                     })
                   });
