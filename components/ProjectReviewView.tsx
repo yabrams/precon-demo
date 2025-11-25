@@ -78,6 +78,7 @@ interface ProjectReviewViewProps {
   platform?: Platform;
   uploadedDocuments: UploadedDocument[];
   selectedExternalProject?: ExternalProject;
+  initialProjectName?: string;
   onApprove: (projectData: any) => void;
   onCancel: () => void;
 }
@@ -87,6 +88,7 @@ export default function ProjectReviewView({
   platform,
   uploadedDocuments,
   selectedExternalProject,
+  initialProjectName,
   onApprove,
   onCancel
 }: ProjectReviewViewProps) {
@@ -243,10 +245,11 @@ export default function ProjectReviewView({
       setExtractedBidPackagesData(extractionResults);
 
       // Set project name and description from extracted data
-      if (extractedProjectName || extractedProjectDescription) {
+      // If initialProjectName was provided by user, use it instead of extracted name
+      if (extractedProjectName || extractedProjectDescription || initialProjectName) {
         setProjectInfo(prev => ({
           ...prev,
-          name: extractedProjectName || prev.name || 'New Project ' + new Date().toISOString().split('T')[0],
+          name: initialProjectName || extractedProjectName || prev.name || 'New Project ' + new Date().toISOString().split('T')[0],
           description: extractedProjectDescription || prev.description
         }));
       }
