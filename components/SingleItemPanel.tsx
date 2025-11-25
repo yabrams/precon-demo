@@ -170,17 +170,17 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   const isLastItem = itemIndex === totalItems - 1;
 
   return (
-    <div className="bg-white border-t border-gray-200 flex-shrink-0" style={{ height: '120px' }}>
+    <div className="bg-gradient-to-b from-zinc-50 to-white border-t border-gray-200 flex-shrink-0 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]" style={{ height: '150px' }}>
       {/* Navigation Bar */}
-      <div className="px-4 py-1.5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+      <div className="px-4 py-2.5 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-gray-100 to-gray-200">
         <div className="flex items-center gap-3">
           <button
             onClick={onPrevious}
             disabled={isFirstItem}
             className={`p-1.5 rounded-lg transition-colors ${
               isFirstItem
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'
+                ? 'text-gray-400 cursor-not-allowed'
+                : 'text-gray-700 hover:bg-gray-300 hover:text-gray-900'
             }`}
             title="Previous item (←)"
           >
@@ -188,7 +188,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <span className="text-xs font-medium text-gray-700">
+          <span className="text-sm font-bold text-zinc-900">
             {itemIndex + 1} / {totalItems}
           </span>
           <button
@@ -196,8 +196,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             disabled={isLastItem}
             className={`p-1.5 rounded-lg transition-colors ${
               isLastItem
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'
+                ? 'text-gray-400 cursor-not-allowed'
+                : 'text-gray-700 hover:bg-gray-300 hover:text-gray-900'
             }`}
             title="Next item (→)"
           >
@@ -209,15 +209,15 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
 
         {/* Confidence - Center */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Confidence</span>
+          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Confidence</span>
           <div className="flex items-center gap-2 w-32">
-            <div className="flex-1 bg-gray-200 rounded-full h-2">
+            <div className="flex-1 bg-gray-300 rounded-full h-2.5 border border-gray-400">
               <div
-                className={`h-2 rounded-full transition-all ${getConfidenceBarColor(item.confidence)}`}
+                className={`h-full rounded-full transition-all ${getConfidenceBarColor(item.confidence)}`}
                 style={{ width: `${item.confidence ?? 0}%` }}
               />
             </div>
-            <span className={`text-xs font-semibold font-mono ${getConfidenceColorClass(item.confidence)}`}>
+            <span className="text-sm font-bold font-mono text-zinc-900">
               {item.confidence ?? 0}%
             </span>
           </div>
@@ -304,10 +304,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
       </div>
 
       {/* Fields - Single Row */}
-      <div className="px-4 py-2 grid grid-cols-12 gap-3">
+      <div className="px-4 py-3.5 grid grid-cols-12 gap-3 bg-white">
         {/* CSI Code - First */}
         <div className="col-span-3">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
             CSI MasterFormat
           </label>
           {isEditing('csiCode') && !readOnly ? (
@@ -322,8 +322,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           ) : (
             <div
               onClick={() => startEditing('csiCode')}
-              className={`w-full px-2 py-1.5 text-sm rounded-lg bg-gray-50 min-h-[2rem] flex items-center ${
-                readOnly ? '' : 'cursor-pointer hover:bg-gray-100'
+              className={`w-full px-3 py-2 text-sm rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
+                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
               }`}
             >
               {item.csiCode && item.csiTitle ? (
@@ -344,7 +344,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
 
         {/* Item Number */}
         <div className="col-span-1">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
             Item #
           </label>
           {isEditing('item_number') && !readOnly ? (
@@ -361,8 +361,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           ) : (
             <div
               onClick={() => startEditing('item_number')}
-              className={`w-full px-2 py-1.5 text-sm text-zinc-900 font-mono rounded-lg bg-gray-50 min-h-[2rem] flex items-center ${
-                readOnly ? '' : 'cursor-pointer hover:bg-gray-100'
+              className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
+                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
               }`}
             >
               {item.item_number || <span className="text-gray-400">#</span>}
@@ -372,7 +372,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
 
         {/* Description */}
         <div className="col-span-4">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
             Description
           </label>
           {isEditing('description') && !readOnly ? (
@@ -389,8 +389,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           ) : (
             <div
               onClick={() => startEditing('description')}
-              className={`w-full px-2 py-1.5 text-sm text-zinc-900 rounded-lg bg-gray-50 min-h-[2rem] flex items-center overflow-hidden ${
-                readOnly ? '' : 'cursor-pointer hover:bg-gray-100'
+              className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
+                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
               }`}
             >
               <span className="truncate">{item.description || <span className="text-gray-400">Description</span>}</span>
@@ -400,7 +400,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
 
         {/* Notes */}
         <div className="col-span-4">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
             Notes
           </label>
           {isEditing('notes') && !readOnly ? (
@@ -417,8 +417,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           ) : (
             <div
               onClick={() => startEditing('notes')}
-              className={`w-full px-2 py-1.5 text-sm text-zinc-900 rounded-lg bg-gray-50 min-h-[2rem] flex items-center overflow-hidden ${
-                readOnly ? '' : 'cursor-pointer hover:bg-gray-100'
+              className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
+                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
               }`}
             >
               <span className="truncate">{item.notes || <span className="text-gray-400">Notes</span>}</span>
