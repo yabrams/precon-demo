@@ -8,7 +8,18 @@
 
 import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import CSIInlineSearch from './CSIInlineSearch';
+
+// Dynamically import PDFViewer to avoid SSR issues with pdf.js
+const PDFViewer = dynamic(() => import('./PDFViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  ),
+});
 
 type Platform = 'buildingconnected' | 'planhub' | 'constructconnect';
 
@@ -413,13 +424,23 @@ export default function ProjectReviewView({
             <h3 className="font-semibold text-zinc-900">Documents</h3>
             <p className="text-sm text-gray-600 mt-1">{currentDocIndex + 1} of {uploadedDocuments.length}</p>
           </div>
-          <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
-            {currentDoc.fileType.startsWith('image/') ? (
-              <img src={currentDoc.url} alt={currentDoc.fileName} className="max-w-full max-h-full object-contain rounded-lg shadow-lg border border-gray-200" />
+          <div className="flex-1 flex items-center justify-center bg-gray-50">
+            {currentDoc.fileType === 'application/pdf' || currentDoc.fileName.toLowerCase().endsWith('.pdf') ? (
+              <PDFViewer
+                documents={{
+                  url: currentDoc.url,
+                  fileName: currentDoc.fileName
+                }}
+                className="h-full w-full"
+              />
+            ) : currentDoc.fileType.startsWith('image/') ? (
+              <div className="p-6">
+                <img src={currentDoc.url} alt={currentDoc.fileName} className="max-w-full max-h-full object-contain rounded-lg shadow-lg border border-gray-200" />
+              </div>
             ) : (
-              <div className="text-center">
+              <div className="text-center p-6">
                 <div className="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 font-bold text-2xl">PDF</span>
+                  <span className="text-blue-600 font-bold text-2xl">FILE</span>
                 </div>
                 <p className="text-gray-900 font-medium">{currentDoc.fileName}</p>
                 <a href={currentDoc.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 text-sm mt-2 inline-block">Open in new tab</a>
