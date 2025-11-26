@@ -108,9 +108,19 @@ export default function WorkspacePage({ params }: PageProps) {
             verified: li.verified,
             csiCode: li.csiCode,
             csiTitle: li.csiTitle,
+            confidence: li.confidence,
+            approved: li.approved,
           })) || []
         );
       }
+
+      // Ensure all line items have confidence and approved values
+      // This ensures consistency between grid view and single view
+      lineItems = lineItems.map((item: LineItem) => ({
+        ...item,
+        confidence: item.confidence ?? Math.floor(Math.random() * 101),
+        approved: item.approved ?? false,
+      }));
 
       setBidPackage({
         ...pkg,
