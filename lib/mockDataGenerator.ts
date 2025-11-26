@@ -308,21 +308,17 @@ function getUnitForDivision(division: string): string {
 
 /**
  * Try to match a description to a CSI code
+ * Uses progressive word trimming: if full description doesn't match,
+ * 1. First trim words from the end until a match is found
+ * 2. If still no match, trim words from the beginning until a match is found
+ * Tries with division filter first, then without as fallback
  */
 function matchToCSICode(description: string, division: string): {
   code: string | null;
   title: string | null;
   confidence: number;
 } {
-  // Search for matching CSI codes
-  const searchResults = searchCSICodes({
-    query: description,
-    divisions: [division],
-    limit: 3,
-  });
-
-  if (searchResults.length === 0) {
-    // No match found - return N/A
+  if (!description || description.trim().length === 0) {
     return {
       code: 'N/A',
       title: 'No CSI match found',
@@ -330,26 +326,106 @@ function matchToCSICode(description: string, division: string): {
     };
   }
 
-  // Use the best match
-  const bestMatch = searchResults[0];
+  // Clean the description and split into words
+  const cleanDescription = description.trim();
+  const words = cleanDescription.split(/[\s\-–—]+/).filter(w => w.length > 0);
 
-  // Calculate confidence based on score
-  // High score (>80) = high confidence (80-100)
-  // Medium score (40-80) = medium confidence (50-79)
-  // Low score (<40) = low confidence (20-49)
-  let confidence: number;
-  if (bestMatch.score > 80) {
-    confidence = randomInt(80, 100);
-  } else if (bestMatch.score > 40) {
-    confidence = randomInt(50, 79);
-  } else {
-    confidence = randomInt(20, 49);
+  // Try with division filter first, then without
+  const divisionFilters = [[division], []]; // First with division, then without
+
+  for (const divisions of divisionFilters) {
+    // Strategy 1: Trim words from the END
+    for (let wordCount = words.length; wordCount >= 1; wordCount--) {
+      const searchTermWords = words.slice(0, wordCount);
+      const searchTerm = searchTermWords.join(' ');
+
+      // Skip if search term is too short
+      if (searchTerm.length < 2) {
+        continue;
+      }
+
+      // Search for matching CSI codes
+      const searchResults = searchCSICodes({
+        query: searchTerm,
+        divisions: divisions,
+        limit: 3,
+      });
+
+      if (searchResults.length > 0) {
+        const bestMatch = searchResults[0];
+
+        // Calculate confidence based on score
+        // Lower confidence if we had to search outside the expected division
+        let confidence: number;
+        const divisionMatch = divisions.length > 0;
+        if (bestMatch.score > 80) {
+          confidence = divisionMatch ? randomInt(80, 100) : randomInt(70, 90);
+        } else if (bestMatch.score > 40) {
+          confidence = divisionMatch ? randomInt(50, 79) : randomInt(40, 69);
+        } else {
+          confidence = divisionMatch ? randomInt(20, 49) : randomInt(15, 39);
+        }
+
+        const searchScope = divisions.length > 0 ? `division ${division}` : 'all divisions';
+        console.log(`CSI match for "${searchTerm}" (from "${description}", trim-end) in ${searchScope}: ${bestMatch.code.code} - ${bestMatch.code.title}`);
+
+        return {
+          code: bestMatch.code.code,
+          title: bestMatch.code.title,
+          confidence,
+        };
+      }
+    }
+
+    // Strategy 2: Trim words from the BEGINNING
+    for (let startIdx = 1; startIdx < words.length; startIdx++) {
+      const searchTermWords = words.slice(startIdx);
+      const searchTerm = searchTermWords.join(' ');
+
+      // Skip if search term is too short
+      if (searchTerm.length < 2) {
+        continue;
+      }
+
+      // Search for matching CSI codes
+      const searchResults = searchCSICodes({
+        query: searchTerm,
+        divisions: divisions,
+        limit: 3,
+      });
+
+      if (searchResults.length > 0) {
+        const bestMatch = searchResults[0];
+
+        // Calculate confidence - slightly lower for trim-from-beginning matches
+        let confidence: number;
+        const divisionMatch = divisions.length > 0;
+        if (bestMatch.score > 80) {
+          confidence = divisionMatch ? randomInt(70, 95) : randomInt(60, 85);
+        } else if (bestMatch.score > 40) {
+          confidence = divisionMatch ? randomInt(40, 69) : randomInt(30, 59);
+        } else {
+          confidence = divisionMatch ? randomInt(15, 39) : randomInt(10, 34);
+        }
+
+        const searchScope = divisions.length > 0 ? `division ${division}` : 'all divisions';
+        console.log(`CSI match for "${searchTerm}" (from "${description}", trim-start) in ${searchScope}: ${bestMatch.code.code} - ${bestMatch.code.title}`);
+
+        return {
+          code: bestMatch.code.code,
+          title: bestMatch.code.title,
+          confidence,
+        };
+      }
+    }
   }
 
+  // No match found even after all trimming strategies in all divisions
+  console.log(`No CSI match found for "${description}" even after all trimming strategies in all divisions`);
   return {
-    code: bestMatch.code.code,
-    title: bestMatch.code.title,
-    confidence,
+    code: 'N/A',
+    title: 'No CSI match found',
+    confidence: 0,
   };
 }
 
