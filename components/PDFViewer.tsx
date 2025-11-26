@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Grid, Grid3x3 } from 'lucide-react';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -41,10 +41,44 @@ export default function PDFViewer({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
+  const [baseScale, setBaseScale] = useState(1.0); // Scale that makes PDF fit container height
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [pdfPageHeight, setPdfPageHeight] = useState(0);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const currentDoc = docs[currentDocIndex];
+
+  // Track container size
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateContainerHeight = () => {
+      if (containerRef.current) {
+        // Subtract padding (32px = 16px * 2 for p-4)
+        const height = containerRef.current.clientHeight - 32;
+        setContainerHeight(height);
+      }
+    };
+
+    updateContainerHeight();
+
+    const resizeObserver = new ResizeObserver(updateContainerHeight);
+    resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  // Calculate base scale when container or PDF dimensions change
+  useEffect(() => {
+    if (containerHeight > 0 && pdfPageHeight > 0) {
+      const fitScale = containerHeight / pdfPageHeight;
+      setBaseScale(fitScale);
+      // Set initial scale to fit height (100%)
+      setScale(fitScale);
+    }
+  }, [containerHeight, pdfPageHeight]);
 
   const onDocumentLoad = useCallback(
     ({ numPages }: { numPages: number }) => {
@@ -73,12 +107,28 @@ export default function PDFViewer({
   const changeDocument = (newIndex: number) => {
     setCurrentDocIndex(newIndex);
     setPageNumber(1);
-    setScale(1.0);
+    setPdfPageHeight(0); // Reset to trigger recalculation
   };
 
-  const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3.0));
-  const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
+  // Handle page load to get PDF dimensions
+  const onPageLoad = useCallback(
+    (page: { height: number; width: number; originalHeight: number; originalWidth: number }) => {
+      // Use original height (unscaled) for calculations
+      if (page.originalHeight && page.originalHeight !== pdfPageHeight) {
+        setPdfPageHeight(page.originalHeight);
+      }
+    },
+    [pdfPageHeight]
+  );
+
+  // Zoom steps relative to base scale (fit-to-height = 100%)
+  const zoomStep = baseScale * 0.2;
+  const handleZoomIn = () => setScale((prev) => Math.min(prev + zoomStep, baseScale * 3.0));
+  const handleZoomOut = () => setScale((prev) => Math.max(prev - zoomStep, baseScale * 0.5));
   const handleFullscreen = () => setIsFullscreen((prev) => !prev);
+
+  // Calculate display percentage (100% = fit to height)
+  const displayPercentage = baseScale > 0 ? Math.round((scale / baseScale) * 100) : 100;
 
   return (
     <div
@@ -158,7 +208,7 @@ export default function PDFViewer({
             <ZoomOut className="h-4 w-4" />
           </button>
           <span className="text-sm font-medium min-w-[50px] text-center">
-            {Math.round(scale * 100)}%
+            {displayPercentage}%
           </span>
           <button
             onClick={handleZoomIn}
@@ -247,7 +297,7 @@ export default function PDFViewer({
       )}
 
       {/* PDF Document Container */}
-      <div className="flex-1 overflow-auto bg-gray-100 flex items-start justify-center p-4">
+      <div ref={containerRef} className="flex-1 overflow-auto bg-gray-100 flex items-start justify-center p-4">
         <div className="bg-white shadow-lg">
           <Document
             file={currentDoc.url}
@@ -278,6 +328,7 @@ export default function PDFViewer({
               renderTextLayer={true}
               renderAnnotationLayer={true}
               className="shadow-md"
+              onLoadSuccess={onPageLoad}
             />
           </Document>
         </div>
