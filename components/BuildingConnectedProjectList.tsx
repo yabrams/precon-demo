@@ -121,7 +121,7 @@ export default function BuildingConnectedProjectList({
                 <div
                   key={project.id}
                   onClick={() => onProjectSelect(project)}
-                  className="bg-white border border-gray-200 rounded-xl hover:border-zinc-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
+                  className="bg-white border border-zinc-200 rounded-xl hover:border-zinc-300 hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden"
                 >
                   {/* Project Header */}
                   <div className="p-5 border-b border-gray-200">

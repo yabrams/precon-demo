@@ -2,8 +2,7 @@
 
 /**
  * IconButton Component
- * Amazon-inspired button with icon and text
- * Based on the "Buy it again" button pattern with circular arrow icon
+ * Button with icon and text - uses zinc palette
  */
 
 import React from 'react';
@@ -36,9 +35,9 @@ export default function IconButton({
   };
 
   const variantClasses = {
-    outline: 'bg-white border border-[#D5D9D9] text-[#0F1111] hover:bg-[#F7FAFA] shadow-sm',
-    solid: 'bg-[#FFD814] border border-[#FCD200] text-[#0F1111] hover:bg-[#F7CA00] shadow-sm',
-    ghost: 'bg-transparent border border-transparent text-[#0F1111] hover:bg-[#F7FAFA]',
+    outline: 'bg-white border border-zinc-200 text-zinc-900 hover:bg-zinc-50 hover:border-zinc-300 shadow-sm',
+    solid: 'bg-zinc-900 border border-zinc-900 text-white hover:bg-zinc-800 shadow-sm',
+    ghost: 'bg-transparent border border-transparent text-zinc-700 hover:bg-zinc-100',
   };
 
   const iconSize = size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-6 w-6';

@@ -374,11 +374,11 @@ export default function MultiDiagramUpload({
               />
             </div>
 
-            <div className={`p-4 border rounded-lg ${useMockData ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-200'}`}>
-              <h4 className={`font-medium mb-2 ${useMockData ? 'text-amber-900' : 'text-blue-900'}`}>
+            <div className={`p-4 border rounded-lg ${useMockData ? 'bg-amber-50 border-amber-200' : 'bg-zinc-50 border-zinc-200'}`}>
+              <h4 className={`font-medium mb-2 ${useMockData ? 'text-amber-900' : 'text-zinc-900'}`}>
                 {useMockData ? 'Mock Mode - What will happen:' : 'What will happen:'}
               </h4>
-              <ul className={`text-sm space-y-1 ${useMockData ? 'text-amber-700' : 'text-blue-700'}`}>
+              <ul className={`text-sm space-y-1 ${useMockData ? 'text-amber-700' : 'text-zinc-700'}`}>
                 {useMockData ? (
                   <>
                     <li>• Upload all {uploadedFiles.length} files (no AI processing)</li>

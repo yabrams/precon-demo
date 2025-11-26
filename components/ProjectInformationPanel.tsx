@@ -127,7 +127,7 @@ export default function ProjectInformationPanel({
                   type="text"
                   value={project.name}
                   onChange={(e) => onUpdateField?.('name', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 />
               </div>
               <div>
@@ -138,7 +138,7 @@ export default function ProjectInformationPanel({
                   type="text"
                   value={project.projectNumber || ''}
                   onChange={(e) => onUpdateField?.('projectNumber', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 />
               </div>
               <div className="col-span-2">
@@ -149,7 +149,7 @@ export default function ProjectInformationPanel({
                   value={project.description || ''}
                   onChange={(e) => onUpdateField?.('description', e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   placeholder="Project description..."
                 />
               </div>
@@ -193,7 +193,7 @@ export default function ProjectInformationPanel({
                     type="text"
                     value={project.location?.address || ''}
                     onChange={(e) => onUpdateLocation?.('address', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     placeholder="Street address"
                   />
                 </div>
@@ -204,7 +204,7 @@ export default function ProjectInformationPanel({
                       type="text"
                       value={project.location?.city || ''}
                       onChange={(e) => onUpdateLocation?.('city', e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     />
                   </div>
                   <div>
@@ -213,7 +213,7 @@ export default function ProjectInformationPanel({
                       type="text"
                       value={project.location?.state || ''}
                       onChange={(e) => onUpdateLocation?.('state', e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     />
                   </div>
                   <div>
@@ -222,7 +222,7 @@ export default function ProjectInformationPanel({
                       type="text"
                       value={project.location?.zipCode || ''}
                       onChange={(e) => onUpdateLocation?.('zipCode', e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     />
                   </div>
                 </div>
@@ -238,7 +238,7 @@ export default function ProjectInformationPanel({
                         : ''
                     }
                     onChange={(e) => onUpdateField?.('bidDueDate', e.target.value ? new Date(e.target.value) : null)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
                 <div>
@@ -248,7 +248,7 @@ export default function ProjectInformationPanel({
                     value={project.estimatedBudget || ''}
                     onChange={(e) => onUpdateField?.('estimatedBudget', parseFloat(e.target.value) || null)}
                     placeholder="0.00"
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
                 <div>
@@ -261,7 +261,7 @@ export default function ProjectInformationPanel({
                         : ''
                     }
                     onChange={(e) => onUpdateField?.('estimatedStartDate', e.target.value ? new Date(e.target.value) : null)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
                 <div>
@@ -274,7 +274,7 @@ export default function ProjectInformationPanel({
                         : ''
                     }
                     onChange={(e) => onUpdateField?.('estimatedCompletionDate', e.target.value ? new Date(e.target.value) : null)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
               </div>
@@ -343,7 +343,7 @@ export default function ProjectInformationPanel({
                   <select
                     value={project.constructionType || ''}
                     onChange={(e) => onUpdateField?.('constructionType', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   >
                     <option value="">Select...</option>
                     <option value="new">New Construction</option>
@@ -357,7 +357,7 @@ export default function ProjectInformationPanel({
                   <select
                     value={project.projectType || ''}
                     onChange={(e) => onUpdateField?.('projectType', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   >
                     <option value="">Select...</option>
                     <option value="commercial">Commercial</option>
@@ -374,7 +374,7 @@ export default function ProjectInformationPanel({
                   value={project.scope || ''}
                   onChange={(e) => onUpdateField?.('scope', e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   placeholder="Project scope..."
                 />
               </div>
@@ -385,7 +385,7 @@ export default function ProjectInformationPanel({
                     type="text"
                     value={project.owner || ''}
                     onChange={(e) => onUpdateField?.('owner', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     placeholder="Owner name"
                   />
                 </div>
@@ -395,7 +395,7 @@ export default function ProjectInformationPanel({
                     type="text"
                     value={project.architect || ''}
                     onChange={(e) => onUpdateField?.('architect', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     placeholder="Architect name"
                   />
                 </div>
@@ -405,7 +405,7 @@ export default function ProjectInformationPanel({
                     type="text"
                     value={project.engineer || ''}
                     onChange={(e) => onUpdateField?.('engineer', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     placeholder="Engineer name"
                   />
                 </div>
@@ -415,7 +415,7 @@ export default function ProjectInformationPanel({
                     type="text"
                     value={project.generalContractor || ''}
                     onChange={(e) => onUpdateField?.('generalContractor', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                     placeholder="GC name"
                   />
                 </div>
@@ -427,7 +427,7 @@ export default function ProjectInformationPanel({
                 <select
                   value={project.preconLeadId || ''}
                   onChange={(e) => handlePreconLeadChange(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 >
                   <option value="">Select a precon lead...</option>
                   {preconLeads.map(user => (
@@ -530,7 +530,7 @@ export default function ProjectInformationPanel({
                 <select
                   value={project.contractType || ''}
                   onChange={(e) => onUpdateField?.('contractType', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 >
                   <option value="">Select...</option>
                   <option value="lump-sum">Lump Sum</option>
@@ -544,7 +544,7 @@ export default function ProjectInformationPanel({
                 <select
                   value={project.bondingRequired ? 'true' : 'false'}
                   onChange={(e) => onUpdateField?.('bondingRequired', e.target.value === 'true')}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 >
                   <option value="false">No</option>
                   <option value="true">Yes</option>
@@ -555,7 +555,7 @@ export default function ProjectInformationPanel({
                 <select
                   value={project.prevailingWage ? 'true' : 'false'}
                   onChange={(e) => onUpdateField?.('prevailingWage', e.target.value === 'true')}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                 >
                   <option value="false">No</option>
                   <option value="true">Yes</option>

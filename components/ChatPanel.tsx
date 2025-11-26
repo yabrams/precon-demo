@@ -224,13 +224,13 @@ export default function ChatPanel({
             onKeyDown={handleKeyDown}
             placeholder="Ask a question or request an update..."
             disabled={isLoading}
-            className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 focus:outline-none text-sm text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-600 shadow-sm transition-all"
+            className="flex-1 px-4 py-3 bg-white border border-zinc-200 rounded-xl resize-none focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 focus:outline-none text-sm text-zinc-900 placeholder-zinc-400 disabled:bg-zinc-50 disabled:cursor-not-allowed disabled:text-zinc-600 shadow-sm transition-all"
             rows={3}
           />
           <button
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
-            className="px-4 bg-gray-700 text-white rounded-xl hover:bg-gray-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center self-end shadow-md disabled:shadow-none"
+            className="px-4 bg-zinc-900 text-white rounded-xl hover:bg-zinc-800 transition-all disabled:bg-zinc-300 disabled:cursor-not-allowed flex items-center justify-center self-end shadow-md disabled:shadow-none"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

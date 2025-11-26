@@ -16,10 +16,10 @@ import TempPasswordDialog from '@/components/admin/TempPasswordDialog';
 
 // Role badge colors
 const RoleBadgeColors: Record<UserRole, string> = {
-  [UserRole.ADMIN]: 'bg-red-100 text-red-800 border-red-200',
-  [UserRole.PRECON_LEAD]: 'bg-blue-100 text-blue-800 border-blue-200',
-  [UserRole.SCOPE_CAPTAIN]: 'bg-green-100 text-green-800 border-green-200',
-  [UserRole.PRECON_ANALYST]: 'bg-gray-100 text-gray-800 border-gray-200',
+  [UserRole.ADMIN]: 'bg-red-50 text-red-700 border-red-200',
+  [UserRole.PRECON_LEAD]: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  [UserRole.SCOPE_CAPTAIN]: 'bg-amber-50 text-amber-700 border-amber-200',
+  [UserRole.PRECON_ANALYST]: 'bg-zinc-50 text-zinc-600 border-zinc-200',
 };
 
 export default function UsersManagementPage() {
@@ -234,7 +234,7 @@ export default function UsersManagementPage() {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium"
           >
             + Add User
           </button>
@@ -250,7 +250,7 @@ export default function UsersManagementPage() {
                 placeholder="Search by name, email, or username..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
               />
             </div>
             <div>
@@ -258,7 +258,7 @@ export default function UsersManagementPage() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value as UserRole | 'all')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
               >
                 <option value="all">All Roles</option>
                 {Object.entries(UserRoleLabels).map(([key, label]) => (
@@ -273,7 +273,7 @@ export default function UsersManagementPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
               >
                 <option value="active">Active Only</option>
                 <option value="inactive">Inactive Only</option>
@@ -313,7 +313,7 @@ export default function UsersManagementPage() {
                 <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                      <div className="h-10 w-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-600 font-semibold">
                         {user.firstName?.[0] || user.userName[0].toUpperCase()}
                       </div>
                       <div className="ml-4">
@@ -360,7 +360,7 @@ export default function UsersManagementPage() {
                         setSelectedUser(user);
                         setShowEditModal(true);
                       }}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-zinc-600 hover:text-zinc-900"
                     >
                       Edit
                     </button>

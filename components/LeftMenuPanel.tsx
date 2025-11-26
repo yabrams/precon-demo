@@ -169,7 +169,7 @@ export default function LeftMenuPanel({ activeItem = 'projects', onItemClick, co
       <div className="border-t border-gray-200 py-3 overflow-x-hidden">
         <div className="px-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center group relative">
+            <div className="w-8 h-8 bg-zinc-900 rounded-md flex items-center justify-center group relative">
               <span className="text-xs font-bold text-white">TC</span>
               {!isExpanded && (
                 <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">

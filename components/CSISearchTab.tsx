@@ -392,7 +392,7 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
 
           {/* AI Matching Indicator */}
           {results.length === 0 && isAIMatching && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-6 text-center">
               <svg
                 className="animate-spin h-10 w-10 text-zinc-900 mx-auto mb-3"
                 fill="none"
@@ -431,7 +431,7 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
           {/* AI Results */}
           {results.length === 0 && aiMatches.length > 0 && !isAIMatching && (
             <div className="space-y-3">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <svg className="w-5 h-5 text-zinc-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -488,7 +488,7 @@ export default function CSISearchTab({ onSelectCode }: CSISearchTabProps) {
                             {match.title}
                           </p>
                         </div>
-                        <div className="bg-blue-50 border border-blue-200 rounded p-2">
+                        <div className="bg-zinc-50 border border-zinc-200 rounded p-2">
                           <p className="text-xs text-gray-700">
                             <span className="font-semibold text-zinc-900">Why this?</span> {match.reasoning}
                           </p>

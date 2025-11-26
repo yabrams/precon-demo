@@ -16,7 +16,7 @@ const PDFViewer = dynamic(() => import('./PDFViewer'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900"></div>
     </div>
   ),
 });
@@ -439,11 +439,11 @@ export default function ProjectReviewView({
               </div>
             ) : (
               <div className="text-center p-6">
-                <div className="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 font-bold text-2xl">FILE</span>
+                <div className="w-24 h-24 bg-zinc-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <span className="text-zinc-600 font-bold text-2xl">FILE</span>
                 </div>
                 <p className="text-gray-900 font-medium">{currentDoc.fileName}</p>
-                <a href={currentDoc.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 text-sm mt-2 inline-block">Open in new tab</a>
+                <a href={currentDoc.url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-zinc-800 text-sm mt-2 inline-block underline">Open in new tab</a>
               </div>
             )}
           </div>
@@ -487,7 +487,7 @@ export default function ProjectReviewView({
                       type="text"
                       value={projectInfo.name || ''}
                       onChange={(e) => updateField('name', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                       placeholder="Enter project name"
                     />
                   </div>
@@ -497,7 +497,7 @@ export default function ProjectReviewView({
                       value={projectInfo.description || ''}
                       onChange={(e) => updateField('description', e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                       placeholder="Enter project description"
                     />
                   </div>
@@ -521,7 +521,7 @@ export default function ProjectReviewView({
                                   updated[index].name = e.target.value;
                                   setBidPackages(updated);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 text-sm"
                                 placeholder="Package name"
                               />
                             </div>
@@ -567,7 +567,7 @@ export default function ProjectReviewView({
                                   updated[index].captainId = e.target.value || null;
                                   setBidPackages(updated);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 text-sm"
                               >
                                 <option value="">Select a captain...</option>
                                 {users.map((user) => {
@@ -592,7 +592,7 @@ export default function ProjectReviewView({
                                   setBidPackages(updated);
                                 }}
                                 rows={2}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 text-sm"
                                 placeholder="Package description"
                               />
                             </div>
@@ -603,7 +603,7 @@ export default function ProjectReviewView({
                     <button
                       type="button"
                       onClick={() => setBidPackages([...bidPackages, { name: '', description: '', csiCode: null, csiTitle: null, captainId: null }])}
-                      className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-sm text-zinc-600 hover:text-zinc-800 font-medium"
                     >
                       + Add Bid Package
                     </button>

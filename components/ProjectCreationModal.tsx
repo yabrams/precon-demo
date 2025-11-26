@@ -195,7 +195,7 @@ export default function ProjectCreationModal({
                 <div>
                   <p className="text-gray-600 font-medium mb-2">Uploading...</p>
                   <div className="w-48 h-2 bg-gray-200 rounded-full mx-auto">
-                    <div className="h-full bg-blue-600 rounded-full animate-pulse w-3/5"></div>
+                    <div className="h-full bg-zinc-900 rounded-full animate-pulse w-3/5"></div>
                   </div>
                 </div>
               ) : (
@@ -219,8 +219,8 @@ export default function ProjectCreationModal({
                   >
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
                       <div className="flex-shrink-0">
-                        <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
-                          <span className="text-blue-600 font-semibold text-xs">
+                        <div className="w-10 h-10 bg-zinc-100 rounded flex items-center justify-center">
+                          <span className="text-zinc-600 font-semibold text-xs">
                             {doc.fileType.split('/')[1]?.toUpperCase().slice(0, 3)}
                           </span>
                         </div>

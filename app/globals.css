@@ -1,31 +1,39 @@
 @import "tailwindcss";
 
-/* ConstructAI Design System - Architectural Monochrome Theme */
+/* Precon Design System - Professional Zinc Theme */
 :root {
-  /* Light mode only - Architectural Monochrome */
-  --background: #f9fafb;        /* gray-50 */
+  /* Base Colors - Zinc palette */
+  --background: #fafafa;        /* zinc-50 */
   --foreground: #18181b;        /* zinc-900 */
   --panel: #ffffff;             /* white */
-  --border: #e5e7eb;            /* gray-200 */
-  --muted: #6b7280;             /* gray-500 */
+  --border: #e4e4e7;            /* zinc-200 */
+  --border-hover: #d4d4d8;      /* zinc-300 */
+  --muted: #71717a;             /* zinc-500 */
 
-  /* Brand colors - Zinc-based */
+  /* Primary - Zinc-based */
   --primary: #18181b;           /* zinc-900 */
   --primary-hover: #27272a;     /* zinc-800 */
-  --secondary: #71717a;         /* zinc-500 */
+  --secondary: #52525b;         /* zinc-600 */
 
-  /* Accent colors - From Amazon design (exact match) */
-  --accent-teal: #067D7D;       /* Teal accent for section headers */
-  --accent-blue: #007185;       /* Blue for links and interactive elements */
-  --accent-blue-hover: #C7511F; /* Orange-brown for link hover (Amazon style) */
-  --amazon-text: #0F1111;       /* Amazon primary text color */
-  --amazon-secondary: #565959;  /* Amazon secondary text color */
-  --amazon-border: #D5D9D9;     /* Amazon border color */
-  --amazon-bg-gray: #F0F2F2;    /* Amazon gray background */
-  --amazon-yellow: #FFD814;     /* Amazon button yellow */
-  --amazon-yellow-border: #FCD200; /* Amazon button yellow border */
-  --amazon-yellow-hover: #F7CA00; /* Amazon button yellow hover */
-  --amazon-hover-bg: #F7FAFA;   /* Amazon hover background */
+  /* Text Colors */
+  --text-primary: #18181b;      /* zinc-900 */
+  --text-secondary: #52525b;    /* zinc-600 */
+  --text-muted: #71717a;        /* zinc-500 */
+  --text-disabled: #a1a1aa;     /* zinc-400 */
+
+  /* Status Colors */
+  --success: #10b981;           /* emerald-500 */
+  --success-light: #d1fae5;     /* emerald-100 */
+  --warning: #f59e0b;           /* amber-500 */
+  --warning-light: #fef3c7;     /* amber-100 */
+  --error: #ef4444;             /* red-500 */
+  --error-light: #fee2e2;       /* red-100 */
+  --info: #3b82f6;              /* blue-500 */
+  --info-light: #dbeafe;        /* blue-100 */
+
+  /* Focus Ring */
+  --focus-ring: #71717a;        /* zinc-500 */
+  --focus-ring-alpha: rgba(113, 113, 122, 0.2); /* zinc-500/20 */
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -33,25 +41,39 @@
 }
 
 @theme inline {
+  /* Base */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-panel: var(--panel);
   --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
   --color-muted: var(--muted);
+
+  /* Primary */
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
-  --color-accent-teal: var(--accent-teal);
-  --color-accent-blue: var(--accent-blue);
-  --color-accent-blue-hover: var(--accent-blue-hover);
-  --color-amazon-text: var(--amazon-text);
-  --color-amazon-secondary: var(--amazon-secondary);
-  --color-amazon-border: var(--amazon-border);
-  --color-amazon-bg-gray: var(--amazon-bg-gray);
-  --color-amazon-yellow: var(--amazon-yellow);
-  --color-amazon-yellow-border: var(--amazon-yellow-border);
-  --color-amazon-yellow-hover: var(--amazon-yellow-hover);
-  --color-amazon-hover-bg: var(--amazon-hover-bg);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+
+  /* Status */
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+
+  /* Focus */
+  --color-focus-ring: var(--focus-ring);
+
+  /* Fonts */
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }

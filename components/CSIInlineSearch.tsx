@@ -157,7 +157,7 @@ export default function CSIInlineSearch({
         {showResults && results.length > 0 && (
           <div
             ref={dropdownRef}
-            className="fixed bg-white border-2 border-blue-500 rounded-lg shadow-2xl max-h-80 overflow-y-auto"
+            className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl max-h-80 overflow-y-auto"
             style={{
               ...(dropdownDirection === 'up'
                 ? { bottom: `${dropdownPosition.bottom}px` }
@@ -174,7 +174,7 @@ export default function CSIInlineSearch({
                 onMouseEnter={() => setSelectedIndex(index)}
                 className={`w-full text-left px-3 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
                   index === selectedIndex
-                    ? 'bg-blue-50 border-l-4 border-l-blue-500'
+                    ? 'bg-zinc-50 border-l-4 border-l-zinc-900'
                     : 'hover:bg-gray-50'
                 }`}
               >
@@ -196,7 +196,7 @@ export default function CSIInlineSearch({
 
         {query.length >= 2 && results.length === 0 && (
           <div
-            className="fixed bg-white border-2 border-blue-500 rounded-lg shadow-2xl p-3"
+            className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl p-3"
             style={{
               ...(dropdownDirection === 'up'
                 ? { bottom: `${dropdownPosition.bottom}px` }
@@ -226,7 +226,7 @@ export default function CSIInlineSearch({
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-3 py-2 text-sm border border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400 shadow-lg"
+        className="w-full px-3 py-2 text-sm border border-zinc-400 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-zinc-400 shadow-lg"
         autoComplete="off"
       />
       {renderDropdown()}
