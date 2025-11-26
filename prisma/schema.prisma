@@ -108,6 +108,7 @@ model BuildingConnectedProject {
   diagrams          Diagram[]        // Project-level diagrams
   bidPackages       BidPackage[]
   userAssignments   UserAssignment[]
+  extractionSessions ExtractionSession[]
 
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -283,4 +284,271 @@ model VerificationRecord {
   status      String   // pending, approved, needs_review
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ============================================================================
+// ADVANCED EXTRACTION SYSTEM
+// ============================================================================
+
+// Extraction session - tracks a multi-pass extraction run
+model ExtractionSession {
+  id              String                    @id @default(cuid())
+  projectId       String
+  project         BuildingConnectedProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Configuration used for this extraction
+  config          String                    @db.Text  // JSON ExtractionConfig
+
+  // Status tracking
+  status          String                    @default("initializing") // initializing, pass_1_extracting, pass_2_reviewing, pass_3_validating, awaiting_review, completed, failed
+  currentPass     Int                       @default(0)
+  progress        Int                       @default(0) // 0-100
+  statusMessage   String?
+
+  // Results summary
+  metrics         String?                   @db.Text  // JSON ExtractionMetrics
+
+  // Processing history
+  passes          String?                   @db.Text  // JSON ExtractionPass[]
+
+  // Error tracking
+  error           String?                   @db.Text
+
+  // Timestamps
+  startedAt       DateTime                  @default(now())
+  completedAt     DateTime?
+
+  // Relations
+  workPackages    ExtractedWorkPackageRecord[]
+  observations    AIObservationRecord[]
+  documentRefs    DocumentReferenceRecord[]
+  predictions     PredictionRecord[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+// Work package extracted during a session
+model ExtractedWorkPackageRecord {
+  id                  String            @id @default(cuid())
+  sessionId           String
+  session             ExtractionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // Package identification
+  packageId           String            // e.g., "MEC", "ELE"
+  name                String
+  description         String?           @db.Text
+  trade               String
+  scopeResponsible    String?
+
+  // CSI Classification
+  csiDivisionCode     String
+  csiDivisionName     String
+  csiSectionCode      String?
+  csiSectionName      String?
+  csiConfidence       Float
+  csiReasoning        String?           @db.Text
+
+  // Metrics
+  itemCount           Int               @default(0)
+  complexity          String            @default("medium") // low, medium, high
+
+  // Extraction metadata
+  extractedBy         String            // ModelIdentifier
+  extractionPass      Int
+  confidence          Float             @default(0.5)
+  confidenceDetails   String?           @db.Text  // JSON ConfidenceScore
+
+  // Key document references (JSON array of reference IDs)
+  keyDocumentRefs     String?           @db.Text
+
+  // Relations
+  lineItems           ExtractedLineItemRecord[]
+
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([sessionId])
+  @@index([csiDivisionCode])
+  @@index([trade])
+}
+
+// Line item within a work package
+model ExtractedLineItemRecord {
+  id                  String                      @id @default(cuid())
+  workPackageId       String
+  workPackage         ExtractedWorkPackageRecord  @relation(fields: [workPackageId], references: [id], onDelete: Cascade)
+
+  // Item data
+  itemNumber          String?
+  description         String
+  action              String
+  quantity            Float?
+  unit                String?
+  quantityNotes       String?
+  specifications      String?           @db.Text
+  notes               String?           @db.Text
+
+  // Ordering
+  orderIndex          Int               @default(0)
+
+  // Document references (JSON array of reference IDs)
+  referenceIds        String?           @db.Text
+  primaryReferenceId  String?
+
+  // Extraction metadata
+  extractedBy         String
+  extractionPass      Int
+  confidence          Float             @default(0.5)
+  confidenceDetails   String?           @db.Text
+  flags               String?           @db.Text  // JSON array of ConfidenceFlag
+
+  // Human review tracking
+  humanReviewed       Boolean           @default(false)
+  humanReviewedBy     String?
+  humanReviewedAt     DateTime?
+  humanCorrections    String?           @db.Text  // JSON of corrections made
+
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([workPackageId])
+  @@index([humanReviewed])
+}
+
+// Document reference - links extracted items to source documents
+model DocumentReferenceRecord {
+  id                  String            @id @default(cuid())
+  sessionId           String
+  session             ExtractionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // Source document (links to Diagram)
+  documentId          String            // Diagram ID
+  documentName        String
+  documentType        String            // DocumentType
+
+  // Location within document
+  pageNumber          Int
+  sheetNumber         String?
+  boundingBox         String?           @db.Text  // JSON BoundingBox
+  textRange           String?           @db.Text  // JSON TextRange
+  extractedText       String?           @db.Text
+
+  // Reference metadata
+  relationshipType    String            // DocumentRelationshipType
+  displayLabel        String
+  previewSnippet      String?           @db.Text
+  thumbnailUrl        String?
+
+  // Extraction info
+  extractedBy         String
+  confidence          Float             @default(0.5)
+  reasoning           String?           @db.Text
+
+  createdAt           DateTime          @default(now())
+
+  @@index([sessionId])
+  @@index([documentId])
+  @@index([relationshipType])
+}
+
+// AI observation / insight
+model AIObservationRecord {
+  id                  String            @id @default(cuid())
+  sessionId           String
+  session             ExtractionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // Classification
+  severity            String            // critical, warning, info
+  category            String            // ObservationCategory
+
+  // Content
+  title               String
+  insight             String            @db.Text
+  suggestedActions    String?           @db.Text  // JSON array
+
+  // What it affects (JSON arrays)
+  affectedPackageIds  String?           @db.Text
+  affectedItemIds     String?           @db.Text
+
+  // Document references (JSON array of reference IDs)
+  referenceIds        String?           @db.Text
+
+  // Extraction metadata
+  extractedBy         String
+  confidence          Float             @default(0.5)
+
+  // User response tracking
+  acknowledged        Boolean           @default(false)
+  userResponse        String?           @db.Text
+  respondedAt         DateTime?
+  respondedBy         String?
+
+  createdAt           DateTime          @default(now())
+
+  @@index([sessionId])
+  @@index([severity])
+  @@index([category])
+  @@index([acknowledged])
+}
+
+// ============================================================================
+// PHASE 2: LEARNING & OPTIMIZATION
+// ============================================================================
+
+// Prediction tracking for model performance analysis
+model PredictionRecord {
+  id                  String            @id @default(cuid())
+  sessionId           String
+  session             ExtractionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // What was predicted
+  entityType          String            // work_package, line_item, observation
+  entityId            String
+  fieldName           String
+  predictedValue      String            @db.Text  // JSON
+  predictedConfidence Float
+  predictedBy         String            // ModelIdentifier
+
+  // Final outcome (after human review)
+  finalValue          String?           @db.Text  // JSON
+  finalSource         String?           // human_correction, model_refinement, consensus, accepted
+  correctedBy         String?           // User ID if human
+  correctedAt         DateTime?
+
+  // Analysis
+  wasCorrect          Boolean?
+  errorMagnitude      Float?            // For numeric comparisons
+  errorCategory       String?           // Type of error
+
+  // Context for learning
+  contextData         String?           @db.Text  // JSON context (project type, size, etc.)
+
+  createdAt           DateTime          @default(now())
+
+  @@index([sessionId])
+  @@index([entityType])
+  @@index([predictedBy])
+  @@index([wasCorrect])
+}
+
+// Confidence calibration data (aggregated)
+model ConfidenceCalibration {
+  id                  String            @id @default(cuid())
+
+  // Dimensions for grouping
+  model               String
+  entityType          String
+  fieldName           String
+
+  // Calibration data
+  calibrationData     String            @db.Text  // JSON bins array
+  brierScore          Float
+  calibrationError    Float
+  sampleCount         Int
+
+  lastUpdated         DateTime          @default(now())
+
+  @@unique([model, entityType, fieldName])
+  @@index([model])
 }

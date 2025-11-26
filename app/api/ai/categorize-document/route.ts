@@ -117,7 +117,7 @@ File type: ${fileType || 'Unknown'}`;
     });
 
     // Extract text response
-    const textContent = message.content.find((block: any) => block.type === 'text');
+    const textContent = message.content.find((block): block is Anthropic.TextBlock => block.type === 'text');
     if (!textContent) {
       throw new Error('No text content in Claude response');
     }

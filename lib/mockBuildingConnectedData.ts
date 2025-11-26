@@ -6,7 +6,8 @@
 import { BuildingConnectedProject } from '@/types/buildingconnected';
 import { BidPackage } from '@/types/bidPackage';
 
-export const mockBuildingConnectedProjects: Omit<BuildingConnectedProject, 'id' | 'createdAt' | 'updatedAt'>[] = [
+// Using type assertion for mock data which may contain additional fields not in the core type
+export const mockBuildingConnectedProjects: Array<Omit<BuildingConnectedProject, 'id' | 'createdAt' | 'updatedAt'> & Record<string, unknown>> = [
   {
     bcProjectId: 'bc-proj-2024-downtown-001',
     name: 'Downtown Office Tower',
@@ -192,7 +193,8 @@ export const mockBuildingConnectedProjects: Omit<BuildingConnectedProject, 'id' 
   }
 ];
 
-export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'createdAt' | 'updatedAt'>[]> = {
+// Using type assertion for mock data which may contain additional fields
+export const mockBidPackagesByProject: Record<string, Array<Omit<BidPackage, 'id' | 'createdAt' | 'updatedAt'> & Record<string, unknown>>> = {
   'bc-proj-2024-downtown-001': [
     {
       bcBidPackageId: 'bp-dt001-concrete',

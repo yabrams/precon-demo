@@ -79,7 +79,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       setPreviewUrl(data.avatarUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload avatar');
-      setPreviewUrl(currentAvatarUrl);
+      setPreviewUrl(currentAvatarUrl ?? null);
     } finally {
       setUploading(false);
     }

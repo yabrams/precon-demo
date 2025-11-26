@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { ChatMessage as ChatMessageType } from '@/types/chat';
 import { motion } from 'framer-motion';
 
@@ -11,7 +12,7 @@ interface ChatMessageProps {
 
 // Helper function to parse markdown bold syntax (**text**)
 function parseMarkdownBold(text: string) {
-  const parts: (string | JSX.Element)[] = [];
+  const parts: (string | React.ReactElement)[] = [];
   const regex = /\*\*(.*?)\*\*/g;
   let lastIndex = 0;
   let match;

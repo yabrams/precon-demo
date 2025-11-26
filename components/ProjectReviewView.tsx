@@ -28,6 +28,7 @@ interface UploadedDocument {
   url: string;
   fileSize: number;
   fileType: string;
+  diagramId?: string;
 }
 
 interface ExtractedProjectInfo {

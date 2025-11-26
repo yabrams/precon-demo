@@ -5,12 +5,38 @@ import path from 'path';
 import { prisma } from '@/lib/prisma';
 import {
   categorizeLineItems,
-  organizeIntoBidPackages,
-  extractProjectName
+  extractProjectName,
+  TRADE_CATEGORIES
 } from '@/lib/bid-package-utils';
 import { generateCopyName } from '@/lib/file-utils';
 import { isPDFFile, processPDFForExtraction } from '@/lib/pdf-utils';
 import { generateMockBidPackages } from '@/lib/mockDataGenerator';
+
+// Local helper to organize categorized items into bid packages format
+function organizeToBidPackages(categorizedItems: Record<string, any[]>) {
+  const bidPackages: Array<{
+    category: string;
+    name: string;
+    description: string;
+    itemCount: number;
+    items: any[];
+  }> = [];
+
+  for (const [category, items] of Object.entries(categorizedItems)) {
+    if (items.length > 0) {
+      const categoryConfig = TRADE_CATEGORIES[category as keyof typeof TRADE_CATEGORIES];
+      bidPackages.push({
+        category,
+        name: categoryConfig?.name || category,
+        description: `${categoryConfig?.name || category} scope items`,
+        itemCount: items.length,
+        items
+      });
+    }
+  }
+
+  return bidPackages;
+}
 
 interface ExtractionRequest {
   diagramId: string;
@@ -348,7 +374,7 @@ export async function POST(request: Request) {
 
     // Categorize all line items and organize into bid packages
     const categorizedItems = categorizeLineItems(allLineItems);
-    const bidPackages = organizeIntoBidPackages(categorizedItems);
+    const bidPackages = organizeToBidPackages(categorizedItems);
 
     // Create or update project in database
     let projectId: string;

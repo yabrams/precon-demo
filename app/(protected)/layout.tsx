@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { AuthProvider } from '@/lib/auth-context';
 import { EditModeProvider } from '@/contexts/EditModeContext';
 import ProtectedLayoutClient from './ProtectedLayoutClient';
+import { UserPublic } from '@/types/user';
 
 /**
  * Protected Layout
@@ -64,8 +65,9 @@ async function getAuthUser() {
     }
 
     // Return user without password hash
+    // Cast to UserPublic to match expected type (Prisma's enum is compatible)
     const { passwordHash: _, ...userPublic } = user;
-    return userPublic;
+    return userPublic as UserPublic;
   } catch (error) {
     console.error('Auth verification failed:', error);
     return null;

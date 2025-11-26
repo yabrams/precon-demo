@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface MagnifyingGlassProps {
   imageSrc: string;
-  imageRef: React.RefObject<HTMLImageElement>;
+  imageRef: React.RefObject<HTMLImageElement | null>;
   zoomFactor?: number; // How much to zoom (2 = 2x, 3 = 3x, etc.)
   lensWidth?: number; // Width of the magnifying glass lens in pixels
   lensHeight?: number; // Height of the magnifying glass lens in pixels

@@ -4,7 +4,7 @@
  */
 
 import bcrypt from 'bcrypt';
-import { UserPublic } from '@/types/user';
+import { UserPublic, UserRole } from '@/types/user';
 
 interface StoredUser {
   id: string;
@@ -13,6 +13,7 @@ interface StoredUser {
   passwordHash: string;
   firstName?: string;
   lastName?: string;
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +38,7 @@ const defaultUser: StoredUser = {
   passwordHash: bcrypt.hashSync('password123', 10), // password: password123
   firstName: 'Test',
   lastName: 'User',
+  role: UserRole.ADMIN,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -52,8 +54,15 @@ function toUserPublic(user: StoredUser): UserPublic {
     id: user.id,
     email: user.email,
     userName: user.userName,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    firstName: user.firstName ?? null,
+    lastName: user.lastName ?? null,
+    avatarUrl: null,
+    role: user.role,
+    passwordResetRequired: false,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastLoginAt: null,
   };
 }
 
@@ -86,6 +95,7 @@ export const inMemoryAuth = {
       passwordHash,
       firstName: data.firstName,
       lastName: data.lastName,
+      role: UserRole.PRECON_ANALYST, // Default role for new users
       createdAt: new Date(),
       updatedAt: new Date(),
     };

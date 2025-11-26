@@ -12,6 +12,10 @@ export interface BuildingConnectedLocation {
   state?: string;
   zipCode?: string;
   country?: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export interface BuildingConnectedProject {
@@ -31,6 +35,10 @@ export interface BuildingConnectedProject {
   bidDueDate?: Date;
   expectedStartDate?: Date;
   expectedEndDate?: Date;
+  estimatedStartDate?: Date;
+  estimatedCompletionDate?: Date;
+  projectStartDate?: Date;
+  projectEndDate?: Date;
 
   // Location
   location?: BuildingConnectedLocation;
@@ -39,11 +47,24 @@ export interface BuildingConnectedProject {
   projectSize?: number;
   projectSizeUnit?: string; // 'SF', 'square meters', etc.
   projectValue?: number; // Estimated value in dollars
+  estimatedBudget?: number;
+  currency?: string;
   marketSector?: string; // 'Commercial', 'Healthcare', 'Education', etc.
   typeOfWork?: string; // 'New Construction', 'Renovation', 'Addition', etc.
+  constructionType?: string;
+  projectType?: string;
+  scope?: string;
+
+  // Contract details
+  contractType?: string;
+  bondingRequired?: boolean;
+  prevailingWage?: boolean;
 
   // Parties involved
   architect?: string;
+  engineer?: string;
+  generalContractor?: string;
+  owner?: string;
   client?: string; // Owner/client name
   accountManager?: string;
   owningOffice?: string;
@@ -57,7 +78,7 @@ export interface BuildingConnectedProject {
 
   // Sync metadata
   lastSyncedAt?: Date;
-  syncStatus: 'pending' | 'syncing' | 'synced' | 'error';
+  syncStatus?: 'pending' | 'syncing' | 'synced' | 'error';
   syncError?: string;
 
   // Timestamps

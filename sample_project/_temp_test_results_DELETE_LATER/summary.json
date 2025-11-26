@@ -1,0 +1,51 @@
+{
+  "totalWorkPackages": 13,
+  "totalLineItems": 61,
+  "totalObservations": 10,
+  "dataQuality": {
+    "withBoundingBox": 61,
+    "withConfidence": 61,
+    "withQuantity": 33,
+    "withSourceRef": 61
+  },
+  "csiDivisions": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06",
+    "07",
+    "08",
+    "22",
+    "23",
+    "26",
+    "31",
+    "32",
+    "33"
+  ],
+  "trades": [
+    "General Conditions",
+    "Demolition",
+    "Concrete",
+    "Metals",
+    "Carpentry",
+    "Roofing",
+    "Openings",
+    "Plumbing",
+    "Mechanical",
+    "Electrical",
+    "Civil",
+    "Paving & Landscaping",
+    "Utilities"
+  ],
+  "observationsBySeverity": {
+    "critical": 3,
+    "warning": 4,
+    "info": 3
+  },
+  "totalTokens": {
+    "input": 91125,
+    "output": 40766
+  },
+  "totalDuration": 413.01
+}

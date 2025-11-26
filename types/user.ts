@@ -36,19 +36,20 @@ export interface User {
 }
 
 // Public user info (safe to send to client)
+// Note: Using `| null` instead of `?:` to match Prisma's return types
 export interface UserPublic {
   id: string;
   email: string;
   userName: string;
-  firstName?: string;
-  lastName?: string;
-  avatarUrl?: string;
+  firstName: string | null;
+  lastName: string | null;
+  avatarUrl: string | null;
   role: UserRole;
   passwordResetRequired: boolean;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  lastLoginAt?: Date;
+  lastLoginAt: Date | null;
 }
 
 // User registration input (self-registration)

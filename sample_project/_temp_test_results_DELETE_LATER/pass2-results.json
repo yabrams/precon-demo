@@ -1,0 +1,392 @@
+{
+  "additions": [
+    {
+      "work_package": "ROOF",
+      "item_number": null,
+      "description": "Re-flash Vents Thru Roof (VTRs)",
+      "action": "Install",
+      "quantity": 20,
+      "unit": "EA",
+      "specifications": "Replace counter flashing per detail 2/A2.3.",
+      "notes": "Quantity is an estimate based on counting symbols on plan A1.2. Contractor to verify exact count.",
+      "source_reference": {
+        "sheet": "A1.1",
+        "location": "Roof Plan Equipment Legend",
+        "page": 6,
+        "bounding_box": [
+          133,
+          88,
+          142,
+          304
+        ]
+      },
+      "confidence": 0.9,
+      "reason_missed": "This item was in the equipment legend but not explicitly called out with a keynote, requiring a manual count from the plan."
+    },
+    {
+      "work_package": "ROOF",
+      "item_number": null,
+      "description": "Re-flash Boiler Flues",
+      "action": "Install",
+      "quantity": 2,
+      "unit": "EA",
+      "specifications": "Replace counter flashing.",
+      "notes": "Located on Roof B.",
+      "source_reference": {
+        "sheet": "A1.1",
+        "location": "Roof Plan Equipment Legend",
+        "page": 6,
+        "bounding_box": [
+          185,
+          88,
+          194,
+          304
+        ]
+      },
+      "confidence": 1,
+      "reason_missed": "This item was in the equipment legend but not explicitly called out with a keynote."
+    },
+    {
+      "work_package": "ROOF",
+      "item_number": null,
+      "description": "Infill abandoned roof openings",
+      "action": "Install",
+      "quantity": 3,
+      "unit": "EA",
+      "specifications": "Infill opening with new framing and sheathing to match adjacent construction, and roof over.",
+      "notes": "Locations identified on demo plan A1.1.",
+      "source_reference": {
+        "sheet": "A1.1",
+        "location": "Roof Plan Equipment Legend",
+        "page": 6,
+        "bounding_box": [
+          198,
+          88,
+          207,
+          304
+        ]
+      },
+      "confidence": 1,
+      "reason_missed": "This item was in the equipment legend but not explicitly called out with a keynote."
+    },
+    {
+      "work_package": "HVAC",
+      "item_number": "EF-4, EF-5",
+      "description": "Exhaust Fan",
+      "action": "Install",
+      "quantity": 2,
+      "unit": "EA",
+      "specifications": "Per electrical panel schedule MECH on E5.0. 1/3 HP, 208V/1P. Model to be confirmed.",
+      "notes": "These fans are shown on the electrical schedule but not on the mechanical fan schedule or plans. This is a scope gap that requires an RFI to confirm fan model and location.",
+      "source_reference": {
+        "sheet": "E5.0",
+        "location": "Panel Schedule MECH",
+        "page": 23,
+        "bounding_box": [
+          270,
+          221,
+          297,
+          280
+        ]
+      },
+      "confidence": 0.7,
+      "reason_missed": "The equipment was only listed in the electrical panel schedule and not shown on mechanical plans, indicating a potential drawing coordination issue."
+    },
+    {
+      "work_package": "HVAC",
+      "item_number": null,
+      "description": "HVAC Equipment Startup",
+      "action": "Perform",
+      "quantity": 1,
+      "unit": "LS",
+      "specifications": "Provide startup of all listed installed equipment. Verify equipment meets design intent for airflow, temperature, etc.",
+      "notes": "This is a distinct activity from third-party testing and balancing.",
+      "source_reference": {
+        "sheet": "M0.2",
+        "location": "Mechanical Specifications - Balancing & Startup",
+        "page": 13,
+        "bounding_box": [
+          835,
+          663,
+          854,
+          945
+        ]
+      },
+      "confidence": 1,
+      "reason_missed": "This was a procedural requirement in the specifications that was not extracted as a distinct line item."
+    },
+    {
+      "work_package": "ELEC",
+      "item_number": null,
+      "description": "Panel 'MECH'",
+      "action": "Install",
+      "quantity": 1,
+      "unit": "EA",
+      "specifications": "208Y/120V, 3P4W, 100A Main Breaker. See schedule on E5.0 for branch breakers.",
+      "notes": "New panel to serve new rooftop mechanical equipment.",
+      "source_reference": {
+        "sheet": "E5.0",
+        "location": "Panel Schedule MECH",
+        "page": 23,
+        "bounding_box": [
+          120,
+          221,
+          140,
+          530
+        ]
+      },
+      "confidence": 1,
+      "reason_missed": "The feeder for this panel was captured, but the panel itself was missed as a distinct line item."
+    },
+    {
+      "work_package": "ELEC",
+      "item_number": null,
+      "description": "Branch circuits for new mechanical equipment",
+      "action": "Install",
+      "quantity": 1,
+      "unit": "LS",
+      "specifications": "Provide conduit and wiring from new Panel 'MECH' to all new RTUs and Exhaust Fans per plan E3.0 and panel schedule E5.0.",
+      "notes": "Includes circuits for RTU-1 through RTU-6 and EF-4, EF-5. Note that circuits for RTU-1 and RTU-6 are part of Additive Alternates #1 and #2 respectively.",
+      "source_reference": {
+        "sheet": "E3.0",
+        "location": "Roof Power Plan",
+        "page": 21,
+        "bounding_box": [
+          120,
+          88,
+          750,
+          650
+        ]
+      },
+      "confidence": 1,
+      "reason_missed": "Only one specific branch circuit was captured previously; this consolidates all required branch circuits into a single, comprehensive line item."
+    }
+  ],
+  "modifications": [
+    {
+      "original_item_ref": "ROOF.New Scupper",
+      "changes": {
+        "quantity": 2
+      },
+      "reason": "The initial extraction had a null quantity. A review of demo plan A1.1, note 6, indicates the scuppers on Roof B are to be replaced. The plan shows two scuppers on Roof B."
+    },
+    {
+      "original_item_ref": "ELEC.Branch Circuit for RTU-6",
+      "changes": {
+        "description": "This item is now covered by the more comprehensive 'Branch circuits for new mechanical equipment' line item being added. This specific item can be removed or considered redundant."
+      },
+      "reason": "A new, more comprehensive line item was created to cover all branch circuits, making this specific one redundant. The notes in the new item clarify which circuits belong to the alternates."
+    }
+  ],
+  "new_packages": [
+    {
+      "packageId": "FINISHES",
+      "name": "Finishes",
+      "csi_division": "09",
+      "trade": "Finishes",
+      "confidence": {
+        "overall": 0.8,
+        "reasoning": "The scope is minor and only mentioned in notes, but represents a distinct trade."
+      },
+      "line_items": [
+        {
+          "item_number": null,
+          "description": "Patch GWB and Finishes",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "LS",
+          "specifications": "Patch GWB and finish to match existing.",
+          "notes": "Required at new roof access ladder bracket locations inside the building.",
+          "source_reference": {
+            "sheet": "A2.2",
+            "location": "Roof Hatch Ladder Plan",
+            "page": 9,
+            "bounding_box": [
+              700,
+              692,
+              708,
+              886
+            ]
+          },
+          "confidence": 0.9,
+          "reason_missed": "This was a minor note on a detail and was overlooked in the initial pass."
+        }
+      ]
+    }
+  ],
+  "gaps_identified": [
+    "Full Division 07 roofing specification, including manufacturer, membrane thickness, and warranty requirements.",
+    "Structural verification for the new, heavier RTUs. No structural engineer is listed on the project team, and details refer to coordinating with one.",
+    "Confirmation of scope and model for exhaust fans EF-4 and EF-5, which appear on electrical schedules but not mechanical plans.",
+    "Clarification on conflicting code references (2012 IBC on T1.1 vs. 2009 IBC for seismic on E4.0).",
+    "A hazardous materials survey report for the existing roof system (asbestos) and other building components.",
+    "A phasing plan for performing the work while the facility is potentially occupied."
+  ],
+  "confidence_adjustments": [],
+  "ai_observations": [
+    {
+      "id": "obs_001",
+      "severity": "critical",
+      "category": "coordination_required",
+      "title": "Roofing, Mechanical, and Electrical Coordination",
+      "insight": "This project involves significant replacement of rooftop mechanical units (RTUs) concurrent with a full roof replacement. Coordination is critical between the roofer (Div 07), mechanical contractor (Div 23), and electrical contractor (Div 26). Key coordination points include: responsibility for providing and installing new roof curbs, sequencing of equipment removal/installation to maintain a watertight building envelope, and final flashing details around new curbs and penetrations. The mechanical details (M2.3) show 'field fabricated insulated roof curbs' but responsibility for fabrication and installation needs to be explicitly defined in subcontracts.",
+      "affected_packages": [
+        "ROOF",
+        "HVAC",
+        "ELEC"
+      ],
+      "affected_line_items": [],
+      "source_reference": {
+        "sheet": "M2.3",
+        "location": "RTU-5 ROOF CURB DETAIL",
+        "page": 18,
+        "bounding_box": [
+          640,
+          815,
+          666,
+          945
+        ],
+        "text_excerpt": "FIELD FABRICATED INSULATED ROOF CURB"
+      },
+      "suggested_actions": [
+        "Hold a pre-construction meeting with Roofing, Mechanical, and Electrical subcontractors to define responsibilities.",
+        "Clearly define who is responsible for providing, setting, and flashing the new roof curbs in all subcontracts.",
+        "Develop a detailed phasing plan for equipment and roofing replacement to minimize building downtime and water intrusion risk."
+      ],
+      "estimated_impact": "High. Poor coordination can lead to significant delays, rework, and potential water damage to the building interior."
+    },
+    {
+      "id": "obs_002",
+      "severity": "critical",
+      "category": "risk_flag",
+      "title": "Structural Capacity for New RTUs",
+      "insight": "The new RTUs may be heavier than the units they are replacing. For example, the new 15-ton RTU-6 has an operating weight of 2,490 lbs per the schedule. The mechanical curb detail on M2.3 explicitly states to 'COORDINATE WITH STRUCTURAL FOR COMPONENTS', yet no structural engineer is listed on the project team on sheet T1.1. This is a major red flag. Proceeding without verifying the existing roof structure's capacity for the new loads could lead to catastrophic failure.",
+      "affected_packages": [
+        "HVAC",
+        "GEN_REQ"
+      ],
+      "affected_line_items": [
+        "RTU-6"
+      ],
+      "source_reference": {
+        "sheet": "M2.3",
+        "location": "RTU-5 ROOF CURB DETAIL",
+        "page": 18,
+        "bounding_box": [
+          650,
+          815,
+          666,
+          945
+        ],
+        "text_excerpt": "COORDINATE WITH STRUCTURAL FOR COMPONENTS"
+      },
+      "suggested_actions": [
+        "Submit an RFI immediately to the Architect requesting structural verification for the new RTU loads.",
+        "Do not order equipment until structural adequacy is confirmed in writing by a licensed structural engineer.",
+        "Include a qualification in the bid that the pricing assumes the existing structure is adequate."
+      ],
+      "estimated_impact": "High. If the structure is inadequate, significant structural upgrades would be required, leading to major cost increases and schedule delays."
+    },
+    {
+      "id": "obs_003",
+      "severity": "warning",
+      "category": "long_lead_item",
+      "title": "HVAC Equipment Lead Times",
+      "insight": "Rooftop units, particularly larger, more complex units, are experiencing extended manufacturing lead times, often ranging from 6 to 12 months. The project schedule must account for this. Ordering the equipment should be one of the first actions upon contract award.",
+      "affected_packages": [
+        "HVAC",
+        "GEN_REQ"
+      ],
+      "affected_line_items": [
+        "RTU-1",
+        "RTU-2",
+        "RTU-3,4,5",
+        "RTU-6"
+      ],
+      "source_reference": {
+        "sheet": "M0.1",
+        "location": "Roof Top Gas/Electric AC Unit Schedule",
+        "page": 12,
+        "bounding_box": [
+          200,
+          336,
+          215,
+          590
+        ]
+      },
+      "suggested_actions": [
+        "Obtain current lead time quotes from suppliers for all specified RTU models during bidding.",
+        "Incorporate equipment delivery dates into the overall project schedule.",
+        "Recommend the owner pre-purchase the equipment if the project schedule is critical."
+      ],
+      "estimated_impact": "Schedule. Failure to account for lead times could delay the project by several months."
+    },
+    {
+      "id": "obs_004",
+      "severity": "warning",
+      "category": "change_order_risk",
+      "title": "Discovery of Deteriorated Roof Deck and Parapet Framing",
+      "insight": "General Note #1 on sheet A1.1 anticipates the discovery of deteriorated decking. Similarly, the details call for 'sistering' new framing to existing parapets. If the existing wood (decking or framing) is substantially rotted, the repair scope will exceed simple sistering or patching, triggering a change order. This is a common issue on re-roofing projects.",
+      "affected_packages": [
+        "DEMO",
+        "WOOD",
+        "ROOF"
+      ],
+      "affected_line_items": [],
+      "source_reference": {
+        "sheet": "A1.1",
+        "location": "General Notes",
+        "page": 6,
+        "bounding_box": [
+          258,
+          88,
+          292,
+          304
+        ],
+        "text_excerpt": "AFTER DEMOLITION OF THE EXISTING ROOFING, IF ANY DETERIORATED DECKING IS DISCOVERED..."
+      },
+      "suggested_actions": [
+        "Request pre-negotiated unit prices for wood deck replacement (per SF) and parapet framing replacement (per LF) in the bid documents.",
+        "Include a contingency allowance in the overall project budget for these potential repairs.",
+        "Perform exploratory openings, if possible, before finalizing the bid."
+      ],
+      "estimated_impact": "Cost. Unknown deck/framing repairs can add significant, unplanned costs to the project."
+    },
+    {
+      "id": "obs_005",
+      "severity": "info",
+      "category": "missing_information",
+      "title": "Roofing System Warranty",
+      "insight": "The plans call for an EPDM roofing system but do not specify the warranty requirements (e.g., duration, type such as NDL, coverage). The warranty is a major cost driver for a commercial roofing system, as it dictates inspection requirements, material choices, and detailing standards. This information is essential for accurate pricing.",
+      "affected_packages": [
+        "ROOF"
+      ],
+      "affected_line_items": [
+        "New Roofing System"
+      ],
+      "source_reference": {
+        "sheet": "A1.2",
+        "location": "Roof Plan Notes",
+        "page": 7,
+        "bounding_box": [
+          288,
+          88,
+          304,
+          304
+        ],
+        "text_excerpt": "NEW ROOFING SYSTEM TO BE INSTALLED PER SPECIFICATIONS AND MANUFACTURER REQUIREMENTS."
+      },
+      "suggested_actions": [
+        "Submit an RFI to obtain the full Division 07 roofing specifications, specifically requesting the warranty requirements.",
+        "Provide pricing based on a clearly stated assumption (e.g., 'Price based on a 20-year manufacturer's NDL warranty')."
+      ],
+      "estimated_impact": "Cost. The difference between a standard 15-year and a premium 30-year NDL warranty can be substantial."
+    }
+  ],
+  "overall_assessment": {
+    "extraction_completeness": 0.95,
+    "data_quality": 0.9,
+    "risk_level": "high",
+    "summary": "The extraction is now more complete, capturing minor scopes and correcting quantities. The project itself carries a high level of risk due to the missing structural verification for new, heavy rooftop equipment. This is a critical safety and cost issue that must be resolved before proceeding. Other significant risks include long equipment lead times, potential for extensive wood rot discovery, and the need for tight multi-trade coordination on an occupied site. The scope is generally well-defined, but the identified gaps in information (structural, warranty, hazmat) must be addressed to ensure a successful project."
+  }
+}

@@ -133,10 +133,10 @@ export default function UserManagementView({ currentUser }: UserManagementViewPr
     }
   };
 
-  const startEditing = (userId: string, field: string, currentFirstName: string, currentLastName: string) => {
+  const startEditing = (userId: string, field: string, currentValue: string, currentLastName?: string) => {
     setEditingUserId(userId);
     setEditingField(field);
-    setEditValue(currentFirstName || '');
+    setEditValue(currentValue || '');
     setEditLastName(currentLastName || '');
   };
 

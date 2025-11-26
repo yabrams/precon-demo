@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     let payload: JWTPayload;
     try {
       const { payload: verifiedPayload } = await jwtVerify(token, JWT_SECRET);
-      payload = verifiedPayload as JWTPayload;
+      payload = verifiedPayload as unknown as JWTPayload;
     } catch (error) {
       console.error('JWT verification failed:', error);
       return NextResponse.json(

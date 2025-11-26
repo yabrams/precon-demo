@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extraction Results - Kenai Rec Center</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { color: #1a1a2e; margin-bottom: 20px; }
+    h2 { color: #16213e; margin: 30px 0 15px; border-bottom: 2px solid #0f3460; padding-bottom: 5px; }
+    h3 { color: #0f3460; margin: 20px 0 10px; }
+    .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+    .stat-box { background: #e8f4f8; padding: 15px; border-radius: 6px; text-align: center; }
+    .stat-value { font-size: 2em; font-weight: bold; color: #0f3460; }
+    .stat-label { color: #666; font-size: 0.9em; }
+    .package { border-left: 4px solid #0f3460; padding-left: 15px; margin: 15px 0; }
+    .package-header { font-weight: bold; color: #1a1a2e; }
+    .package-meta { color: #666; font-size: 0.9em; }
+    .observation { padding: 15px; border-radius: 6px; margin: 10px 0; }
+    .observation.critical { background: #fee; border-left: 4px solid #e53935; }
+    .observation.warning { background: #fff8e1; border-left: 4px solid #ffc107; }
+    .observation.info { background: #e3f2fd; border-left: 4px solid #2196f3; }
+    .obs-title { font-weight: bold; margin-bottom: 5px; }
+    .obs-insight { color: #444; }
+    .line-item { background: #fafafa; padding: 10px; margin: 5px 0; border-radius: 4px; font-size: 0.9em; }
+    .bbox { font-family: monospace; background: #e8e8e8; padding: 2px 6px; border-radius: 3px; }
+    .confidence { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; }
+    .confidence.high { background: #c8e6c9; color: #2e7d32; }
+    .confidence.medium { background: #fff3e0; color: #ef6c00; }
+    .confidence.low { background: #ffcdd2; color: #c62828; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f5f5f5; font-weight: 600; }
+    .progress-bar { height: 20px; background: #e0e0e0; border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #4caf50; transition: width 0.3s; }
+    pre { background: #1a1a2e; color: #e0e0e0; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏗️ Extraction Results: KENAI REC CENTER UPGRADES</h1>
+    <p style="color:#666;margin-bottom:20px">Generated: 11/26/2025, 1:47:47 AM</p>
+
+    <div class="card">
+      <h2>📊 Summary Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value">13</div>
+          <div class="stat-label">Work Packages</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">61</div>
+          <div class="stat-label">Line Items</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">10</div>
+          <div class="stat-label">AI Observations</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">413s</div>
+          <div class="stat-label">Total Duration</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📈 Data Quality</h2>
+      <table>
+        <tr>
+          <th>Metric</th>
+          <th>Count</th>
+          <th>Percentage</th>
+          <th>Progress</th>
+        </tr>
+        <tr>
+          <td>Source References</td>
+          <td>61/61</td>
+          <td>100%</td>
+          <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+        </tr>
+        <tr>
+          <td>Bounding Boxes</td>
+          <td>61/61</td>
+          <td>100%</td>
+          <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+        </tr>
+        <tr>
+          <td>Confidence Scores</td>
+          <td>61/61</td>
+          <td>100%</td>
+          <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+        </tr>
+        <tr>
+          <td>Quantities</td>
+          <td>33/61</td>
+          <td>54%</td>
+          <td><div class="progress-bar"><div class="progress-fill" style="width:54.09836065573771%"></div></div></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🔍 AI Observations</h2>
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-box" style="background:#ffebee">
+          <div class="stat-value" style="color:#c62828">3</div>
+          <div class="stat-label">Critical</div>
+        </div>
+        <div class="stat-box" style="background:#fff8e1">
+          <div class="stat-value" style="color:#f57f17">4</div>
+          <div class="stat-label">Warning</div>
+        </div>
+        <div class="stat-box" style="background:#e3f2fd">
+          <div class="stat-value" style="color:#1565c0">3</div>
+          <div class="stat-label">Info</div>
+        </div>
+      </div>
+      
+    <div class="observation critical">
+      <div class="obs-title">🔴 Roofing, Mechanical, and Electrical Coordination</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">coordination_required</div>
+      <div class="obs-insight">This project involves significant replacement of rooftop mechanical units (RTUs) concurrent with a full roof replacement. Coordination is critical between the roofer (Div 07), mechanical contractor (Div 23), and electrical contractor (Div 26). Key coordination points include: responsibility for providing and installing new roof curbs, sequencing of equipment removal/installation to maintain a watertight building envelope, and final flashing details around new curbs and penetrations. The mechanical details (M2.3) show 'field fabricated insulated roof curbs' but responsibility for fabrication and installation needs to be explicitly defined in subcontracts.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> ROOF, HVAC, ELEC</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Hold a pre-construction meeting with Roofing, Mechanical, and Electrical subcontractors to define responsibilities.; Clearly define who is responsible for providing, setting, and flashing the new roof curbs in all subcontracts.; Develop a detailed phasing plan for equipment and roofing replacement to minimize building downtime and water intrusion risk.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet M2.3 <span class="bbox">[640, 815, 666, 945]</span></div>
+    </div>
+  
+    <div class="observation warning">
+      <div class="obs-title">🟡 Discovery of Deteriorated Roof Deck</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">risk_flag</div>
+      <div class="obs-insight">General Note #1 on sheet A1.1 states that if any deteriorated decking is discovered after demolition, the architect or project manager must be contacted. This indicates a known risk. The cost for potential deck replacement is not included in the base scope and should be addressed with a pre-negotiated unit price for deck repair/replacement (e.g., per SF). This will prevent delays and costly change orders during construction.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> DEMO, WOOD, ROOF</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Request a unit price for plywood deck replacement in the bid form.; Include a contingency allowance for potential deck repairs.; Advise the owner of this potential for additional costs.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet A1.1 <span class="bbox">[258, 88, 292, 304]</span></div>
+    </div>
+  
+    <div class="observation warning">
+      <div class="obs-title">🟡 Additive Alternates Pricing</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">pricing_concern</div>
+      <div class="obs-insight">The project includes two clearly defined Additive Alternates (#1 and #2) which cover specific roof areas and their associated RTUs (RTU-1 and RTU-6). All trades (Roofing, Mechanical, Electrical, Demolition) must provide separate pricing for these alternates. Failure to break out costs correctly could lead to bid disqualification or incorrect contract awards. The scope for each alternate must be carefully traced across all disciplines.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> GEN_REQ, DEMO, ROOF, HVAC, ELEC</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Ensure bid forms have separate line items for the Base Bid, Additive Alternate #1, and Additive Alternate #2.; Instruct all subcontractors to provide pricing broken down by base bid and alternates.; Review subcontractor bids carefully to ensure all scope within the alternate areas is captured correctly.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet A1.1 <span class="bbox">[315, 541, 332, 620]</span></div>
+    </div>
+  
+    <div class="observation info">
+      <div class="obs-title">🔵 Multiple Governing Codes</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">code_compliance</div>
+      <div class="obs-insight">The cover sheet (T1.1) lists a mix of code years (e.g., 2012 IBC, 2018 NEC, 2015 UPC). This requires careful review by all trades to ensure their work complies with the specific edition of the code applicable to their scope. For example, the electrical contractor must adhere to the 2018 NEC, while the plumber follows the 2015 UPC. This can affect material choices, installation methods, and labor costs.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> GEN_REQ, PLUMB, HVAC, ELEC</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Verify that all subcontractors have reviewed and understand the specified code requirements for their trade.; Confirm with the local building department if there are any superseding local amendments.; Account for any cost impacts of complying with these specific code editions in the estimate.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet T1.1 <span class="bbox">[445, 590, 510, 945]</span></div>
+    </div>
+  
+    <div class="observation info">
+      <div class="obs-title">🔵 Roofing System Specification</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">missing_information</div>
+      <div class="obs-insight">The architectural plans repeatedly state 'New Roof System per Roof Type and Spec.' The details on A2.3 indicate an 'EPDM Fully Adhered Roofing Membrane', but the full specification (e.g., manufacturer, thickness, warranty requirements) is not on the drawings. The full project manual/specification book is required to accurately price the roofing system. The warranty requirements, in particular, can significantly impact cost.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> ROOF</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Submit an RFI to obtain the full Division 07 roofing specifications.; Clarify the required warranty term (e.g., 15, 20, 30 years) and type (e.g., NDL - No Dollar Limit).; Base the estimate on the specified EPDM system but include a clear allowance or assumption for membrane thickness and warranty until confirmed.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet A2.3 <span class="bbox">[700, 486, 726, 580]</span></div>
+    </div>
+  
+    <div class="observation critical">
+      <div class="obs-title">🔴 Roofing, Mechanical, and Electrical Coordination</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">coordination_required</div>
+      <div class="obs-insight">This project involves significant replacement of rooftop mechanical units (RTUs) concurrent with a full roof replacement. Coordination is critical between the roofer (Div 07), mechanical contractor (Div 23), and electrical contractor (Div 26). Key coordination points include: responsibility for providing and installing new roof curbs, sequencing of equipment removal/installation to maintain a watertight building envelope, and final flashing details around new curbs and penetrations. The mechanical details (M2.3) show 'field fabricated insulated roof curbs' but responsibility for fabrication and installation needs to be explicitly defined in subcontracts.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> ROOF, HVAC, ELEC</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Hold a pre-construction meeting with Roofing, Mechanical, and Electrical subcontractors to define responsibilities.; Clearly define who is responsible for providing, setting, and flashing the new roof curbs in all subcontracts.; Develop a detailed phasing plan for equipment and roofing replacement to minimize building downtime and water intrusion risk.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet M2.3 <span class="bbox">[640, 815, 666, 945]</span></div>
+    </div>
+  
+    <div class="observation critical">
+      <div class="obs-title">🔴 Structural Capacity for New RTUs</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">risk_flag</div>
+      <div class="obs-insight">The new RTUs may be heavier than the units they are replacing. For example, the new 15-ton RTU-6 has an operating weight of 2,490 lbs per the schedule. The mechanical curb detail on M2.3 explicitly states to 'COORDINATE WITH STRUCTURAL FOR COMPONENTS', yet no structural engineer is listed on the project team on sheet T1.1. This is a major red flag. Proceeding without verifying the existing roof structure's capacity for the new loads could lead to catastrophic failure.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> HVAC, GEN_REQ</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Submit an RFI immediately to the Architect requesting structural verification for the new RTU loads.; Do not order equipment until structural adequacy is confirmed in writing by a licensed structural engineer.; Include a qualification in the bid that the pricing assumes the existing structure is adequate.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet M2.3 <span class="bbox">[650, 815, 666, 945]</span></div>
+    </div>
+  
+    <div class="observation warning">
+      <div class="obs-title">🟡 HVAC Equipment Lead Times</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">long_lead_item</div>
+      <div class="obs-insight">Rooftop units, particularly larger, more complex units, are experiencing extended manufacturing lead times, often ranging from 6 to 12 months. The project schedule must account for this. Ordering the equipment should be one of the first actions upon contract award.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> HVAC, GEN_REQ</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Obtain current lead time quotes from suppliers for all specified RTU models during bidding.; Incorporate equipment delivery dates into the overall project schedule.; Recommend the owner pre-purchase the equipment if the project schedule is critical.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet M0.1 <span class="bbox">[200, 336, 215, 590]</span></div>
+    </div>
+  
+    <div class="observation warning">
+      <div class="obs-title">🟡 Discovery of Deteriorated Roof Deck and Parapet Framing</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">change_order_risk</div>
+      <div class="obs-insight">General Note #1 on sheet A1.1 anticipates the discovery of deteriorated decking. Similarly, the details call for 'sistering' new framing to existing parapets. If the existing wood (decking or framing) is substantially rotted, the repair scope will exceed simple sistering or patching, triggering a change order. This is a common issue on re-roofing projects.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> DEMO, WOOD, ROOF</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Request pre-negotiated unit prices for wood deck replacement (per SF) and parapet framing replacement (per LF) in the bid documents.; Include a contingency allowance in the overall project budget for these potential repairs.; Perform exploratory openings, if possible, before finalizing the bid.</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet A1.1 <span class="bbox">[258, 88, 292, 304]</span></div>
+    </div>
+  
+    <div class="observation info">
+      <div class="obs-title">🔵 Roofing System Warranty</div>
+      <div style="color:#888;font-size:0.85em;margin-bottom:5px">missing_information</div>
+      <div class="obs-insight">The plans call for an EPDM roofing system but do not specify the warranty requirements (e.g., duration, type such as NDL, coverage). The warranty is a major cost driver for a commercial roofing system, as it dictates inspection requirements, material choices, and detailing standards. This information is essential for accurate pricing.</div>
+      <div style="margin-top:8px;font-size:0.9em"><strong>Affects:</strong> ROOF</div>
+      <div style="margin-top:5px;font-size:0.9em"><strong>Actions:</strong> Submit an RFI to obtain the full Division 07 roofing specifications, specifically requesting the warranty requirements.; Provide pricing based on a clearly stated assumption (e.g., 'Price based on a 20-year manufacturer's NDL warranty').</div>
+      <div style="margin-top:5px;font-size:0.85em;color:#666"><strong>Source:</strong> Sheet A1.2 <span class="bbox">[288, 88, 304, 304]</span></div>
+    </div>
+  
+    </div>
+
+    <div class="card">
+      <h2>📦 Work Packages</h2>
+      
+    <div class="package">
+      <div class="package-header">General Requirements</div>
+      <div class="package-meta">
+        ID: GEN_REQ | CSI: 01 | Trade: General Conditions | Items: 4
+        <span class="confidence high">95% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">General project requirements, codes, standards, and coordination.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Demolition</div>
+      <div class="package-meta">
+        ID: DEMO | CSI: 02 | Trade: Demolition | Items: 12
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Demolition of existing roofing, mechanical equipment, electrical systems, and site features as shown on the plans.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Concrete</div>
+      <div class="package-meta">
+        ID: CONC | CSI: 03 | Trade: Concrete | Items: 1
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Cast-in-place concrete for new sidewalks.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Metals</div>
+      <div class="package-meta">
+        ID: METALS | CSI: 05 | Trade: Metals | Items: 1
+        <span class="confidence high">85% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Fabrication and installation of new roof access ladder.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Wood, Plastics, and Composites</div>
+      <div class="package-meta">
+        ID: WOOD | CSI: 06 | Trade: Carpentry | Items: 5
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Wood framing for parapets, roof decking, and blocking.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Thermal and Moisture Protection</div>
+      <div class="package-meta">
+        ID: ROOF | CSI: 07 | Trade: Roofing | Items: 7
+        <span class="confidence high">85% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of new roofing system, insulation, flashing, and related components.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Openings</div>
+      <div class="package-meta">
+        ID: OPENINGS | CSI: 08 | Trade: Openings | Items: 1
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of new roof access hatch.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Plumbing</div>
+      <div class="package-meta">
+        ID: PLUMB | CSI: 22 | Trade: Plumbing | Items: 4
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of new roof drains, overflow drains, and associated rainleader piping.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Heating, Ventilation, and Air Conditioning (HVAC)</div>
+      <div class="package-meta">
+        ID: HVAC | CSI: 23 | Trade: Mechanical | Items: 9
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of new rooftop units, exhaust fans, gas piping, and associated ductwork.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Electrical</div>
+      <div class="package-meta">
+        ID: ELEC | CSI: 26 | Trade: Electrical | Items: 6
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of new electrical panel, feeders, branch circuits for new mechanical equipment, and heat trace systems.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Site Work</div>
+      <div class="package-meta">
+        ID: CIVIL | CSI: 31 | Trade: Civil | Items: 6
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Earthwork and site preparation for new roof drain fields.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Exterior Improvements</div>
+      <div class="package-meta">
+        ID: EXT_IMPRV | CSI: 32 | Trade: Paving & Landscaping | Items: 2
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Asphalt paving repair and landscaping restoration.</div>
+    </div>
+  
+    <div class="package">
+      <div class="package-header">Utilities</div>
+      <div class="package-meta">
+        ID: UTIL | CSI: 33 | Trade: Utilities | Items: 3
+        <span class="confidence high">90% confidence</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.9em;color:#666">Installation of underground storm drainage piping.</div>
+    </div>
+  
+    </div>
+
+    <div class="card">
+      <h2>🔗 Document References (Sample)</h2>
+      
+    <table>
+      <tr>
+        <th>Description</th>
+        <th>Sheet</th>
+        <th>Page</th>
+        <th>Bounding Box</th>
+      </tr>
+      
+        <tr>
+          <td>Comply with applicable codes</td>
+          <td>T1.1</td>
+          <td>1</td>
+          <td><span class="bbox">[445, 590, 510, 945]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Independent Air Balancing</td>
+          <td>M0.2</td>
+          <td>13</td>
+          <td><span class="bbox">[793, 663, 833, 945]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Additive Alternate #1</td>
+          <td>A1.1</td>
+          <td>6</td>
+          <td><span class="bbox">[315, 541, 332, 620]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Additive Alternate #2</td>
+          <td>A1.1</td>
+          <td>6</td>
+          <td><span class="bbox">[570, 598, 587, 677]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Existing BUR roofing and coverboard</td>
+          <td>A1.1</td>
+          <td>6</td>
+          <td><span class="bbox">[688, 88, 712, 304]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Existing parapet cap flashing</td>
+          <td>A1.1</td>
+          <td>6</td>
+          <td><span class="bbox">[714, 88, 723, 304]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Wood privacy fence</td>
+          <td>A1.0</td>
+          <td>5</td>
+          <td><span class="bbox">[785, 710, 794, 863]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Roof access ladder</td>
+          <td>A1.0</td>
+          <td>5</td>
+          <td><span class="bbox">[797, 710, 815, 863]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Roofing, sheathing, and sloped 2x4 sleepers at Roo...</td>
+          <td>A1.0</td>
+          <td>5</td>
+          <td><span class="bbox">[818, 710, 845, 863]</span></td>
+        </tr>
+      
+        <tr>
+          <td>Rooftop Unit (RTU) and roof curb</td>
+          <td>M1.2</td>
+          <td>15</td>
+          <td><span class="bbox">[193, 792, 209, 945]</span></td>
+        </tr>
+      
+    </table>
+  
+    </div>
+
+    <div class="card">
+      <h2>📝 Raw JSON Data</h2>
+      <h3>Pass 1 Response</h3>
+      <pre>{
+  "project_name": "KENAI REC CENTER UPGRADES",
+  "work_packages": [
+    {
+      "packageId": "GEN_REQ",
+      "name": "General Requirements",
+      "csi_division": "01",
+      "trade": "General Conditions",
+      "description": "General project requirements, codes, standards, and coordination.",
+      "scope_responsible": "General Contractor",
+      "confidence": {
+        "overall": 0.95,
+        "reasoning": "General notes and code requirements are clearly stated on the cover sheet."
+      },
+      "line_items": [
+        {
+          "item_number": "8",
+          "description": "Comply with applicable codes",
+          "action": "Comply",
+          "quantity": null,
+          "unit": null,
+          "specifications": "2012 IBC, 2018 NEC, 2012 IMC, 2015 UPC, 2012 IFC, ADAAG, NFPA 10/13/70/72, ASHRAE 90.1-2016",
+          "notes": "Construction not governed by local code will be governed by the more stringent provisions of the latest published, statute adopted edition.",
+          "source_reference": {
+            "sheet": "T1.1",
+            "location": "General Notes",
+            "page": 1,
+            "bounding_box": [
+              445,
+              590,
+              510,
+              945
+            ],
+            "text_excerpt": "2012 INTERNATIONAL BUILDING CODE, 2018 NATIONAL ELECTRICAL CODE, 2012 INTERNATIONAL MECHANICAL CODE, 2015 UNIFORM PLUMBING CODE, 2012 INTERNATIONAL FIRE CODE"
+          },
+          "confidence": 1,
+          "flags": []
+        },
+        {
+          "item_number": null,
+          "description": "Independent Air Balancing",
+          "action": "Provide",
+          "quantity": 1,
+          "unit": "LS",
+          "specifications": "Perform air balancing of complete heating and HVAC systems per SMACNA balancing and adjustment manual. Adjust air quantities to within 5% of design values.",
+          "notes": "Submit final testing and balancing report before project is complete.",
+          "source_reference": {
+            "sheet": "M0.2",
+            "location": "Mechanical Specifications",
+            "page": 13,
+            "bounding_box": [
+              793,
+              663,
+              833,
+              945
+            ],
+            "text_excerpt": "BALANCING & STARTUP"
+          },
+          "confidence": 0.95,
+          "flags": []
+        },
+        {
+          "item_number": null,
+          "description": "Additive Alternate #1",
+          "action": "Price Separately",
+          "quantity": 1,
+          "unit": "LS",
+          "specifications": "Includes work on Roof A and C, including RTU-1.",
+          "notes": "Scope is geographically defined on multiple sheets.",
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "Roof Plan",
+            "page": 6,
+            "bounding_box": [
+              315,
+              541,
+              332,
+              620
+            ],
+            "text_excerpt": "ADDITIVE ALTERNATE #1"
+          },
+          "confidence": 1,
+          "flags": []
+        },
+        {
+          "item_number": null,
+          "description": "Additive Alternate #2",
+          "action": "Price Separately",
+          "quantity": 1,
+          "unit": "LS",
+          "specifications": "Includes work on Roof F, including RTU-6.",
+          "notes": "Scope is geographically defined on multiple sheets.",
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "Roof Plan",
+            "page": 6,
+            "bounding_box": [
+              570,
+              598,
+              587,
+              677
+            ],
+            "text_excerpt": "ADDITIVE ALTERNATE #2"
+          },
+          "confidence": 1,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "packageId": "DEMO",
+      "name": "Demolition",
+      "csi_division": "02",
+      "trade": "Demolition",
+      "description": "Demolition of existing roofing, mechanical equipment, electrical systems, and site features as shown on the plans.",
+      "scope_responsible": "General Contractor",
+      "confidence": {
+        "overall": 0.9,
+        "reasoning": "Demolition plans are provided for architectural, mechanical, and electrical scopes, with clear keynotes and legends."
+      },
+      "line_items": [
+        {
+          "item_number": "1",
+          "description": "Existing BUR roofing and coverboard",
+          "action": "Demo",
+          "quantity": null,
+          "unit": "SF",
+          "specifications": "Demo all existing tapered insulation at crickets. Existing non-tapered insulation to remain.",
+          "notes": "Applies to all roof areas unless noted otherwise.",
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "Demo Roof Plan Notes",
+            "page": 6,
+            "bounding_box": [
+              688,
+              88,
+              712,
+              304
+            ],
+            "text_excerpt": "DEMO ALL EXISTING BUR ROOFING AND COVERBOARD. DEMO ALL EXISTING TAPERED INSULAT
+... (truncated)</pre>
+    </div>
+  </div>
+</body>
+</html>

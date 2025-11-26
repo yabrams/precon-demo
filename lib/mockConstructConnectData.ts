@@ -27,8 +27,8 @@ export interface ConstructConnectProject {
   architectName?: string;
   engineerName?: string;
   generalContractorName?: string;
-  estimatedSquareFootage?: number;
-  numberOfFloors?: number;
+  estimatedSquareFootage?: number | null;
+  numberOfFloors?: number | null;
   projectPhase?: string;
   fundingType?: string;
   deliveryMethod?: string;
