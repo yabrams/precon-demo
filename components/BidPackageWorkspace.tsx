@@ -379,7 +379,7 @@ export default function BidPackageWorkspace({
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-600">Progress</span>
-                    <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                    <span className="text-xs font-semibold text-zinc-900">{approvedItems}/{totalItems}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div
