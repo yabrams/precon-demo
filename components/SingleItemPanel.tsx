@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LineItem } from './BidFormTable';
 import CSIInlineSearch from './CSIInlineSearch';
 
@@ -303,129 +304,138 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
         </div>
       </div>
 
-      {/* Fields - Single Row */}
-      <div className="px-4 py-3.5 grid grid-cols-12 gap-3 bg-white">
-        {/* CSI Code - First */}
-        <div className="col-span-3">
-          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-            CSI MasterFormat
-          </label>
-          {isEditing('csiCode') && !readOnly ? (
-            <CSIInlineSearch
-              initialValue={item.csiCode || item.csiTitle || ''}
-              onSelect={handleCSISelect}
-              onBlur={stopEditing}
-              placeholder="Search CSI code..."
-              dropdownDirection="up"
-              onFieldKeyDown={handleFieldKeyDown}
-            />
-          ) : (
-            <div
-              onClick={() => startEditing('csiCode')}
-              className={`w-full px-3 py-2 text-sm rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
-                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
-              }`}
-            >
-              {item.csiCode && item.csiTitle ? (
-                item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
-                  <span className="text-gray-400 italic">N/A</span>
+      {/* Fields - Single Row with fade transition */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={itemIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: 'easeInOut' }}
+          className="px-4 py-3.5 grid grid-cols-12 gap-3 bg-white"
+        >
+          {/* CSI Code - First */}
+          <div className="col-span-3">
+            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+              CSI MasterFormat
+            </label>
+            {isEditing('csiCode') && !readOnly ? (
+              <CSIInlineSearch
+                initialValue={item.csiCode || item.csiTitle || ''}
+                onSelect={handleCSISelect}
+                onBlur={stopEditing}
+                placeholder="Search CSI code..."
+                dropdownDirection="up"
+                onFieldKeyDown={handleFieldKeyDown}
+              />
+            ) : (
+              <div
+                onClick={() => startEditing('csiCode')}
+                className={`w-full px-3 py-2 text-sm rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
+                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                }`}
+              >
+                {item.csiCode && item.csiTitle ? (
+                  item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
+                    <span className="text-gray-400 italic">N/A</span>
+                  ) : (
+                    <span className="text-zinc-900">
+                      <span className="font-mono font-semibold">{item.csiCode}</span>
+                      <span className="text-zinc-600 ml-2 text-xs">{item.csiTitle}</span>
+                    </span>
+                  )
                 ) : (
-                  <span className="text-zinc-900">
-                    <span className="font-mono font-semibold">{item.csiCode}</span>
-                    <span className="text-zinc-600 ml-2 text-xs">{item.csiTitle}</span>
-                  </span>
-                )
-              ) : (
-                <span className="text-gray-400">-</span>
-              )}
-            </div>
-          )}
-        </div>
+                  <span className="text-gray-400">-</span>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Item Number */}
-        <div className="col-span-1">
-          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-            Item #
-          </label>
-          {isEditing('item_number') && !readOnly ? (
-            <input
-              ref={(el) => { fieldRefs.current['item_number'] = el; }}
-              type="text"
-              value={item.item_number || ''}
-              onChange={(e) => handleChange('item_number', e.target.value)}
-              onBlur={stopEditing}
-              onKeyDown={handleFieldKeyDown}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900 font-mono"
-              placeholder="#"
-            />
-          ) : (
-            <div
-              onClick={() => startEditing('item_number')}
-              className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
-                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
-              }`}
-            >
-              {item.item_number || <span className="text-gray-400">#</span>}
-            </div>
-          )}
-        </div>
+          {/* Item Number */}
+          <div className="col-span-1">
+            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+              Item #
+            </label>
+            {isEditing('item_number') && !readOnly ? (
+              <input
+                ref={(el) => { fieldRefs.current['item_number'] = el; }}
+                type="text"
+                value={item.item_number || ''}
+                onChange={(e) => handleChange('item_number', e.target.value)}
+                onBlur={stopEditing}
+                onKeyDown={handleFieldKeyDown}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900 font-mono"
+                placeholder="#"
+              />
+            ) : (
+              <div
+                onClick={() => startEditing('item_number')}
+                className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
+                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                }`}
+              >
+                {item.item_number || <span className="text-gray-400">#</span>}
+              </div>
+            )}
+          </div>
 
-        {/* Description */}
-        <div className="col-span-4">
-          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-            Description
-          </label>
-          {isEditing('description') && !readOnly ? (
-            <input
-              ref={(el) => { fieldRefs.current['description'] = el; }}
-              type="text"
-              value={item.description || ''}
-              onChange={(e) => handleChange('description', e.target.value)}
-              onBlur={stopEditing}
-              onKeyDown={handleFieldKeyDown}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900"
-              placeholder="Description"
-            />
-          ) : (
-            <div
-              onClick={() => startEditing('description')}
-              className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
-                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
-              }`}
-            >
-              <span className="truncate">{item.description || <span className="text-gray-400">Description</span>}</span>
-            </div>
-          )}
-        </div>
+          {/* Description */}
+          <div className="col-span-4">
+            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+              Description
+            </label>
+            {isEditing('description') && !readOnly ? (
+              <input
+                ref={(el) => { fieldRefs.current['description'] = el; }}
+                type="text"
+                value={item.description || ''}
+                onChange={(e) => handleChange('description', e.target.value)}
+                onBlur={stopEditing}
+                onKeyDown={handleFieldKeyDown}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900"
+                placeholder="Description"
+              />
+            ) : (
+              <div
+                onClick={() => startEditing('description')}
+                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
+                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                }`}
+              >
+                <span className="truncate">{item.description || <span className="text-gray-400">Description</span>}</span>
+              </div>
+            )}
+          </div>
 
-        {/* Notes */}
-        <div className="col-span-4">
-          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-            Notes
-          </label>
-          {isEditing('notes') && !readOnly ? (
-            <input
-              ref={(el) => { fieldRefs.current['notes'] = el; }}
-              type="text"
-              value={item.notes || ''}
-              onChange={(e) => handleChange('notes', e.target.value)}
-              onBlur={stopEditing}
-              onKeyDown={handleFieldKeyDown}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900"
-              placeholder="Notes"
-            />
-          ) : (
-            <div
-              onClick={() => startEditing('notes')}
-              className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
-                readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
-              }`}
-            >
-              <span className="truncate">{item.notes || <span className="text-gray-400">Notes</span>}</span>
-            </div>
-          )}
-        </div>
-      </div>
+          {/* Notes */}
+          <div className="col-span-4">
+            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+              Notes
+            </label>
+            {isEditing('notes') && !readOnly ? (
+              <input
+                ref={(el) => { fieldRefs.current['notes'] = el; }}
+                type="text"
+                value={item.notes || ''}
+                onChange={(e) => handleChange('notes', e.target.value)}
+                onBlur={stopEditing}
+                onKeyDown={handleFieldKeyDown}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-500 focus:border-transparent bg-white text-zinc-900"
+                placeholder="Notes"
+              />
+            ) : (
+              <div
+                onClick={() => startEditing('notes')}
+                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
+                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                }`}
+              >
+                <span className="truncate">{item.notes || <span className="text-gray-400">Notes</span>}</span>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
     </div>
   );
