@@ -125,7 +125,7 @@ export default function RandomPDFPagesViewer({
     }
   }, [numPages, itemId, bidPackageId]);
 
-  // Calculate page dimensions so all pages fill 100% width while fitting height
+  // Calculate page dimensions: fit within 100% width, then maximize height up to 100%
   const pageDimensions = useMemo(() => {
     if (containerSize.width === 0 || containerSize.height === 0 || selectedPages.length === 0) {
       return { width: 200, height: 280 };
@@ -140,21 +140,23 @@ export default function RandomPDFPagesViewer({
     const availableWidth = containerSize.width - padding - (gap * (numPagesDisplay - 1));
     const availableHeight = containerSize.height - padding - pageNumberHeight;
 
-    // Width per page to fill 100% of available width
-    const widthPerPage = availableWidth / numPagesDisplay;
-
-    // Calculate height based on typical PDF aspect ratio (US Letter: 8.5x11 ≈ 0.77 ratio)
+    // PDF aspect ratio (US Letter: 8.5x11 ≈ 0.77 width/height ratio)
     const aspectRatio = 0.77;
-    const heightFromWidth = widthPerPage / aspectRatio;
 
-    // If calculated height exceeds available height, constrain by height instead
-    if (heightFromWidth <= availableHeight) {
-      // Width-constrained: pages fill 100% width
-      return { width: widthPerPage, height: heightFromWidth };
+    // Start by maximizing height (100% of available height)
+    const maxHeight = availableHeight;
+    const widthFromMaxHeight = maxHeight * aspectRatio;
+    const totalWidthAtMaxHeight = widthFromMaxHeight * numPagesDisplay;
+
+    // Check if all pages at max height fit within available width
+    if (totalWidthAtMaxHeight <= availableWidth) {
+      // Height-constrained: use 100% height, width fits within container
+      return { width: widthFromMaxHeight, height: maxHeight };
     } else {
-      // Height-constrained: pages fill 100% height, may not fill full width
-      const widthFromHeight = availableHeight * aspectRatio;
-      return { width: widthFromHeight, height: availableHeight };
+      // Width-constrained: scale down to fit within 100% width
+      const widthPerPage = availableWidth / numPagesDisplay;
+      const heightFromWidth = widthPerPage / aspectRatio;
+      return { width: widthPerPage, height: heightFromWidth };
     }
   }, [containerSize, selectedPages.length]);
 
