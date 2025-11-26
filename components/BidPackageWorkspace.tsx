@@ -9,7 +9,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-import { ChevronLeft } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import BidFormTable, { LineItem } from './BidFormTable';
 import DiagramOverlay from './DiagramOverlay';
@@ -345,56 +344,42 @@ export default function BidPackageWorkspace({
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Back"
+          {/* Left side: Status and Progress */}
+          <div className="flex items-center gap-4">
+            <span
+              className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(
+                bidPackage.status
+              )}`}
             >
-              <ChevronLeft className="h-5 w-5 text-gray-600" />
-            </button>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-semibold text-zinc-900">{bidPackage.name}</h1>
-                <span
-                  className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(
-                    bidPackage.status
-                  )}`}
-                >
-                  {bidPackage.status}
-                </span>
-              </div>
-              {project.description && (
-                <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 max-w-md">{project.description}</p>
-              )}
-            </div>
-          </div>
+              {bidPackage.status}
+            </span>
 
-          {/* Center: Progress Bar */}
-          {lineItems.length > 0 && (() => {
-            const approvedItems = lineItems.filter(item => item.approved === true).length;
-            const totalItems = lineItems.length;
-            const percentage = totalItems > 0 ? Math.round((approvedItems / totalItems) * 100) : 0;
+            {/* Progress Bar */}
+            {lineItems.length > 0 && (() => {
+              const approvedItems = lineItems.filter(item => item.approved === true).length;
+              const totalItems = lineItems.length;
+              const percentage = totalItems > 0 ? Math.round((approvedItems / totalItems) * 100) : 0;
 
-            return (
-              <div className="flex-1 max-w-xs mx-8">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600">Progress</span>
-                    <span className="text-xs font-semibold text-zinc-900">{approvedItems}/{totalItems}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div
-                      className={`h-full transition-all duration-300 rounded-full ${
-                        percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
-                      }`}
-                      style={{ width: `${percentage}%` }}
-                    />
+              return (
+                <div className="w-96">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-600">Progress</span>
+                      <span className="text-xs font-semibold text-zinc-900">{approvedItems}/{totalItems}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 rounded-full ${
+                          percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
+                        }`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })()}
+              );
+            })()}
+          </div>
 
           {/* Right side: View toggles */}
           <div className="flex items-center gap-3">
