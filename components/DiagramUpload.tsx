@@ -13,7 +13,7 @@ interface UploadedFile {
 
 interface DiagramUploadProps {
   onUploadSuccess: (file: UploadedFile) => void;
-  onExtractStart: (url: string, instructions?: string) => void;
+  onExtractStart: (url: string, instructions?: string, useMockData?: boolean) => void;
   bcProjectId: string;
   onCancel: () => void;
 }
@@ -27,6 +27,7 @@ export default function DiagramUpload({
   const [uploading, setUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
   const [instructions, setInstructions] = useState('');
+  const [useMockData, setUseMockData] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
@@ -61,7 +62,7 @@ export default function DiagramUpload({
 
   const handleExtract = () => {
     if (uploadedFile) {
-      onExtractStart(uploadedFile.url, instructions);
+      onExtractStart(uploadedFile.url, instructions, useMockData);
     }
   };
 
@@ -101,21 +102,56 @@ export default function DiagramUpload({
           transition={{ delay: 0.1 }}
           className="flex-1 flex flex-col bg-white p-6"
         >
-          <h3 className="text-lg font-semibold text-zinc-900 mb-4">
-            Instructions for AI (Optional)
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-zinc-900">
+              Instructions for AI (Optional)
+            </h3>
+
+            {/* Mock Data Toggle */}
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={useMockData}
+                onChange={(e) => setUseMockData(e.target.checked)}
+                className="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 rounded focus:ring-zinc-500 focus:ring-2 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-zinc-900 transition-colors">
+                Use Mock Data
+              </span>
+            </label>
+          </div>
+
+          {useMockData && (
+            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm text-amber-800">
+                  <strong className="font-semibold">Mock Mode Enabled:</strong>
+                  <p className="mt-1">
+                    The diagram will be uploaded but AI analysis will be skipped.
+                    Instead, 5-8 CSI-based bid packages with realistic mock data will be generated.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex-1 flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:border-zinc-300 hover:shadow-md transition-all">
             <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Add specific instructions for the AI extractor...&#10;&#10;Examples:&#10;- Focus on electrical items only&#10;- Include labor costs&#10;- Group items by room&#10;- Extract quantities from the legend"
               className="flex-1 w-full p-4 bg-white border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 focus:outline-none text-zinc-900 placeholder:text-gray-400"
+              disabled={useMockData}
             />
             <div className="mt-4 flex gap-3">
               <button
                 onClick={() => {
                   setUploadedFile(null);
                   setInstructions('');
+                  setUseMockData(false);
                   onCancel();
                 }}
                 className="px-6 py-3 bg-white hover:bg-gray-50 text-zinc-900 border border-gray-200 rounded-lg transition-colors font-medium shadow-sm"
@@ -126,7 +162,7 @@ export default function DiagramUpload({
                 onClick={handleExtract}
                 className="flex-1 px-6 py-3 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-all font-medium shadow-md shadow-zinc-900/10"
               >
-                Process Diagram →
+                {useMockData ? 'Generate Mock Data →' : 'Process Diagram →'}
               </button>
             </div>
           </div>

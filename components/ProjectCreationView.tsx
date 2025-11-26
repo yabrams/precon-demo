@@ -56,6 +56,7 @@ export default function ProjectCreationView({
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [projectName, setProjectName] = useState('');
+  const [useMockData, setUseMockData] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get API endpoint for selected platform
@@ -215,7 +216,8 @@ export default function ProjectCreationView({
       platform: undefined,
       uploadedDocuments,
       selectedExternalProject: undefined,
-      projectName: projectName.trim() || undefined
+      projectName: projectName.trim() || undefined,
+      useMockData
     });
   };
 
@@ -350,13 +352,31 @@ export default function ProjectCreationView({
 
       {/* Footer */}
       <div className="px-6 py-4 bg-white border-t border-gray-200">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          {/* Mock Data Toggle */}
+          <label className="flex items-center gap-2 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={useMockData}
+              onChange={(e) => setUseMockData(e.target.checked)}
+              className="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 rounded focus:ring-zinc-500 focus:ring-2 cursor-pointer"
+            />
+            <span className="text-sm font-medium text-gray-700 group-hover:text-zinc-900 transition-colors">
+              Use Mock Data
+            </span>
+            {useMockData && (
+              <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded">
+                Testing Mode
+              </span>
+            )}
+          </label>
+
           <button
             onClick={handleContinue}
             disabled={uploadedDocuments.length === 0}
             className="px-6 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Process Documents
+            {useMockData ? 'Generate Mock Data' : 'Process Documents'}
           </button>
         </div>
       </div>

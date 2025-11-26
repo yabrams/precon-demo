@@ -29,8 +29,8 @@ export default function UploadDiagramPage({ params }: PageProps) {
     }
   };
 
-  const handleExtractStart = async (url: string, instructions?: string) => {
-    // Trigger extraction
+  const handleExtractStart = async (url: string, instructions?: string, useMockData?: boolean) => {
+    // Trigger extraction (or mock data generation)
     try {
       const response = await fetch('/api/extract-v2', {
         method: 'POST',
@@ -39,6 +39,7 @@ export default function UploadDiagramPage({ params }: PageProps) {
           imageUrl: url,
           instructions,
           projectId,
+          useMockData,
         }),
       });
 

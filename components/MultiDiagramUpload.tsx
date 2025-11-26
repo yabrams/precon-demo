@@ -64,6 +64,7 @@ export default function MultiDiagramUpload({
   const [instructions, setInstructions] = useState('');
   const [projectName, setProjectName] = useState('');
   const [duplicateHandling, setDuplicateHandling] = useState<'reuse' | 'copy'>('copy');
+  const [useMockData, setUseMockData] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
@@ -141,7 +142,8 @@ export default function MultiDiagramUpload({
           createNewProject: !bcProjectId && !hasDuplicates,
           projectName: projectName || uploadedFiles[0].fileName.replace(/\.[^/.]+$/, ''),
           isDuplicate: hasDuplicates && duplicateHandling === 'copy',
-          originalProjectId: firstDuplicate?.existingProjectId
+          originalProjectId: firstDuplicate?.existingProjectId,
+          useMockData
         }),
       });
 
@@ -307,9 +309,41 @@ export default function MultiDiagramUpload({
           transition={{ delay: 0.1 }}
           className="flex-1 flex flex-col bg-white p-6"
         >
-          <h3 className="text-lg font-semibold text-zinc-900 mb-4">
-            Extraction Options
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-zinc-900">
+              Extraction Options
+            </h3>
+
+            {/* Mock Data Toggle */}
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={useMockData}
+                onChange={(e) => setUseMockData(e.target.checked)}
+                className="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 rounded focus:ring-zinc-500 focus:ring-2 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-zinc-900 transition-colors">
+                Use Mock Data
+              </span>
+            </label>
+          </div>
+
+          {useMockData && (
+            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm text-amber-800">
+                  <strong className="font-semibold">Mock Mode Enabled:</strong>
+                  <p className="mt-1">
+                    Diagrams will be uploaded but AI analysis will be skipped.
+                    Instead, 5-8 CSI-based bid packages with realistic mock data will be generated for testing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex-1 space-y-4">
             {!bcProjectId && newFiles.length > 0 && (
@@ -336,21 +370,36 @@ export default function MultiDiagramUpload({
                 onChange={(e) => setInstructions(e.target.value)}
                 placeholder="Add specific instructions for the AI extractor...&#10;&#10;Examples:&#10;- Focus on specific trades&#10;- Group items by location&#10;- Extract from specific areas"
                 className="w-full h-32 p-4 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+                disabled={useMockData}
               />
             </div>
 
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">What will happen:</h4>
-              <ul className="text-sm text-blue-700 space-y-1">
-                <li>• Extract bid items from all {uploadedFiles.length} files</li>
-                <li>• Automatically categorize items by trade</li>
-                <li>• Create bid packages for each trade category</li>
-                <li>• Save all data to the database</li>
-                {duplicateFiles.length > 0 && duplicateHandling === 'copy' && (
-                  <li>• Create copies of {duplicateFiles.length} duplicate project(s)</li>
-                )}
-                {duplicateFiles.length > 0 && duplicateHandling === 'reuse' && (
-                  <li>• Reuse existing data for {duplicateFiles.length} duplicate(s)</li>
+            <div className={`p-4 border rounded-lg ${useMockData ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-200'}`}>
+              <h4 className={`font-medium mb-2 ${useMockData ? 'text-amber-900' : 'text-blue-900'}`}>
+                {useMockData ? 'Mock Mode - What will happen:' : 'What will happen:'}
+              </h4>
+              <ul className={`text-sm space-y-1 ${useMockData ? 'text-amber-700' : 'text-blue-700'}`}>
+                {useMockData ? (
+                  <>
+                    <li>• Upload all {uploadedFiles.length} files (no AI processing)</li>
+                    <li>• Generate 5-8 random CSI-based bid packages</li>
+                    <li>• Create 3-20 mock line items per package</li>
+                    <li>• Match items to CSI codes automatically</li>
+                    <li>• Save mock data to the database</li>
+                  </>
+                ) : (
+                  <>
+                    <li>• Extract bid items from all {uploadedFiles.length} files</li>
+                    <li>• Automatically categorize items by trade</li>
+                    <li>• Create bid packages for each trade category</li>
+                    <li>• Save all data to the database</li>
+                    {duplicateFiles.length > 0 && duplicateHandling === 'copy' && (
+                      <li>• Create copies of {duplicateFiles.length} duplicate project(s)</li>
+                    )}
+                    {duplicateFiles.length > 0 && duplicateHandling === 'reuse' && (
+                      <li>• Reuse existing data for {duplicateFiles.length} duplicate(s)</li>
+                    )}
+                  </>
                 )}
               </ul>
             </div>
@@ -362,6 +411,7 @@ export default function MultiDiagramUpload({
                 setUploadedFiles([]);
                 setInstructions('');
                 setProjectName('');
+                setUseMockData(false);
                 onCancel();
               }}
               className="px-6 py-3 bg-white hover:bg-gray-50 text-zinc-900 border border-gray-200 rounded-lg transition-colors font-medium"
@@ -373,7 +423,7 @@ export default function MultiDiagramUpload({
               disabled={extracting}
               className="flex-1 px-6 py-3 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-all font-medium disabled:opacity-50"
             >
-              {extracting ? 'Processing...' : `Process ${uploadedFiles.length} Files →`}
+              {extracting ? 'Processing...' : useMockData ? `Generate Mock Data →` : `Process ${uploadedFiles.length} Files →`}
             </button>
           </div>
         </motion.div>

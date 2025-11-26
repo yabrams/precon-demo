@@ -79,6 +79,7 @@ interface ProjectReviewViewProps {
   uploadedDocuments: UploadedDocument[];
   selectedExternalProject?: ExternalProject;
   initialProjectName?: string;
+  useMockData?: boolean;
   onApprove: (projectData: any) => void;
   onCancel: () => void;
 }
@@ -89,6 +90,7 @@ export default function ProjectReviewView({
   uploadedDocuments,
   selectedExternalProject,
   initialProjectName,
+  useMockData = false,
   onApprove,
   onCancel
 }: ProjectReviewViewProps) {
@@ -216,6 +218,7 @@ export default function ProjectReviewView({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               imageUrl: doc.url,
+              useMockData,
               // Don't pass projectId - we just want the extraction data, not to save to DB yet
             })
           });

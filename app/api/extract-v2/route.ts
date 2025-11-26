@@ -5,6 +5,7 @@ import path from 'path';
 import { prisma } from '@/lib/prisma';
 import { isPDFFile, processPDFForExtraction } from '@/lib/pdf-utils';
 import { searchCSICodes } from '@/lib/csi/csiLookup';
+import { generateMockExtraction } from '@/lib/mockDataGenerator';
 
 // Helper function to match a line item description to CSI codes using search
 function matchLineItemToCSI(description: string, csiDivision?: string): { code: string; title: string } | null {
@@ -368,7 +369,7 @@ function combineExtractionResults(results: any[]) {
 
 export async function POST(request: Request) {
   try {
-    const { imageUrl, instructions, projectId, diagramId } = await request.json();
+    const { imageUrl, instructions, projectId, diagramId, useMockData } = await request.json();
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -403,6 +404,119 @@ export async function POST(request: Request) {
           { status: 404 }
         );
       }
+    }
+
+    // If mock mode is enabled, generate mock data instead of calling Claude API
+    if (useMockData) {
+      console.log('Mock mode enabled - generating mock data instead of calling Claude API');
+
+      // Generate mock bid packages (with 2 second delay to simulate API call)
+      const mockResult = await generateMockExtraction(2000);
+
+      console.log('Mock extraction complete:', JSON.stringify(mockResult, null, 2));
+      console.log('Mock bid packages count:', mockResult.bid_packages?.length || 0);
+
+      // Log total line items across all packages
+      const totalLineItems = mockResult.bid_packages?.reduce((sum: number, pkg: any) =>
+        sum + (pkg.line_items?.length || 0), 0) || 0;
+      console.log('Total mock line items across all packages:', totalLineItems);
+
+      // If projectId is provided, save mock data to database
+      if (projectId && mockResult.bid_packages && mockResult.bid_packages.length > 0) {
+        try {
+          // Create bid packages and forms for each mock package
+          const createdPackages = await Promise.all(
+            mockResult.bid_packages.map(async (pkg: any) => {
+              // Check if package has any line items
+              if (!pkg.line_items || pkg.line_items.length === 0) {
+                console.log(`Skipping empty mock package: ${pkg.name}`);
+                return null;
+              }
+
+              // Create the bid package
+              const bidPackage = await prisma.bidPackage.create({
+                data: {
+                  bcBidPackageId: `${projectId}-${pkg.csi_division}-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
+                  bcProjectId: projectId,
+                  name: pkg.name,
+                  description: pkg.description || `${pkg.name} scope of work (MOCK DATA)`,
+                  scope: pkg.description,
+                  status: 'draft',
+                  progress: 0,
+                  diagramIds: diagramId ? JSON.stringify([diagramId]) : null,
+                }
+              });
+
+              // Create bid form with mock line items for this package
+              const lineItemsForDB = pkg.line_items.map((item: any, index: number) => ({
+                itemNumber: item.item_number || null,
+                description: item.description,
+                quantity: item.quantity || null,
+                unit: item.unit || null,
+                unitPrice: item.unit_price || null,
+                totalPrice: item.total_price || null,
+                notes: item.notes || null,
+                order: index,
+                verified: false,
+                csiCode: item.csiCode || 'N/A',
+                csiTitle: item.csiTitle || 'N/A',
+              }));
+
+              const bidForm = await prisma.bidForm.create({
+                data: {
+                  bidPackageId: bidPackage.id,
+                  diagramId: diagramId || null,
+                  extractionConfidence: mockResult.extraction_confidence || 'medium',
+                  rawExtractedText: 'MOCK DATA GENERATED',
+                  status: 'draft',
+                  lineItems: {
+                    create: lineItemsForDB
+                  }
+                },
+                include: {
+                  lineItems: {
+                    orderBy: {
+                      order: 'asc'
+                    }
+                  }
+                }
+              });
+
+              console.log(`Created Mock BidPackage: ${bidPackage.id} (${pkg.name}) with BidForm: ${bidForm.id}`);
+
+              return {
+                bidPackage,
+                bidForm
+              };
+            })
+          );
+
+          // Filter out null values (empty packages)
+          const validPackages = createdPackages.filter(p => p !== null);
+
+          return NextResponse.json({
+            ...mockResult,
+            createdPackages: validPackages,
+            message: `Successfully created ${validPackages.length} mock bid packages with forms`,
+            isMockData: true
+          });
+
+        } catch (dbError) {
+          console.error('Error saving mock data to database:', dbError);
+          // Return mock extraction result even if DB save fails
+          return NextResponse.json({
+            ...mockResult,
+            warning: 'Mock extraction successful but failed to save to database',
+            isMockData: true
+          });
+        }
+      }
+
+      // Return mock extraction result without saving to database
+      return NextResponse.json({
+        ...mockResult,
+        isMockData: true
+      });
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
