@@ -5,12 +5,13 @@
  * Displays bid packages for a selected BuildingConnected project
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-import { ChevronDown, ChevronLeft, ChevronRight, Edit2, Eye } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
+import { useEditMode } from '@/contexts/EditModeContext';
 
 // Dynamically import PDFViewer to avoid SSR issues with pdf.js
 const PDFViewer = dynamic(() => import('./PDFViewer'), {
@@ -59,7 +60,7 @@ export default function BidPackageListView({
   onProjectUpdate,
   onSaveComplete,
 }: BidPackageListViewProps) {
-  const [isEditMode, setIsEditMode] = useState(false);
+  const { isEditMode, registerCallbacks, unregisterCallbacks } = useEditMode();
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(
     project.diagrams?.[0]?.id || null
   );
@@ -68,9 +69,6 @@ export default function BidPackageListView({
   // State for tracking edits
   const [editedBidPackages, setEditedBidPackages] = useState<BidPackage[]>([]);
   const [editedProject, setEditedProject] = useState<BuildingConnectedProject>(project);
-
-  // State for delete confirmation
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // State for users list
   const [users, setUsers] = useState<User[]>([]);
@@ -101,79 +99,122 @@ export default function BidPackageListView({
     fetchUsers();
   }, []);
 
-  // Initialize edit state when entering edit mode
-  const handleEditModeToggle = async () => {
-    if (!isEditMode) {
-      // Entering edit mode - initialize state
-      setEditedBidPackages(JSON.parse(JSON.stringify(bidPackages)));
-      setEditedProject(JSON.parse(JSON.stringify(project)));
-      setIsEditMode(true);
-    } else {
-      // Saving changes
-      console.log('Saving changes...', { editedProject, editedBidPackages });
+  // Save handler for edit mode
+  const handleSave = useCallback(async () => {
+    console.log('Saving changes...', { editedProject, editedBidPackages });
 
-      // Update parent component's state immediately
-      if (onProjectUpdate) {
-        onProjectUpdate(editedProject, editedBidPackages);
-      }
+    // Update parent component's state immediately
+    if (onProjectUpdate) {
+      onProjectUpdate(editedProject, editedBidPackages);
+    }
 
-      // Persist to database
-      try {
-        let allSuccess = true;
+    // Persist to database
+    try {
+      let allSuccess = true;
 
-        // Update each bid package that was modified
-        for (const bidPackage of editedBidPackages) {
-          console.log('Updating bid package:', bidPackage.id, bidPackage);
-          const response = await fetch(`/api/bid-packages/${bidPackage.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bidPackage),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Failed to update bid package:', bidPackage.id, errorData);
-            allSuccess = false;
-          } else {
-            const data = await response.json();
-            console.log('Bid package updated successfully:', data);
-          }
-        }
-
-        // Update project information
-        console.log('Updating project:', editedProject.id);
-        const projectResponse = await fetch(`/api/projects/${editedProject.id}`, {
+      // Update each bid package that was modified
+      for (const bidPackage of editedBidPackages) {
+        console.log('Updating bid package:', bidPackage.id, bidPackage);
+        const response = await fetch(`/api/bid-packages/${bidPackage.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(editedProject),
+          body: JSON.stringify(bidPackage),
         });
 
-        if (!projectResponse.ok) {
-          const errorData = await projectResponse.json();
-          console.error('Failed to update project:', errorData);
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Failed to update bid package:', bidPackage.id, errorData);
           allSuccess = false;
         } else {
-          const data = await projectResponse.json();
-          console.log('Project updated successfully:', data);
+          const data = await response.json();
+          console.log('Bid package updated successfully:', data);
         }
-
-        if (allSuccess) {
-          console.log('All changes saved successfully');
-          // Reload projects from database
-          if (onSaveComplete) {
-            await onSaveComplete();
-          }
-        } else {
-          alert('Some changes failed to save. Please check the console and try again.');
-        }
-      } catch (error) {
-        console.error('Error saving changes:', error);
-        alert('Failed to save changes. Please try again.');
       }
 
-      setIsEditMode(false);
+      // Update project information
+      console.log('Updating project:', editedProject.id);
+      const projectResponse = await fetch(`/api/projects/${editedProject.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedProject),
+      });
+
+      if (!projectResponse.ok) {
+        const errorData = await projectResponse.json();
+        console.error('Failed to update project:', errorData);
+        allSuccess = false;
+      } else {
+        const data = await projectResponse.json();
+        console.log('Project updated successfully:', data);
+      }
+
+      if (allSuccess) {
+        console.log('All changes saved successfully');
+        // Reload projects from database
+        if (onSaveComplete) {
+          await onSaveComplete();
+        }
+      } else {
+        alert('Some changes failed to save. Please check the console and try again.');
+      }
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      alert('Failed to save changes. Please try again.');
     }
-  };
+  }, [editedProject, editedBidPackages, onProjectUpdate, onSaveComplete]);
+
+  // Delete handler for edit mode
+  const handleDelete = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/projects/${project.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete project');
+      }
+
+      // Reload projects to update the list
+      if (onSaveComplete) {
+        await onSaveComplete();
+      }
+
+      // Navigate back to projects list
+      onBack();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Failed to delete project. Please try again.');
+    }
+  }, [project.id, onSaveComplete, onBack]);
+
+  // Register callbacks with the EditModeContext on mount, unregister on unmount
+  useEffect(() => {
+    registerCallbacks({
+      onSave: handleSave,
+      onDelete: handleDelete,
+    });
+    // Only unregister on unmount
+    return () => {
+      unregisterCallbacks();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - register once on mount
+
+  // Update callbacks when they change (refs in context will be updated)
+  useEffect(() => {
+    registerCallbacks({
+      onSave: handleSave,
+      onDelete: handleDelete,
+    });
+  }, [handleSave, handleDelete, registerCallbacks]);
+
+  // Initialize edit state when entering edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      setEditedBidPackages(JSON.parse(JSON.stringify(bidPackages)));
+      setEditedProject(JSON.parse(JSON.stringify(project)));
+    }
+  }, [isEditMode, bidPackages, project]);
 
   // Update bid package field
   const updateBidPackage = (index: number, field: string, value: any) => {
@@ -365,30 +406,6 @@ export default function BidPackageListView({
     event.target.value = '';
   };
 
-  // Handle project deletion
-  const handleDeleteProject = async () => {
-    try {
-      const response = await fetch(`/api/projects/${project.id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete project');
-      }
-
-      // Reload projects to update the list
-      if (onSaveComplete) {
-        await onSaveComplete();
-      }
-
-      // Navigate back to projects list
-      onBack();
-    } catch (error) {
-      console.error('Error deleting project:', error);
-      alert('Failed to delete project. Please try again.');
-    }
-  };
-
   // Handle captain assignment in non-edit mode
   const handleCaptainAssignment = async (bidPackageId: string, userId: string) => {
     try {
@@ -457,127 +474,6 @@ export default function BidPackageListView({
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            {/* Back Button */}
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Back to Projects"
-            >
-              <ChevronLeft className="h-5 w-5 text-gray-600" />
-            </button>
-            {/* Precon Lead Avatar */}
-            {(isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar) && (
-              <div className="flex-shrink-0">
-                <img
-                  src={isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar}
-                  alt={isEditMode ? editedProject.preconLeadName : project.preconLeadName}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
-                  title={`Precon Lead: ${isEditMode ? editedProject.preconLeadName : project.preconLeadName}`}
-                />
-              </div>
-            )}
-            {!(isEditMode ? editedProject.preconLeadAvatar : project.preconLeadAvatar) && (isEditMode ? editedProject.preconLeadName : project.preconLeadName) && (
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 border-2 border-emerald-200 flex items-center justify-center">
-                <span className="text-emerald-700 font-bold text-sm">
-                  {getCaptainInitials(isEditMode ? editedProject.preconLeadName : project.preconLeadName)}
-                </span>
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              {isEditMode ? (
-                <input
-                  type="text"
-                  value={editedProject.name}
-                  onChange={(e) => updateProjectField('name', e.target.value)}
-                  className="text-lg font-bold text-zinc-900 bg-transparent border-b border-gray-300 focus:border-zinc-400 focus:outline-none w-full max-w-md"
-                />
-              ) : (
-                <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
-              )}
-              <div className="flex items-center space-x-3">
-                {project.projectNumber && (
-                  <p className="text-xs text-gray-600 font-mono">#{project.projectNumber}</p>
-                )}
-                {project.bidDueDate && (
-                  <div className="flex items-center space-x-1">
-                    {project.projectNumber && <span className="text-gray-300">•</span>}
-                    <p className="text-xs text-gray-600">Due: {formatDate(project.bidDueDate)}</p>
-                  </div>
-                )}
-                {(isEditMode ? editedProject.preconLeadName : project.preconLeadName) && (
-                  <div className="flex items-center space-x-1">
-                    <span className="text-gray-300">•</span>
-                    <p className="text-xs text-emerald-700 font-medium">
-                      Lead: {isEditMode ? editedProject.preconLeadName : project.preconLeadName}
-                    </p>
-                  </div>
-                )}
-              </div>
-              {/* Project Description */}
-              {isEditMode ? (
-                <textarea
-                  value={editedProject.description || ''}
-                  onChange={(e) => updateProjectField('description', e.target.value)}
-                  placeholder="Project description..."
-                  rows={2}
-                  className="mt-1 text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 focus:border-zinc-400 focus:outline-none w-full max-w-lg resize-none"
-                />
-              ) : (
-                (project.description) && (
-                  <p className="mt-1 text-sm text-gray-600 line-clamp-2 max-w-lg">{project.description}</p>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* Edit/Save Toggle and Delete Button */}
-          <div className="flex items-center gap-3">
-            {isEditMode && (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-900/10 hover:shadow-lg"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-                <span>Delete Project</span>
-              </button>
-            )}
-            <button
-              onClick={handleEditModeToggle}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isEditMode
-                  ? 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md shadow-zinc-900/10 hover:shadow-lg'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {isEditMode ? (
-                <>
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Save Changes</span>
-                </>
-              ) : (
-                <>
-                  <Edit2 className="h-4 w-4" />
-                  <span>Edit</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main Content with Panels */}
       <div className="flex-1 min-h-0">
         {project.diagrams && project.diagrams.length > 0 ? (
@@ -1073,60 +969,6 @@ export default function BidPackageListView({
           </div>
         )}
       </div>
-
-      {/* Delete Confirmation Dialog */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-red-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">
-                    Delete Project
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Are you sure you want to delete this project? This action cannot be undone.
-                  </p>
-                  <div className="flex gap-3 justify-end">
-                    <button
-                      onClick={() => setShowDeleteConfirm(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowDeleteConfirm(false);
-                        handleDeleteProject();
-                      }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
