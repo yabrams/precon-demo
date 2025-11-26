@@ -8,34 +8,101 @@ import { searchCSICodes } from '@/lib/csi/csiLookup';
 import { generateMockExtraction } from '@/lib/mockDataGenerator';
 
 // Helper function to match a line item description to CSI codes using search
+// Uses progressive word trimming: if full description doesn't match,
+// 1. First trim words from the end until a match is found
+// 2. If still no match, trim words from the beginning until a match is found
+// Tries with division filter first, then without as fallback
 function matchLineItemToCSI(description: string, csiDivision?: string): { code: string; title: string } | null {
   if (!description || description.trim().length === 0) {
     return null;
   }
 
-  // Search for CSI codes matching the description
-  const searchOptions: any = {
-    query: description,
-    limit: 3,
-    caseSensitive: false,
-  };
+  // Clean the description: remove special characters like #, numbers at end, etc.
+  const cleanDescription = description.trim();
 
-  // If we have a CSI division hint, filter by it
+  // Split into words, filtering out empty strings
+  const words = cleanDescription.split(/[\s\-–—]+/).filter(w => w.length > 0);
+
+  // Try with division filter first, then without
+  const divisionFilters: (string[] | undefined)[] = [];
   if (csiDivision && csiDivision !== '00') {
-    searchOptions.divisions = [csiDivision];
+    divisionFilters.push([csiDivision]); // First with division
+  }
+  divisionFilters.push(undefined); // Then without division filter
+
+  for (const divisions of divisionFilters) {
+    // Strategy 1: Trim words from the END
+    for (let wordCount = words.length; wordCount >= 1; wordCount--) {
+      const searchTermWords = words.slice(0, wordCount);
+      const searchTerm = searchTermWords.join(' ');
+
+      // Skip if search term is too short (less than 2 chars)
+      if (searchTerm.length < 2) {
+        continue;
+      }
+
+      // Search for CSI codes matching the search term
+      const searchOptions: any = {
+        query: searchTerm,
+        limit: 3,
+        caseSensitive: false,
+      };
+
+      if (divisions) {
+        searchOptions.divisions = divisions;
+      }
+
+      const results = searchCSICodes(searchOptions);
+
+      // Return the best match if found
+      if (results.length > 0) {
+        const bestMatch = results[0];
+        const searchScope = divisions ? `division ${csiDivision}` : 'all divisions';
+        console.log(`CSI match found for "${searchTerm}" (from "${description}", trim-end) in ${searchScope}: ${bestMatch.code.code} - ${bestMatch.code.title}`);
+        return {
+          code: bestMatch.code.code,
+          title: bestMatch.code.title,
+        };
+      }
+    }
+
+    // Strategy 2: Trim words from the BEGINNING
+    for (let startIdx = 1; startIdx < words.length; startIdx++) {
+      const searchTermWords = words.slice(startIdx);
+      const searchTerm = searchTermWords.join(' ');
+
+      // Skip if search term is too short (less than 2 chars)
+      if (searchTerm.length < 2) {
+        continue;
+      }
+
+      // Search for CSI codes matching the search term
+      const searchOptions: any = {
+        query: searchTerm,
+        limit: 3,
+        caseSensitive: false,
+      };
+
+      if (divisions) {
+        searchOptions.divisions = divisions;
+      }
+
+      const results = searchCSICodes(searchOptions);
+
+      // Return the best match if found
+      if (results.length > 0) {
+        const bestMatch = results[0];
+        const searchScope = divisions ? `division ${csiDivision}` : 'all divisions';
+        console.log(`CSI match found for "${searchTerm}" (from "${description}", trim-start) in ${searchScope}: ${bestMatch.code.code} - ${bestMatch.code.title}`);
+        return {
+          code: bestMatch.code.code,
+          title: bestMatch.code.title,
+        };
+      }
+    }
   }
 
-  const results = searchCSICodes(searchOptions);
-
-  // Return the best match if found
-  if (results.length > 0) {
-    const bestMatch = results[0];
-    return {
-      code: bestMatch.code.code,
-      title: bestMatch.code.title,
-    };
-  }
-
+  console.log(`No CSI match found for "${description}" even after all trimming strategies in all divisions`);
   return null;
 }
 
