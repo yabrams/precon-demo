@@ -260,10 +260,12 @@ function HandDrawnCircle({
   );
 }
 
-// Calculate zoom transform to focus on circle area
-function calculateZoomTransform(circle: CircleArea): { scale: number; originX: number; originY: number } {
+// Base resolution multiplier for PDF.js - renders at higher quality
+const PDF_RESOLUTION_SCALE = 2;
+
+// Calculate zoom scale to focus on circle area
+function calculateZoomScale(circle: CircleArea): number {
   // Zoom to show circle + 50% beyond
-  // Circle diameter is roughly radiusX * 2 for width
   const circleWidthRatio = circle.radiusX * 2;
   const circleHeightRatio = circle.radiusY * 2;
 
@@ -274,14 +276,7 @@ function calculateZoomTransform(circle: CircleArea): { scale: number; originX: n
   // Scale to fit the larger dimension
   const scaleX = 1 / viewWidthRatio;
   const scaleY = 1 / viewHeightRatio;
-  const scale = Math.min(scaleX, scaleY, 4); // Cap at 4x zoom
-
-  // Use transform-origin to zoom directly into the circle center
-  // Convert normalized coordinates to percentage
-  const originX = circle.centerX * 100;
-  const originY = circle.centerY * 100;
-
-  return { scale, originX, originY };
+  return Math.min(scaleX, scaleY, 4); // Cap at 4x zoom
 }
 
 export default function RandomPDFPagesViewer({
@@ -337,9 +332,11 @@ export default function RandomPDFPagesViewer({
   }, []);
 
   // Handle page load to get actual rendered dimensions
+  // Divide by PDF_RESOLUTION_SCALE since we render at higher resolution
   const onPageLoadSuccess = useCallback((page: { width: number; height: number }) => {
-    if (page.height && page.height !== actualPageHeight) {
-      setActualPageHeight(page.height);
+    const normalizedHeight = page.height / PDF_RESOLUTION_SCALE;
+    if (normalizedHeight && normalizedHeight !== actualPageHeight) {
+      setActualPageHeight(normalizedHeight);
     }
   }, [actualPageHeight]);
 
@@ -454,10 +451,18 @@ export default function RandomPDFPagesViewer({
             {pageData.pages.map((pageNum, index) => {
               const circle = pageData.circles[index];
               const isHovered = hoveredIndex === index;
-              const zoomTransform = circle ? calculateZoomTransform(circle) : { scale: 1, originX: 50, originY: 50 };
-              const pageScale = getPageScale(index);
               // Use actual page height if available, otherwise fall back to calculated
               const displayHeight = actualPageHeight || pageDimensions.height;
+              const zoomScale = circle ? calculateZoomScale(circle) : 1;
+              const pageScale = getPageScale(index);
+
+              // Container dimensions
+              const containerWidth = pageDimensions.width;
+              const containerHeight = displayHeight;
+
+              // Transform origin at circle center (as percentage)
+              const originX = circle ? circle.centerX * 100 : 50;
+              const originY = circle ? circle.centerY * 100 : 50;
 
               return (
                 <motion.div
@@ -481,37 +486,73 @@ export default function RandomPDFPagesViewer({
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <motion.div
+                  <div
                     className="relative overflow-hidden"
-                    animate={{
-                      scale: isHovered ? zoomTransform.scale : 1,
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease: [0.4, 0, 0.2, 1], // Custom easing for smooth zoom
-                    }}
                     style={{
-                      transformOrigin: `${zoomTransform.originX}% ${zoomTransform.originY}%`,
+                      width: containerWidth,
+                      height: containerHeight,
                     }}
                   >
-                    <Document file={pdfUrl} loading={null} error={null}>
-                      <Page
-                        pageNumber={pageNum}
-                        width={pageDimensions.width}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                        onLoadSuccess={onPageLoadSuccess}
-                      />
-                    </Document>
-                    {/* Hand-drawn circle overlay */}
-                    {circle && (
-                      <HandDrawnCircle
-                        {...circle}
-                        width={pageDimensions.width}
-                        height={displayHeight}
-                      />
-                    )}
-                  </motion.div>
+                    <motion.div
+                      animate={{
+                        scale: isHovered ? zoomScale : 1,
+                      }}
+                      transition={{
+                        duration: 0.4,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                      style={{
+                        transformOrigin: `${originX}% ${originY}%`,
+                        width: containerWidth,
+                        height: containerHeight,
+                      }}
+                    >
+                      {/* PDF rendered at higher resolution, scaled down to fit */}
+                      <div
+                        style={{
+                          width: containerWidth,
+                          height: containerHeight,
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            transform: `scale(${1 / PDF_RESOLUTION_SCALE})`,
+                            transformOrigin: 'top left',
+                          }}
+                        >
+                          <Document file={pdfUrl} loading={null} error={null}>
+                            <Page
+                              pageNumber={pageNum}
+                              width={pageDimensions.width * PDF_RESOLUTION_SCALE}
+                              renderTextLayer={false}
+                              renderAnnotationLayer={false}
+                              onLoadSuccess={onPageLoadSuccess}
+                            />
+                          </Document>
+                        </div>
+                      </div>
+                      {/* Hand-drawn circle overlay */}
+                      {circle && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: containerWidth,
+                            height: containerHeight,
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          <HandDrawnCircle
+                            {...circle}
+                            width={containerWidth}
+                            height={containerHeight}
+                          />
+                        </div>
+                      )}
+                    </motion.div>
+                  </div>
                   {/* Page number indicator */}
                   <div className="bg-zinc-900 text-white text-xs py-1 px-2 text-center font-mono">
                     Page {pageNum}
