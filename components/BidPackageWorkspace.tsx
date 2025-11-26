@@ -478,7 +478,7 @@ export default function BidPackageWorkspace({
             <Panel defaultSize={35} minSize={20} className="relative bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
                 {/* Diagram Container */}
-                <div className="flex-1 overflow-auto bg-gray-50 p-4 relative">
+                <div className={`flex-1 overflow-auto bg-gray-50 relative ${isPDF ? '' : 'p-4'}`}>
                   {diagramUrl ? (
                     isPDF ? (
                       // PDF Viewer
@@ -550,7 +550,7 @@ export default function BidPackageWorkspace({
               {/* Diagram Container - Full Width with Auto-Zoom */}
               <div
                 ref={diagramContainerRef}
-                className="flex-1 overflow-hidden bg-gray-50 relative flex items-center justify-center p-4"
+                className={`flex-1 overflow-hidden bg-gray-50 relative flex items-center justify-center ${isPDF ? '' : 'p-4'}`}
               >
                 {diagramUrl ? (
                   isPDF ? (
@@ -600,6 +600,7 @@ export default function BidPackageWorkspace({
 
             {/* Single Item Panel at Bottom */}
             {currentItem && (
+              <div className="shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.08)] relative z-10">
               <SingleItemPanel
                 ref={singleItemPanelRef}
                 item={currentItem}
@@ -623,6 +624,7 @@ export default function BidPackageWorkspace({
                 }
                 onRecall={bidPackage.status === 'pending-review' ? onRecall : undefined}
               />
+              </div>
             )}
           </div>
         )}
