@@ -285,24 +285,50 @@ export default function BidPackageListView({
       return Math.max(0, Math.min(100, bidPackage.progress));
     }
 
-    // Try to calculate from line items if available
+    // Calculate from counts
+    const counts = getApprovalCounts(bidPackage);
+    if (counts.total === 0) return 0;
+
+    return Math.round((counts.approved / counts.total) * 100);
+  };
+
+  // Get approval counts for display
+  const getApprovalCounts = (bidPackage: BidPackage): { approved: number; total: number } => {
     try {
-      const workspaceData = bidPackage.workspaceData
-        ? JSON.parse(bidPackage.workspaceData)
-        : null;
+      // First, try to get counts from workspaceData (for packages that have been worked on)
+      if (bidPackage.workspaceData && bidPackage.workspaceData.trim() !== '') {
+        const workspaceData = JSON.parse(bidPackage.workspaceData);
 
-      if (workspaceData?.lineItems && Array.isArray(workspaceData.lineItems)) {
-        const totalItems = workspaceData.lineItems.length;
-        if (totalItems === 0) return 0;
-
-        const approvedItems = workspaceData.lineItems.filter((item: any) => item.approved === true).length;
-        return Math.round((approvedItems / totalItems) * 100);
+        // Check if workspaceData has lineItems array
+        if (workspaceData?.lineItems && Array.isArray(workspaceData.lineItems)) {
+          const totalItems = workspaceData.lineItems.length;
+          const approvedItems = workspaceData.lineItems.filter((item: any) => item.approved === true).length;
+          return { approved: approvedItems, total: totalItems };
+        }
       }
-    } catch (error) {
-      console.error('Error calculating approval percentage:', error);
-    }
 
-    return 0;
+      // Fall back to bidForms lineItems (for packages not yet opened/edited)
+      if (bidPackage.bidForms && Array.isArray(bidPackage.bidForms)) {
+        let totalItems = 0;
+        let approvedItems = 0;
+
+        bidPackage.bidForms.forEach((form: any) => {
+          if (form.lineItems && Array.isArray(form.lineItems)) {
+            totalItems += form.lineItems.length;
+            approvedItems += form.lineItems.filter((item: any) => item.approved === true).length;
+          }
+        });
+
+        return { approved: approvedItems, total: totalItems };
+      }
+
+      // No line items found
+      return { approved: 0, total: 0 };
+    } catch (error) {
+      console.error('Error getting approval counts for bid package:', bidPackage.id, error);
+      console.error('workspaceData:', bidPackage.workspaceData);
+      return { approved: 0, total: 0 };
+    }
   };
 
   // Direct file upload handler
@@ -843,11 +869,12 @@ export default function BidPackageListView({
                               <div>
                                 {(() => {
                                   const percentage = getApprovalPercentage(bidPackage);
+                                  const counts = getApprovalCounts(bidPackage);
                                   return (
                                     <div className="space-y-1">
                                       <div className="flex items-center justify-between">
                                         <span className="text-xs text-gray-600">Progress</span>
-                                        <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                                        <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
                                       </div>
                                       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                                         <div
@@ -1018,11 +1045,12 @@ export default function BidPackageListView({
                         <div>
                           {(() => {
                             const percentage = getApprovalPercentage(bidPackage);
+                            const counts = getApprovalCounts(bidPackage);
                             return (
                               <div className="space-y-1">
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs text-gray-600">Progress</span>
-                                  <span className="text-xs font-semibold text-zinc-900">{percentage}%</span>
+                                  <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                                   <div
