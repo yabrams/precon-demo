@@ -32,6 +32,16 @@ const PDFViewer = dynamic(() => import('./PDFViewer'), {
   ),
 });
 
+// Dynamically import RandomPDFPagesViewer for single view
+const RandomPDFPagesViewer = dynamic(() => import('./RandomPDFPagesViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900"></div>
+    </div>
+  ),
+});
+
 type ViewMode = 'grid' | 'single';
 
 interface UploadedFile {
@@ -556,13 +566,12 @@ export default function BidPackageWorkspace({
               >
                 {diagramUrl ? (
                   isPDF ? (
-                    // PDF Viewer
+                    // Random PDF Pages Viewer - shows 2-4 random pages side by side
                     <div className="w-full h-full">
-                      <PDFViewer
-                        documents={{
-                          url: diagramUrl,
-                          fileName: currentDiagram?.fileName || 'Document.pdf'
-                        }}
+                      <RandomPDFPagesViewer
+                        pdfUrl={diagramUrl}
+                        itemId={currentItem?.id || `item-${currentItemIndex}`}
+                        bidPackageId={bidPackage.id}
                         className="h-full"
                       />
                     </div>
