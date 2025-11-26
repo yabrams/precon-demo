@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronLeft } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import BidFormTable, { LineItem } from './BidFormTable';
 import DiagramOverlay from './DiagramOverlay';
 import ChatPanel from './ChatPanel';
@@ -21,6 +22,16 @@ import { BuildingConnectedProject } from '@/types/buildingconnected';
 import { Diagram } from '@/types/diagram';
 import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
 import { useDiagramAutoFocus, getTransformStyle } from '@/hooks/useDiagramAutoFocus';
+
+// Dynamically import PDFViewer to avoid SSR issues with pdf.js
+const PDFViewer = dynamic(() => import('./PDFViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  ),
+});
 
 type ViewMode = 'grid' | 'single';
 
@@ -100,6 +111,11 @@ export default function BidPackageWorkspace({
     : relevantDiagrams[0];
 
   const diagramUrl = currentDiagram?.fileUrl || null;
+
+  // Check if current diagram is a PDF
+  const isPDF = currentDiagram ?
+    (currentDiagram.fileType === 'application/pdf' || currentDiagram.fileName.toLowerCase().endsWith('.pdf'))
+    : false;
 
   // Update image dimensions and zoom level when image loads or on resize
   useEffect(() => {
@@ -346,7 +362,6 @@ export default function BidPackageWorkspace({
                   {bidPackage.status}
                 </span>
               </div>
-              <p className="text-xs font-medium text-gray-700">{project.name}</p>
               {project.description && (
                 <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 max-w-md">{project.description}</p>
               )}
@@ -471,56 +486,45 @@ export default function BidPackageWorkspace({
             {/* Left Panel: Diagram Viewer */}
             <Panel defaultSize={35} minSize={20} className="relative bg-white border-r border-gray-200">
               <div className="h-full flex flex-col">
-                {/* Diagram Info Bar */}
-                <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                  <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-sm font-medium text-zinc-900">Documents</span>
-                    {relevantDiagrams.length > 1 && (
-                      <select
-                        value={selectedDiagramId || relevantDiagrams[0]?.id || ''}
-                        onChange={(e) => setSelectedDiagramId(e.target.value)}
-                        className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
-                      >
-                        {relevantDiagrams.map((diagram) => (
-                          <option key={diagram.id} value={diagram.id}>
-                            {diagram.fileName}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {relevantDiagrams.length === 1 && currentDiagram && (
-                      <span className="text-xs text-gray-600 truncate">
-                        {currentDiagram.fileName}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
                 {/* Diagram Container */}
                 <div className="flex-1 overflow-auto bg-gray-50 p-4 relative">
                   {diagramUrl ? (
-                    <>
-                      <img
-                        ref={imageRef}
-                        src={diagramUrl}
-                        alt="Construction diagram"
-                        className="max-w-full h-auto mx-auto object-contain"
-                      />
-                      {/* Bounding Box Overlay */}
-                      {lineItems.some(item => item.boundingBox) && imageDimensions.width > 0 && (
-                        <DiagramOverlay
-                          lineItems={lineItems}
-                          hoveredItemId={hoveredItemId}
-                          onHoverChange={(id) => setHoveredItemId(id)}
-                          imageWidth={imageDimensions.width}
-                          imageHeight={imageDimensions.height}
+                    isPDF ? (
+                      // PDF Viewer
+                      <div className="h-full">
+                        <PDFViewer
+                          documents={{
+                            url: diagramUrl,
+                            fileName: currentDiagram?.fileName || 'Document.pdf'
+                          }}
+                          className="h-full"
                         />
-                      )}
-                      {/* Magnifying Glass */}
-                      {magnifyingGlassEnabled && diagramUrl && (
-                        <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
-                      )}
-                    </>
+                      </div>
+                    ) : (
+                      // Image Viewer with Overlays
+                      <>
+                        <img
+                          ref={imageRef}
+                          src={diagramUrl}
+                          alt="Construction diagram"
+                          className="max-w-full h-auto mx-auto object-contain"
+                        />
+                        {/* Bounding Box Overlay */}
+                        {lineItems.some(item => item.boundingBox) && imageDimensions.width > 0 && (
+                          <DiagramOverlay
+                            lineItems={lineItems}
+                            hoveredItemId={hoveredItemId}
+                            onHoverChange={(id) => setHoveredItemId(id)}
+                            imageWidth={imageDimensions.width}
+                            imageHeight={imageDimensions.height}
+                          />
+                        )}
+                        {/* Magnifying Glass */}
+                        {magnifyingGlassEnabled && diagramUrl && (
+                          <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
+                        )}
+                      </>
+                    )
                   ) : (
                     <div className="h-full flex items-center justify-center text-gray-500">
                       No diagram available
@@ -552,62 +556,51 @@ export default function BidPackageWorkspace({
           <div className="h-full flex flex-col">
             {/* Full-width Diagram Area */}
             <div className="flex-1 min-h-0 flex flex-col bg-white">
-              {/* Diagram Info Bar */}
-              <div className="px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
-                <div className="flex items-center space-x-2 flex-1 min-w-0">
-                  <span className="text-sm font-medium text-zinc-900">Documents</span>
-                  {relevantDiagrams.length > 1 && (
-                    <select
-                      value={selectedDiagramId || relevantDiagrams[0]?.id || ''}
-                      onChange={(e) => setSelectedDiagramId(e.target.value)}
-                      className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-zinc-900 max-w-xs truncate focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
-                    >
-                      {relevantDiagrams.map((diagram) => (
-                        <option key={diagram.id} value={diagram.id}>
-                          {diagram.fileName}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  {relevantDiagrams.length === 1 && currentDiagram && (
-                    <span className="text-xs text-gray-600 truncate">
-                      {currentDiagram.fileName}
-                    </span>
-                  )}
-                </div>
-              </div>
-
               {/* Diagram Container - Full Width with Auto-Zoom */}
               <div
                 ref={diagramContainerRef}
                 className="flex-1 overflow-hidden bg-gray-50 relative flex items-center justify-center p-4"
               >
                 {diagramUrl ? (
-                  <div
-                    className="relative w-full h-full flex items-center justify-center"
-                    style={getTransformStyle(diagramTransform)}
-                  >
-                    <img
-                      ref={imageRef}
-                      src={diagramUrl}
-                      alt="Construction diagram"
-                      className="w-full h-full object-contain"
-                    />
-                    {/* Bounding Box Overlay for current item */}
-                    {currentItem?.boundingBox && imageDimensions.width > 0 && (
-                      <DiagramOverlay
-                        lineItems={[currentItem]}
-                        hoveredItemId={currentItem.id || null}
-                        onHoverChange={() => {}}
-                        imageWidth={imageDimensions.width}
-                        imageHeight={imageDimensions.height}
+                  isPDF ? (
+                    // PDF Viewer
+                    <div className="w-full h-full">
+                      <PDFViewer
+                        documents={{
+                          url: diagramUrl,
+                          fileName: currentDiagram?.fileName || 'Document.pdf'
+                        }}
+                        className="h-full"
                       />
-                    )}
-                    {/* Magnifying Glass */}
-                    {magnifyingGlassEnabled && diagramUrl && (
-                      <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    // Image Viewer with Auto-Zoom and Overlays
+                    <div
+                      className="relative w-full h-full flex items-center justify-center"
+                      style={getTransformStyle(diagramTransform)}
+                    >
+                      <img
+                        ref={imageRef}
+                        src={diagramUrl}
+                        alt="Construction diagram"
+                        className="w-full h-full object-contain"
+                      />
+                      {/* Bounding Box Overlay for current item */}
+                      {currentItem?.boundingBox && imageDimensions.width > 0 && (
+                        <DiagramOverlay
+                          lineItems={[currentItem]}
+                          hoveredItemId={currentItem.id || null}
+                          onHoverChange={() => {}}
+                          imageWidth={imageDimensions.width}
+                          imageHeight={imageDimensions.height}
+                        />
+                      )}
+                      {/* Magnifying Glass */}
+                      {magnifyingGlassEnabled && diagramUrl && (
+                        <MagnifyingGlass imageRef={imageRef as React.RefObject<HTMLImageElement>} imageSrc={diagramUrl} enabled={magnifyingGlassEnabled} />
+                      )}
+                    </div>
+                  )
                 ) : (
                   <div className="text-gray-500">No diagram available</div>
                 )}

@@ -8,8 +8,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronDown, ChevronLeft, ChevronRight, Edit2, Eye } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { BidPackage } from '@/types/bidPackage';
 import { BuildingConnectedProject } from '@/types/buildingconnected';
+
+// Dynamically import PDFViewer to avoid SSR issues with pdf.js
+const PDFViewer = dynamic(() => import('./PDFViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  ),
+});
 
 interface User {
   id: string;
@@ -189,6 +200,11 @@ export default function BidPackageListView({
   const currentDiagram = selectedDiagramId
     ? project.diagrams?.find(d => d.id === selectedDiagramId)
     : project.diagrams?.[0];
+
+  // Check if current diagram is a PDF
+  const isPDF = currentDiagram ?
+    (currentDiagram.fileType === 'application/pdf' || currentDiagram.fileName.toLowerCase().endsWith('.pdf'))
+    : false;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -563,12 +579,26 @@ export default function BidPackageListView({
                 {/* Diagram Viewer */}
                 <div className="flex-1 overflow-auto bg-gray-50 p-4">
                   {currentDiagram ? (
-                    <img
-                      ref={imageRef}
-                      src={currentDiagram.fileUrl}
-                      alt={currentDiagram.fileName}
-                      className="max-w-full h-auto mx-auto object-contain"
-                    />
+                    isPDF ? (
+                      // PDF Viewer
+                      <div className="h-full">
+                        <PDFViewer
+                          documents={{
+                            url: currentDiagram.fileUrl,
+                            fileName: currentDiagram.fileName
+                          }}
+                          className="h-full"
+                        />
+                      </div>
+                    ) : (
+                      // Image Viewer
+                      <img
+                        ref={imageRef}
+                        src={currentDiagram.fileUrl}
+                        alt={currentDiagram.fileName}
+                        className="max-w-full h-auto mx-auto object-contain"
+                      />
+                    )
                   ) : (
                     <div className="h-full flex items-center justify-center text-gray-500 text-sm">
                       No diagram selected
