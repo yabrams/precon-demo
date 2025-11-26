@@ -354,28 +354,30 @@ export default function BidPackageWorkspace({
               {bidPackage.status}
             </span>
 
-            {/* Progress Bar */}
+            {/* Progress Indicator - Discrete rectangles */}
             {lineItems.length > 0 && (() => {
               const approvedItems = lineItems.filter(item => item.approved === true).length;
               const totalItems = lineItems.length;
-              const percentage = totalItems > 0 ? Math.round((approvedItems / totalItems) * 100) : 0;
 
               return (
-                <div className="w-96">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-600">Progress</span>
-                      <span className="text-xs font-semibold text-zinc-900">{approvedItems}/{totalItems}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-600">Progress</span>
+                  <div className="flex items-center gap-0.5">
+                    {lineItems.map((item, index) => (
                       <div
-                        className={`h-full transition-all duration-300 rounded-full ${
-                          percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
+                        key={item.id || index}
+                        className={`w-2.5 h-4 transition-all duration-200 ${
+                          item.approved ? 'bg-emerald-500' : 'bg-gray-300'
+                        } ${
+                          viewMode === 'single' && index === currentItemIndex
+                            ? 'ring-1 ring-zinc-900 ring-offset-1'
+                            : ''
                         }`}
-                        style={{ width: `${percentage}%` }}
+                        title={`Item ${index + 1}${item.approved ? ' (approved)' : ''}`}
                       />
-                    </div>
+                    ))}
                   </div>
+                  <span className="text-xs font-semibold text-zinc-900">{approvedItems}/{totalItems}</span>
                 </div>
               );
             })()}
