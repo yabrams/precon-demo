@@ -10,6 +10,7 @@ import {
 } from '@/lib/bid-package-utils';
 import { generateCopyName } from '@/lib/file-utils';
 import { isPDFFile, processPDFForExtraction } from '@/lib/pdf-utils';
+import { generateMockBidPackages } from '@/lib/mockDataGenerator';
 
 interface ExtractionRequest {
   diagramId: string;
@@ -258,7 +259,8 @@ export async function POST(request: Request) {
       createNewProject = false,
       projectName: providedProjectName,
       isDuplicate = false,
-      originalProjectId
+      originalProjectId,
+      useMockData = false
     } = body;
 
     if (!diagrams || !Array.isArray(diagrams) || diagrams.length === 0) {
@@ -268,33 +270,66 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'ANTHROPIC_API_KEY not configured' },
-        { status: 500 }
-      );
-    }
-
-    const client = new Anthropic({ apiKey });
-
-    // Process all diagrams in parallel for efficiency
-    const extractionPromises = diagrams.map((diagram: ExtractionRequest) =>
-      extractFromDiagram(client, diagram)
-    );
-
-    const extractionResults = await Promise.all(extractionPromises);
-
-    // Combine all line items from all diagrams
-    const allLineItems: any[] = [];
+    // Mock mode: Skip Claude API and generate mock data
+    let allLineItems: any[] = [];
     let extractedProjectName: string | null = null;
+    let extractionResults: ExtractionResult[] = [];
 
-    for (const result of extractionResults) {
-      if (result.success && result.line_items) {
-        allLineItems.push(...result.line_items);
+    if (useMockData) {
+      console.log('Mock mode enabled for batch extraction - generating mock data');
+
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Generate mock bid packages
+      const mockData = generateMockBidPackages();
+
+      console.log(`Generated ${mockData.bid_packages.length} mock bid packages`);
+
+      // Flatten mock packages into line items for categorization
+      for (const pkg of mockData.bid_packages) {
+        allLineItems.push(...(pkg.line_items || []));
       }
-      if (result.project_name && !extractedProjectName) {
-        extractedProjectName = result.project_name;
+
+      extractedProjectName = mockData.project_name;
+
+      // Create mock extraction results
+      extractionResults = diagrams.map((diagram: ExtractionRequest) => ({
+        diagramId: diagram.diagramId,
+        success: true,
+        project_name: mockData.project_name,
+        line_items: [],
+        extraction_confidence: mockData.extraction_confidence,
+      }));
+
+      console.log(`Mock extraction complete with ${allLineItems.length} total line items`);
+    } else {
+      // Real extraction mode
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: 'ANTHROPIC_API_KEY not configured' },
+          { status: 500 }
+        );
+      }
+
+      const client = new Anthropic({ apiKey });
+
+      // Process all diagrams in parallel for efficiency
+      const extractionPromises = diagrams.map((diagram: ExtractionRequest) =>
+        extractFromDiagram(client, diagram)
+      );
+
+      extractionResults = await Promise.all(extractionPromises);
+
+      // Combine all line items from all diagrams
+      for (const result of extractionResults) {
+        if (result.success && result.line_items) {
+          allLineItems.push(...result.line_items);
+        }
+        if (result.project_name && !extractedProjectName) {
+          extractedProjectName = result.project_name;
+        }
       }
     }
 

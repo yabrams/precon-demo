@@ -133,6 +133,7 @@ export default function ProjectReviewPage() {
       uploadedDocuments={projectData.uploadedDocuments}
       selectedExternalProject={projectData.selectedExternalProject}
       initialProjectName={projectData.projectName}
+      useMockData={projectData.useMockData}
       onApprove={handleApprove}
       onCancel={handleCancel}
     />
