@@ -45,10 +45,6 @@ interface SingleItemPanelProps {
   onPrevious: () => void;
   onNext: () => void;
   readOnly?: boolean;
-  allLineItems?: LineItem[];
-  onCompleted?: () => void;
-  bidPackageStatus?: string;
-  onRecall?: () => void;
 }
 
 export interface SingleItemPanelRef {
@@ -65,10 +61,6 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   onPrevious,
   onNext,
   readOnly = false,
-  allLineItems = [],
-  onCompleted,
-  bidPackageStatus,
-  onRecall,
 }, ref) {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [fieldIndex, setFieldIndex] = useState(0);
@@ -171,9 +163,17 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   const isLastItem = itemIndex === totalItems - 1;
 
   return (
-    <div className="bg-gradient-to-b from-zinc-50 to-white border-t border-gray-200 flex-shrink-0 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]" style={{ height: '150px' }}>
+    <div className={`border-t flex-shrink-0 shadow-[0_-12px_40px_rgba(0,0,0,0.18)] transition-colors duration-200 ${
+      item.approved
+        ? 'bg-gradient-to-b from-emerald-50 to-emerald-50/50 border-emerald-200'
+        : 'bg-gradient-to-b from-zinc-50 to-white border-gray-200'
+    }`} style={{ height: '150px' }}>
       {/* Navigation Bar */}
-      <div className="px-4 py-2.5 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-gray-100 to-gray-200">
+      <div className={`px-4 py-2.5 border-b flex items-center justify-between transition-colors duration-200 ${
+        item.approved
+          ? 'bg-gradient-to-r from-emerald-100 to-emerald-200 border-emerald-200'
+          : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-200'
+      }`}>
         <div className="flex items-center gap-3">
           <button
             onClick={onPrevious}
@@ -225,81 +225,46 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Show Recall button when status is pending-review */}
-          {bidPackageStatus === 'pending-review' && onRecall ? (
+          {/* Unapprove Button - only shown for approved items */}
+          {item.approved && !readOnly && (
             <button
-              onClick={onRecall}
-              className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-              title="Recall from review and return to In Progress"
+              onClick={onApprove}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+              title="Unapprove (A)"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              Recall
+              Unapprove
             </button>
-          ) : (
-            <>
-              {/* Unapprove Button - only shown for approved items */}
-              {item.approved && !readOnly && (
-                <button
-                  onClick={onApprove}
-                  className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
-                  title="Unapprove (A)"
-                >
-                  ✅ Unapprove
-                </button>
-              )}
+          )}
 
-              {/* Approve Button - only shown for unapproved items */}
-              {!item.approved && !readOnly && (
-                <button
-                  onClick={onApprove}
-                  className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
-                  title="Approve (A)"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Approve
-                </button>
-              )}
+          {/* Approve Button - only shown for unapproved items */}
+          {!item.approved && !readOnly && (
+            <button
+              onClick={onApprove}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+              title="Approve (A)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Approve
+            </button>
+          )}
 
-              {/* Approve & Next Button - Primary Action */}
-              {!readOnly && (
-                <button
-                  onClick={onApproveAndNext}
-                  className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-                  title="Approve and move to next (Enter)"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Approve & Next
-                </button>
-              )}
-
-              {/* Completed Button - Only visible when onCompleted is provided */}
-              {!readOnly && onCompleted && (() => {
-                const allItemsApproved = allLineItems.length > 0 && allLineItems.every(item => item.approved === true);
-                return (
-                  <button
-                    onClick={onCompleted}
-                    disabled={!allItemsApproved}
-                    className={`px-3 py-1 text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5 ${
-                      allItemsApproved
-                        ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }`}
-                    title={!allItemsApproved ? 'All items must be approved before marking as completed' : 'Mark as completed'}
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Completed
-                  </button>
-                );
-              })()}
-            </>
+          {/* Approve & Next Button - Primary Action (only shown for unapproved items) */}
+          {!readOnly && !item.approved && (
+            <button
+              onClick={onApproveAndNext}
+              className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+              title="Approve and move to next (Enter)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Approve & Next
+            </button>
           )}
         </div>
       </div>
@@ -312,7 +277,9 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15, ease: 'easeInOut' }}
-          className="px-4 py-3.5 grid grid-cols-12 gap-3 bg-white"
+          className={`px-4 py-3.5 grid grid-cols-12 gap-3 transition-colors duration-200 ${
+            item.approved ? 'bg-emerald-50/50' : 'bg-white'
+          }`}
         >
           {/* CSI Code - First */}
           <div className="col-span-3">
@@ -331,8 +298,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             ) : (
               <div
                 onClick={() => startEditing('csiCode')}
-                className={`w-full px-3 py-2 text-sm rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
-                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.25rem] flex items-center transition-colors duration-200 ${
+                  item.approved
+                    ? `bg-emerald-100 border border-emerald-200 ${readOnly ? '' : 'cursor-pointer hover:bg-emerald-200 hover:border-emerald-300'}`
+                    : `bg-zinc-100 border border-zinc-200 ${readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'}`
                 }`}
               >
                 {item.csiCode && item.csiTitle ? (
@@ -370,8 +339,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             ) : (
               <div
                 onClick={() => startEditing('item_number')}
-                className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center ${
-                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                className={`w-full px-3 py-2 text-sm text-zinc-900 font-mono rounded-lg min-h-[2.25rem] flex items-center transition-colors duration-200 ${
+                  item.approved
+                    ? `bg-emerald-100 border border-emerald-200 ${readOnly ? '' : 'cursor-pointer hover:bg-emerald-200 hover:border-emerald-300'}`
+                    : `bg-zinc-100 border border-zinc-200 ${readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'}`
                 }`}
               >
                 {item.item_number || <span className="text-gray-400">#</span>}
@@ -398,8 +369,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             ) : (
               <div
                 onClick={() => startEditing('description')}
-                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
-                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.25rem] flex items-center overflow-hidden transition-colors duration-200 ${
+                  item.approved
+                    ? `bg-emerald-100 border border-emerald-200 ${readOnly ? '' : 'cursor-pointer hover:bg-emerald-200 hover:border-emerald-300'}`
+                    : `bg-zinc-100 border border-zinc-200 ${readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'}`
                 }`}
               >
                 <span className="truncate">{item.description || <span className="text-gray-400">Description</span>}</span>
@@ -426,8 +399,10 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             ) : (
               <div
                 onClick={() => startEditing('notes')}
-                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg bg-zinc-100 border border-zinc-200 min-h-[2.25rem] flex items-center overflow-hidden ${
-                  readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'
+                className={`w-full px-3 py-2 text-sm text-zinc-900 rounded-lg min-h-[2.25rem] flex items-center overflow-hidden transition-colors duration-200 ${
+                  item.approved
+                    ? `bg-emerald-100 border border-emerald-200 ${readOnly ? '' : 'cursor-pointer hover:bg-emerald-200 hover:border-emerald-300'}`
+                    : `bg-zinc-100 border border-zinc-200 ${readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'}`
                 }`}
               >
                 <span className="truncate">{item.notes || <span className="text-gray-400">Notes</span>}</span>
