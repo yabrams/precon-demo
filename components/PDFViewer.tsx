@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Grid, Grid3x3 } from 'lucide-react';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -42,6 +42,7 @@ export default function PDFViewer({
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showThumbnails, setShowThumbnails] = useState(false);
 
   const currentDoc = docs[currentDocIndex];
 
@@ -135,6 +136,19 @@ export default function PDFViewer({
 
         {/* Controls */}
         <div className="flex items-center space-x-1">
+          {/* Thumbnails Toggle */}
+          {(hasMultipleDocs || numPages > 1) && (
+            <button
+              onClick={() => setShowThumbnails(!showThumbnails)}
+              className={`p-1.5 rounded hover:bg-gray-100 mr-2 ${
+                showThumbnails ? 'bg-blue-50 text-blue-600' : ''
+              }`}
+              title={showThumbnails ? 'Hide thumbnails' : 'Show thumbnails'}
+            >
+              <Grid3x3 className="h-4 w-4" />
+            </button>
+          )}
+
           {/* Zoom Controls */}
           <button
             onClick={handleZoomOut}
@@ -166,7 +180,7 @@ export default function PDFViewer({
       </div>
 
       {/* Thumbnail Carousel (for multiple documents or pages) */}
-      {(hasMultipleDocs || numPages > 1) && (
+      {showThumbnails && (hasMultipleDocs || numPages > 1) && (
         <div className="bg-white border-b border-gray-200 px-4 flex-shrink-0">
           <div className="flex items-center space-x-3 overflow-x-auto">
             {hasMultipleDocs ? (
