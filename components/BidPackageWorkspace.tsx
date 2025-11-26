@@ -297,21 +297,6 @@ export default function BidPackageWorkspace({
     event.target.value = '';
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'bidding':
-        return 'bg-zinc-50 text-zinc-800 border border-zinc-200';
-      case 'active':
-        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
-      case 'awarded':
-        return 'bg-zinc-50 text-zinc-800 border border-zinc-200';
-      case 'draft':
-        return 'bg-gray-50 text-gray-600 border border-gray-200';
-      default:
-        return 'bg-gray-50 text-gray-600 border border-gray-200';
-    }
-  };
-
   return (
     <div ref={workspaceRef} className="h-full flex flex-col bg-gray-50 relative">
       {/* Chat Overlay */}
@@ -354,16 +339,8 @@ export default function BidPackageWorkspace({
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
-          {/* Left side: Status and Progress */}
-          <div className="flex items-center gap-4">
-            <span
-              className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(
-                bidPackage.status
-              )}`}
-            >
-              {bidPackage.status}
-            </span>
-
+          {/* Left side: Progress */}
+          <div className="flex items-center gap-4 flex-1">
             {/* Progress Indicator - Discrete rectangles */}
             {lineItems.length > 0 && (() => {
               const approvedItems = lineItems.filter(item => item.approved === true).length;
@@ -393,8 +370,40 @@ export default function BidPackageWorkspace({
             })()}
           </div>
 
+          {/* Center: Completed/Recall buttons */}
+          <div className="flex items-center justify-center flex-1">
+            {bidPackage.status === 'pending-review' && onRecall ? (
+              <button
+                onClick={onRecall}
+                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2"
+                title="Recall from review and return to In Progress"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                </svg>
+                Recall
+              </button>
+            ) : onSubmitToReview &&
+               bidPackage.status !== 'pending-review' &&
+               bidPackage.status !== 'bidding' &&
+               bidPackage.status !== 'awarded' &&
+               lineItems.length > 0 &&
+               lineItems.every(item => item.approved === true) ? (
+              <button
+                onClick={onSubmitToReview}
+                className="px-4 py-1.5 text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+                title="Mark as completed"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Completed
+              </button>
+            ) : null}
+          </div>
+
           {/* Right side: View toggles */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-1 justify-end">
             {/* View Mode Toggle */}
             {lineItems.length > 0 && (
               <div className="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
@@ -623,17 +632,6 @@ export default function BidPackageWorkspace({
                 onPrevious={handlePreviousItem}
                 onNext={handleNextItem}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
-                allLineItems={lineItems}
-                bidPackageStatus={bidPackage.status}
-                onCompleted={
-                  bidPackage.status !== 'pending-review' &&
-                  bidPackage.status !== 'bidding' &&
-                  bidPackage.status !== 'bidding-leveling' &&
-                  bidPackage.status !== 'awarded'
-                    ? onSubmitToReview
-                    : undefined
-                }
-                onRecall={bidPackage.status === 'pending-review' ? onRecall : undefined}
               />
               </div>
             )}
