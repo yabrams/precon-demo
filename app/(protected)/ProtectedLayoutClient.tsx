@@ -7,10 +7,12 @@
 
 import { useState, useEffect, ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Edit2 } from 'lucide-react';
 import LeftMenuPanel from '@/components/LeftMenuPanel';
 import Avatar from '@/components/Avatar';
 import RouteBreadcrumbs from '@/components/RouteBreadcrumbs';
 import { useAuth } from '@/hooks/useAuth';
+import { useEditMode } from '@/contexts/EditModeContext';
 import { UserPublic } from '@/types/user';
 
 interface ProtectedLayoutClientProps {
@@ -22,8 +24,10 @@ export default function ProtectedLayoutClient({ children, user }: ProtectedLayou
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
+  const { isEditMode, canEdit, isSaving, setEditMode, triggerSave, triggerDelete } = useEditMode();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -103,8 +107,64 @@ export default function ProtectedLayoutClient({ children, user }: ProtectedLayou
         {/* Header */}
         <header className="bg-white border-b border-gray-200 flex-shrink-0 z-10 h-[68px]">
           <div className="px-6 h-full flex items-center justify-between">
-            {/* Breadcrumbs */}
-            <RouteBreadcrumbs />
+            {/* Breadcrumbs + Edit Controls */}
+            <div className="flex items-center gap-4">
+              <RouteBreadcrumbs />
+
+              {/* Edit Controls - shown next to breadcrumbs when canEdit is true */}
+              {canEdit && (
+                <div className="flex items-center gap-2">
+                  {isEditMode ? (
+                    <>
+                      <button
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                        Delete
+                      </button>
+                      <button
+                        onClick={async () => {
+                          await triggerSave();
+                          setEditMode(false);
+                        }}
+                        disabled={isSaving}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors bg-zinc-900 hover:bg-zinc-800 text-white disabled:opacity-50"
+                      >
+                        {isSaving ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-white"></div>
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Save
+                          </>
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setEditMode(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                    >
+                      <Edit2 className="h-3.5 w-3.5" />
+                      Edit
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* User Menu */}
             <div className="flex items-center">
@@ -172,6 +232,60 @@ export default function ProtectedLayoutClient({ children, user }: ProtectedLayou
           </div>
         </main>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+                    Delete Project
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Are you sure you want to delete this project? This action cannot be undone.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        triggerDelete();
+                      }}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

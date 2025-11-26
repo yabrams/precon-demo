@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { jwtVerify } from 'jose';
 import { PrismaClient } from '@prisma/client';
 import { AuthProvider } from '@/lib/auth-context';
+import { EditModeProvider } from '@/contexts/EditModeContext';
 import ProtectedLayoutClient from './ProtectedLayoutClient';
 
 /**
@@ -84,9 +85,11 @@ export default async function ProtectedLayout({
 
   return (
     <AuthProvider initialUser={user}>
-      <ProtectedLayoutClient user={user}>
-        {children}
-      </ProtectedLayoutClient>
+      <EditModeProvider>
+        <ProtectedLayoutClient user={user}>
+          {children}
+        </ProtectedLayoutClient>
+      </EditModeProvider>
     </AuthProvider>
   );
 }
