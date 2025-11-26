@@ -125,7 +125,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white border border-gray-200 rounded-xl shadow-sm p-8 hover:border-zinc-300 hover:shadow-md transition-all duration-300">
+    <div className="w-full max-w-md mx-auto bg-white border border-zinc-200 rounded-xl shadow-sm p-8">
       <h2 className="text-2xl font-bold text-zinc-900 mb-6">Create Account</h2>
 
       {error && (
@@ -145,7 +145,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+              className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
               placeholder="John"
               disabled={loading}
             />
@@ -160,7 +160,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+              className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
               placeholder="Doe"
               disabled={loading}
             />
@@ -224,7 +224,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.userName}
             onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
             placeholder="johndoe"
             disabled={loading}
           />
@@ -240,7 +240,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
             placeholder="you@example.com"
             disabled={loading}
           />
@@ -256,7 +256,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
             placeholder="••••••••"
             disabled={loading}
           />
@@ -273,7 +273,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 text-sm text-zinc-900 placeholder:text-gray-400 transition-all duration-200"
+            className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-400/20 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200"
             placeholder="••••••••"
             disabled={loading}
           />

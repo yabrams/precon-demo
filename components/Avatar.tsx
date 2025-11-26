@@ -22,18 +22,18 @@ const Avatar: React.FC<AvatarProps> = ({
     return firstInitial + lastInitial || '?';
   };
 
-  // Generate consistent color based on name
+  // Generate consistent color based on name - using muted professional tones
   const getAvatarColor = () => {
     const name = `${firstName || ''}${lastName || ''}`;
     const colors = [
-      'bg-blue-500',
-      'bg-green-500',
-      'bg-purple-500',
-      'bg-pink-500',
-      'bg-indigo-500',
-      'bg-red-500',
-      'bg-yellow-500',
-      'bg-teal-500',
+      'bg-zinc-600',
+      'bg-slate-600',
+      'bg-stone-600',
+      'bg-neutral-600',
+      'bg-zinc-700',
+      'bg-slate-700',
+      'bg-stone-700',
+      'bg-neutral-700',
     ];
 
     // Simple hash function to get consistent color

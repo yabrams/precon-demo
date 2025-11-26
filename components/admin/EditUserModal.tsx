@@ -91,7 +91,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
 
@@ -105,7 +105,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     required
                     value={formData.userName}
                     onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
 
@@ -118,7 +118,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     type="text"
                     value={formData.firstName || ''}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
 
@@ -131,7 +131,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     type="text"
                     value={formData.lastName || ''}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   />
                 </div>
 
@@ -144,7 +144,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     required
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
                   >
                     {Object.entries(UserRoleLabels).map(([key, label]) => (
                       <option key={key} value={key}>
@@ -161,7 +161,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-zinc-900 focus:ring-zinc-400 border-gray-300 rounded"
                   />
                   <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
                     Active user
@@ -181,7 +181,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSubmit }: EditU
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    className="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50"
                   >
                     {submitting ? 'Saving...' : 'Save Changes'}
                   </button>

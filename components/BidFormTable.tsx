@@ -284,14 +284,16 @@ export default function BidFormTable({
                     <button
                       onClick={() => handleChange(index, 'approved', !item.approved)}
                       disabled={readOnly}
-                      className={`inline-flex items-center justify-center w-10 h-10 text-lg rounded-full transition-all ${
+                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all ${
                         item.approved
-                          ? 'bg-green-50 hover:bg-green-100 border border-green-300'
-                          : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                          ? 'bg-emerald-100 text-emerald-600 border border-emerald-200 hover:bg-emerald-200'
+                          : 'bg-zinc-100 text-zinc-400 border border-zinc-200 hover:bg-zinc-200'
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
-                      title={item.approved ? 'Approved' : 'Click to approve'}
+                      title={item.approved ? 'Approved - click to unapprove' : 'Click to approve'}
                     >
-                      {item.approved ? '✅' : '⭕'}
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
                     </button>
                   </td>
                   <td className="px-3 py-3">
@@ -302,7 +304,7 @@ export default function BidFormTable({
                         onChange={(e) => handleChange(index, 'item_number', e.target.value)}
                         onBlur={stopEditing}
                         autoFocus
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 font-mono placeholder:text-gray-400"
                         placeholder="#"
                       />
                     ) : (
@@ -324,7 +326,7 @@ export default function BidFormTable({
                         onChange={(e) => handleChange(index, 'description', e.target.value)}
                         onBlur={stopEditing}
                         autoFocus
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
                         placeholder="Description"
                       />
                     ) : (
@@ -376,7 +378,7 @@ export default function BidFormTable({
                         onChange={(e) => handleChange(index, 'notes', e.target.value)}
                         onBlur={stopEditing}
                         autoFocus
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
                         placeholder="Notes"
                       />
                     ) : (
@@ -407,10 +409,12 @@ export default function BidFormTable({
                     <td className="px-3 py-3 text-center">
                       <button
                         onClick={() => handleDeleteRow(index)}
-                        className="inline-flex items-center justify-center w-8 h-8 text-red-700 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors"
+                        className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-red-500 bg-zinc-100 hover:bg-red-50 border border-zinc-200 hover:border-red-200 rounded-full transition-all"
                         title="Delete row"
                       >
-                        🗑️
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
                       </button>
                     </td>
                   )}
@@ -430,7 +434,7 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('item_number', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 font-mono placeholder:text-gray-400"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 font-mono placeholder:text-gray-400"
                     placeholder="#"
                   />
                 </td>
@@ -439,7 +443,7 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('description', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
                     placeholder="Description"
                   />
                 </td>
@@ -451,7 +455,7 @@ export default function BidFormTable({
                     type="text"
                     value=""
                     onChange={(e) => handlePlaceholderChange('notes', e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-zinc-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
                     placeholder="Notes"
                   />
                 </td>

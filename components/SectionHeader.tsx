@@ -2,8 +2,7 @@
 
 /**
  * SectionHeader Component
- * Amazon-inspired section header with teal accent color
- * Based on the "Arriving today" / "Arriving tomorrow" pattern
+ * Section header with zinc accent color
  */
 
 import React from 'react';
@@ -16,12 +15,11 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({
   title,
-  variant = 'teal',
+  variant = 'default',
   className = '',
 }: SectionHeaderProps) {
-  const colorClass = variant === 'teal'
-    ? 'text-[#067D7D]'
-    : 'text-[#0F1111]';
+  // Both variants now use zinc-900 for consistency
+  const colorClass = 'text-zinc-900';
 
   return (
     <h2 className={`text-[22px] font-bold leading-8 ${colorClass} ${className}`}>

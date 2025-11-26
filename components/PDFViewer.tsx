@@ -96,7 +96,7 @@ export default function PDFViewer({
               <select
                 value={currentDocIndex}
                 onChange={(e) => changeDocument(parseInt(e.target.value))}
-                className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
               >
                 {docs.map((doc, index) => (
                   <option key={index} value={index}>
@@ -141,7 +141,7 @@ export default function PDFViewer({
             <button
               onClick={() => setShowThumbnails(!showThumbnails)}
               className={`p-1.5 rounded hover:bg-gray-100 mr-2 ${
-                showThumbnails ? 'bg-blue-50 text-blue-600' : ''
+                showThumbnails ? 'bg-zinc-100 text-zinc-900' : ''
               }`}
               title={showThumbnails ? 'Hide thumbnails' : 'Show thumbnails'}
             >
@@ -199,7 +199,7 @@ export default function PDFViewer({
                       file={doc.url}
                       loading={
                         <div className="flex items-center justify-center w-full h-full">
-                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-zinc-900"></div>
                         </div>
                       }
                       error={
@@ -256,7 +256,7 @@ export default function PDFViewer({
             loading={
               <div className="flex items-center justify-center min-h-[600px] min-w-[400px]">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 mx-auto mb-4"></div>
                   <p className="text-gray-600">Loading PDF...</p>
                 </div>
               </div>

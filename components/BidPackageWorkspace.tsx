@@ -28,7 +28,7 @@ const PDFViewer = dynamic(() => import('./PDFViewer'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900"></div>
     </div>
   ),
 });
@@ -330,14 +330,16 @@ export default function BidPackageWorkspace({
       {/* Chat Toggle Overlay Button */}
       <button
         onClick={onChatToggle}
-        className={`fixed bottom-6 left-6 z-40 px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center font-medium text-2xl ${
+        className={`fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full shadow-lg transition-all flex items-center justify-center ${
           chatOpen
-            ? 'bg-gray-600 hover:bg-gray-700 text-white'
-            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+            ? 'bg-zinc-800 hover:bg-zinc-900 text-white'
+            : 'bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200'
         }`}
         title={chatOpen ? 'Close AI Chat' : 'Open AI Chat'}
       >
-        💬
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
       </button>
 
       {/* Header */}
@@ -398,28 +400,32 @@ export default function BidPackageWorkspace({
           <div className="flex items-center gap-3">
             {/* View Mode Toggle */}
             {lineItems.length > 0 && (
-              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+              <div className="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 text-lg transition-colors ${
+                  className={`px-3 py-2 transition-colors ${
                     viewMode === 'grid'
                       ? 'bg-zinc-900 text-white'
-                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                      : 'bg-white text-zinc-600 hover:bg-zinc-50'
                   }`}
                   title="Grid view"
                 >
-                  ▦
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
                 </button>
                 <button
                   onClick={() => setViewMode('single')}
-                  className={`px-3 py-2 text-lg transition-colors ${
+                  className={`px-3 py-2 transition-colors ${
                     viewMode === 'single'
                       ? 'bg-zinc-900 text-white'
-                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                      : 'bg-white text-zinc-600 hover:bg-zinc-50'
                   }`}
                   title="Single item view"
                 >
-                  ◻️
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                  </svg>
                 </button>
               </div>
             )}

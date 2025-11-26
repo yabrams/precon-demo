@@ -17,7 +17,7 @@ const PDFViewer = dynamic(() => import('./PDFViewer'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900"></div>
     </div>
   ),
 });
@@ -211,7 +211,7 @@ export default function BidPackageListView({
       case 'to do':
         return 'bg-gray-50 text-gray-600 border-gray-200';
       case 'assigned':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+        return 'bg-sky-50 text-sky-700 border-sky-200';
       case 'in progress':
         return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'in review':
@@ -493,7 +493,7 @@ export default function BidPackageListView({
                   type="text"
                   value={editedProject.name}
                   onChange={(e) => updateProjectField('name', e.target.value)}
-                  className="text-lg font-bold text-zinc-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none w-full max-w-md"
+                  className="text-lg font-bold text-zinc-900 bg-transparent border-b border-gray-300 focus:border-zinc-400 focus:outline-none w-full max-w-md"
                 />
               ) : (
                 <h1 className="text-lg font-bold text-zinc-900">{project.name}</h1>
@@ -524,7 +524,7 @@ export default function BidPackageListView({
                   onChange={(e) => updateProjectField('description', e.target.value)}
                   placeholder="Project description..."
                   rows={2}
-                  className="mt-1 text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 focus:border-blue-500 focus:outline-none w-full max-w-lg resize-none"
+                  className="mt-1 text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 focus:border-zinc-400 focus:outline-none w-full max-w-lg resize-none"
                 />
               ) : (
                 (project.description) && (
@@ -674,7 +674,7 @@ export default function BidPackageListView({
                                     type="text"
                                     value={bidPackage.name}
                                     onChange={(e) => updateBidPackage(index, 'name', e.target.value)}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                   />
                                 </div>
                                 <div>
@@ -683,7 +683,7 @@ export default function BidPackageListView({
                                     value={bidPackage.description || ''}
                                     onChange={(e) => updateBidPackage(index, 'description', e.target.value)}
                                     rows={2}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
@@ -694,7 +694,7 @@ export default function BidPackageListView({
                                       value={bidPackage.budgetAmount || ''}
                                       onChange={(e) => updateBidPackage(index, 'budgetAmount', parseFloat(e.target.value) || null)}
                                       placeholder="0.00"
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                     />
                                   </div>
                                   <div>
@@ -702,7 +702,7 @@ export default function BidPackageListView({
                                     <select
                                       value={bidPackage.status}
                                       onChange={(e) => updateBidPackage(index, 'status', e.target.value)}
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                     >
                                       <option value="to do">To Do</option>
                                       <option value="assigned">Assigned</option>
@@ -721,7 +721,7 @@ export default function BidPackageListView({
                                     onChange={(e) => updateBidPackage(index, 'scope', e.target.value)}
                                     rows={2}
                                     placeholder="Detailed scope of work for this package..."
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
@@ -747,7 +747,7 @@ export default function BidPackageListView({
                                           updateBidPackage(index, 'captain', null);
                                         }
                                       }}
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                       disabled={loadingUsers}
                                     >
                                       <option value="">Select captain...</option>
@@ -765,14 +765,14 @@ export default function BidPackageListView({
                                       value={bidPackage.location || ''}
                                       onChange={(e) => updateBidPackage(index, 'location', e.target.value)}
                                       placeholder="Package location"
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                     />
                                   </div>
                                 </div>
                                 <div className="pt-2 border-t border-gray-300">
                                   <button
                                     onClick={() => onBidPackageSelect(bidPackage)}
-                                    className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                                    className="text-xs text-zinc-600 hover:text-zinc-800 font-medium"
                                   >
                                     View Package Details →
                                   </button>
@@ -807,7 +807,7 @@ export default function BidPackageListView({
                                         e.stopPropagation();
                                         setCaptainSelectorOpen(captainSelectorOpen === bidPackage.id ? null : bidPackage.id);
                                       }}
-                                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all ${
+                                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-zinc-400 transition-all ${
                                         bidPackage.captainId || bidPackage.captainName
                                           ? 'bg-zinc-900 text-white'
                                           : 'bg-gray-200 text-gray-500'
@@ -983,7 +983,7 @@ export default function BidPackageListView({
                                   e.stopPropagation();
                                   setCaptainSelectorOpen(captainSelectorOpen === bidPackage.id ? null : bidPackage.id);
                                 }}
-                                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all ${
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-zinc-400 transition-all ${
                                   bidPackage.captainId || bidPackage.captainName
                                     ? 'bg-zinc-900 text-white'
                                     : 'bg-gray-200 text-gray-500'
