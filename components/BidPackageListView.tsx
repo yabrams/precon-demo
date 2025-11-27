@@ -609,8 +609,7 @@ export default function BidPackageListView({
                                 key={bidPackage.id}
                                 className="p-4 border border-gray-200 rounded-lg bg-gray-50 space-y-3"
                               >
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-semibold text-gray-700">Package {index + 1}</span>
+                                <div className="flex items-center justify-end">
                                   <span
                                     className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
                                       bidPackage.status
@@ -661,14 +660,6 @@ export default function BidPackageListView({
                                     ))}
                                   </select>
                                 </div>
-                                <div className="pt-2 border-t border-gray-300">
-                                  <button
-                                    onClick={() => onBidPackageSelect(bidPackage)}
-                                    className="text-xs text-zinc-600 hover:text-zinc-800 font-medium"
-                                  >
-                                    View Package Details →
-                                  </button>
-                                </div>
                               </div>
                           ))}
                         </div>
@@ -678,8 +669,9 @@ export default function BidPackageListView({
                             <div
                               key={bidPackage.id}
                               onClick={() => onBidPackageSelect(bidPackage)}
-                              className="p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-gray-300 cursor-pointer transition-all bg-white"
+                              className="p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-gray-300 cursor-pointer transition-all bg-white flex items-center gap-3"
                             >
+                              <div className="flex-1 min-w-0">
                               {/* Header with Status and Avatar */}
                               <div className="flex items-start justify-between mb-3">
                                 <h4 className="text-sm font-semibold text-zinc-900 line-clamp-1 flex-1 pr-2">
@@ -776,6 +768,11 @@ export default function BidPackageListView({
                                   );
                                 })()}
                               </div>
+                              </div>
+                              {/* Right Arrow */}
+                              <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
                             </div>
                           ))}
                         </div>
@@ -850,8 +847,9 @@ export default function BidPackageListView({
                       <div
                         key={bidPackage.id}
                         onClick={() => onBidPackageSelect(bidPackage)}
-                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer bg-white"
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer bg-white flex items-center gap-3"
                       >
+                        <div className="flex-1 min-w-0">
                         {/* Header with Status and Avatar */}
                         <div className="flex items-start justify-between mb-3">
                           <h4 className="text-sm font-semibold text-zinc-900 line-clamp-1 flex-1 pr-2">
@@ -948,6 +946,11 @@ export default function BidPackageListView({
                             );
                           })()}
                         </div>
+                        </div>
+                        {/* Right Arrow */}
+                        <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
                       </div>
                     ))}
                   </div>
