@@ -128,15 +128,22 @@ export default function BidPackageWorkspace({
     onViewModeChange?.(mode);
   }, [onViewModeChange]);
 
+  // Simple wrapper - URL sync is handled by useEffect below
   const setCurrentItemIndex = useCallback((indexOrUpdater: number | ((prev: number) => number)) => {
-    setCurrentItemIndexInternal((prev) => {
-      const newIndex = typeof indexOrUpdater === 'function' ? indexOrUpdater(prev) : indexOrUpdater;
-      // Get the item ID at the new index and update URL
-      const itemAtIndex = lineItems[newIndex];
-      onItemIdChange?.(itemAtIndex?.id || null);
-      return newIndex;
-    });
-  }, [onItemIdChange, lineItems]);
+    setCurrentItemIndexInternal(indexOrUpdater);
+  }, []);
+
+  // Sync current item index to URL (separate from render to avoid setState during render)
+  const currentItemIdRef = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    const currentItem = lineItems[currentItemIndex];
+    const currentItemId = currentItem?.id || null;
+    // Only update URL if the item ID actually changed (avoid infinite loops)
+    if (currentItemIdRef.current !== currentItemId) {
+      currentItemIdRef.current = currentItemId;
+      onItemIdChange?.(currentItemId);
+    }
+  }, [currentItemIndex, lineItems, onItemIdChange]);
   const imageRef = useRef<HTMLImageElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
   const diagramContainerRef = useRef<HTMLDivElement>(null);
