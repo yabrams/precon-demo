@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { searchCSICodes } from '@/lib/csi/csiClient';
+import { searchCSICodes, getCodesByLevel } from '@/lib/csi/csiClient';
 
 interface CSIInlineSearchProps {
   initialValue: string;
@@ -11,6 +11,8 @@ interface CSIInlineSearchProps {
   placeholder?: string;
   dropdownDirection?: 'up' | 'down';
   onFieldKeyDown?: (e: React.KeyboardEvent) => void;
+  levelFilter?: (1 | 2 | 3 | 4)[];
+  showAllOnFocus?: boolean;
 }
 
 interface SearchResult {
@@ -28,6 +30,8 @@ export default function CSIInlineSearch({
   placeholder = 'Search CSI code...',
   dropdownDirection = 'down',
   onFieldKeyDown,
+  levelFilter,
+  showAllOnFocus = false,
 }: CSIInlineSearchProps) {
   const [query, setQuery] = useState(initialValue);
   const [showResults, setShowResults] = useState(false);
@@ -36,11 +40,14 @@ export default function CSIInlineSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Focus input on mount
+  // Focus input on mount and show results if showAllOnFocus is enabled
   useEffect(() => {
     inputRef.current?.focus();
     inputRef.current?.select();
-  }, []);
+    if (showAllOnFocus) {
+      setShowResults(true);
+    }
+  }, [showAllOnFocus]);
 
   // Update dropdown position when input position changes
   useEffect(() => {
@@ -68,6 +75,24 @@ export default function CSIInlineSearch({
 
   // Client-side search
   const results = useMemo<SearchResult[]>(() => {
+    // If showAllOnFocus is enabled and query is empty/short, show all codes for the level filter
+    if (showAllOnFocus && query.length < 2 && levelFilter && levelFilter.length > 0) {
+      const allCodes: SearchResult[] = [];
+      for (const level of levelFilter) {
+        const codes = getCodesByLevel(level);
+        codes.forEach((code) => {
+          allCodes.push({
+            code: code.code,
+            title: code.title,
+            level: code.level,
+            division: code.division,
+            score: 100,
+          });
+        });
+      }
+      return allCodes;
+    }
+
     if (query.length < 2) {
       return [];
     }
@@ -78,6 +103,7 @@ export default function CSIInlineSearch({
       caseSensitive: false,
       exactMatch: false,
       fuzzySearch: true,
+      levels: levelFilter,
     });
 
     return searchResults.map((result) => ({
@@ -87,13 +113,17 @@ export default function CSIInlineSearch({
       division: result.code.division,
       score: result.score,
     }));
-  }, [query]);
+  }, [query, levelFilter, showAllOnFocus]);
 
-  // Show results when query changes
+  // Show results when query changes or when showAllOnFocus is enabled
   useEffect(() => {
-    setShowResults(query.length >= 2 && results.length > 0);
+    if (showAllOnFocus && results.length > 0) {
+      setShowResults(true);
+    } else {
+      setShowResults(query.length >= 2 && results.length > 0);
+    }
     setSelectedIndex(0);
-  }, [query, results.length]);
+  }, [query, results.length, showAllOnFocus]);
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {

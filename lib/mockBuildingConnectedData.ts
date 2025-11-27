@@ -198,34 +198,22 @@ export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'c
       bcBidPackageId: 'bp-dt001-concrete',
       bcProjectId: 'bc-proj-2024-downtown-001',
       name: 'CONCRETE',
-      description: 'All concrete work including foundations, columns, beams, slabs, and core walls',
-      scope: 'Division 03 - Concrete',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 32000000,
-      currentAmount: null
+      progress: 0
     },
     {
       bcBidPackageId: 'bp-dt001-steel',
       bcProjectId: 'bc-proj-2024-downtown-001',
       name: 'STRUCTURAL STEEL',
-      description: 'Structural steel framing, connections, and erection',
-      scope: 'Division 05 - Metals',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 28000000,
-      currentAmount: null
+      progress: 0
     },
     {
       bcBidPackageId: 'bp-dt001-mep',
       bcProjectId: 'bc-proj-2024-downtown-001',
       name: 'MEP',
-      description: 'Mechanical, electrical, and plumbing systems',
-      scope: 'Divisions 21, 22, 23, 26, 27, 28',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 45000000,
-      currentAmount: null
+      progress: 0
     }
   ],
   'bc-proj-2024-hospital-002': [
@@ -233,23 +221,15 @@ export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'c
       bcBidPackageId: 'bp-rmc002-mep',
       bcProjectId: 'bc-proj-2024-hospital-002',
       name: 'MEP',
-      description: 'Medical gas, HVAC, electrical, fire protection, and plumbing',
-      scope: 'Divisions 21-28',
       status: 'active',
-      progress: 35,
-      budgetAmount: 28000000,
-      currentAmount: 27500000
+      progress: 35
     },
     {
       bcBidPackageId: 'bp-rmc002-finishes',
       bcProjectId: 'bc-proj-2024-hospital-002',
       name: 'ARCHITECTURAL FINISHES',
-      description: 'Interior finishes including flooring, ceilings, wall protection, and casework',
-      scope: 'Division 09',
       status: 'active',
-      progress: 15,
-      budgetAmount: 12000000,
-      currentAmount: 11800000
+      progress: 15
     }
   ],
   'bc-proj-2024-school-003': [
@@ -257,23 +237,15 @@ export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'c
       bcBidPackageId: 'bp-les003-seismic',
       bcProjectId: 'bc-proj-2024-school-003',
       name: 'STRUCTURAL STEEL',
-      description: 'Seismic bracing, shear walls, and structural upgrades',
-      scope: 'Division 05',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 6500000,
-      currentAmount: null
+      progress: 0
     },
     {
       bcBidPackageId: 'bp-les003-hvac',
       bcProjectId: 'bc-proj-2024-school-003',
       name: 'MEP',
-      description: 'New HVAC system with energy recovery',
-      scope: 'Division 23',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 4200000,
-      currentAmount: null
+      progress: 0
     }
   ],
   'bc-proj-2024-warehouse-004': [
@@ -281,23 +253,15 @@ export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'c
       bcBidPackageId: 'bp-tcdc004-concrete',
       bcProjectId: 'bc-proj-2024-warehouse-004',
       name: 'CONCRETE',
-      description: 'Tilt-up panels, slab-on-grade, and loading dock',
-      scope: 'Division 03',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 8500000,
-      currentAmount: null
+      progress: 0
     },
     {
       bcBidPackageId: 'bp-tcdc004-steel',
       bcProjectId: 'bc-proj-2024-warehouse-004',
       name: 'STRUCTURAL STEEL',
-      description: 'Roof structure and mezzanine framing',
-      scope: 'Division 05',
       status: 'bidding',
-      progress: 0,
-      budgetAmount: 5200000,
-      currentAmount: null
+      progress: 0
     }
   ],
   'bc-proj-2024-housing-005': [
@@ -305,23 +269,15 @@ export const mockBidPackagesByProject: Record<string, Omit<BidPackage, 'id' | 'c
       bcBidPackageId: 'bp-rah005-concrete',
       bcProjectId: 'bc-proj-2024-housing-005',
       name: 'CONCRETE',
-      description: 'Foundations, podium slab, and toppings',
-      scope: 'Division 03',
       status: 'active',
-      progress: 60,
-      budgetAmount: 9200000,
-      currentAmount: 9100000
+      progress: 60
     },
     {
       bcBidPackageId: 'bp-rah005-framing',
       bcProjectId: 'bc-proj-2024-housing-005',
       name: 'SITE WORK',
-      description: 'Wood framing for residential floors',
-      scope: 'Division 06',
       status: 'active',
-      progress: 40,
-      budgetAmount: 12500000,
-      currentAmount: 12450000
+      progress: 40
     }
   ]
 };

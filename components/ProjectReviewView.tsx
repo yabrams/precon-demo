@@ -66,7 +66,6 @@ interface ExtractedProjectInfo {
 
 interface BidPackageInfo {
   name: string;
-  description: string;
   csiCode: string | null;
   csiTitle: string | null;
   captainId: string | null;
@@ -276,7 +275,6 @@ export default function ProjectReviewView({
             if (pkg.line_items && pkg.line_items.length > 0) {
               allBidPackages.push({
                 name: pkg.name,
-                description: pkg.description || `${pkg.line_items.length} items`,
                 csiCode: null,
                 csiTitle: null,
                 captainId: null
@@ -344,7 +342,6 @@ export default function ProjectReviewView({
         if (proj.bidPackages && proj.bidPackages.length > 0) {
           setBidPackages(proj.bidPackages.map((pkg: any) => ({
             name: pkg.name,
-            description: pkg.description || '',
             csiCode: pkg.csiCode || null,
             csiTitle: pkg.csiTitle || null,
             captainId: pkg.captainId || null
@@ -402,28 +399,8 @@ export default function ProjectReviewView({
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      <div className="px-6 py-3 border-b border-gray-200 bg-white flex items-center">
-        <div className="flex items-center space-x-3 w-full">
-          <button
-            onClick={onCancel}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Back"
-          >
-            <ChevronLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-lg font-semibold text-zinc-900">Review Project Information</h1>
-            <p className="text-xs text-gray-600">Verify and edit project details before creating</p>
-          </div>
-        </div>
-      </div>
-
       <div className="flex-1 flex overflow-hidden">
         <div className="w-3/5 border-r border-gray-200 flex flex-col bg-white">
-          <div className="p-4 border-b border-gray-200">
-            <h3 className="font-semibold text-zinc-900">Documents</h3>
-            <p className="text-sm text-gray-600 mt-1">{currentDocIndex + 1} of {uploadedDocuments.length}</p>
-          </div>
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             {currentDoc.fileType === 'application/pdf' || currentDoc.fileName.toLowerCase().endsWith('.pdf') ? (
               <PDFViewer
@@ -491,16 +468,6 @@ export default function ProjectReviewView({
                       placeholder="Enter project name"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea
-                      value={projectInfo.description || ''}
-                      onChange={(e) => updateField('description', e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400"
-                      placeholder="Enter project description"
-                    />
-                  </div>
                 </div>
 
                 {/* Bid Packages */}
@@ -538,7 +505,9 @@ export default function ProjectReviewView({
                                     setEditingCSIIndex(null);
                                   }}
                                   onBlur={() => setEditingCSIIndex(null)}
-                                  placeholder="Search CSI code..."
+                                  placeholder="Search CSI division..."
+                                  levelFilter={[1]}
+                                  showAllOnFocus={true}
                                 />
                               ) : (
                                 <div
@@ -582,27 +551,13 @@ export default function ProjectReviewView({
                                 })}
                               </select>
                             </div>
-                            <div className="col-span-2">
-                              <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
-                              <textarea
-                                value={pkg.description}
-                                onChange={(e) => {
-                                  const updated = [...bidPackages];
-                                  updated[index].description = e.target.value;
-                                  setBidPackages(updated);
-                                }}
-                                rows={2}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 text-sm"
-                                placeholder="Package description"
-                              />
-                            </div>
                           </div>
                         </div>
                       ))}
                     </div>
                     <button
                       type="button"
-                      onClick={() => setBidPackages([...bidPackages, { name: '', description: '', csiCode: null, csiTitle: null, captainId: null }])}
+                      onClick={() => setBidPackages([...bidPackages, { name: '', csiCode: null, csiTitle: null, captainId: null }])}
                       className="text-sm text-zinc-600 hover:text-zinc-800 font-medium"
                     >
                       + Add Bid Package

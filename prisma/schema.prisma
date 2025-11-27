@@ -128,8 +128,6 @@ model BidPackage {
 
   // Basic info
   name              String
-  description       String?                      @db.Text
-  scope             String?                      @db.Text
 
   // Dates
   bidDueDate        DateTime?
@@ -142,8 +140,6 @@ model BidPackage {
   captainId         String?                      // Captain assigned to this bid package
   captain           User?                        @relation("BidPackageCaptain", fields: [captainId], references: [id], onDelete: SetNull)
   captainName       String?                      // Legacy field - kept for backward compatibility
-  budgetAmount      Float?                       // Budget amount for this package
-  location          String?                      // Location of the work
 
   // Diagram references (stored as JSON array of diagram IDs from parent project)
   diagramIds        String?                      @db.Text // JSON array of diagram IDs

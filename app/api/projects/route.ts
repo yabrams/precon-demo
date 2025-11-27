@@ -181,14 +181,11 @@ export async function POST(request: Request) {
                 bcBidPackageId: pkg.bcBidPackageId || `${bcProjectId}-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
                 bcProjectId: newProject.id,
                 name: pkg.name,
-                description: pkg.description,
-                scope: pkg.scope,
                 status: pkg.status || 'draft',
                 progress: pkg.progress || 0,
                 bidDueDate: pkg.bidDueDate ? new Date(pkg.bidDueDate) : null,
                 diagramIds: pkg.diagramIds ? JSON.stringify(pkg.diagramIds) : null,
-                captainId: pkg.captainId || null,
-                budgetAmount: pkg.budgetAmount || null
+                captainId: pkg.captainId || null
               }
             })
           )
