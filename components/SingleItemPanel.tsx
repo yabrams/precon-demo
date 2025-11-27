@@ -50,6 +50,7 @@ interface SingleItemPanelProps {
   onApproveAndNext: () => void;
   onPrevious: () => void;
   onNext: () => void;
+  onDelete?: () => void;
   readOnly?: boolean;
   otherBidPackages?: BidPackageSummary[];
   onReallocateItem?: (itemId: string, targetPackageId: string) => void;
@@ -68,6 +69,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   onApproveAndNext,
   onPrevious,
   onNext,
+  onDelete,
   readOnly = false,
   otherBidPackages = [],
   onReallocateItem,
@@ -273,7 +275,49 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Reallocate Button with Dropdown */}
+          {/* Approve & Next Button - Primary Action (only shown for unapproved items) */}
+          {!readOnly && !item.approved && (
+            <button
+              onClick={onApproveAndNext}
+              className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+              title="Approve and move to next (Enter)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Approve & Next
+            </button>
+          )}
+
+          {/* Unapprove Button - only shown for approved items */}
+          {item.approved && !readOnly && (
+            <button
+              onClick={onApprove}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+              title="Unapprove (A)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Unapprove
+            </button>
+          )}
+
+          {/* Approve Button - only shown for unapproved items */}
+          {!item.approved && !readOnly && (
+            <button
+              onClick={onApprove}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+              title="Approve (A)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Approve
+            </button>
+          )}
+
+          {/* Move To Button with Dropdown */}
           {!readOnly && otherBidPackages.length > 0 && onReallocateItem && (
             <div className="relative" ref={reallocateDropdownRef}>
               <button
@@ -286,15 +330,11 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
                   }
                   setShowReallocateDropdown(!showReallocateDropdown);
                 }}
-                className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                className="px-2 py-1 text-xs font-medium rounded-lg transition-colors flex items-center bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
                 title="Move to another bid package"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-                Reallocate
-                <svg className={`w-3 h-3 transition-transform ${showReallocateDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               {showReallocateDropdown && (() => {
@@ -369,45 +409,16 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
             </div>
           )}
 
-          {/* Unapprove Button - only shown for approved items */}
-          {item.approved && !readOnly && (
+          {/* Delete Button */}
+          {!readOnly && onDelete && (
             <button
-              onClick={onApprove}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
-              title="Unapprove (A)"
+              onClick={onDelete}
+              className="px-2 py-1 text-xs font-medium rounded-lg transition-colors flex items-center bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+              title="Delete item"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Unapprove
-            </button>
-          )}
-
-          {/* Approve Button - only shown for unapproved items */}
-          {!item.approved && !readOnly && (
-            <button
-              onClick={onApprove}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
-              title="Approve (A)"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Approve
-            </button>
-          )}
-
-          {/* Approve & Next Button - Primary Action (only shown for unapproved items) */}
-          {!readOnly && !item.approved && (
-            <button
-              onClick={onApproveAndNext}
-              className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-              title="Approve and move to next (Enter)"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Approve & Next
             </button>
           )}
         </div>
