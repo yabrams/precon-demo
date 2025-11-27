@@ -32,7 +32,6 @@ export interface MockLineItem {
 export interface MockBidPackage {
   name: string;
   csi_division: string;
-  description: string;
   line_items: MockLineItem[];
 }
 
@@ -519,7 +518,6 @@ export function generateMockBidPackages(): MockExtractionResult {
     return {
       name: `${division.code} - ${division.title}`,
       csi_division: division.code,
-      description: division.description || `Work related to ${division.title.toLowerCase()}`,
       line_items: lineItems,
     };
   });

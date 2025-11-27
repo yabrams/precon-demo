@@ -11,7 +11,9 @@ const prisma = new PrismaClient();
 const statusMapping: Record<string, string> = {
   'draft': 'to do',
   'active': 'in progress',
-  'bidding': 'bidding',
+  'bidding': 'in review',
+  'bidding leveling': 'in review',
+  'pending-review': 'in review',
   'awarded': 'completed',
   'closed': 'completed',
 };

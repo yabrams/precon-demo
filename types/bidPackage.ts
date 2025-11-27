@@ -15,14 +15,12 @@ export interface BidPackage {
 
   // Basic information
   name: string;
-  description?: string;
-  scope?: string; // Detailed scope of work description
 
   // Dates
   bidDueDate?: Date;
 
-  // Status tracking
-  status: 'draft' | 'active' | 'bidding' | 'awarded' | 'closed';
+  // Status tracking (workflow-controlled, not user-editable)
+  status: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
   progress: number; // 0-100 percentage
 
   // Assignment
@@ -35,10 +33,6 @@ export interface BidPackage {
     email: string;
   };
   captainName?: string; // Legacy field - kept for backward compatibility
-  location?: string; // Package location or work area
-
-  // Budget
-  budgetAmount?: number; // Estimated budget for this package
 
   // Diagram references (diagrams are owned by parent project)
   diagramIds?: string[]; // IDs of diagrams from parent project to use for this package
@@ -86,18 +80,14 @@ export interface BidPackageCreateInput {
   bcBidPackageId: string;
   bcProjectId: string;
   name: string;
-  description?: string;
-  scope?: string;
   bidDueDate?: Date;
-  status?: 'draft' | 'active' | 'bidding' | 'awarded' | 'closed';
+  status?: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
 }
 
 export interface BidPackageUpdateInput {
   name?: string;
-  description?: string;
-  scope?: string;
   bidDueDate?: Date;
-  status?: 'draft' | 'active' | 'bidding' | 'awarded' | 'closed';
+  status?: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
   progress?: number;
   diagramIds?: string[]; // Update which diagrams from project to use
 }
@@ -107,7 +97,7 @@ export interface BidPackageSummary {
   id: string;
   bcBidPackageId: string;
   name: string;
-  status: 'draft' | 'active' | 'bidding' | 'awarded' | 'closed';
+  status: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
   progress: number;
   bidDueDate?: Date;
   diagramCount: number;

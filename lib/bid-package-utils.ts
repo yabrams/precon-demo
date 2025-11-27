@@ -126,7 +126,6 @@ export async function createOrGetBidPackages(bcProjectId: string, categories: st
           bcBidPackageId,
           bcProjectId,
           name: `${category} Package`,
-          description: `Bid package for ${category.toLowerCase()} work`,
           status: 'to do'
         }
       });

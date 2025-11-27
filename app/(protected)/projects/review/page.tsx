@@ -39,10 +39,18 @@ export default function ProjectReviewPage() {
 
   const handleApprove = async (approvedData: any) => {
     try {
+      // If we have extractedBidPackagesData, don't pass bidPackages to project creation
+      // to avoid creating duplicate bid packages (they'll be created from extractedBidPackagesData below)
+      const projectPayload = { ...approvedData };
+      if (approvedData.extractedBidPackagesData?.length > 0) {
+        delete projectPayload.bidPackages;
+      }
+      delete projectPayload.extractedBidPackagesData; // Don't send this to project creation API
+
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(approvedData)
+        body: JSON.stringify(projectPayload)
       });
 
       if (response.ok) {

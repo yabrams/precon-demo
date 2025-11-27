@@ -216,12 +216,10 @@ export default function BidPackageListView({
     }
   }, [isEditMode, bidPackages, project]);
 
-  // Update bid package field
-  const updateBidPackage = (index: number, field: string, value: any) => {
+  // Update bid package field by ID
+  const updateBidPackageById = (id: string, field: string, value: any) => {
     setEditedBidPackages(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
-      return updated;
+      return prev.map(bp => bp.id === id ? { ...bp, [field]: value } : bp);
     });
   };
 
@@ -257,10 +255,6 @@ export default function BidPackageListView({
         return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'in review':
         return 'bg-purple-50 text-purple-700 border-purple-200';
-      case 'bidding':
-        return 'bg-orange-50 text-orange-700 border-orange-200';
-      case 'bidding leveling':
-        return 'bg-rose-50 text-rose-700 border-rose-200';
       case 'completed':
         return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       default:
@@ -277,6 +271,36 @@ export default function BidPackageListView({
       year: 'numeric',
     });
   };
+
+  // Extract division code from bid package name for sorting
+  // Handles formats like "03 - Concrete", "03A - Concrete", "Division 03", or just "03"
+  const extractDivisionCode = (name: string): string => {
+    // Match leading numbers (with optional letter suffix) at start of name
+    const match = name.match(/^(\d+[A-Za-z]?)/);
+    if (match) {
+      // Pad numeric part to ensure proper sorting (03 before 10)
+      const code = match[1];
+      const numericPart = code.match(/^\d+/)?.[0] || '';
+      const letterPart = code.slice(numericPart.length);
+      return numericPart.padStart(3, '0') + letterPart;
+    }
+    // No division code found, sort alphabetically at the end
+    return 'zzz' + name;
+  };
+
+  // Sort bid packages by division code
+  const sortedBidPackages = [...bidPackages].sort((a, b) => {
+    const codeA = extractDivisionCode(a.name);
+    const codeB = extractDivisionCode(b.name);
+    return codeA.localeCompare(codeB);
+  });
+
+  // Sort edited bid packages by division code (for edit mode)
+  const sortedEditedBidPackages = [...editedBidPackages].sort((a, b) => {
+    const codeA = extractDivisionCode(a.name);
+    const codeB = extractDivisionCode(b.name);
+    return codeA.localeCompare(codeB);
+  });
 
   const getCaptainInitials = (bidPackage?: any) => {
     // Try to get name from captain object first, then fall back to captainName
@@ -549,7 +573,7 @@ export default function BidPackageListView({
                         </div>
                       ) : isEditMode ? (
                         <div className="space-y-4">
-                            {editedBidPackages.map((bidPackage, index) => (
+                            {sortedEditedBidPackages.map((bidPackage, index) => (
                               <div
                                 key={bidPackage.id}
                                 className="p-4 border border-gray-200 rounded-lg bg-gray-50 space-y-3"
@@ -569,101 +593,42 @@ export default function BidPackageListView({
                                   <input
                                     type="text"
                                     value={bidPackage.name}
-                                    onChange={(e) => updateBidPackage(index, 'name', e.target.value)}
+                                    onChange={(e) => updateBidPackageById(bidPackage.id, 'name', e.target.value)}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
                                   />
                                 </div>
                                 <div>
-                                  <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
-                                  <textarea
-                                    value={bidPackage.description || ''}
-                                    onChange={(e) => updateBidPackage(index, 'description', e.target.value)}
-                                    rows={2}
+                                  <label className="block text-xs font-medium text-gray-700 mb-1">Captain</label>
+                                  <select
+                                    value={bidPackage.captainId || ''}
+                                    onChange={(e) => {
+                                      const selectedUser = users.find(u => u.id === e.target.value);
+                                      updateBidPackageById(bidPackage.id, 'captainId', e.target.value);
+                                      // Also update captainName for backward compatibility
+                                      if (selectedUser) {
+                                        updateBidPackageById(bidPackage.id, 'captainName', formatUserName(selectedUser));
+                                        updateBidPackageById(bidPackage.id, 'captain', {
+                                          id: selectedUser.id,
+                                          userName: selectedUser.userName,
+                                          firstName: selectedUser.firstName,
+                                          lastName: selectedUser.lastName,
+                                          email: selectedUser.email
+                                        });
+                                      } else {
+                                        updateBidPackageById(bidPackage.id, 'captainName', '');
+                                        updateBidPackageById(bidPackage.id, 'captain', null);
+                                      }
+                                    }}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                  />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                  <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Budget Amount</label>
-                                    <input
-                                      type="number"
-                                      value={bidPackage.budgetAmount || ''}
-                                      onChange={(e) => updateBidPackage(index, 'budgetAmount', parseFloat(e.target.value) || null)}
-                                      placeholder="0.00"
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                                    <select
-                                      value={bidPackage.status}
-                                      onChange={(e) => updateBidPackage(index, 'status', e.target.value)}
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                    >
-                                      <option value="to do">To Do</option>
-                                      <option value="assigned">Assigned</option>
-                                      <option value="in progress">In Progress</option>
-                                      <option value="in review">In Review</option>
-                                      <option value="bidding">Bidding</option>
-                                      <option value="bidding leveling">Bidding Leveling</option>
-                                      <option value="completed">Completed</option>
-                                    </select>
-                                  </div>
-                                </div>
-                                <div>
-                                  <label className="block text-xs font-medium text-gray-700 mb-1">Scope</label>
-                                  <textarea
-                                    value={bidPackage.scope || ''}
-                                    onChange={(e) => updateBidPackage(index, 'scope', e.target.value)}
-                                    rows={2}
-                                    placeholder="Detailed scope of work for this package..."
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                  />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                  <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Captain</label>
-                                    <select
-                                      value={bidPackage.captainId || ''}
-                                      onChange={(e) => {
-                                        const selectedUser = users.find(u => u.id === e.target.value);
-                                        updateBidPackage(index, 'captainId', e.target.value);
-                                        // Also update captainName for backward compatibility
-                                        if (selectedUser) {
-                                          updateBidPackage(index, 'captainName', formatUserName(selectedUser));
-                                          updateBidPackage(index, 'captain', {
-                                            id: selectedUser.id,
-                                            userName: selectedUser.userName,
-                                            firstName: selectedUser.firstName,
-                                            lastName: selectedUser.lastName,
-                                            email: selectedUser.email
-                                          });
-                                        } else {
-                                          updateBidPackage(index, 'captainName', '');
-                                          updateBidPackage(index, 'captain', null);
-                                        }
-                                      }}
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                      disabled={loadingUsers}
-                                    >
-                                      <option value="">Select captain...</option>
-                                      {users.map((user) => (
-                                        <option key={user.id} value={user.id}>
-                                          {formatUserName(user)} ({user.role})
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                  <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
-                                    <input
-                                      type="text"
-                                      value={bidPackage.location || ''}
-                                      onChange={(e) => updateBidPackage(index, 'location', e.target.value)}
-                                      placeholder="Package location"
-                                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white"
-                                    />
-                                  </div>
+                                    disabled={loadingUsers}
+                                  >
+                                    <option value="">Select captain...</option>
+                                    {users.map((user) => (
+                                      <option key={user.id} value={user.id}>
+                                        {formatUserName(user)} ({user.role})
+                                      </option>
+                                    ))}
+                                  </select>
                                 </div>
                                 <div className="pt-2 border-t border-gray-300">
                                   <button
@@ -677,8 +642,8 @@ export default function BidPackageListView({
                           ))}
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {bidPackages.map((bidPackage) => (
+                        <div className="space-y-3">
+                          {sortedBidPackages.map((bidPackage) => (
                             <div
                               key={bidPackage.id}
                               onClick={() => onBidPackageSelect(bidPackage)}
@@ -747,19 +712,6 @@ export default function BidPackageListView({
                                 </div>
                               </div>
 
-
-                              {/* Location */}
-                              {bidPackage.location && (
-                                <div className="mb-3">
-                                  <span className="text-xs text-gray-500">Location:</span>
-                                  <p className="text-xs text-zinc-900 line-clamp-1">{bidPackage.location}</p>
-                                </div>
-                              )}
-
-                              {/* Description */}
-                              {bidPackage.description && (
-                                <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
-                              )}
 
                               {/* Progress Percentage */}
                               <div>
@@ -853,8 +805,8 @@ export default function BidPackageListView({
                 {bidPackages.length === 0 ? (
                   <p className="text-sm text-gray-600 text-center py-8">No bid packages yet</p>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {bidPackages.map((bidPackage) => (
+                  <div className="space-y-3">
+                    {sortedBidPackages.map((bidPackage) => (
                       <div
                         key={bidPackage.id}
                         onClick={() => onBidPackageSelect(bidPackage)}
@@ -923,19 +875,6 @@ export default function BidPackageListView({
                           </div>
                         </div>
 
-
-                        {/* Location */}
-                        {bidPackage.location && (
-                          <div className="mb-3">
-                            <span className="text-xs text-gray-500">Location:</span>
-                            <p className="text-xs text-zinc-900 line-clamp-1">{bidPackage.location}</p>
-                          </div>
-                        )}
-
-                        {/* Description */}
-                        {bidPackage.description && (
-                          <p className="text-xs text-gray-600 mb-3 line-clamp-2">{bidPackage.description}</p>
-                        )}
 
                         {/* Progress Percentage */}
                         <div>
