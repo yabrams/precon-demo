@@ -10,7 +10,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { GeminiClient } from '@/lib/extraction/clients/gemini';
-import { ExtractionDocument } from '@/lib/extraction/types';
+import { ExtractionDocument, GeminiExtractionResponse } from '@/lib/extraction/types';
 import { SAMPLE_DOCUMENTS, fileExists } from '../setup';
 import fs from 'fs/promises';
 import path from 'path';
@@ -88,7 +88,7 @@ Here's the extraction:
 `;
 
       // Test the parsing logic (extracted to a testable function)
-      const parsed = parseJsonFromResponse(responseWithCodeBlock);
+      const parsed = parseJsonFromResponse<GeminiExtractionResponse>(responseWithCodeBlock);
       expect(parsed.project_name).toBe('Test Project');
       expect(parsed.work_packages).toHaveLength(1);
       expect(parsed.work_packages[0].packageId).toBe('MEC');
@@ -100,7 +100,7 @@ Here's the extraction:
   "work_packages": []
 }`;
 
-      const parsed = parseJsonFromResponse(responseInline);
+      const parsed = parseJsonFromResponse<GeminiExtractionResponse>(responseInline);
       expect(parsed.project_name).toBe('Inline Test');
     });
 

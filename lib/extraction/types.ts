@@ -11,10 +11,36 @@
 
 export type ModelIdentifier =
   | 'gemini-2.5-pro'
+  | 'gemini-3-pro-preview'
   | 'claude-sonnet-4.5'
   | 'claude-opus-4.5'
+  | 'gpt-4o'
+  | 'gpt-4o-mini'
+  | 'o1'
   | 'consensus'
   | 'human';
+
+// Model configuration for API calls
+export const MODEL_CONFIGS: Record<string, { apiModel: string; provider: 'google' | 'anthropic' | 'openai' }> = {
+  'gemini-2.5-pro': { apiModel: 'gemini-2.5-pro', provider: 'google' },
+  'gemini-3-pro-preview': { apiModel: 'gemini-3-pro-preview', provider: 'google' },
+  'claude-sonnet-4.5': { apiModel: 'claude-sonnet-4-5-20250929', provider: 'anthropic' },
+  'claude-opus-4.5': { apiModel: 'claude-opus-4-5-20251001', provider: 'anthropic' },
+  'gpt-4o': { apiModel: 'gpt-4o', provider: 'openai' },
+  'gpt-4o-mini': { apiModel: 'gpt-4o-mini', provider: 'openai' },
+  'o1': { apiModel: 'o1', provider: 'openai' },
+};
+
+// Model pricing per 1M tokens (as of Jan 2025)
+export const MODEL_PRICING: Record<string, { input: number; output: number }> = {
+  'gemini-2.5-pro': { input: 1.25, output: 10.00 },
+  'gemini-3-pro-preview': { input: 2.00, output: 15.00 },
+  'claude-sonnet-4.5': { input: 3.00, output: 15.00 },
+  'claude-opus-4.5': { input: 15.00, output: 75.00 },
+  'gpt-4o': { input: 2.50, output: 10.00 },
+  'gpt-4o-mini': { input: 0.15, output: 0.60 },
+  'o1': { input: 15.00, output: 60.00 },
+};
 
 // ============================================================================
 // DOCUMENT TYPES
@@ -450,19 +476,34 @@ export interface GeminiExtractionResponse {
   extraction_confidence?: number;
 }
 
+export interface GeminiReviewAddition extends GeminiRawLineItem {
+  work_package: string; // Which package to add to
+  confidence?: number;
+  reason_missed?: string;
+}
+
 export interface GeminiReviewResponse {
-  additions: GeminiRawLineItem[];
+  additions: GeminiReviewAddition[];
   modifications: {
     original_item_ref: string;
     changes: Partial<GeminiRawLineItem>;
     reason: string;
   }[];
+  new_packages?: GeminiRawWorkPackage[];
   gaps_identified: string[];
   confidence_adjustments: {
     item_ref: string;
-    new_confidence: 'high' | 'medium' | 'low';
+    previous_confidence?: number;
+    new_confidence: 'high' | 'medium' | 'low' | number;
     reason: string;
   }[];
+  ai_observations?: GeminiAIObservation[];
+  overall_assessment?: {
+    extraction_completeness: number;
+    data_quality: number;
+    risk_level: 'low' | 'medium' | 'high';
+    summary: string;
+  };
 }
 
 export interface ClaudeValidationResponse {
@@ -487,4 +528,136 @@ export interface ClaudeValidationResponse {
     items_needing_review: string[];
     critical_issues: string[];
   };
+}
+
+// ============================================================================
+// PERMUTATION TESTING TYPES
+// ============================================================================
+
+/**
+ * Configuration for a single pass in the extraction workflow
+ */
+export interface PassConfig {
+  passNumber: number;
+  model: ModelIdentifier;
+  purpose: 'initial_extraction' | 'self_review' | 'trade_deep_dive' | 'cross_validation' | 'final_validation';
+  dependsOnPasses: number[]; // Which previous passes this depends on
+}
+
+/**
+ * Configuration for a complete permutation test
+ */
+export interface PermutationConfig {
+  id: string;
+  name: string;
+  description: string;
+  passes: PassConfig[];
+  expectedCost?: number; // Estimated cost in USD
+}
+
+/**
+ * Result of a single pass execution
+ */
+export interface PassResult {
+  passNumber: number;
+  model: ModelIdentifier;
+  purpose: string;
+  startedAt: Date;
+  completedAt: Date;
+  durationMs: number;
+  tokensUsed: {
+    input: number;
+    output: number;
+  };
+  cost: number; // Calculated cost in USD
+  response: GeminiExtractionResponse | GeminiReviewResponse | ClaudeValidationResponse;
+  cacheHit: boolean; // Whether this result was from cache
+  cacheKey?: string;
+}
+
+/**
+ * Complete result of a permutation test
+ */
+export interface PermutationResult {
+  permutationId: string;
+  permutationName: string;
+  config: PermutationConfig;
+  documentHash: string; // Hash of input documents for cache key
+  passes: PassResult[];
+  finalResult: {
+    workPackages: GeminiRawWorkPackage[];
+    observations: GeminiAIObservation[];
+    totalLineItems: number;
+    totalObservations: number;
+  };
+  metrics: {
+    totalDurationMs: number;
+    totalTokens: { input: number; output: number };
+    totalCost: number;
+    cacheHits: number;
+    apiCalls: number;
+  };
+  startedAt: Date;
+  completedAt: Date;
+}
+
+/**
+ * Cache entry for a pass result
+ */
+export interface PassCacheEntry {
+  cacheKey: string;
+  passNumber: number;
+  model: ModelIdentifier;
+  purpose: string;
+  documentHash: string;
+  previousPassHashes: string[]; // Hashes of dependent pass results
+  promptVersion: string; // Version of the prompt used
+  result: PassResult;
+  createdAt: Date;
+}
+
+/**
+ * Summary for comparison report
+ */
+export interface PermutationComparison {
+  permutations: PermutationResult[];
+  lineItemComparison: {
+    itemKey: string; // e.g., "MEC.RTU-1" or description hash
+    description: string;
+    byPermutation: {
+      [permutationId: string]: {
+        found: boolean;
+        quantity?: number;
+        unit?: string;
+        confidence?: number;
+        passFound?: number; // Which pass found this item
+      };
+    };
+  }[];
+  observationComparison: {
+    observationKey: string;
+    title: string;
+    byPermutation: {
+      [permutationId: string]: {
+        found: boolean;
+        severity?: string;
+        category?: string;
+        passFound?: number;
+      };
+    };
+  }[];
+  incrementalValueAnalysis: {
+    permutationId: string;
+    byPass: {
+      passNumber: number;
+      model: ModelIdentifier;
+      newItemsFound: number;
+      itemsModified: number;
+      newObservations: number;
+      costForPass: number;
+      valueScore: number; // items found per dollar
+    }[];
+  }[];
+  recommendations: string[];
+  generatedAt: Date;
 }

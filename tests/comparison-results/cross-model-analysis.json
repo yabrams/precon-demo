@@ -1,0 +1,5330 @@
+{
+  "timestamp": "2025-11-27T13:29:58.710Z",
+  "permutationsAnalyzed": [
+    "G25_P1",
+    "CS_P1",
+    "G25_P1P2",
+    "CS_P1P2",
+    "G25_P1P2P3",
+    "G25_CS_VAL",
+    "CS_G25_VAL",
+    "G25_FULL5",
+    "HYBRID_FULL5",
+    "GPT4O_P1",
+    "GPT4O_P1P2",
+    "G25_GPT4O_VAL",
+    "GPT4O_G25_VAL",
+    "TRIPLE_VAL"
+  ],
+  "modelsCompared": [
+    "G25",
+    "CS",
+    "HYBRID",
+    "GPT4O",
+    "TRIPLE"
+  ],
+  "workPackageComparison": [
+    {
+      "packageId": "ARCH",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Architectural - Roofing and Framing",
+          "description": "Installation of new EPDM roofing system, including recovery board, insulation, flashings, and associated rough carpentry for parapets and sheathing.",
+          "csiDivision": "07",
+          "trade": "Roofing & Carpentry",
+          "lineItemCount": 8
+        },
+        "hybrid": {
+          "name": "Architectural - Roofing and Framing",
+          "description": "Installation of new EPDM roofing system, including recovery board, insulation, flashings, and associated rough carpentry for parapets and sheathing.",
+          "csiDivision": "07",
+          "trade": "Roofing & Carpentry",
+          "lineItemCount": 14
+        },
+        "triple": {
+          "name": "Architectural - Roofing and Framing",
+          "description": "Installation of new EPDM roofing system, including recovery board, insulation, flashings, and associated rough carpentry for parapets and sheathing.",
+          "csiDivision": "07",
+          "trade": "Roofing & Carpentry",
+          "lineItemCount": 20
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Strong agreement across models"
+    },
+    {
+      "packageId": "CIVIL",
+      "byModel": {
+        "gpt-4o": {
+          "name": "Civil Site Work",
+          "description": "Site preparation and drainage improvements.",
+          "csiDivision": "Division 02",
+          "trade": "Civil",
+          "lineItemCount": 2
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "CIVIL-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Site Civil Work - Roof Drainage",
+          "description": "Roof drainage system improvements including rain leaders, drain fields, and site grading",
+          "csiDivision": "33 40 00",
+          "trade": "Site Utilities",
+          "lineItemCount": 20
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "CONTROLS-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Building Automation and Controls",
+          "description": "DDC controls for all RTUs including economizers, building pressure control, CO2 sensors, smoke detectors, thermostats",
+          "csiDivision": "23 09 00",
+          "trade": "Controls",
+          "lineItemCount": 0
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "CX-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Commissioning and Startup",
+          "description": "Mechanical and electrical systems startup, testing, and commissioning",
+          "csiDivision": "01 91 00",
+          "trade": "Commissioning",
+          "lineItemCount": 0
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "DEMO",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Demolition",
+          "description": "Demolition of existing roofing systems, rooftop mechanical and electrical equipment, parapets, and associated components to prepare for new work.",
+          "csiDivision": "02",
+          "trade": "Demolition",
+          "lineItemCount": 10
+        },
+        "hybrid": {
+          "name": "Demolition",
+          "description": "Demolition of existing roofing systems, rooftop mechanical and electrical equipment, parapets, and associated components to prepare for new work.",
+          "csiDivision": "02",
+          "trade": "Demolition",
+          "lineItemCount": 11
+        },
+        "triple": {
+          "name": "Demolition",
+          "description": "Demolition of existing roofing systems, rooftop mechanical and electrical equipment, parapets, and associated components to prepare for new work.",
+          "csiDivision": "02",
+          "trade": "Demolition",
+          "lineItemCount": 12
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Strong agreement across models"
+    },
+    {
+      "packageId": "DEMO-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Demolition - Mechanical Systems",
+          "description": "Demolition of existing mechanical equipment, ductwork, and piping systems",
+          "csiDivision": "02 41 00",
+          "trade": "Demolition",
+          "lineItemCount": 6
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "DEMO-02",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Demolition - Electrical Systems",
+          "description": "Demolition of existing electrical panels, feeders, and circuits",
+          "csiDivision": "02 41 00",
+          "trade": "Demolition",
+          "lineItemCount": 6
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "ELEC",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Electrical",
+          "description": "Power wiring for new mechanical equipment, panelboard modifications, and installation of a heat trace system for roof drainage.",
+          "csiDivision": "26",
+          "trade": "Electrical",
+          "lineItemCount": 5
+        },
+        "hybrid": {
+          "name": "Electrical",
+          "description": "Power wiring for new mechanical equipment, panelboard modifications, and installation of a heat trace system for roof drainage.",
+          "csiDivision": "26",
+          "trade": "Electrical",
+          "lineItemCount": 12
+        },
+        "gpt-4o": {
+          "name": "Electrical Work",
+          "description": "Demolition of existing panel and installation of new panels, feeders, and branch circuits to support new mechanical equipment. Installation of heat trace system.",
+          "csiDivision": "Division 26",
+          "trade": "Electrical",
+          "lineItemCount": 4
+        },
+        "triple": {
+          "name": "Electrical",
+          "description": "Power wiring for new mechanical equipment, panelboard modifications, and installation of a heat trace system for roof drainage.",
+          "csiDivision": "26",
+          "trade": "Electrical",
+          "lineItemCount": 19
+        }
+      },
+      "nameAgreement": 0.5,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Good agreement with minor differences"
+    },
+    {
+      "packageId": "ELEC-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Electrical - Power Distribution Upgrades",
+          "description": "Main electrical service upgrades including main breaker replacement, new feeders, new panel installations",
+          "csiDivision": "26 24 00",
+          "trade": "Electrical",
+          "lineItemCount": 0
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "FIN",
+      "byModel": {
+        "hybrid": {
+          "name": "Finishes",
+          "description": "Surface preparation and application of paint and coatings to various interior and exterior substrates as specified.",
+          "csiDivision": "09",
+          "trade": "Painting",
+          "lineItemCount": 1
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "MEC",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Mechanical - HVAC",
+          "description": "Replacement of multiple rooftop units and exhaust fans, including new roof curbs, ductwork transitions, and gas piping.",
+          "csiDivision": "23",
+          "trade": "Mechanical",
+          "lineItemCount": 7
+        },
+        "hybrid": {
+          "name": "Mechanical - HVAC",
+          "description": "Replacement of multiple rooftop units and exhaust fans, including new roof curbs, ductwork transitions, and gas piping.",
+          "csiDivision": "23",
+          "trade": "Mechanical",
+          "lineItemCount": 13
+        },
+        "triple": {
+          "name": "Mechanical - HVAC",
+          "description": "Replacement of multiple rooftop units and exhaust fans, including new roof curbs, ductwork transitions, and gas piping.",
+          "csiDivision": "23",
+          "trade": "Mechanical",
+          "lineItemCount": 19
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Strong agreement across models"
+    },
+    {
+      "packageId": "MECH",
+      "byModel": {
+        "gpt-4o": {
+          "name": "Mechanical Work",
+          "description": "HVAC upgrades and installations.",
+          "csiDivision": "Division 23",
+          "trade": "Mechanical",
+          "lineItemCount": 1
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "MECH_CORRECTED",
+      "byModel": {
+        "gpt-4o": {
+          "name": "Mechanical Work (Corrected & Expanded)",
+          "description": "Demolition and replacement of rooftop units (RTUs) and installation of new exhaust fans. Includes base bid and additive alternate pricing structure.",
+          "csiDivision": "Division 23",
+          "trade": "Mechanical",
+          "lineItemCount": 4
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "MECH-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "HVAC Equipment - RTU Replacement",
+          "description": "Roof top gas/electric air conditioning unit replacement with associated ductwork modifications",
+          "csiDivision": "23 74 00",
+          "trade": "HVAC",
+          "lineItemCount": 9
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "MECH-02",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "HVAC - Exhaust Fans",
+          "description": "New exhaust fan installations for racquetball courts and weight room",
+          "csiDivision": "23 34 00",
+          "trade": "HVAC",
+          "lineItemCount": 8
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "MECH-03",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Mechanical - Gas Piping Systems",
+          "description": "Natural gas piping from meter to all RTU units including supports and testing",
+          "csiDivision": "23 11 00",
+          "trade": "Mechanical - Gas Piping",
+          "lineItemCount": 0
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "PAINT",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Painting",
+          "description": "Exterior painting of new composite trim, galvanized metal surfaces, and other miscellaneous components as specified.",
+          "csiDivision": "09",
+          "trade": "Painting",
+          "lineItemCount": 2
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "PLMB",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Plumbing - Roof Drainage",
+          "description": "Installation of new roof drains, overflows, and interior rain leader piping, including cleanouts.",
+          "csiDivision": "22",
+          "trade": "Plumbing",
+          "lineItemCount": 3
+        },
+        "hybrid": {
+          "name": "Plumbing - Roof Drainage",
+          "description": "Installation of new roof drains, overflows, and interior rain leader piping, including cleanouts.",
+          "csiDivision": "22",
+          "trade": "Plumbing",
+          "lineItemCount": 6
+        },
+        "triple": {
+          "name": "Plumbing - Roof Drainage",
+          "description": "Installation of new roof drains, overflows, and interior rain leader piping, including cleanouts.",
+          "csiDivision": "22",
+          "trade": "Plumbing",
+          "lineItemCount": 9
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Strong agreement across models"
+    },
+    {
+      "packageId": "ROOF",
+      "byModel": {
+        "gpt-4o": {
+          "name": "Roofing Work",
+          "description": "Roof replacement and upgrades.",
+          "csiDivision": "Division 07",
+          "trade": "Roofing",
+          "lineItemCount": 2
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "ROOF-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Roofing and Waterproofing",
+          "description": "Roof replacement and associated flashing, details per architectural drawings",
+          "csiDivision": "07 00 00",
+          "trade": "Roofing",
+          "lineItemCount": 24
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "SEAL",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Joint Sealants",
+          "description": "Installation of various types of sealants at exterior control joints, penetrations, flashing, and windows.",
+          "csiDivision": "07",
+          "trade": "Caulking & Sealants",
+          "lineItemCount": 2
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    },
+    {
+      "packageId": "SITE",
+      "byModel": {
+        "gemini-2.5-pro": {
+          "name": "Sitework and Utilities",
+          "description": "Installation of new underground storm drainage systems including drain fields, piping, and associated excavation and surface restoration.",
+          "csiDivision": "33",
+          "trade": "Civil",
+          "lineItemCount": 6
+        },
+        "hybrid": {
+          "name": "Sitework and Utilities",
+          "description": "Installation of new underground storm drainage systems including drain fields, piping, and associated excavation and surface restoration.",
+          "csiDivision": "33",
+          "trade": "Civil",
+          "lineItemCount": 8
+        },
+        "triple": {
+          "name": "Sitework and Utilities",
+          "description": "Installation of new underground storm drainage systems including drain fields, piping, and associated excavation and surface restoration.",
+          "csiDivision": "33",
+          "trade": "Civil",
+          "lineItemCount": 10
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Strong agreement across models"
+    },
+    {
+      "packageId": "TAB-01",
+      "byModel": {
+        "claude-sonnet-4.5": {
+          "name": "Testing, Adjusting and Balancing",
+          "description": "Independent air balancing of complete HVAC systems per SMACNA standards",
+          "csiDivision": "23 05 93",
+          "trade": "Testing and Balancing",
+          "lineItemCount": 0
+        }
+      },
+      "nameAgreement": 1,
+      "csiAgreement": 1,
+      "tradeAgreement": 1,
+      "analysis": "Only found by one model family"
+    }
+  ],
+  "workPackageAgreementScore": 0.9930555555555557,
+  "lineItemConsensus": [
+    {
+      "key": "DEMO:existing bur roofing and coverboard",
+      "packageId": "DEMO",
+      "description": "Existing BUR roofing and coverboard",
+      "normalizedDescription": "existing bur roofing and coverboard",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "DEMO:existing parapet cap flashing",
+      "packageId": "DEMO",
+      "description": "Existing parapet cap flashing",
+      "normalizedDescription": "existing parapet cap flashing",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "DEMO:existing scuppers except at roof b",
+      "packageId": "DEMO",
+      "description": "Existing scuppers (except at Roof B)",
+      "normalizedDescription": "existing scuppers except at roof b",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:existing roof ladder",
+      "packageId": "DEMO",
+      "description": "Existing roof ladder",
+      "normalizedDescription": "existing roof ladder",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:roofing sheathing and sloped 2x4 sleepers at roof d",
+      "packageId": "DEMO",
+      "description": "Roofing, sheathing and sloped 2x4 sleepers at Roof D",
+      "normalizedDescription": "roofing sheathing and sloped 2x4 sleepers at roof d",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "DEMO:rooftop unit rtu roof curb and appurtenances",
+      "packageId": "DEMO",
+      "description": "Rooftop Unit (RTU), roof curb and appurtenances",
+      "normalizedDescription": "rooftop unit rtu roof curb and appurtenances",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:gas piping and supports",
+      "packageId": "DEMO",
+      "description": "Gas piping and supports",
+      "normalizedDescription": "gas piping and supports",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO:exhaust fan ductwork and appurtenances",
+      "packageId": "DEMO",
+      "description": "Exhaust Fan, ductwork and appurtenances",
+      "normalizedDescription": "exhaust fan ductwork and appurtenances",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:exhaust fan ef1 and associated appurtenances",
+      "packageId": "DEMO",
+      "description": "Exhaust Fan (EF-1) and associated appurtenances",
+      "normalizedDescription": "exhaust fan ef1 and associated appurtenances",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:electrical wiring and conduit for demolished equipment",
+      "packageId": "DEMO",
+      "description": "Electrical wiring and conduit for demolished equipment",
+      "normalizedDescription": "electrical wiring and conduit for demolished equipment",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "SITE:roof drain field 1",
+      "packageId": "SITE",
+      "description": "Roof Drain Field #1",
+      "normalizedDescription": "roof drain field 1",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "SITE:roof drain field 2",
+      "packageId": "SITE",
+      "description": "Roof Drain Field #2",
+      "normalizedDescription": "roof drain field 2",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "SITE:4 dip cl52 rain leader pipe",
+      "packageId": "SITE",
+      "description": "4\" DIP CL52 Rain Leader Pipe",
+      "normalizedDescription": "4 dip cl52 rain leader pipe",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "SITE:asphalt pavement patching",
+      "packageId": "SITE",
+      "description": "Asphalt Pavement Patching",
+      "normalizedDescription": "asphalt pavement patching",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "SITE:concrete sidewalk",
+      "packageId": "SITE",
+      "description": "Concrete Sidewalk",
+      "normalizedDescription": "concrete sidewalk",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "SITE:topsoil seeding",
+      "packageId": "SITE",
+      "description": "Topsoil & Seeding",
+      "normalizedDescription": "topsoil seeding",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:58 gp dens deck recovery board",
+      "packageId": "ARCH",
+      "description": "5/8\" GP Dens Deck Recovery Board",
+      "normalizedDescription": "58 gp dens deck recovery board",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:epdm fully adhered roofing membrane",
+      "packageId": "ARCH",
+      "description": "EPDM Fully Adhered Roofing Membrane",
+      "normalizedDescription": "epdm fully adhered roofing membrane",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:new 58 roof sheathing and 58 coverboard",
+      "packageId": "ARCH",
+      "description": "New 5/8\" Roof Sheathing and 5/8\" Coverboard",
+      "normalizedDescription": "new 58 roof sheathing and 58 coverboard",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:tapered insulation roof crickets",
+      "packageId": "ARCH",
+      "description": "Tapered Insulation Roof Crickets",
+      "normalizedDescription": "tapered insulation roof crickets",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:parapet cap flashing",
+      "packageId": "ARCH",
+      "description": "Parapet Cap Flashing",
+      "normalizedDescription": "parapet cap flashing",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ARCH:parapet framing",
+      "packageId": "ARCH",
+      "description": "Parapet Framing",
+      "normalizedDescription": "parapet framing",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ARCH:roof hatch",
+      "packageId": "ARCH",
+      "description": "Roof Hatch",
+      "normalizedDescription": "roof hatch",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ARCH:roof access ladder",
+      "packageId": "ARCH",
+      "description": "Roof Access Ladder",
+      "normalizedDescription": "roof access ladder",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:rooftop unit additive alternate 1",
+      "packageId": "MEC",
+      "description": "Rooftop Unit (Additive Alternate #1)",
+      "normalizedDescription": "rooftop unit additive alternate 1",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:rooftop unit additive alternate 2",
+      "packageId": "MEC",
+      "description": "Rooftop Unit (Additive Alternate #2)",
+      "normalizedDescription": "rooftop unit additive alternate 2",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:rooftop units base bid",
+      "packageId": "MEC",
+      "description": "Rooftop Units (Base Bid)",
+      "normalizedDescription": "rooftop units base bid",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 4,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:exhaust fans",
+      "packageId": "MEC",
+      "description": "Exhaust Fans",
+      "normalizedDescription": "exhaust fans",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:ductwork transitions",
+      "packageId": "MEC",
+      "description": "Ductwork Transitions",
+      "normalizedDescription": "ductwork transitions",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MEC:gas piping",
+      "packageId": "MEC",
+      "description": "Gas Piping",
+      "normalizedDescription": "gas piping",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MEC:new insulated roof curbs",
+      "packageId": "MEC",
+      "description": "New Insulated Roof Curbs",
+      "normalizedDescription": "new insulated roof curbs",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "PLMB:new roof drains and overflows",
+      "packageId": "PLMB",
+      "description": "New Roof Drains and Overflows",
+      "normalizedDescription": "new roof drains and overflows",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "PLMB:rainleader piping rl ol",
+      "packageId": "PLMB",
+      "description": "Rainleader Piping (RL & OL)",
+      "normalizedDescription": "rainleader piping rl ol",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "PLMB:cleanouts co",
+      "packageId": "PLMB",
+      "description": "Cleanouts (CO)",
+      "normalizedDescription": "cleanouts co",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:power connections to new rtus and efs",
+      "packageId": "ELEC",
+      "description": "Power connections to new RTUs and EFs",
+      "normalizedDescription": "power connections to new rtus and efs",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:heat trace system",
+      "packageId": "ELEC",
+      "description": "Heat Trace System",
+      "normalizedDescription": "heat trace system",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 2,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 2,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 2,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 2,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:new panel d",
+      "packageId": "ELEC",
+      "description": "New Panel 'D'",
+      "normalizedDescription": "new panel d",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:new panel mech",
+      "packageId": "ELEC",
+      "description": "New Panel 'MECH'",
+      "normalizedDescription": "new panel mech",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:duct smoke detector audio visual alarm",
+      "packageId": "ELEC",
+      "description": "Duct Smoke Detector Audio Visual Alarm",
+      "normalizedDescription": "duct smoke detector audio visual alarm",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.6,
+      "likelyTruePositive": true,
+      "analysis": "Medium confidence: Found by 3/5 model families",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO:existing wood privacy fence demo",
+      "packageId": "DEMO",
+      "description": "Existing wood privacy fence (demo)",
+      "normalizedDescription": "existing wood privacy fence demo",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "SITE:vb lid cleanout pipe riser assembly",
+      "packageId": "SITE",
+      "description": "VB lid cleanout pipe riser assembly",
+      "normalizedDescription": "vb lid cleanout pipe riser assembly",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "SITE:dry well manhole existing to remain",
+      "packageId": "SITE",
+      "description": "Dry well manhole (existing to remain)",
+      "normalizedDescription": "dry well manhole existing to remain",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ARCH:new scuppers per detail 5a23",
+      "packageId": "ARCH",
+      "description": "New scuppers per Detail 5/A2.3",
+      "normalizedDescription": "new scuppers per detail 5a23",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ARCH:new monitoring pipes per detail ca22 and da22",
+      "packageId": "ARCH",
+      "description": "New monitoring pipes per Detail C/A2.2 and D/A2.2",
+      "normalizedDescription": "new monitoring pipes per detail ca22 and da22",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ARCH:roof access hatch ladder and brackets",
+      "packageId": "ARCH",
+      "description": "Roof access hatch ladder and brackets",
+      "normalizedDescription": "roof access hatch ladder and brackets",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ARCH:field verify and measure all existing conditions",
+      "packageId": "ARCH",
+      "description": "Field verify and measure all existing conditions",
+      "normalizedDescription": "field verify and measure all existing conditions",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ARCH:blocking and nailers for roof equipment",
+      "packageId": "ARCH",
+      "description": "Blocking and nailers for roof equipment",
+      "normalizedDescription": "blocking and nailers for roof equipment",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ARCH:roof walkway pads",
+      "packageId": "ARCH",
+      "description": "Roof walkway pads",
+      "normalizedDescription": "roof walkway pads",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "MEC:doghouse ductwork enclosure at ef4 and ef5",
+      "packageId": "MEC",
+      "description": "Doghouse ductwork enclosure at EF-4 and EF-5",
+      "normalizedDescription": "doghouse ductwork enclosure at ef4 and ef5",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:motor operated dampers for rtu building pressure control",
+      "packageId": "MEC",
+      "description": "Motor operated dampers for RTU building pressure control",
+      "normalizedDescription": "motor operated dampers for rtu building pressure control",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:duct smoke detectors per rtu schedule",
+      "packageId": "MEC",
+      "description": "Duct smoke detectors per RTU schedule",
+      "normalizedDescription": "duct smoke detectors per rtu schedule",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MEC:testing adjusting and balancing tab",
+      "packageId": "MEC",
+      "description": "Testing, adjusting, and balancing (TAB)",
+      "normalizedDescription": "testing adjusting and balancing tab",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MEC:field services and startup",
+      "packageId": "MEC",
+      "description": "Field services and startup",
+      "normalizedDescription": "field services and startup",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MEC:operation and maintenance manuals",
+      "packageId": "MEC",
+      "description": "Operation and Maintenance Manuals",
+      "normalizedDescription": "operation and maintenance manuals",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "PLMB:cast iron dome for roof drains",
+      "packageId": "PLMB",
+      "description": "Cast iron dome for roof drains",
+      "normalizedDescription": "cast iron dome for roof drains",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "PLMB:water dam for overflow drains",
+      "packageId": "PLMB",
+      "description": "Water dam for overflow drains",
+      "normalizedDescription": "water dam for overflow drains",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "PLMB:rainleader system testing",
+      "packageId": "PLMB",
+      "description": "Rainleader system testing",
+      "normalizedDescription": "rainleader system testing",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:convenience receptacles at rtus",
+      "packageId": "ELEC",
+      "description": "Convenience receptacles at RTUs",
+      "normalizedDescription": "convenience receptacles at rtus",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:heat trace controls and monitoring",
+      "packageId": "ELEC",
+      "description": "Heat trace controls and monitoring",
+      "normalizedDescription": "heat trace controls and monitoring",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:main breaker replacement",
+      "packageId": "ELEC",
+      "description": "Main breaker replacement",
+      "normalizedDescription": "main breaker replacement",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:double lugs at main disconnect",
+      "packageId": "ELEC",
+      "description": "Double lugs at main disconnect",
+      "normalizedDescription": "double lugs at main disconnect",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:feeder replacement from main to panel a",
+      "packageId": "ELEC",
+      "description": "Feeder replacement from main to Panel A",
+      "normalizedDescription": "feeder replacement from main to panel a",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:panel schedules and labeling",
+      "packageId": "ELEC",
+      "description": "Panel schedules and labeling",
+      "normalizedDescription": "panel schedules and labeling",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:seismic restraint calculations and details",
+      "packageId": "ELEC",
+      "description": "Seismic restraint calculations and details",
+      "normalizedDescription": "seismic restraint calculations and details",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        },
+        {
+          "modelId": "triple",
+          "permutationId": "TRIPLE_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.4,
+      "likelyTruePositive": false,
+      "analysis": "Low confidence: Only found by 2/5 model families - verify manually",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO-01:demolish existing rtu units",
+      "packageId": "DEMO-01",
+      "description": "Demolish existing RTU units",
+      "normalizedDescription": "demolish existing rtu units",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 4,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-01:demolish gas piping to rtus",
+      "packageId": "DEMO-01",
+      "description": "Demolish gas piping to RTUs",
+      "normalizedDescription": "demolish gas piping to rtus",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "DEMO-01:demolish hrv unit and ductwork",
+      "packageId": "DEMO-01",
+      "description": "Demolish HRV unit and ductwork",
+      "normalizedDescription": "demolish hrv unit and ductwork",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-01:demolish exhaust fans ef1 ef2 ef3",
+      "packageId": "DEMO-01",
+      "description": "Demolish exhaust fans EF-1, EF-2, EF-3",
+      "normalizedDescription": "demolish exhaust fans ef1 ef2 ef3",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 3,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 3,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-01:demolish existing outside air intakes and roof relief hoods",
+      "packageId": "DEMO-01",
+      "description": "Demolish existing outside air intakes and roof relief hoods",
+      "normalizedDescription": "demolish existing outside air intakes and roof relief hoods",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-01:demolish gas piping through roof",
+      "packageId": "DEMO-01",
+      "description": "Demolish gas piping through roof",
+      "normalizedDescription": "demolish gas piping through roof",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-02:demolish existing panel x",
+      "packageId": "DEMO-02",
+      "description": "Demolish existing panel 'X'",
+      "normalizedDescription": "demolish existing panel x",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO-02:demolish rtu electrical loads",
+      "packageId": "DEMO-02",
+      "description": "Demolish RTU electrical loads",
+      "normalizedDescription": "demolish rtu electrical loads",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO-02:demolish additional rtu electrical loads",
+      "packageId": "DEMO-02",
+      "description": "Demolish additional RTU electrical loads",
+      "normalizedDescription": "demolish additional rtu electrical loads",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO-02:demolish rtu electrical loads circuits 37 39 41",
+      "packageId": "DEMO-02",
+      "description": "Demolish RTU electrical loads - circuits 37, 39, 41",
+      "normalizedDescription": "demolish rtu electrical loads circuits 37 39 41",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO-02:demolish rtu electrical loads circuits 20 22 24",
+      "packageId": "DEMO-02",
+      "description": "Demolish RTU electrical loads - circuits 20, 22, 24",
+      "normalizedDescription": "demolish rtu electrical loads circuits 20 22 24",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO-02:demolish wires and conduit to panels",
+      "packageId": "DEMO-02",
+      "description": "Demolish wires and conduit to panels",
+      "normalizedDescription": "demolish wires and conduit to panels",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "CIVIL-01:sawcut and clean edge on existing asphalt pavement",
+      "packageId": "CIVIL-01",
+      "description": "Sawcut and clean edge on existing asphalt pavement",
+      "normalizedDescription": "sawcut and clean edge on existing asphalt pavement",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:roof drain field 1 30l x 15w x 3d",
+      "packageId": "CIVIL-01",
+      "description": "Roof drain field #1 - 30'L x 15'W x 3'D",
+      "normalizedDescription": "roof drain field 1 30l x 15w x 3d",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:roof drain field 2 12l x 4w x 3d",
+      "packageId": "CIVIL-01",
+      "description": "Roof drain field #2 - 12'L x 4'W x 3'D",
+      "normalizedDescription": "roof drain field 2 12l x 4w x 3d",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:electric heat trace in rain leader pipes",
+      "packageId": "CIVIL-01",
+      "description": "Electric heat trace in rain leader pipes",
+      "normalizedDescription": "electric heat trace in rain leader pipes",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:regrade disturbed area to maintain existing drainage",
+      "packageId": "CIVIL-01",
+      "description": "Regrade disturbed area to maintain existing drainage",
+      "normalizedDescription": "regrade disturbed area to maintain existing drainage",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:backfill with nfs sandgravel from excavation",
+      "packageId": "CIVIL-01",
+      "description": "Backfill with NFS sand/gravel from excavation",
+      "normalizedDescription": "backfill with nfs sandgravel from excavation",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "CY",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "CY"
+    },
+    {
+      "key": "CIVIL-01:grade new asphalt to match existing",
+      "packageId": "CIVIL-01",
+      "description": "Grade new asphalt to match existing",
+      "normalizedDescription": "grade new asphalt to match existing",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:2 asphalt pavement",
+      "packageId": "CIVIL-01",
+      "description": "2\" asphalt pavement",
+      "normalizedDescription": "2 asphalt pavement",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:2 leveling course",
+      "packageId": "CIVIL-01",
+      "description": "2\" leveling course",
+      "normalizedDescription": "2 leveling course",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:washed drain rock aggregate around perforated pipe",
+      "packageId": "CIVIL-01",
+      "description": "Washed drain rock - aggregate around perforated pipe",
+      "normalizedDescription": "washed drain rock aggregate around perforated pipe",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "CY",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "CY"
+    },
+    {
+      "key": "CIVIL-01:typar 3401 geotextile fabric or mirafi 140n alternate",
+      "packageId": "CIVIL-01",
+      "description": "Typar 3401 geotextile fabric (or Mirafi 140N alternate)",
+      "normalizedDescription": "typar 3401 geotextile fabric or mirafi 140n alternate",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:24 ads perforated n12 cpep pipes and laterals",
+      "packageId": "CIVIL-01",
+      "description": "24\" ADS perforated N=12 CPEP pipes and laterals",
+      "normalizedDescription": "24 ads perforated n12 cpep pipes and laterals",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 3,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 3,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:24 ads split end caps",
+      "packageId": "CIVIL-01",
+      "description": "24\" ADS split end caps",
+      "normalizedDescription": "24 ads split end caps",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:24 ads solid coupling",
+      "packageId": "CIVIL-01",
+      "description": "24\" ADS solid coupling",
+      "normalizedDescription": "24 ads solid coupling",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:4 rain leader from building",
+      "packageId": "CIVIL-01",
+      "description": "4\" rain leader from building",
+      "normalizedDescription": "4 rain leader from building",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:vb cleanout riser assembly with monitoring pipe",
+      "packageId": "CIVIL-01",
+      "description": "VB cleanout riser assembly with monitoring pipe",
+      "normalizedDescription": "vb cleanout riser assembly with monitoring pipe",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:rain leader trench typical",
+      "packageId": "CIVIL-01",
+      "description": "Rain leader trench - typical",
+      "normalizedDescription": "rain leader trench typical",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:2 insufoam 40 insulation board",
+      "packageId": "CIVIL-01",
+      "description": "2\" Insufoam 40 insulation board",
+      "normalizedDescription": "2 insufoam 40 insulation board",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:4 concrete sidewalk",
+      "packageId": "CIVIL-01",
+      "description": "4\" concrete sidewalk",
+      "normalizedDescription": "4 concrete sidewalk",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL-01:paved unpaved transition",
+      "packageId": "CIVIL-01",
+      "description": "Paved unpaved transition",
+      "normalizedDescription": "paved unpaved transition",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ROOF-01:demo and replace roofing per details",
+      "packageId": "ROOF-01",
+      "description": "Demo and replace roofing per details",
+      "normalizedDescription": "demo and replace roofing per details",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ROOF-01:demo and replace parapet flashing",
+      "packageId": "ROOF-01",
+      "description": "Demo and replace parapet flashing",
+      "normalizedDescription": "demo and replace parapet flashing",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ROOF-01:demo and infill existing scuppers",
+      "packageId": "ROOF-01",
+      "description": "Demo and infill existing scuppers",
+      "normalizedDescription": "demo and infill existing scuppers",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:demo existing scuppers and replace",
+      "packageId": "ROOF-01",
+      "description": "Demo existing scuppers and replace",
+      "normalizedDescription": "demo existing scuppers and replace",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:new roof penetration flashing for mechanical equipment",
+      "packageId": "ROOF-01",
+      "description": "New roof penetration flashing for mechanical equipment",
+      "normalizedDescription": "new roof penetration flashing for mechanical equipment",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:existing roof penetration regain with new flashing",
+      "packageId": "ROOF-01",
+      "description": "Existing roof penetration - regain with new flashing",
+      "normalizedDescription": "existing roof penetration regain with new flashing",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:coordinate temporary removal of mechanical equipment",
+      "packageId": "ROOF-01",
+      "description": "Coordinate temporary removal of mechanical equipment",
+      "normalizedDescription": "coordinate temporary removal of mechanical equipment",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ROOF-01:metal roof at gymnasium not in contract",
+      "packageId": "ROOF-01",
+      "description": "Metal roof at gymnasium - not in contract",
+      "normalizedDescription": "metal roof at gymnasium not in contract",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "N/A",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "N/A"
+    },
+    {
+      "key": "ROOF-01:demo wood parapet fence",
+      "packageId": "ROOF-01",
+      "description": "Demo wood parapet fence",
+      "normalizedDescription": "demo wood parapet fence",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ROOF-01:demo and install new roof access ladder",
+      "packageId": "ROOF-01",
+      "description": "Demo and install new roof access ladder",
+      "normalizedDescription": "demo and install new roof access ladder",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:remove existing shingles and siding at roof b",
+      "packageId": "ROOF-01",
+      "description": "Remove existing shingles and siding at Roof B",
+      "normalizedDescription": "remove existing shingles and siding at roof b",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ROOF-01:new parapet details multiple configurations",
+      "packageId": "ROOF-01",
+      "description": "New parapet details - multiple configurations",
+      "normalizedDescription": "new parapet details multiple configurations",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ROOF-01:new sidewall details",
+      "packageId": "ROOF-01",
+      "description": "New sidewall details",
+      "normalizedDescription": "new sidewall details",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "ROOF-01:rain leader wall sections",
+      "packageId": "ROOF-01",
+      "description": "Rain leader wall sections",
+      "normalizedDescription": "rain leader wall sections",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:roof hatch detail and ladder plan",
+      "packageId": "ROOF-01",
+      "description": "Roof hatch detail and ladder plan",
+      "normalizedDescription": "roof hatch detail and ladder plan",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:roof drain and overflow drain details",
+      "packageId": "ROOF-01",
+      "description": "Roof drain and overflow drain details",
+      "normalizedDescription": "roof drain and overflow drain details",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:mechanical vent detail",
+      "packageId": "ROOF-01",
+      "description": "Mechanical vent detail",
+      "normalizedDescription": "mechanical vent detail",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:insulated stack hot detail",
+      "packageId": "ROOF-01",
+      "description": "Insulated stack (hot) detail",
+      "normalizedDescription": "insulated stack hot detail",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:mechanical curb detail",
+      "packageId": "ROOF-01",
+      "description": "Mechanical curb detail",
+      "normalizedDescription": "mechanical curb detail",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:new scupper detail",
+      "packageId": "ROOF-01",
+      "description": "New scupper detail",
+      "normalizedDescription": "new scupper detail",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:roof ladder bracket and base support",
+      "packageId": "ROOF-01",
+      "description": "Roof ladder bracket and base support",
+      "normalizedDescription": "roof ladder bracket and base support",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "SET",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "SET"
+    },
+    {
+      "key": "ROOF-01:roof type r1",
+      "packageId": "ROOF-01",
+      "description": "Roof Type R1",
+      "normalizedDescription": "roof type r1",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ROOF-01:roof type r2",
+      "packageId": "ROOF-01",
+      "description": "Roof Type R2",
+      "normalizedDescription": "roof type r2",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ROOF-01:rain leader building sections roof f to c c to d h to g",
+      "packageId": "ROOF-01",
+      "description": "Rain leader building sections - Roof F to C, C to D, H to G",
+      "normalizedDescription": "rain leader building sections roof f to c c to d h to g",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 3,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 3,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu1 rooftop unit racquetball courts",
+      "packageId": "MECH-01",
+      "description": "RTU-1 Rooftop unit - Racquetball Courts",
+      "normalizedDescription": "rtu1 rooftop unit racquetball courts",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu2 rooftop unit cardio",
+      "packageId": "MECH-01",
+      "description": "RTU-2 Rooftop unit - Cardio",
+      "normalizedDescription": "rtu2 rooftop unit cardio",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu3 rooftop unit 2nd floor commons",
+      "packageId": "MECH-01",
+      "description": "RTU-3 Rooftop unit - 2nd Floor Commons",
+      "normalizedDescription": "rtu3 rooftop unit 2nd floor commons",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu4 rooftop unit 1st floor lobby weight room",
+      "packageId": "MECH-01",
+      "description": "RTU-4 Rooftop unit - 1st Floor Lobby, Weight Room",
+      "normalizedDescription": "rtu4 rooftop unit 1st floor lobby weight room",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu5 rooftop unit gym locker rooms 2nd floor lounge",
+      "packageId": "MECH-01",
+      "description": "RTU-5 Rooftop unit - Gym Locker Rooms, 2nd Floor Lounge",
+      "normalizedDescription": "rtu5 rooftop unit gym locker rooms 2nd floor lounge",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu6 rooftop unit gym",
+      "packageId": "MECH-01",
+      "description": "RTU-6 Rooftop unit - Gym",
+      "normalizedDescription": "rtu6 rooftop unit gym",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu installation factory curbs",
+      "packageId": "MECH-01",
+      "description": "RTU installation - factory curbs",
+      "normalizedDescription": "rtu installation factory curbs",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 4,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:rtu installation field fabricated curbs",
+      "packageId": "MECH-01",
+      "description": "RTU installation - field fabricated curbs",
+      "normalizedDescription": "rtu installation field fabricated curbs",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:transition ductwork from new rtu to existing ductwork",
+      "packageId": "MECH-01",
+      "description": "Transition ductwork from new RTU to existing ductwork",
+      "normalizedDescription": "transition ductwork from new rtu to existing ductwork",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:ef1 exhaust fan racquetball court 1",
+      "packageId": "MECH-02",
+      "description": "EF-1 Exhaust fan - Racquetball Court 1",
+      "normalizedDescription": "ef1 exhaust fan racquetball court 1",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:ef2 exhaust fan racquetball court 2",
+      "packageId": "MECH-02",
+      "description": "EF-2 Exhaust fan - Racquetball Court 2",
+      "normalizedDescription": "ef2 exhaust fan racquetball court 2",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:ef3 exhaust fan weight room",
+      "packageId": "MECH-02",
+      "description": "EF-3 Exhaust fan - Weight Room",
+      "normalizedDescription": "ef3 exhaust fan weight room",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:ef4 roof exhaust fan",
+      "packageId": "MECH-02",
+      "description": "EF-4 Roof exhaust fan",
+      "normalizedDescription": "ef4 roof exhaust fan",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:ef5 large roof exhaust fan",
+      "packageId": "MECH-02",
+      "description": "EF-5 Large roof exhaust fan",
+      "normalizedDescription": "ef5 large roof exhaust fan",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:exhaust ductwork for ef1 ef2",
+      "packageId": "MECH-02",
+      "description": "Exhaust ductwork for EF-1, EF-2",
+      "normalizedDescription": "exhaust ductwork for ef1 ef2",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 2,
+          "unit": "RUNS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 2,
+      "consensusUnit": "RUNS"
+    },
+    {
+      "key": "MECH-02:exhaust ductwork for ef3",
+      "packageId": "MECH-02",
+      "description": "Exhaust ductwork for EF-3",
+      "normalizedDescription": "exhaust ductwork for ef3",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "RUN",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "RUN"
+    },
+    {
+      "key": "MECH-02:doghouse for exhaust fan ef3",
+      "packageId": "MECH-02",
+      "description": "Doghouse for exhaust fan EF-3",
+      "normalizedDescription": "doghouse for exhaust fan ef3",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "DEMO:hrv units ductwork and appurtenances",
+      "packageId": "DEMO",
+      "description": "HRV units, ductwork, and appurtenances",
+      "normalizedDescription": "hrv units ductwork and appurtenances",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO:outside air intakes roof vents and relief hoods",
+      "packageId": "DEMO",
+      "description": "Outside air intakes, roof vents, and relief hoods",
+      "normalizedDescription": "outside air intakes roof vents and relief hoods",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "DEMO:temporary removal and reinstallation of rooftop equipment",
+      "packageId": "DEMO",
+      "description": "Temporary removal and reinstallation of rooftop equipment",
+      "normalizedDescription": "temporary removal and reinstallation of rooftop equipment",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "SITE:monitoring pipes for drain field 1",
+      "packageId": "SITE",
+      "description": "Monitoring Pipes for Drain Field #1",
+      "normalizedDescription": "monitoring pipes for drain field 1",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "quantity": 3,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusQuantity": 3,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ARCH:new 12 plywood sheathing at parapets",
+      "packageId": "ARCH",
+      "description": "New 1/2\" Plywood Sheathing at Parapets",
+      "normalizedDescription": "new 12 plywood sheathing at parapets",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ARCH:new composite trim at parapets",
+      "packageId": "ARCH",
+      "description": "New Composite Trim at Parapets",
+      "normalizedDescription": "new composite trim at parapets",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "MEC:exhaust fan",
+      "packageId": "MEC",
+      "description": "Exhaust Fan",
+      "normalizedDescription": "exhaust fan",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "PAINT:painting of exterior composite trim",
+      "packageId": "PAINT",
+      "description": "Painting of Exterior Composite Trim",
+      "normalizedDescription": "painting of exterior composite trim",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "PAINT:painting of exterior galvanized and ferrous metal",
+      "packageId": "PAINT",
+      "description": "Painting of Exterior Galvanized and Ferrous Metal",
+      "normalizedDescription": "painting of exterior galvanized and ferrous metal",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "SEAL:sealants at concrete masonry",
+      "packageId": "SEAL",
+      "description": "Sealants at Concrete Masonry",
+      "normalizedDescription": "sealants at concrete masonry",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "SEAL:sealants at flashing and metal trim",
+      "packageId": "SEAL",
+      "description": "Sealants at Flashing and Metal Trim",
+      "normalizedDescription": "sealants at flashing and metal trim",
+      "foundByModels": [
+        {
+          "modelId": "gemini-2.5-pro",
+          "permutationId": "G25_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gemini-2.5-pro - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "DEMO-02:demolish existing 300a main breaker in main disconnect",
+      "packageId": "DEMO-02",
+      "description": "Demolish existing 300A main breaker in main disconnect",
+      "normalizedDescription": "demolish existing 300a main breaker in main disconnect",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:cleanout risers co for rain leader system",
+      "packageId": "CIVIL-01",
+      "description": "Cleanout risers (CO) for rain leader system",
+      "normalizedDescription": "cleanout risers co for rain leader system",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 7,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 7,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "CIVIL-01:4 and 3 cast iron rain leader piping with nohub fittings",
+      "packageId": "CIVIL-01",
+      "description": "4\" and 3\" cast iron rain leader piping with no-hub fittings",
+      "normalizedDescription": "4 and 3 cast iron rain leader piping with nohub fittings",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:rain leader pipe insulation 10 fiberglass",
+      "packageId": "CIVIL-01",
+      "description": "Rain leader pipe insulation - 1.0\" fiberglass",
+      "normalizedDescription": "rain leader pipe insulation 10 fiberglass",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "CIVIL-01:test rain leader systems per upc",
+      "packageId": "CIVIL-01",
+      "description": "Test rain leader systems per UPC",
+      "normalizedDescription": "test rain leader systems per upc",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "CIVIL-01:alaska digline call before excavation",
+      "packageId": "CIVIL-01",
+      "description": "Alaska Digline call before excavation",
+      "normalizedDescription": "alaska digline call before excavation",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "CIVIL-01:noise and dust control during construction",
+      "packageId": "CIVIL-01",
+      "description": "Noise and dust control during construction",
+      "normalizedDescription": "noise and dust control during construction",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ROOF-01:roof drain rd1 with underdeck clamp and cast iron dome",
+      "packageId": "ROOF-01",
+      "description": "Roof drain RD-1 with underdeck clamp and cast iron dome",
+      "normalizedDescription": "roof drain rd1 with underdeck clamp and cast iron dome",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 7,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 7,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ROOF-01:overflow roof drain od1 with underdeck clamp and 2 water dam",
+      "packageId": "ROOF-01",
+      "description": "Overflow roof drain OD-1 with underdeck clamp and 2\" water dam",
+      "normalizedDescription": "overflow roof drain od1 with underdeck clamp and 2 water dam",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 7,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 7,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:gas piping from meter manifold to rtu1 rtu2 rtu3 rtu4",
+      "packageId": "MECH-01",
+      "description": "Gas piping from meter manifold to RTU-1, RTU-2, RTU-3, RTU-4",
+      "normalizedDescription": "gas piping from meter manifold to rtu1 rtu2 rtu3 rtu4",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "MECH-01:gas piping from meter to rtu5 1 12 g 7 wc",
+      "packageId": "MECH-01",
+      "description": "Gas piping from meter to RTU-5 - 1 1/2\" G (7\" WC)",
+      "normalizedDescription": "gas piping from meter to rtu5 1 12 g 7 wc",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "RUN",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "RUN"
+    },
+    {
+      "key": "MECH-01:gas piping from meter manifold to rtu6 2 g down to gas meter manifold",
+      "packageId": "MECH-01",
+      "description": "Gas piping from meter manifold to RTU-6 - 2\" G down to gas meter manifold",
+      "normalizedDescription": "gas piping from meter manifold to rtu6 2 g down to gas meter manifold",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "RUN",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "RUN"
+    },
+    {
+      "key": "MECH-01:gas piping supports and roof blocking",
+      "packageId": "MECH-01",
+      "description": "Gas piping supports and roof blocking",
+      "normalizedDescription": "gas piping supports and roof blocking",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-01:motor operated dampers for rtu relief air",
+      "packageId": "MECH-01",
+      "description": "Motor operated dampers for RTU relief air",
+      "normalizedDescription": "motor operated dampers for rtu relief air",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:roof relief vents and outside air intake vents",
+      "packageId": "MECH-01",
+      "description": "Roof relief vents and outside air intake vents",
+      "normalizedDescription": "roof relief vents and outside air intake vents",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-01:air balancing by independent testing and balancing company",
+      "packageId": "MECH-01",
+      "description": "Air balancing by independent testing and balancing company",
+      "normalizedDescription": "air balancing by independent testing and balancing company",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-01:startup and field services for all mechanical equipment",
+      "packageId": "MECH-01",
+      "description": "Startup and field services for all mechanical equipment",
+      "normalizedDescription": "startup and field services for all mechanical equipment",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-01:qduct factory insulated exterior ductwork system",
+      "packageId": "MECH-01",
+      "description": "Q-Duct factory insulated exterior ductwork system",
+      "normalizedDescription": "qduct factory insulated exterior ductwork system",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "unit": "LF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusUnit": "LF"
+    },
+    {
+      "key": "MECH-01:mechanical equipment seismic restraint calculations and details",
+      "packageId": "MECH-01",
+      "description": "Mechanical equipment seismic restraint calculations and details",
+      "normalizedDescription": "mechanical equipment seismic restraint calculations and details",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-01:permits inspections and fees for mechanical work",
+      "packageId": "MECH-01",
+      "description": "Permits, inspections and fees for mechanical work",
+      "normalizedDescription": "permits inspections and fees for mechanical work",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-01:operation and maintenance manuals with warranties",
+      "packageId": "MECH-01",
+      "description": "Operation and maintenance manuals with warranties",
+      "normalizedDescription": "operation and maintenance manuals with warranties",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "MECH-02:duct smoke detectors in rtu return air",
+      "packageId": "MECH-02",
+      "description": "Duct smoke detectors in RTU return air",
+      "normalizedDescription": "duct smoke detectors in rtu return air",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:building pressure control systems for rtu economizers",
+      "packageId": "MECH-02",
+      "description": "Building pressure control systems for RTU economizers",
+      "normalizedDescription": "building pressure control systems for rtu economizers",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:co2 sensors for outside air modulation",
+      "packageId": "MECH-02",
+      "description": "CO2 sensors for outside air modulation",
+      "normalizedDescription": "co2 sensors for outside air modulation",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:low ambient controls for rtus",
+      "packageId": "MECH-02",
+      "description": "Low ambient controls for RTUs",
+      "normalizedDescription": "low ambient controls for rtus",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:field powered 115v gfci outlets for rtu maintenance",
+      "packageId": "MECH-02",
+      "description": "Field powered 115V GFCI outlets for RTU maintenance",
+      "normalizedDescription": "field powered 115v gfci outlets for rtu maintenance",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 6,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 6,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH-02:basddc controls programming and integration",
+      "packageId": "MECH-02",
+      "description": "BAS/DDC controls programming and integration",
+      "normalizedDescription": "basddc controls programming and integration",
+      "foundByModels": [
+        {
+          "modelId": "claude-sonnet-4.5",
+          "permutationId": "CS_P1P2",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by claude-sonnet-4.5 - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "FIN:exterior painting",
+      "packageId": "FIN",
+      "description": "Exterior Painting",
+      "normalizedDescription": "exterior painting",
+      "foundByModels": [
+        {
+          "modelId": "hybrid",
+          "permutationId": "HYBRID_FULL5",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by hybrid - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "CIVIL:roof drain field 1",
+      "packageId": "CIVIL",
+      "description": "Roof Drain Field #1",
+      "normalizedDescription": "roof drain field 1",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_P1",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "CIVIL:roof drain field 2",
+      "packageId": "CIVIL",
+      "description": "Roof Drain Field #2",
+      "normalizedDescription": "roof drain field 2",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_P1",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ROOF:demo existing roofing",
+      "packageId": "ROOF",
+      "description": "Demo Existing Roofing",
+      "normalizedDescription": "demo existing roofing",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "ROOF:new roof system",
+      "packageId": "ROOF",
+      "description": "New Roof System",
+      "normalizedDescription": "new roof system",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_P1",
+          "unit": "SF",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusUnit": "SF"
+    },
+    {
+      "key": "MECH:rtu installation",
+      "packageId": "MECH",
+      "description": "RTU Installation",
+      "normalizedDescription": "rtu installation",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_P1",
+          "quantity": 2,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 2,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH_CORRECTED:demo and replace rooftop units base bid",
+      "packageId": "MECH_CORRECTED",
+      "description": "Demo and Replace Rooftop Units (Base Bid)",
+      "normalizedDescription": "demo and replace rooftop units base bid",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 4,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 4,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH_CORRECTED:demo and replace rooftop unit additive alternate 1",
+      "packageId": "MECH_CORRECTED",
+      "description": "Demo and Replace Rooftop Unit (Additive Alternate #1)",
+      "normalizedDescription": "demo and replace rooftop unit additive alternate 1",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH_CORRECTED:demo and replace rooftop unit additive alternate 2",
+      "packageId": "MECH_CORRECTED",
+      "description": "Demo and Replace Rooftop Unit (Additive Alternate #2)",
+      "normalizedDescription": "demo and replace rooftop unit additive alternate 2",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "MECH_CORRECTED:install new exhaust fans",
+      "packageId": "MECH_CORRECTED",
+      "description": "Install New Exhaust Fans",
+      "normalizedDescription": "install new exhaust fans",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 3,
+          "unit": "EA",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 3,
+      "consensusUnit": "EA"
+    },
+    {
+      "key": "ELEC:panel modifications",
+      "packageId": "ELEC",
+      "description": "Panel Modifications",
+      "normalizedDescription": "panel modifications",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:new panel mech and feeders",
+      "packageId": "ELEC",
+      "description": "New Panel 'MECH' and Feeders",
+      "normalizedDescription": "new panel mech and feeders",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:power to new mechanical equipment",
+      "packageId": "ELEC",
+      "description": "Power to New Mechanical Equipment",
+      "normalizedDescription": "power to new mechanical equipment",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    },
+    {
+      "key": "ELEC:install heat trace system",
+      "packageId": "ELEC",
+      "description": "Install Heat Trace System",
+      "normalizedDescription": "install heat trace system",
+      "foundByModels": [
+        {
+          "modelId": "gpt-4o",
+          "permutationId": "GPT4O_G25_VAL",
+          "quantity": 1,
+          "unit": "LS",
+          "passFound": 1
+        }
+      ],
+      "consensusScore": 0.2,
+      "likelyTruePositive": false,
+      "analysis": "Possible false positive: Only found by gpt-4o - may be hallucination",
+      "consensusQuantity": 1,
+      "consensusUnit": "LS"
+    }
+  ],
+  "totalUniqueItems": 189,
+  "highConfidenceItems": 0,
+  "mediumConfidenceItems": 64,
+  "lowConfidenceItems": 125,
+  "passValueAnalysis": [
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "CS_P1",
+      "newItemsFound": 73,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 73,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 73,
+      "costForPass": 0.410589,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1P2",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1P2",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 7,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 7,
+      "costForPass": 0.15827,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "CS_P1P2",
+      "newItemsFound": 100,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 100,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 100,
+      "costForPass": 0.410589,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "CS_P1P2",
+      "newItemsFound": 14,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 14,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 14,
+      "costForPass": 0.389967,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1P2P3",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1P2P3",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 7,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 7,
+      "costForPass": 0.15827,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 3,
+      "purpose": "trade_deep_dive",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_P1P2P3",
+      "newItemsFound": 9,
+      "itemsAlsoFoundByOthers": 1,
+      "uniqueItemsOnlyThisPass": 8,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0.5,
+      "likelyNoiseAdded": 8,
+      "costForPass": 0.14033625,
+      "valuePerDollar": 3.5628713179951723,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_CS_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_CS_VAL",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 7,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 7,
+      "costForPass": 0.15827,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "G25_CS_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.292137,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "CS_G25_VAL",
+      "newItemsFound": 100,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 100,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 100,
+      "costForPass": 0.410589,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "CS_G25_VAL",
+      "newItemsFound": 14,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 14,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 14,
+      "costForPass": 0.389967,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "gemini-2.5-pro",
+      "permutationId": "CS_G25_VAL",
+      "newItemsFound": 2,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 2,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 2,
+      "costForPass": 0.16575375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_FULL5",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_FULL5",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 7,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 7,
+      "costForPass": 0.15827,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 3,
+      "purpose": "trade_deep_dive",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_FULL5",
+      "newItemsFound": 9,
+      "itemsAlsoFoundByOthers": 1,
+      "uniqueItemsOnlyThisPass": 8,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0.5,
+      "likelyNoiseAdded": 8,
+      "costForPass": 0.14033625,
+      "valuePerDollar": 3.5628713179951723,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "G25_FULL5",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.310302,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 5,
+      "purpose": "final_validation",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_FULL5",
+      "newItemsFound": 4,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 4,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 4,
+      "costForPass": 0.14033625,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "HYBRID_FULL5",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "HYBRID_FULL5",
+      "newItemsFound": 25,
+      "itemsAlsoFoundByOthers": 25,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 12.5,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.336642,
+      "valuePerDollar": 37.131433392149525,
+      "recommendation": "moderate_value"
+    },
+    {
+      "passNumber": 3,
+      "purpose": "trade_deep_dive",
+      "model": "gemini-2.5-pro",
+      "permutationId": "HYBRID_FULL5",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 1,
+      "uniqueItemsOnlyThisPass": 6,
+      "itemsLaterConfirmed": 1,
+      "likelyValueAdded": 1,
+      "likelyNoiseAdded": 6,
+      "costForPass": 0.1380475,
+      "valuePerDollar": 7.243883445915356,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "HYBRID_FULL5",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.297945,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 5,
+      "purpose": "final_validation",
+      "model": "gemini-2.5-pro",
+      "permutationId": "HYBRID_FULL5",
+      "newItemsFound": 2,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 2,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 2,
+      "costForPass": 0.13760125,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gpt-4o",
+      "permutationId": "GPT4O_P1",
+      "newItemsFound": 5,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 5,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 5,
+      "costForPass": 0.067845,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gpt-4o",
+      "permutationId": "GPT4O_P1P2",
+      "newItemsFound": 5,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 5,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 5,
+      "costForPass": 0.067845,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gpt-4o",
+      "permutationId": "GPT4O_P1P2",
+      "newItemsFound": 1,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 1,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 1,
+      "costForPass": 0.0636725,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_GPT4O_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gemini-2.5-pro",
+      "permutationId": "G25_GPT4O_VAL",
+      "newItemsFound": 7,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 7,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 7,
+      "costForPass": 0.15827,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "gpt-4o",
+      "permutationId": "G25_GPT4O_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.10239,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gpt-4o",
+      "permutationId": "GPT4O_G25_VAL",
+      "newItemsFound": 5,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 5,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 5,
+      "costForPass": 0.067845,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "gpt-4o",
+      "permutationId": "GPT4O_G25_VAL",
+      "newItemsFound": 1,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 1,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 1,
+      "costForPass": 0.0636725,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "gemini-2.5-pro",
+      "permutationId": "GPT4O_G25_VAL",
+      "newItemsFound": 3,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 3,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 3,
+      "costForPass": 0.12664,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 1,
+      "purpose": "initial_extraction",
+      "model": "gemini-2.5-pro",
+      "permutationId": "TRIPLE_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.20240375,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    },
+    {
+      "passNumber": 2,
+      "purpose": "self_review",
+      "model": "claude-sonnet-4.5",
+      "permutationId": "TRIPLE_VAL",
+      "newItemsFound": 25,
+      "itemsAlsoFoundByOthers": 25,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 12.5,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.336642,
+      "valuePerDollar": 37.131433392149525,
+      "recommendation": "moderate_value"
+    },
+    {
+      "passNumber": 4,
+      "purpose": "cross_validation",
+      "model": "gpt-4o",
+      "permutationId": "TRIPLE_VAL",
+      "newItemsFound": 0,
+      "itemsAlsoFoundByOthers": 0,
+      "uniqueItemsOnlyThisPass": 0,
+      "itemsLaterConfirmed": 0,
+      "likelyValueAdded": 0,
+      "likelyNoiseAdded": 0,
+      "costForPass": 0.1032125,
+      "valuePerDollar": 0,
+      "recommendation": "likely_noise"
+    }
+  ],
+  "recommendations": {
+    "optimalWorkflow": "Pass 1 (Gemini) → Pass 2 (Self-review) → Cross-validation (Claude or GPT-4o)",
+    "modelStrengths": [],
+    "passesToKeep": [],
+    "passesToDrop": [
+      "initial_extraction (low value or high noise)",
+      "self_review (low value or high noise)",
+      "trade_deep_dive (low value or high noise)",
+      "cross_validation (low value or high noise)",
+      "final_validation (low value or high noise)"
+    ],
+    "estimatedAccuracy": 0.14895833333333336,
+    "confidenceInAnalysis": 0.1
+  }
+}

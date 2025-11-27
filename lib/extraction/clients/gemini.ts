@@ -711,6 +711,291 @@ Return ONLY valid JSON:
 }
 `;
   }
+
+  /**
+   * Pass 3: Trade Deep-Dive
+   * Focus on specific trades that need more detailed extraction
+   */
+  async tradeDeepDive(
+    documents: ExtractionDocument[],
+    currentExtraction: GeminiExtractionResponse,
+    focusTrades: string[]
+  ): Promise<{
+    response: GeminiReviewResponse;
+    tokensUsed: { input: number; output: number };
+  }> {
+    const model = this.client.getGenerativeModel({
+      model: this.modelName,
+      generationConfig: {
+        maxOutputTokens: this.maxOutputTokens,
+        temperature: this.temperature,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const parts: Part[] = [];
+
+    for (const doc of documents) {
+      try {
+        const docPart = await this.loadDocument(doc);
+        parts.push(docPart);
+      } catch (error) {
+        console.error(`Failed to load document ${doc.name}:`, error);
+      }
+    }
+
+    parts.push({
+      text: this.buildPass3Prompt(JSON.stringify(currentExtraction, null, 2), focusTrades),
+    });
+
+    const result = await model.generateContent(parts);
+    const response = result.response;
+    const text = response.text();
+
+    const parsed = this.parseJsonResponse<GeminiReviewResponse>(text);
+
+    const usage = response.usageMetadata;
+    const tokensUsed = {
+      input: usage?.promptTokenCount || 0,
+      output: usage?.candidatesTokenCount || 0,
+    };
+
+    return { response: parsed, tokensUsed };
+  }
+
+  /**
+   * Pass 4: Cross-Model Validation
+   */
+  async crossValidation(
+    documents: ExtractionDocument[],
+    extraction: GeminiExtractionResponse
+  ): Promise<{
+    response: GeminiReviewResponse;
+    tokensUsed: { input: number; output: number };
+  }> {
+    const model = this.client.getGenerativeModel({
+      model: this.modelName,
+      generationConfig: {
+        maxOutputTokens: this.maxOutputTokens,
+        temperature: this.temperature,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const parts: Part[] = [];
+
+    for (const doc of documents) {
+      try {
+        const docPart = await this.loadDocument(doc);
+        parts.push(docPart);
+      } catch (error) {
+        console.error(`Failed to load document ${doc.name}:`, error);
+      }
+    }
+
+    parts.push({
+      text: this.buildPass4Prompt(JSON.stringify(extraction, null, 2)),
+    });
+
+    const result = await model.generateContent(parts);
+    const response = result.response;
+    const text = response.text();
+
+    const parsed = this.parseJsonResponse<GeminiReviewResponse>(text);
+
+    const usage = response.usageMetadata;
+    const tokensUsed = {
+      input: usage?.promptTokenCount || 0,
+      output: usage?.candidatesTokenCount || 0,
+    };
+
+    return { response: parsed, tokensUsed };
+  }
+
+  /**
+   * Pass 5: Final Validation & Quality Check
+   */
+  async finalValidation(
+    documents: ExtractionDocument[],
+    extraction: GeminiExtractionResponse,
+    previousObservations: string
+  ): Promise<{
+    response: GeminiReviewResponse;
+    tokensUsed: { input: number; output: number };
+  }> {
+    const model = this.client.getGenerativeModel({
+      model: this.modelName,
+      generationConfig: {
+        maxOutputTokens: this.maxOutputTokens,
+        temperature: this.temperature,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const parts: Part[] = [];
+
+    for (const doc of documents) {
+      try {
+        const docPart = await this.loadDocument(doc);
+        parts.push(docPart);
+      } catch (error) {
+        console.error(`Failed to load document ${doc.name}:`, error);
+      }
+    }
+
+    parts.push({
+      text: this.buildPass5Prompt(JSON.stringify(extraction, null, 2), previousObservations),
+    });
+
+    const result = await model.generateContent(parts);
+    const response = result.response;
+    const text = response.text();
+
+    const parsed = this.parseJsonResponse<GeminiReviewResponse>(text);
+
+    const usage = response.usageMetadata;
+    const tokensUsed = {
+      input: usage?.promptTokenCount || 0,
+      output: usage?.candidatesTokenCount || 0,
+    };
+
+    return { response: parsed, tokensUsed };
+  }
+
+  /**
+   * Pass 3: Trade Deep-Dive prompt
+   */
+  private buildPass3Prompt(currentExtraction: string, focusTrades: string[]): string {
+    return `TRADE DEEP-DIVE ANALYSIS
+
+Current extraction:
+${currentExtraction}
+
+FOCUS TRADES: ${focusTrades.join(', ')}
+
+TASK: Deep-dive into the focus trades and find:
+1. Missing line items specific to these trades
+2. Missing quantities or specifications
+3. Coordination items with other trades
+4. Trade-specific risks and concerns
+5. Specialized equipment or materials
+
+For each focus trade, verify:
+- All equipment from schedules is captured
+- All demolition for this trade is included
+- Supporting items (hangers, supports, connections)
+- Testing and commissioning requirements
+- Specialty items and accessories
+
+OUTPUT FORMAT:
+Return ONLY valid JSON with same structure as Pass 2:
+{
+  "additions": [],
+  "modifications": [],
+  "new_packages": [],
+  "gaps_identified": [],
+  "confidence_adjustments": [],
+  "ai_observations": [],
+  "overall_assessment": {
+    "extraction_completeness": 0.0,
+    "data_quality": 0.0,
+    "risk_level": "string",
+    "summary": "string"
+  }
+}`;
+  }
+
+  /**
+   * Pass 4: Cross-Model Validation prompt
+   */
+  private buildPass4Prompt(extraction: string): string {
+    return `CROSS-MODEL VALIDATION
+
+The following work packages were extracted by another AI model:
+
+${extraction}
+
+YOUR TASK: Critically validate this extraction.
+
+## VALIDATION CHECKS:
+
+1. **COMPLETENESS CHECK**
+   - Any obvious work items MISSING?
+   - All trades represented?
+   - Quantities complete?
+
+2. **ACCURACY CHECK**
+   - CSI classifications correct?
+   - Descriptions accurate?
+   - Source references plausible?
+
+3. **CONSISTENCY CHECK**
+   - Related items make sense together?
+   - Any conflicting quantities?
+   - Electrical loads match mechanical equipment?
+
+4. **RISK IDENTIFICATION**
+   - Critical risks in this project?
+   - Coordination issues?
+   - Pricing concerns?
+
+OUTPUT FORMAT:
+Return ONLY valid JSON:
+{
+  "additions": [],
+  "modifications": [],
+  "new_packages": [],
+  "gaps_identified": [],
+  "confidence_adjustments": [],
+  "ai_observations": [],
+  "overall_assessment": {
+    "extraction_completeness": 0.0,
+    "data_quality": 0.0,
+    "risk_level": "string",
+    "summary": "string"
+  }
+}`;
+  }
+
+  /**
+   * Pass 5: Final Validation prompt
+   */
+  private buildPass5Prompt(extraction: string, previousObservations: string): string {
+    return `FINAL VALIDATION & QUALITY CHECK
+
+Extraction to validate:
+${extraction}
+
+Previous observations from earlier passes:
+${previousObservations}
+
+YOUR TASK: Final quality check before human review.
+
+## FINAL CHECKS:
+
+1. **OVERALL COMPLETENESS** - Compare against all sheets
+2. **DATA QUALITY** - All items have source references?
+3. **RISK SUMMARY** - Consolidate all identified risks
+4. **HUMAN REVIEW PRIORITIES** - Which items MUST be reviewed?
+5. **FINAL CONFIDENCE ASSESSMENT** - Overall quality score
+
+OUTPUT FORMAT:
+Return ONLY valid JSON:
+{
+  "additions": [],
+  "modifications": [],
+  "new_packages": [],
+  "gaps_identified": [],
+  "confidence_adjustments": [],
+  "ai_observations": [],
+  "overall_assessment": {
+    "extraction_completeness": 0.0,
+    "data_quality": 0.0,
+    "risk_level": "string",
+    "summary": "string"
+  }
+}`;
+  }
 }
 
 // Export singleton instance
