@@ -35,6 +35,12 @@ const getConfidenceBarColor = (confidence: number | null | undefined): string =>
   return 'bg-red-500';
 };
 
+// Summary of other bid packages for reallocation
+interface BidPackageSummary {
+  id: string;
+  name: string;
+}
+
 interface SingleItemPanelProps {
   item: LineItem;
   itemIndex: number;
@@ -45,6 +51,8 @@ interface SingleItemPanelProps {
   onPrevious: () => void;
   onNext: () => void;
   readOnly?: boolean;
+  otherBidPackages?: BidPackageSummary[];
+  onReallocateItem?: (itemId: string, targetPackageId: string) => void;
 }
 
 export interface SingleItemPanelRef {
@@ -61,12 +69,50 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   onPrevious,
   onNext,
   readOnly = false,
+  otherBidPackages = [],
+  onReallocateItem,
 }, ref) {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [fieldIndex, setFieldIndex] = useState(0);
+  const [showReallocateDropdown, setShowReallocateDropdown] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [reallocateSearch, setReallocateSearch] = useState('');
+  const [reallocateHighlightIndex, setReallocateHighlightIndex] = useState(0);
+  const reallocateDropdownRef = useRef<HTMLDivElement>(null);
 
   // Refs for each editable field
   const fieldRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+  // Click outside handler for reallocate dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (reallocateDropdownRef.current && !reallocateDropdownRef.current.contains(event.target as Node)) {
+        setShowReallocateDropdown(false);
+        setReallocateSearch('');
+        setReallocateHighlightIndex(0);
+      }
+    };
+    if (showReallocateDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showReallocateDropdown]);
+
+  const handleReallocate = (targetPackageId: string) => {
+    if (item.id && onReallocateItem) {
+      // Start fade-out animation
+      setIsFadingOut(true);
+      setShowReallocateDropdown(false);
+      setReallocateSearch('');
+      setReallocateHighlightIndex(0);
+
+      // Wait for animation to complete before actually reallocating
+      setTimeout(() => {
+        onReallocateItem(item.id!, targetPackageId);
+        setIsFadingOut(false);
+      }, 300);
+    }
+  };
 
   // Enter field mode - focus on first field
   const enterFieldMode = useCallback(() => {
@@ -163,10 +209,12 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   const isLastItem = itemIndex === totalItems - 1;
 
   return (
-    <div className={`border-t flex-shrink-0 shadow-[0_-12px_40px_rgba(0,0,0,0.18)] transition-colors duration-200 ${
-      item.approved
-        ? 'bg-gradient-to-b from-emerald-50 to-emerald-50/50 border-emerald-200'
-        : 'bg-gradient-to-b from-zinc-50 to-white border-gray-200'
+    <div className={`border-t flex-shrink-0 shadow-[0_-12px_40px_rgba(0,0,0,0.18)] transition-all duration-300 ${
+      isFadingOut
+        ? 'opacity-0 scale-95 bg-amber-50'
+        : item.approved
+          ? 'bg-gradient-to-b from-emerald-50 to-emerald-50/50 border-emerald-200 opacity-100 scale-100'
+          : 'bg-gradient-to-b from-zinc-50 to-white border-gray-200 opacity-100 scale-100'
     }`} style={{ height: '150px' }}>
       {/* Navigation Bar */}
       <div className={`px-4 py-2.5 border-b flex items-center justify-between transition-colors duration-200 ${
@@ -225,6 +273,102 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Reallocate Button with Dropdown */}
+          {!readOnly && otherBidPackages.length > 0 && onReallocateItem && (
+            <div className="relative" ref={reallocateDropdownRef}>
+              <button
+                onClick={() => {
+                  if (showReallocateDropdown) {
+                    setReallocateSearch('');
+                    setReallocateHighlightIndex(0);
+                  } else {
+                    setReallocateHighlightIndex(0);
+                  }
+                  setShowReallocateDropdown(!showReallocateDropdown);
+                }}
+                className="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                title="Move to another bid package"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Reallocate
+                <svg className={`w-3 h-3 transition-transform ${showReallocateDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {showReallocateDropdown && (() => {
+                const filteredPackages = otherBidPackages.filter(pkg =>
+                  pkg.name.toLowerCase().includes(reallocateSearch.toLowerCase())
+                );
+                return (
+                  <div className="absolute bottom-full mb-1 right-0 bg-white border-2 border-zinc-400 rounded-lg shadow-2xl min-w-[280px] max-h-80 z-50">
+                    <div className="px-3 py-2 border-b border-gray-100">
+                      <input
+                        type="text"
+                        value={reallocateSearch}
+                        onChange={(e) => {
+                          setReallocateSearch(e.target.value);
+                          setReallocateHighlightIndex(0);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Escape') {
+                            e.preventDefault();
+                            setShowReallocateDropdown(false);
+                            setReallocateSearch('');
+                            setReallocateHighlightIndex(0);
+                          } else if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            setReallocateHighlightIndex(prev =>
+                              Math.min(prev + 1, filteredPackages.length - 1)
+                            );
+                          } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            setReallocateHighlightIndex(prev => Math.max(prev - 1, 0));
+                          } else if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (filteredPackages.length > 0 && filteredPackages[reallocateHighlightIndex]) {
+                              handleReallocate(filteredPackages[reallocateHighlightIndex].id);
+                            }
+                          }
+                        }}
+                        placeholder="Search divisions..."
+                        className="w-full px-3 py-2 text-sm border border-zinc-400 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-zinc-400 shadow-lg"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="overflow-y-auto max-h-60">
+                      {filteredPackages.map((pkg, pkgIndex) => (
+                        <button
+                          key={pkg.id}
+                          ref={(el) => {
+                            if (el && pkgIndex === reallocateHighlightIndex) {
+                              el.scrollIntoView({ block: 'nearest' });
+                            }
+                          }}
+                          onClick={() => handleReallocate(pkg.id)}
+                          onMouseEnter={() => setReallocateHighlightIndex(pkgIndex)}
+                          className={`w-full text-left px-3 py-2.5 text-sm border-b border-gray-100 last:border-b-0 transition-colors ${
+                            pkgIndex === reallocateHighlightIndex
+                              ? 'bg-zinc-50 border-l-4 border-l-zinc-900'
+                              : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          {pkg.name}
+                        </button>
+                      ))}
+                      {filteredPackages.length === 0 && (
+                        <div className="px-3 py-3 text-xs text-gray-500 text-center">
+                          No matching divisions found.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
           {/* Unapprove Button - only shown for approved items */}
           {item.approved && !readOnly && (
             <button

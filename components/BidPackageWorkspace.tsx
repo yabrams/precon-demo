@@ -51,6 +51,12 @@ interface UploadedFile {
   fileType?: string;
 }
 
+// Summary of other bid packages for reallocation
+interface BidPackageSummary {
+  id: string;
+  name: string;
+}
+
 interface BidPackageWorkspaceProps {
   bidPackage: BidPackage;
   project: BuildingConnectedProject;
@@ -76,6 +82,9 @@ interface BidPackageWorkspaceProps {
   initialItemId?: string | null;
   onViewModeChange?: (mode: ViewMode) => void;
   onItemIdChange?: (itemId: string | null) => void;
+  // Reallocation props
+  allBidPackages?: BidPackageSummary[]; // All bid packages in the project for reallocation
+  onReallocateItem?: (itemId: string, targetPackageId: string) => void;
 }
 
 export default function BidPackageWorkspace({
@@ -102,7 +111,11 @@ export default function BidPackageWorkspace({
   initialItemId = null,
   onViewModeChange,
   onItemIdChange,
+  allBidPackages = [],
+  onReallocateItem,
 }: BidPackageWorkspaceProps) {
+  // Filter out current bid package from reallocation options
+  const otherBidPackages = allBidPackages.filter(pkg => pkg.id !== bidPackage.id);
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
@@ -625,6 +638,8 @@ export default function BidPackageWorkspace({
                   setHoveredRowElement(rowElement ?? null);
                 }}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
+                otherBidPackages={otherBidPackages}
+                onReallocateItem={onReallocateItem}
               />
             </Panel>
           </PanelGroup>
@@ -697,6 +712,8 @@ export default function BidPackageWorkspace({
                 onPrevious={handlePreviousItem}
                 onNext={handleNextItem}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
+                otherBidPackages={otherBidPackages}
+                onReallocateItem={onReallocateItem}
               />
               </div>
             )}
