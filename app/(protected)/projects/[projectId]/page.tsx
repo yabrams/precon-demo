@@ -51,6 +51,10 @@ export default function ProjectBidPackagesPage({ params }: PageProps) {
     router.push(`/projects/${projectId}/packages/${bidPackage.id}`);
   };
 
+  const handleBidPackageItemSelect = (bidPackage: BidPackage, itemId: string) => {
+    router.push(`/projects/${projectId}/packages/${bidPackage.id}?view=single&item=${itemId}`);
+  };
+
   const handleBack = () => {
     router.push('/');
   };
@@ -109,6 +113,7 @@ export default function ProjectBidPackagesPage({ params }: PageProps) {
       project={project}
       bidPackages={project.bidPackages || []}
       onBidPackageSelect={handleBidPackageSelect}
+      onBidPackageItemSelect={handleBidPackageItemSelect}
       onBack={handleBack}
       onUploadDiagrams={handleUploadDiagrams}
       onUploadSuccess={handleUploadSuccess}

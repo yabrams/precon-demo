@@ -43,6 +43,7 @@ interface BidPackageListViewProps {
   project: BuildingConnectedProject;
   bidPackages: BidPackage[];
   onBidPackageSelect: (bidPackage: BidPackage) => void;
+  onBidPackageItemSelect?: (bidPackage: BidPackage, itemId: string) => void; // Navigate to specific item
   onBack: () => void;
   onUploadDiagrams?: () => void;
   onUploadSuccess?: (file: UploadedFile) => void;
@@ -54,6 +55,7 @@ export default function BidPackageListView({
   project,
   bidPackages,
   onBidPackageSelect,
+  onBidPackageItemSelect,
   onBack,
   onUploadDiagrams,
   onUploadSuccess,
@@ -355,6 +357,35 @@ export default function BidPackageListView({
     if (counts.total === 0) return 0;
 
     return Math.round((counts.approved / counts.total) * 100);
+  };
+
+  // Get line items from a bid package for discrete progress bar
+  const getLineItems = (bidPackage: BidPackage): Array<{ id?: string; item_number?: string | null; description?: string; approved?: boolean }> => {
+    try {
+      // First, try to get from workspaceData (for packages that have been worked on)
+      if (bidPackage.workspaceData && bidPackage.workspaceData.trim() !== '') {
+        const workspaceData = JSON.parse(bidPackage.workspaceData);
+        if (workspaceData?.lineItems && Array.isArray(workspaceData.lineItems)) {
+          return workspaceData.lineItems;
+        }
+      }
+
+      // Fall back to bidForms lineItems (for packages not yet opened/edited)
+      if (bidPackage.bidForms && Array.isArray(bidPackage.bidForms)) {
+        const allItems: Array<{ id?: string; item_number?: string | null; description?: string; approved?: boolean }> = [];
+        bidPackage.bidForms.forEach((form: any) => {
+          if (form.lineItems && Array.isArray(form.lineItems)) {
+            allItems.push(...form.lineItems);
+          }
+        });
+        return allItems;
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Error getting line items for bid package:', bidPackage.id, error);
+      return [];
+    }
   };
 
   // Get approval counts for display
@@ -713,25 +744,34 @@ export default function BidPackageListView({
                               </div>
 
 
-                              {/* Progress Percentage */}
-                              <div>
+                              {/* Progress - Discrete Rectangles */}
+                              <div onClick={(e) => e.stopPropagation()}>
                                 {(() => {
-                                  const percentage = getApprovalPercentage(bidPackage);
+                                  const lineItems = getLineItems(bidPackage);
                                   const counts = getApprovalCounts(bidPackage);
                                   return (
-                                    <div className="space-y-1">
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-xs text-gray-600">Progress</span>
-                                        <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-600">Progress</span>
+                                      <div className="flex items-center gap-0.5 flex-1">
+                                        {lineItems.map((item, index) => (
+                                          <button
+                                            key={item.id || index}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              if (item.id && onBidPackageItemSelect) {
+                                                onBidPackageItemSelect(bidPackage, item.id);
+                                              } else {
+                                                onBidPackageSelect(bidPackage);
+                                              }
+                                            }}
+                                            className={`w-2 h-3 transition-all duration-200 hover:scale-110 cursor-pointer ${
+                                              item.approved ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-gray-300 hover:bg-gray-400'
+                                            }`}
+                                            title={`${item.item_number || `#${index + 1}`}: ${item.description || 'No description'}`}
+                                          />
+                                        ))}
                                       </div>
-                                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                        <div
-                                          className={`h-full transition-all duration-300 rounded-full ${
-                                            percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
-                                          }`}
-                                          style={{ width: `${percentage}%` }}
-                                        />
-                                      </div>
+                                      <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
                                     </div>
                                   );
                                 })()}
@@ -876,25 +916,34 @@ export default function BidPackageListView({
                         </div>
 
 
-                        {/* Progress Percentage */}
-                        <div>
+                        {/* Progress - Discrete Rectangles */}
+                        <div onClick={(e) => e.stopPropagation()}>
                           {(() => {
-                            const percentage = getApprovalPercentage(bidPackage);
+                            const lineItems = getLineItems(bidPackage);
                             const counts = getApprovalCounts(bidPackage);
                             return (
-                              <div className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-gray-600">Progress</span>
-                                  <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-600">Progress</span>
+                                <div className="flex items-center gap-0.5 flex-1">
+                                  {lineItems.map((item, index) => (
+                                    <button
+                                      key={item.id || index}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (item.id && onBidPackageItemSelect) {
+                                          onBidPackageItemSelect(bidPackage, item.id);
+                                        } else {
+                                          onBidPackageSelect(bidPackage);
+                                        }
+                                      }}
+                                      className={`w-2 h-3 transition-all duration-200 hover:scale-110 cursor-pointer ${
+                                        item.approved ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-gray-300 hover:bg-gray-400'
+                                      }`}
+                                      title={`${item.item_number || `#${index + 1}`}: ${item.description || 'No description'}`}
+                                    />
+                                  ))}
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                  <div
-                                    className={`h-full transition-all duration-300 rounded-full ${
-                                      percentage === 100 ? 'bg-emerald-500' : 'bg-zinc-900'
-                                    }`}
-                                    style={{ width: `${percentage}%` }}
-                                  />
-                                </div>
+                                <span className="text-xs font-semibold text-zinc-900">{counts.approved}/{counts.total}</span>
                               </div>
                             );
                           })()}
