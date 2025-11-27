@@ -62,6 +62,30 @@ const getConfidenceBarColor = (confidence: number | null | undefined): string =>
   return 'bg-red-500';
 };
 
+// Get confidence text label based on value (0-100)
+const getConfidenceLabel = (confidence: number | null | undefined): string => {
+  if (confidence === null || confidence === undefined) {
+    return 'Low';
+  }
+  const clamped = Math.max(0, Math.min(100, confidence));
+  if (clamped >= 80) return 'Very High';
+  if (clamped >= 60) return 'High';
+  if (clamped >= 40) return 'Medium';
+  return 'Low';
+};
+
+// Get confidence badge background and border class based on value
+const getConfidenceBadgeClass = (confidence: number | null | undefined): string => {
+  if (confidence === null || confidence === undefined) {
+    return 'bg-gray-100 border-gray-300';
+  }
+  const clamped = Math.max(0, Math.min(100, confidence));
+  if (clamped >= 80) return 'bg-emerald-200 border-emerald-400';
+  if (clamped >= 60) return 'bg-lime-100 border-lime-300';
+  if (clamped >= 40) return 'bg-yellow-100 border-yellow-300';
+  return 'bg-red-100 border-red-300';
+};
+
 export interface LineItem {
   id?: string;
   item_number?: string | null;
@@ -493,15 +517,6 @@ export default function BidFormTable({
                 </div>
               </th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-32">Notes</th>
-              <th
-                className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24 cursor-pointer hover:bg-gray-100 transition-colors select-none"
-                onClick={() => handleSort('confidence')}
-              >
-                <div className="flex items-center">
-                  Confidence
-                  <SortIndicator column="confidence" />
-                </div>
-              </th>
               {!readOnly && <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Actions</th>}
             </tr>
           </thead>
@@ -597,26 +612,36 @@ export default function BidFormTable({
                         onSelect={(code, title) => handleCSISelect(index, code, title)}
                         onBlur={stopEditing}
                         placeholder="Search CSI code or description..."
+                        currentCode={item.csiCode}
+                        confidenceLabel={getConfidenceLabel(item.confidence)}
+                        confidenceBadgeClass={getConfidenceBadgeClass(item.confidence)}
                       />
                     ) : (
                       <div
                         onClick={() => !readOnly && startEditing(index, 'csiCode')}
-                        className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.5rem] flex items-center ${
+                        className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.5rem] flex items-center justify-between ${
                           readOnly ? '' : 'cursor-pointer hover:bg-gray-50'
                         }`}
                       >
-                        {item.csiCode && item.csiTitle ? (
-                          item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
-                            <span className="text-gray-400 italic">N/A</span>
+                        <span className="flex-1">
+                          {item.csiCode && item.csiTitle ? (
+                            item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
+                              <span className="text-gray-400 italic">N/A</span>
+                            ) : (
+                              <span className="text-zinc-900">
+                                <span className="font-mono font-semibold">{item.csiCode}</span>
+                                <span className="text-zinc-600 ml-2">{item.csiTitle}</span>
+                              </span>
+                            )
                           ) : (
-                            <span className="text-zinc-900">
-                              <span className="font-mono font-semibold">{item.csiCode}</span>
-                              <span className="text-zinc-600 ml-2">{item.csiTitle}</span>
-                            </span>
-                          )
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </span>
+                        {/* Confidence indicator */}
+                        <span className={`ml-3 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
+                          <span className="grayscale brightness-0">✨</span>
+                          <span>{getConfidenceLabel(item.confidence)}</span>
+                        </span>
                       </div>
                     )}
                   </td>
@@ -641,19 +666,6 @@ export default function BidFormTable({
                         {item.notes || <span className="text-gray-400">Notes</span>}
                       </div>
                     )}
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="flex items-center gap-1">
-                      <div className="w-full bg-gray-200 rounded-full h-2 flex-1">
-                        <div
-                          className={`h-2 rounded-full transition-all ${getConfidenceBarColor(item.confidence)}`}
-                          style={{ width: `${item.confidence ?? 0}%` }}
-                        />
-                      </div>
-                      <span className={`text-xs font-semibold font-mono ${getConfidenceColorClass(item.confidence)} min-w-[3rem] text-right`}>
-                        {item.confidence ?? 0}%
-                      </span>
-                    </div>
                   </td>
                   {!readOnly && (
                     <td className="px-3 py-3">
@@ -823,9 +835,6 @@ export default function BidFormTable({
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
                     placeholder="Notes"
                   />
-                </td>
-                <td className="px-3 py-3">
-                  {/* Confidence will be assigned on creation */}
                 </td>
                 <td className="px-3 py-3">
                   <span className="text-xs text-gray-500 italic">Start typing...</span>

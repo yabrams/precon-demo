@@ -35,6 +35,30 @@ const getConfidenceBarColor = (confidence: number | null | undefined): string =>
   return 'bg-red-500';
 };
 
+// Get confidence text label based on value (0-100)
+const getConfidenceLabel = (confidence: number | null | undefined): string => {
+  if (confidence === null || confidence === undefined) {
+    return 'Low';
+  }
+  const clamped = Math.max(0, Math.min(100, confidence));
+  if (clamped >= 80) return 'Very High';
+  if (clamped >= 60) return 'High';
+  if (clamped >= 40) return 'Medium';
+  return 'Low';
+};
+
+// Get confidence badge background and border class based on value
+const getConfidenceBadgeClass = (confidence: number | null | undefined): string => {
+  if (confidence === null || confidence === undefined) {
+    return 'bg-gray-100 border-gray-300';
+  }
+  const clamped = Math.max(0, Math.min(100, confidence));
+  if (clamped >= 80) return 'bg-emerald-200 border-emerald-400';
+  if (clamped >= 60) return 'bg-lime-100 border-lime-300';
+  if (clamped >= 40) return 'bg-yellow-100 border-yellow-300';
+  return 'bg-red-100 border-red-300';
+};
+
 // Summary of other bid packages for reallocation
 interface BidPackageSummary {
   id: string;
@@ -258,22 +282,6 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
           </button>
         </div>
 
-        {/* Confidence - Center */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Confidence</span>
-          <div className="flex items-center gap-2 w-32">
-            <div className="flex-1 bg-gray-300 rounded-full h-2.5 border border-gray-400">
-              <div
-                className={`h-full rounded-full transition-all ${getConfidenceBarColor(item.confidence)}`}
-                style={{ width: `${item.confidence ?? 0}%` }}
-              />
-            </div>
-            <span className="text-sm font-bold font-mono text-zinc-900">
-              {item.confidence ?? 0}%
-            </span>
-          </div>
-        </div>
-
         <div className="flex items-center gap-2">
           {/* Approve & Next Button - Primary Action (only shown for unapproved items) */}
           {!readOnly && !item.approved && (
@@ -449,28 +457,38 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
                 placeholder="Search CSI code..."
                 dropdownDirection="up"
                 onFieldKeyDown={handleFieldKeyDown}
+                currentCode={item.csiCode}
+                confidenceLabel={getConfidenceLabel(item.confidence)}
+                confidenceBadgeClass={getConfidenceBadgeClass(item.confidence)}
               />
             ) : (
               <div
                 onClick={() => startEditing('csiCode')}
-                className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.25rem] flex items-center transition-colors duration-200 ${
+                className={`w-full px-3 py-2 text-sm rounded-lg min-h-[2.25rem] flex items-center justify-between transition-colors duration-200 ${
                   item.approved
                     ? `bg-emerald-100 border border-emerald-200 ${readOnly ? '' : 'cursor-pointer hover:bg-emerald-200 hover:border-emerald-300'}`
                     : `bg-zinc-100 border border-zinc-200 ${readOnly ? '' : 'cursor-pointer hover:bg-zinc-200 hover:border-zinc-300'}`
                 }`}
               >
-                {item.csiCode && item.csiTitle ? (
-                  item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
-                    <span className="text-gray-400 italic">N/A</span>
+                <span className="flex-1">
+                  {item.csiCode && item.csiTitle ? (
+                    item.csiCode === 'N/A' && item.csiTitle === 'N/A' ? (
+                      <span className="text-gray-400 italic">N/A</span>
+                    ) : (
+                      <span className="text-zinc-900">
+                        <span className="font-mono font-semibold">{item.csiCode}</span>
+                        <span className="text-zinc-600 ml-2 text-xs">{item.csiTitle}</span>
+                      </span>
+                    )
                   ) : (
-                    <span className="text-zinc-900">
-                      <span className="font-mono font-semibold">{item.csiCode}</span>
-                      <span className="text-zinc-600 ml-2 text-xs">{item.csiTitle}</span>
-                    </span>
-                  )
-                ) : (
-                  <span className="text-gray-400">-</span>
-                )}
+                    <span className="text-gray-400">-</span>
+                  )}
+                </span>
+                {/* Confidence indicator */}
+                <span className={`ml-2 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
+                  <span className="grayscale brightness-0">✨</span>
+                  <span>{getConfidenceLabel(item.confidence)}</span>
+                </span>
               </div>
             )}
           </div>

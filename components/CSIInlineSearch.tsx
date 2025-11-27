@@ -13,6 +13,10 @@ interface CSIInlineSearchProps {
   onFieldKeyDown?: (e: React.KeyboardEvent) => void;
   levelFilter?: (1 | 2 | 3 | 4)[];
   showAllOnFocus?: boolean;
+  // Confidence indicator for the currently selected CSI
+  currentCode?: string | null;
+  confidenceLabel?: string;
+  confidenceBadgeClass?: string;
 }
 
 interface SearchResult {
@@ -32,6 +36,9 @@ export default function CSIInlineSearch({
   onFieldKeyDown,
   levelFilter,
   showAllOnFocus = false,
+  currentCode,
+  confidenceLabel,
+  confidenceBadgeClass,
 }: CSIInlineSearchProps) {
   const [query, setQuery] = useState(initialValue);
   const [showResults, setShowResults] = useState(false);
@@ -215,35 +222,44 @@ export default function CSIInlineSearch({
         </div>
         <div className="overflow-y-auto max-h-60">
           {results.length > 0 ? (
-            results.map((result, index) => (
-              <button
-                key={result.code}
-                ref={(el) => {
-                  if (el && index === selectedIndex) {
-                    el.scrollIntoView({ block: 'nearest' });
-                  }
-                }}
-                onClick={() => handleSelect(result)}
-                onMouseEnter={() => setSelectedIndex(index)}
-                className={`w-full text-left px-3 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
-                  index === selectedIndex
-                    ? 'bg-zinc-50 border-l-4 border-l-zinc-900'
-                    : 'hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex items-start gap-2">
-                  <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-medium rounded flex-shrink-0">
-                    L{result.level}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-zinc-900">
-                      <span className="font-mono font-semibold">{result.code}</span>
-                      <span className="text-zinc-600 ml-2">{result.title}</span>
-                    </p>
+            results.map((result, index) => {
+              const isCurrentSelection = currentCode && result.code === currentCode;
+              return (
+                <button
+                  key={result.code}
+                  ref={(el) => {
+                    if (el && index === selectedIndex) {
+                      el.scrollIntoView({ block: 'nearest' });
+                    }
+                  }}
+                  onClick={() => handleSelect(result)}
+                  onMouseEnter={() => setSelectedIndex(index)}
+                  className={`w-full text-left px-3 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
+                    index === selectedIndex
+                      ? 'bg-zinc-50 border-l-4 border-l-zinc-900'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-medium rounded flex-shrink-0">
+                      L{result.level}
+                    </span>
+                    <div className="flex-1 min-w-0 flex items-center justify-between">
+                      <p className="text-sm text-zinc-900">
+                        <span className="font-mono font-semibold">{result.code}</span>
+                        <span className="text-zinc-600 ml-2">{result.title}</span>
+                      </p>
+                      {isCurrentSelection && confidenceLabel && confidenceBadgeClass && (
+                        <span className={`ml-2 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 flex-shrink-0 text-gray-700 ${confidenceBadgeClass}`}>
+                          <span className="grayscale brightness-0">✨</span>
+                          <span>{confidenceLabel}</span>
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))
+                </button>
+              );
+            })
           ) : query.length >= 2 ? (
             <div className="px-3 py-3 text-xs text-gray-500 text-center">
               No results found. Try different keywords.
