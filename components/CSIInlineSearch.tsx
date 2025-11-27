@@ -39,6 +39,7 @@ export default function CSIInlineSearch({
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0, bottom: 0 });
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const placeholderRef = useRef<HTMLSpanElement>(null);
 
   // Focus input on mount and show results if showAllOnFocus is enabled
   useEffect(() => {
@@ -49,16 +50,16 @@ export default function CSIInlineSearch({
     }
   }, [showAllOnFocus]);
 
-  // Update dropdown position when input position changes
+  // Update dropdown position when placeholder position changes
   useEffect(() => {
     const updatePosition = () => {
-      if (inputRef.current) {
-        const rect = inputRef.current.getBoundingClientRect();
+      if (placeholderRef.current) {
+        const rect = placeholderRef.current.getBoundingClientRect();
         setDropdownPosition({
-          top: rect.bottom + window.scrollY,
+          top: rect.top + window.scrollY,
           left: rect.left + window.scrollX,
           width: rect.width,
-          bottom: window.innerHeight - rect.top + window.scrollY,
+          bottom: window.innerHeight - rect.bottom + window.scrollY,
         });
       }
     };
@@ -71,7 +72,7 @@ export default function CSIInlineSearch({
       window.removeEventListener('scroll', updatePosition, true);
       window.removeEventListener('resize', updatePosition);
     };
-  }, [showResults]);
+  }, []);
 
   // Client-side search
   const results = useMemo<SearchResult[]>(() => {
@@ -127,8 +128,15 @@ export default function CSIInlineSearch({
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Handle Tab and Escape for field navigation (delegate to parent)
-    if (e.key === 'Tab' || e.key === 'Escape') {
+    // Handle Escape - close dropdown
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      onBlur();
+      return;
+    }
+
+    // Handle Tab for field navigation (delegate to parent)
+    if (e.key === 'Tab') {
       if (onFieldKeyDown) {
         onFieldKeyDown(e);
       }
@@ -167,9 +175,7 @@ export default function CSIInlineSearch({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(event.target as Node)
       ) {
         onBlur();
       }
@@ -183,23 +189,40 @@ export default function CSIInlineSearch({
     if (typeof window === 'undefined') return null;
 
     const dropdownContent = (
-      <>
-        {showResults && results.length > 0 && (
-          <div
-            ref={dropdownRef}
-            className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl max-h-80 overflow-y-auto"
-            style={{
-              ...(dropdownDirection === 'up'
-                ? { bottom: `${dropdownPosition.bottom}px` }
-                : { top: `${dropdownPosition.top}px` }),
-              left: `${dropdownPosition.left}px`,
-              width: `${Math.max(dropdownPosition.width, 300)}px`,
-              zIndex: 9999,
-            }}
-          >
-            {results.map((result, index) => (
+      <div
+        ref={dropdownRef}
+        className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl max-h-80"
+        style={{
+          ...(dropdownDirection === 'up'
+            ? { bottom: `${dropdownPosition.bottom}px` }
+            : { top: `${dropdownPosition.top}px` }),
+          left: `${dropdownPosition.left}px`,
+          width: `${Math.max(dropdownPosition.width, 480)}px`,
+          zIndex: 9999,
+        }}
+      >
+        <div className="px-3 py-2 border-b border-gray-100">
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="w-full px-3 py-2 text-sm border border-zinc-400 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-zinc-400 shadow-lg"
+            autoComplete="off"
+          />
+        </div>
+        <div className="overflow-y-auto max-h-60">
+          {results.length > 0 ? (
+            results.map((result, index) => (
               <button
                 key={result.code}
+                ref={(el) => {
+                  if (el && index === selectedIndex) {
+                    el.scrollIntoView({ block: 'nearest' });
+                  }
+                }}
                 onClick={() => handleSelect(result)}
                 onMouseEnter={() => setSelectedIndex(index)}
                 className={`w-full text-left px-3 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
@@ -220,28 +243,18 @@ export default function CSIInlineSearch({
                   </div>
                 </div>
               </button>
-            ))}
-          </div>
-        )}
-
-        {query.length >= 2 && results.length === 0 && (
-          <div
-            className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl p-3"
-            style={{
-              ...(dropdownDirection === 'up'
-                ? { bottom: `${dropdownPosition.bottom}px` }
-                : { top: `${dropdownPosition.top}px` }),
-              left: `${dropdownPosition.left}px`,
-              width: `${Math.max(dropdownPosition.width, 300)}px`,
-              zIndex: 9999,
-            }}
-          >
-            <p className="text-xs text-gray-500 text-center">
+            ))
+          ) : query.length >= 2 ? (
+            <div className="px-3 py-3 text-xs text-gray-500 text-center">
               No results found. Try different keywords.
-            </p>
-          </div>
-        )}
-      </>
+            </div>
+          ) : (
+            <div className="px-3 py-3 text-xs text-gray-500 text-center">
+              Type at least 2 characters to search...
+            </div>
+          )}
+        </div>
+      </div>
     );
 
     return createPortal(dropdownContent, document.body);
@@ -249,16 +262,7 @@ export default function CSIInlineSearch({
 
   return (
     <>
-      <input
-        ref={inputRef}
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 text-sm border border-zinc-400 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-zinc-400 shadow-lg"
-        autoComplete="off"
-      />
+      <span ref={placeholderRef} className="block w-full h-0" />
       {renderDropdown()}
     </>
   );

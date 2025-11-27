@@ -1,7 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import CSIInlineSearch from './CSIInlineSearch';
+
+// Summary of other bid packages for reallocation
+interface BidPackageSummary {
+  id: string;
+  name: string;
+}
 
 // Color palette for highlighting - must match DiagramOverlay
 // Architectural Monochrome: Zinc-scale variations
@@ -84,6 +91,8 @@ interface BidFormTableProps {
   hoveredItemId?: string | null;
   onHoverChange?: (itemId: string | null, element?: HTMLTableRowElement | null) => void;
   onChatOpen?: () => void;
+  otherBidPackages?: BidPackageSummary[];
+  onReallocateItem?: (itemId: string, targetPackageId: string) => void;
 }
 
 export default function BidFormTable({
@@ -92,10 +101,69 @@ export default function BidFormTable({
   readOnly = false,
   hoveredItemId,
   onHoverChange,
-  onChatOpen
+  onChatOpen,
+  otherBidPackages = [],
+  onReallocateItem
 }: BidFormTableProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
   const [editingCell, setEditingCell] = useState<{ rowIndex: number; field: string } | null>(null);
+  const [reallocateDropdownIndex, setReallocateDropdownIndex] = useState<number | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
+  const [fadingOutItemId, setFadingOutItemId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [reallocateSearch, setReallocateSearch] = useState('');
+  const [reallocateHighlightIndex, setReallocateHighlightIndex] = useState(0);
+  const reallocateDropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+
+  // For SSR safety - only render portal after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Click outside handler for reallocate dropdown
+  useEffect(() => {
+    if (reallocateDropdownIndex === null) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      // Check if click is inside dropdown
+      if (reallocateDropdownRef.current?.contains(target)) return;
+      // Check if click is on any reallocate button
+      for (const btn of buttonRefs.current.values()) {
+        if (btn?.contains(target)) return;
+      }
+      setReallocateDropdownIndex(null);
+      setDropdownPosition(null);
+      setReallocateSearch('');
+    };
+
+    // Use setTimeout to avoid catching the click that opened the dropdown
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 10);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [reallocateDropdownIndex]);
+
+  const handleReallocate = (itemId: string, targetPackageId: string) => {
+    if (onReallocateItem) {
+      // Start fade-out animation
+      setFadingOutItemId(itemId);
+      setReallocateDropdownIndex(null);
+      setDropdownPosition(null);
+      setReallocateSearch('');
+
+      // Wait for animation to complete before actually reallocating
+      setTimeout(() => {
+        onReallocateItem(itemId, targetPackageId);
+        setFadingOutItemId(null);
+      }, 300);
+    }
+  };
 
   useEffect(() => {
     console.log('BidFormTable: initialLineItems changed, count:', initialLineItems.length);
@@ -272,9 +340,15 @@ export default function BidFormTable({
                 return (
                   <tr
                     key={item.id || index}
-                    className="transition-colors hover:bg-gray-50"
+                    className={`transition-all duration-300 hover:bg-gray-50 ${
+                      fadingOutItemId === item.id
+                        ? 'opacity-0 scale-95 bg-amber-50'
+                        : 'opacity-100 scale-100'
+                    }`}
                     style={{
-                      backgroundColor: isHovered && hasBoundingBox ? `${highlightColor}40` : undefined,
+                      backgroundColor: fadingOutItemId === item.id
+                        ? undefined
+                        : (isHovered && hasBoundingBox ? `${highlightColor}40` : undefined),
                       borderLeft: isHovered && hasBoundingBox ? `4px solid ${highlightColor}` : undefined,
                     }}
                     onMouseEnter={(e) => hasBoundingBox && onHoverChange?.(item.id || null, e.currentTarget)}
@@ -406,16 +480,131 @@ export default function BidFormTable({
                     </div>
                   </td>
                   {!readOnly && (
-                    <td className="px-3 py-3 text-center">
-                      <button
-                        onClick={() => handleDeleteRow(index)}
-                        className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-red-500 bg-zinc-100 hover:bg-red-50 border border-zinc-200 hover:border-red-200 rounded-full transition-all"
-                        title="Delete row"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-1">
+                        {/* Reallocate Button with Dropdown */}
+                        {otherBidPackages.length > 0 && onReallocateItem && item.id && (
+                          <>
+                            <button
+                              ref={(el) => {
+                                if (el) buttonRefs.current.set(index, el);
+                                else buttonRefs.current.delete(index);
+                              }}
+                              onClick={(e) => {
+                                if (reallocateDropdownIndex === index) {
+                                  setReallocateDropdownIndex(null);
+                                  setDropdownPosition(null);
+                                  setReallocateSearch('');
+                                  setReallocateHighlightIndex(0);
+                                } else {
+                                  const rect = e.currentTarget.getBoundingClientRect();
+                                  setDropdownPosition({
+                                    top: rect.bottom + 4,
+                                    left: Math.max(8, rect.right - 250), // Align right edge with button, min 8px from left
+                                  });
+                                  setReallocateDropdownIndex(index);
+                                  setReallocateHighlightIndex(0);
+                                }
+                              }}
+                              className="inline-flex items-center justify-center w-8 h-8 text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 hover:border-amber-300 rounded-full transition-all"
+                              title="Move to another bid package"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                              </svg>
+                            </button>
+                            {mounted && reallocateDropdownIndex === index && dropdownPosition && (() => {
+                              const filteredPackages = otherBidPackages.filter(pkg =>
+                                pkg.name.toLowerCase().includes(reallocateSearch.toLowerCase())
+                              );
+                              return createPortal(
+                                <div
+                                  ref={reallocateDropdownRef}
+                                  className="fixed bg-white border-2 border-zinc-400 rounded-lg shadow-2xl min-w-[280px] max-h-80"
+                                  style={{
+                                    top: dropdownPosition.top,
+                                    left: dropdownPosition.left,
+                                    zIndex: 9999,
+                                  }}
+                                >
+                                  <div className="px-3 py-2 border-b border-gray-100">
+                                    <input
+                                      type="text"
+                                      value={reallocateSearch}
+                                      onChange={(e) => {
+                                        setReallocateSearch(e.target.value);
+                                        setReallocateHighlightIndex(0);
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Escape') {
+                                          e.preventDefault();
+                                          setReallocateDropdownIndex(null);
+                                          setDropdownPosition(null);
+                                          setReallocateSearch('');
+                                          setReallocateHighlightIndex(0);
+                                        } else if (e.key === 'ArrowDown') {
+                                          e.preventDefault();
+                                          setReallocateHighlightIndex(prev =>
+                                            Math.min(prev + 1, filteredPackages.length - 1)
+                                          );
+                                        } else if (e.key === 'ArrowUp') {
+                                          e.preventDefault();
+                                          setReallocateHighlightIndex(prev => Math.max(prev - 1, 0));
+                                        } else if (e.key === 'Enter') {
+                                          e.preventDefault();
+                                          if (filteredPackages.length > 0 && filteredPackages[reallocateHighlightIndex]) {
+                                            handleReallocate(item.id!, filteredPackages[reallocateHighlightIndex].id);
+                                          }
+                                        }
+                                      }}
+                                      placeholder="Search divisions..."
+                                      className="w-full px-3 py-2 text-sm border border-zinc-400 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-zinc-400 shadow-lg"
+                                      autoFocus
+                                    />
+                                  </div>
+                                  <div className="overflow-y-auto max-h-60">
+                                    {filteredPackages.map((pkg, pkgIndex) => (
+                                      <button
+                                        key={pkg.id}
+                                        ref={(el) => {
+                                          if (el && pkgIndex === reallocateHighlightIndex) {
+                                            el.scrollIntoView({ block: 'nearest' });
+                                          }
+                                        }}
+                                        onClick={() => handleReallocate(item.id!, pkg.id)}
+                                        onMouseEnter={() => setReallocateHighlightIndex(pkgIndex)}
+                                        className={`w-full text-left px-3 py-2.5 text-sm border-b border-gray-100 last:border-b-0 transition-colors ${
+                                          pkgIndex === reallocateHighlightIndex
+                                            ? 'bg-zinc-50 border-l-4 border-l-zinc-900'
+                                            : 'hover:bg-gray-50'
+                                        }`}
+                                      >
+                                        {pkg.name}
+                                      </button>
+                                    ))}
+                                    {filteredPackages.length === 0 && (
+                                      <div className="px-3 py-3 text-xs text-gray-500 text-center">
+                                        No matching divisions found.
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>,
+                                document.body
+                              );
+                            })()}
+                          </>
+                        )}
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDeleteRow(index)}
+                          className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-red-500 bg-zinc-100 hover:bg-red-50 border border-zinc-200 hover:border-red-200 rounded-full transition-all"
+                          title="Delete row"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>

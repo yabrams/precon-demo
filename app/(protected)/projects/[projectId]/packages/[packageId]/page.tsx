@@ -367,6 +367,60 @@ export default function WorkspacePage({ params }: PageProps) {
     }
   }, [project, projectId, router]);
 
+  const handleReallocateItem = useCallback(async (itemId: string, targetPackageId: string) => {
+    if (!bidPackage || !project) return;
+
+    // Find the item to move
+    const itemToMove = bidPackage.lineItems.find(item => item.id === itemId);
+    if (!itemToMove) return;
+
+    // Remove item from current package locally
+    const updatedCurrentItems = bidPackage.lineItems.filter(item => item.id !== itemId);
+    setBidPackage(prev => prev ? { ...prev, lineItems: updatedCurrentItems } : null);
+
+    // Call API to reallocate
+    try {
+      const response = await fetch('/api/bid-packages/reallocate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId,
+          sourcePackageId: packageId,
+          targetPackageId,
+          item: itemToMove,
+        }),
+      });
+
+      if (!response.ok) {
+        // Revert on failure
+        setBidPackage(prev => prev ? { ...prev, lineItems: bidPackage.lineItems } : null);
+        alert('Failed to reallocate item');
+        return;
+      }
+
+      // Also persist the updated current package
+      await fetch(`/api/bid-packages/${packageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lineItems: updatedCurrentItems,
+          chatMessages: bidPackage.chatMessages,
+        }),
+      });
+    } catch (error) {
+      console.error('Error reallocating item:', error);
+      // Revert on failure
+      setBidPackage(prev => prev ? { ...prev, lineItems: bidPackage.lineItems } : null);
+      alert('Failed to reallocate item. Please try again.');
+    }
+  }, [bidPackage, packageId, project]);
+
+  // Get all bid packages for reallocation dropdown
+  const allBidPackages = project?.bidPackages?.map((pkg: any) => ({
+    id: pkg.id,
+    name: pkg.name,
+  })) || [];
+
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-50">
@@ -424,6 +478,8 @@ export default function WorkspacePage({ params }: PageProps) {
       initialItemId={workspaceParams.item}
       onViewModeChange={setViewMode}
       onItemIdChange={setCurrentItem}
+      allBidPackages={allBidPackages}
+      onReallocateItem={handleReallocateItem}
     />
   );
 }
