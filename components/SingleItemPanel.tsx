@@ -215,7 +215,7 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
   };
 
   const handleCSISelect = (code: string, title: string) => {
-    onUpdate({ ...item, csiCode: code, csiTitle: title });
+    onUpdate({ ...item, csiCode: code, csiTitle: title, confidence: null }); // Clear confidence when user manually changes CSI code
     setEditingField(null);
   };
 
@@ -458,8 +458,8 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
                 dropdownDirection="up"
                 onFieldKeyDown={handleFieldKeyDown}
                 currentCode={item.csiCode}
-                confidenceLabel={getConfidenceLabel(item.confidence)}
-                confidenceBadgeClass={getConfidenceBadgeClass(item.confidence)}
+                confidenceLabel={item.confidence != null ? getConfidenceLabel(item.confidence) : undefined}
+                confidenceBadgeClass={item.confidence != null ? getConfidenceBadgeClass(item.confidence) : undefined}
               />
             ) : (
               <div
@@ -484,11 +484,13 @@ const SingleItemPanel = forwardRef<SingleItemPanelRef, SingleItemPanelProps>(fun
                     <span className="text-gray-400">-</span>
                   )}
                 </span>
-                {/* Confidence indicator */}
-                <span className={`ml-2 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
-                  <span className="grayscale brightness-0">✨</span>
-                  <span>{getConfidenceLabel(item.confidence)}</span>
-                </span>
+                {/* Confidence indicator - only show for system-matched codes */}
+                {item.confidence != null && (
+                  <span className={`ml-2 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
+                    <span className="grayscale brightness-0">✨</span>
+                    <span>{getConfidenceLabel(item.confidence)}</span>
+                  </span>
+                )}
               </div>
             )}
           </div>
