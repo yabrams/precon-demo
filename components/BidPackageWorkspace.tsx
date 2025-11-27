@@ -288,6 +288,16 @@ export default function BidPackageWorkspace({
     onLineItemsUpdate(updated);
   }, [currentItemIndex, lineItems, onLineItemsUpdate]);
 
+  const handleDeleteItem = useCallback(() => {
+    if (lineItems.length === 0) return;
+    const updated = lineItems.filter((_, index) => index !== currentItemIndex);
+    onLineItemsUpdate(updated);
+    // Adjust current index if we deleted the last item
+    if (currentItemIndex >= updated.length && updated.length > 0) {
+      setCurrentItemIndex(updated.length - 1);
+    }
+  }, [currentItemIndex, lineItems, onLineItemsUpdate, setCurrentItemIndex]);
+
   const handleExitSingleView = useCallback(() => {
     setViewMode('grid');
   }, [setViewMode]);
@@ -711,6 +721,7 @@ export default function BidPackageWorkspace({
                 onApproveAndNext={handleApproveAndNext}
                 onPrevious={handlePreviousItem}
                 onNext={handleNextItem}
+                onDelete={handleDeleteItem}
                 readOnly={bidPackage.status === 'pending-review' || bidPackage.status === 'bidding' || bidPackage.status === 'bidding-leveling' || bidPackage.status === 'awarded'}
                 otherBidPackages={otherBidPackages}
                 onReallocateItem={onReallocateItem}
