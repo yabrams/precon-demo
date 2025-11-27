@@ -107,6 +107,9 @@ export default function BidFormTable({
 }: BidFormTableProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
   const [editingCell, setEditingCell] = useState<{ rowIndex: number; field: string } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortColumn, setSortColumn] = useState<'approved' | 'item_number' | 'description' | 'csiCode' | 'confidence' | null>('confidence');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [reallocateDropdownIndex, setReallocateDropdownIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
   const [fadingOutItemId, setFadingOutItemId] = useState<string | null>(null);
@@ -170,20 +173,14 @@ export default function BidFormTable({
     console.log('BidFormTable: First item:', initialLineItems[0]);
 
     // Migration: Assign random confidence values to items without one and set approved status
-    const itemsWithConfidence = initialLineItems.map(item => ({
+    const itemsWithDefaults = initialLineItems.map(item => ({
       ...item,
       confidence: item.confidence ?? Math.floor(Math.random() * 101), // 0-100
       approved: item.approved ?? false, // Default to not approved
     }));
 
-    // Sort by confidence (ascending - lowest first)
-    const sortedItems = [...itemsWithConfidence].sort((a, b) => {
-      const confA = a.confidence ?? 0;
-      const confB = b.confidence ?? 0;
-      return confA - confB;
-    });
-
-    setLineItems(sortedItems);
+    // Don't sort here - sorting is now controlled by user via column headers
+    setLineItems(itemsWithDefaults);
   }, [initialLineItems]);
 
   const handleDeleteRow = (index: number) => {
@@ -227,13 +224,7 @@ export default function BidFormTable({
     };
     const updated = [...lineItems, newItem];
 
-    // Sort by confidence (ascending - lowest first)
-    updated.sort((a, b) => {
-      const confA = a.confidence ?? 0;
-      const confB = b.confidence ?? 0;
-      return confA - confB;
-    });
-
+    // Don't sort here - sorting is controlled by user via column headers
     setLineItems(updated);
     onUpdate(updated);
   };
@@ -264,12 +255,155 @@ export default function BidFormTable({
     stopEditing();
   };
 
+  // Handle column sort
+  const handleSort = (column: 'approved' | 'item_number' | 'description' | 'csiCode' | 'confidence') => {
+    if (sortColumn === column) {
+      // Toggle direction if same column
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      // New column, default to ascending
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  // Sort function
+  const sortItems = (items: LineItem[]): LineItem[] => {
+    if (!sortColumn) return items;
+
+    return [...items].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortColumn) {
+        case 'approved':
+          const aApproved = a.approved ? 1 : 0;
+          const bApproved = b.approved ? 1 : 0;
+          comparison = aApproved - bApproved;
+          break;
+        case 'item_number':
+          comparison = (a.item_number || '').localeCompare(b.item_number || '', undefined, { numeric: true });
+          break;
+        case 'description':
+          comparison = (a.description || '').localeCompare(b.description || '');
+          break;
+        case 'csiCode':
+          comparison = (a.csiCode || '').localeCompare(b.csiCode || '', undefined, { numeric: true });
+          break;
+        case 'confidence':
+          comparison = (a.confidence ?? 0) - (b.confidence ?? 0);
+          break;
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  };
+
+  // Filter items based on search query
+  const filteredItems = (() => {
+    const query = searchQuery.trim().toLowerCase();
+    let result: LineItem[];
+
+    if (!query) {
+      result = lineItems;
+    } else {
+      // First, check for exact item_number match
+      const exactItemMatch = lineItems.filter(item =>
+        (item.item_number || '').toLowerCase() === query
+      );
+      if (exactItemMatch.length > 0) {
+        result = exactItemMatch;
+      } else {
+        // Then check for items where item_number starts with the query
+        const startsWithMatch = lineItems.filter(item =>
+          (item.item_number || '').toLowerCase().startsWith(query)
+        );
+        if (startsWithMatch.length > 0) {
+          result = startsWithMatch;
+        } else {
+          // Finally, fall back to substring search across all fields
+          result = lineItems.filter(item => {
+            const searchableFields = [
+              item.item_number || '',
+              item.description || '',
+              item.notes || '',
+              item.csiCode || '',
+              item.csiTitle || '',
+            ];
+
+            return searchableFields.some(field =>
+              field.toLowerCase().includes(query)
+            );
+          });
+        }
+      }
+    }
+
+    // Apply sorting
+    return sortItems(result);
+  })();
+
+  // Sort indicator component
+  const SortIndicator = ({ column }: { column: typeof sortColumn }) => {
+    if (sortColumn !== column) {
+      return (
+        <svg className="w-4 h-4 text-gray-300 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      );
+    }
+    return sortDirection === 'asc' ? (
+      <svg className="w-4 h-4 text-zinc-700 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+      </svg>
+    ) : (
+      <svg className="w-4 h-4 text-zinc-700 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
-          <h2 className="text-base font-semibold text-zinc-900">Bid Form</h2>
+          <div className="relative">
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search items..."
+              className="w-64 pl-10 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-zinc-400/20 focus:border-zinc-400 bg-white text-zinc-900 placeholder:text-gray-400"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+            {searchQuery && (
+              <span className="absolute -right-16 top-1/2 -translate-y-1/2 text-xs text-gray-500">
+                {filteredItems.length}/{lineItems.length}
+              </span>
+            )}
+          </div>
           {!readOnly && lineItems.length > 0 && (
             <div className="flex items-center gap-2">
               <button
@@ -322,19 +456,61 @@ export default function BidFormTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">Approved</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Item #</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-64">Description</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-80">CSI MasterFormat</th>
+              <th
+                className="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-16 cursor-pointer hover:bg-gray-100 transition-colors select-none"
+                onClick={() => handleSort('approved')}
+              >
+                <div className="flex items-center justify-center">
+                  Approved
+                  <SortIndicator column="approved" />
+                </div>
+              </th>
+              <th
+                className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20 cursor-pointer hover:bg-gray-100 transition-colors select-none"
+                onClick={() => handleSort('item_number')}
+              >
+                <div className="flex items-center">
+                  Item #
+                  <SortIndicator column="item_number" />
+                </div>
+              </th>
+              <th
+                className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-64 cursor-pointer hover:bg-gray-100 transition-colors select-none"
+                onClick={() => handleSort('description')}
+              >
+                <div className="flex items-center">
+                  Description
+                  <SortIndicator column="description" />
+                </div>
+              </th>
+              <th
+                className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-80 cursor-pointer hover:bg-gray-100 transition-colors select-none"
+                onClick={() => handleSort('csiCode')}
+              >
+                <div className="flex items-center">
+                  CSI MasterFormat
+                  <SortIndicator column="csiCode" />
+                </div>
+              </th>
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-32">Notes</th>
-              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Confidence</th>
+              <th
+                className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24 cursor-pointer hover:bg-gray-100 transition-colors select-none"
+                onClick={() => handleSort('confidence')}
+              >
+                <div className="flex items-center">
+                  Confidence
+                  <SortIndicator column="confidence" />
+                </div>
+              </th>
               {!readOnly && <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">Actions</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {lineItems.map((item, index) => {
+            {filteredItems.map((item, filteredIndex) => {
+                // Find the original index in lineItems for editing/deleting
+                const index = lineItems.findIndex(li => li.id === item.id);
                 const isHovered = hoveredItemId === item.id;
-                const highlightColor = getColorForItem(index);
+                const highlightColor = getColorForItem(filteredIndex);
                 const hasBoundingBox = !!item.boundingBox;
 
                 return (
@@ -506,7 +682,7 @@ export default function BidFormTable({
                                   setReallocateHighlightIndex(0);
                                 }
                               }}
-                              className="inline-flex items-center justify-center w-8 h-8 text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 hover:border-amber-300 rounded-full transition-all"
+                              className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-zinc-600 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 hover:border-zinc-300 rounded-full transition-all"
                               title="Move to another bid package"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
