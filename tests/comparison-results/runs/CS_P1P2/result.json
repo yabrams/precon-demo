@@ -1,0 +1,93 @@
+{
+  "permutationId": "CS_P1P2",
+  "permutationName": "Claude Sonnet 4.5 - Pass 1+2",
+  "config": {
+    "id": "CS_P1P2",
+    "name": "Claude Sonnet 4.5 - Pass 1+2",
+    "description": "Claude Sonnet 4.5 with self-review",
+    "passes": [
+      {
+        "passNumber": 1,
+        "model": "claude-sonnet-4.5",
+        "purpose": "initial_extraction",
+        "dependsOnPasses": []
+      },
+      {
+        "passNumber": 2,
+        "model": "claude-sonnet-4.5",
+        "purpose": "self_review",
+        "dependsOnPasses": [
+          1
+        ]
+      }
+    ],
+    "expectedCost": 10
+  },
+  "documentHash": "28d539949daa0e9e",
+  "passes": [
+    {
+      "passNumber": 1,
+      "model": "claude-sonnet-4.5",
+      "purpose": "initial_extraction",
+      "startedAt": "2025-11-27T08:35:56.983Z",
+      "completedAt": "2025-11-27T08:35:56.984Z",
+      "durationMs": 1,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": true,
+      "cacheKey": "788360267c141e93"
+    },
+    {
+      "passNumber": 2,
+      "model": "claude-sonnet-4.5",
+      "purpose": "self_review",
+      "startedAt": "2025-11-27T08:35:56.984Z",
+      "completedAt": "2025-11-27T08:35:56.985Z",
+      "durationMs": 1,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": false,
+      "cacheKey": "378ea4cf552ec806"
+    }
+  ],
+  "finalResult": {
+    "workPackages": [],
+    "observations": [],
+    "totalLineItems": 0,
+    "totalObservations": 0
+  },
+  "metrics": {
+    "totalDurationMs": 1,
+    "totalTokens": {
+      "input": 0,
+      "output": 0
+    },
+    "totalCost": 0,
+    "cacheHits": 1,
+    "apiCalls": 1
+  },
+  "startedAt": "2025-11-27T08:35:56.984Z",
+  "completedAt": "2025-11-27T08:35:56.985Z"
+}

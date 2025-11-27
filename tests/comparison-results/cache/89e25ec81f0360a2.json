@@ -1,0 +1,540 @@
+{
+  "cacheKey": "89e25ec81f0360a2",
+  "passNumber": 4,
+  "model": "claude-sonnet-4.5",
+  "purpose": "cross_validation",
+  "documentHash": "410d46ae8908de76",
+  "previousPassHashes": [
+    "61fe28bc9b2c7c5e",
+    "b4c80f4787d5e49e",
+    "4d1e072b64199139"
+  ],
+  "promptVersion": "v1.1.0",
+  "result": {
+    "passNumber": 4,
+    "model": "claude-sonnet-4.5",
+    "purpose": "cross_validation",
+    "startedAt": "2025-11-27T09:43:55.048Z",
+    "completedAt": "2025-11-27T09:46:27.451Z",
+    "durationMs": 152403,
+    "tokensUsed": {
+      "input": 68434,
+      "output": 7000
+    },
+    "cost": 0.310302,
+    "response": {
+      "validated_packages": [
+        {
+          "packageId": "DEMO",
+          "confidence": 0.95,
+          "confidence_reasoning": "Demolition scope is well-documented across architectural, mechanical, and electrical drawings with clear keynotes. All major demo items are captured including roofing, equipment, and utilities.",
+          "flags": [
+            {
+              "type": "info",
+              "code": "QUANTITY_VERIFICATION_NEEDED",
+              "message": "Quantities for linear demolition items (parapet cap, scuppers) require field verification and takeoff from plans",
+              "affectedFields": [
+                "line_items[1].quantity",
+                "line_items[2].quantity"
+              ],
+              "suggestedAction": "Perform detailed linear takeoff from roof plans A1.1 and A1.2"
+            }
+          ]
+        },
+        {
+          "packageId": "SITE",
+          "confidence": 0.88,
+          "confidence_reasoning": "Civil scope is clearly detailed with plans and sections. However, quantities for excavation, fill, and surface restoration are not provided and must be calculated. Coordination with mechanical for heat trace in underground piping is critical.",
+          "flags": [
+            {
+              "type": "warning",
+              "code": "EXCAVATION_QUANTITIES_MISSING",
+              "message": "Cubic yards of excavation, drain rock, and backfill not specified - must be calculated from drain field dimensions",
+              "affectedFields": [
+                "line_items[0].quantity",
+                "line_items[1].quantity"
+              ],
+              "suggestedAction": "Calculate volumes from drain field dimensions (30'x15'x3.5' and 12'x4'x3.5') plus over-excavation and working room"
+            },
+            {
+              "type": "warning",
+              "code": "HEAT_TRACE_COORDINATION",
+              "message": "Heat trace scope spans both electrical (E4.0/2) and civil underground piping - requires coordination on extent and transitions",
+              "affectedFields": [
+                "line_items[2]"
+              ],
+              "suggestedAction": "Clarify exact footage of underground piping requiring heat trace and verify power supply requirements"
+            },
+            {
+              "type": "info",
+              "code": "GEOTECHNICAL_ASSUMPTIONS",
+              "message": "No geotechnical report referenced - soil conditions, bearing capacity, and drainage characteristics are assumed",
+              "affectedFields": [
+                "line_items[0]",
+                "line_items[1]"
+              ],
+              "suggestedAction": "Request geotechnical report or include contingency for unknown subsurface conditions"
+            }
+          ]
+        },
+        {
+          "packageId": "ARCH",
+          "confidence": 0.82,
+          "confidence_reasoning": "Roofing scope is well-defined but the critical recovery board requirement is ONLY in Addendum 2, creating high risk of omission. Parapet rebuild quantities are unclear. The R1/R2 roof type distinction needs careful attention to ensure correct assemblies are priced.",
+          "flags": [
+            {
+              "type": "error",
+              "code": "CRITICAL_ADDENDUM_SCOPE",
+              "message": "5/8\" Dens Deck recovery board is REQUIRED per Addendum 2 but NOT shown on original detail A2.3 for R1 - high risk of cost underestimation",
+              "affectedFields": [
+                "line_items[0]"
+              ],
+              "suggestedAction": "Verify all R1 roof areas include recovery board in estimate. Calculate total SF from A1.2 excluding R2 areas (Roof D only)"
+            },
+            {
+              "type": "warning",
+              "code": "ROOF_TYPE_AREA_CALCULATION",
+              "message": "Plans show R1 and R2 roof types but do not provide SF breakdown - takeoff required to separate quantities",
+              "affectedFields": [
+                "line_items[0].quantity",
+                "line_items[1].quantity",
+                "line_items[2].quantity"
+              ],
+              "suggestedAction": "Perform detailed area takeoff separating R1 (EPDM over existing + recovery board) from R2 (EPDM over new sheathing) areas"
+            },
+            {
+              "type": "warning",
+              "code": "PARAPET_SCOPE_AMBIGUITY",
+              "message": "Multiple parapet details shown (Demo 1,3,5,7,9,11 and New 2,4,6,8,10,12) but total LF of each type not specified",
+              "affectedFields": [
+                "line_items[4].quantity",
+                "line_items[5].quantity"
+              ],
+              "suggestedAction": "Map each parapet detail to specific roof edges on plan and calculate LF for each condition"
+            },
+            {
+              "type": "info",
+              "code": "SUBSTRATE_CONDITION_UNKNOWN",
+              "message": "Existing roof deck condition beneath BUR is unknown - may require repair/replacement not shown",
+              "affectedFields": [],
+              "suggestedAction": "Include contingency for substrate repairs or request test cuts before bidding"
+            },
+            {
+              "type": "warning",
+              "code": "TAPERED_INSULATION_DESIGN",
+              "message": "Note 9 on A1.2 requires new tapered insulation crickets but design/layout not provided - coordination with roofing manufacturer required",
+              "affectedFields": [
+                "line_items[3]"
+              ],
+              "suggestedAction": "Coordinate with roofing manufacturer for tapered insulation layout and pricing. Verify if included in system or separate."
+            }
+          ]
+        },
+        {
+          "packageId": "MEC",
+          "confidence": 0.91,
+          "confidence_reasoning": "Mechanical scope is clearly defined with equipment schedules, but ductwork transition quantities are undefined. Controls scope is significantly simplified per Addendum 1. Gas piping lengths require calculation. Field verification of existing duct sizes is critical.",
+          "flags": [
+            {
+              "type": "warning",
+              "code": "DUCTWORK_TRANSITION_UNDEFINED",
+              "message": "Note 3 requires ductwork transitions from new RTUs to existing ducts 'as necessary' but extent/complexity not detailed",
+              "affectedFields": [
+                "line_items[4]"
+              ],
+              "suggestedAction": "Site visit required to assess existing duct sizes, locations, and required transition fabrication. Include allowance for unforeseen conditions."
+            },
+            {
+              "type": "warning",
+              "code": "GAS_PIPING_LENGTHS",
+              "message": "Gas piping shown schematically on M2.3 but total developed lengths not provided - requires calculation",
+              "affectedFields": [
+                "line_items[5].quantity"
+              ],
+              "suggestedAction": "Calculate gas piping lengths from roof plan M2.3, including vertical drops. Note: 2\" gas main serves multiple units (205 MBH over 145' and 600 MBH over 100')."
+            },
+            {
+              "type": "info",
+              "code": "EQUIPMENT_SUBSTITUTION_ALLOWED",
+              "message": "Addendum 1 allows equipment substitutions with comparable features - verify physical sizes, connection locations, and curb dimensions match",
+              "affectedFields": [
+                "line_items[0]",
+                "line_items[1]",
+                "line_items[2]"
+              ],
+              "suggestedAction": "If proposing alternate equipment, verify: curb sizes match or can be accommodated, duct connections align, gas/electrical service sizes adequate"
+            },
+            {
+              "type": "info",
+              "code": "CONTROLS_SCOPE_CLARIFIED",
+              "message": "Addendum 1 eliminates complex DDC controls - factory controls with simple timers only",
+              "affectedFields": [],
+              "suggestedAction": "Confirm mechanical subcontractor has seen Addendum 1 and excluded BAS/DDC costs"
+            },
+            {
+              "type": "warning",
+              "code": "ROOF_CURB_STRUCTURAL_COORDINATION",
+              "message": "Details 3 and 4 on M2.3 show field-fabricated 24\" high curbs for RTU-5 and RTU-6 - structural support not detailed",
+              "affectedFields": [
+                "line_items[6]"
+              ],
+              "suggestedAction": "Coordinate with structural engineer for curb framing details and verify structural capacity for new equipment loads"
+            },
+            {
+              "type": "info",
+              "code": "DOGHOUSE_COORDINATION",
+              "message": "32\"x32\"x24\" doghouse required for exhaust fans per Detail 2/M2.3 - coordinate with roofing for flashing",
+              "affectedFields": [],
+              "suggestedAction": "Include doghouse fabrication/installation cost and coordinate flashing with roofing contractor"
+            }
+          ]
+        },
+        {
+          "packageId": "PLMB",
+          "confidence": 0.89,
+          "confidence_reasoning": "Roof drainage scope is clearly shown on plans M2.2 with pipe sizes and routing. However, exact quantities require takeoff, and coordination with civil for exterior connections is critical. Heat trace scope overlaps with electrical package.",
+          "flags": [
+            {
+              "type": "warning",
+              "code": "ROOF_DRAIN_QUANTITY_VERIFICATION",
+              "message": "Plan shows RD-1 and OD-1 symbols at multiple locations but exact count not provided in schedule",
+              "affectedFields": [
+                "line_items[0].quantity"
+              ],
+              "suggestedAction": "Count all RD-1 (roof drain) and OD-1 (overflow drain) symbols on plan M2.2. Appears to be 7 RD-1 and 7 OD-1 based on visual inspection."
+            },
+            {
+              "type": "warning",
+              "code": "CIVIL_COORDINATION_REQUIRED",
+              "message": "Rainleader piping terminates at building exterior - coordination with civil package for connection to drain fields is critical",
+              "affectedFields": [
+                "line_items[1]"
+              ],
+              "suggestedAction": "Verify interface point between plumbing (interior rainleaders) and civil (exterior piping to drain fields). Coordinate on detail C2.0/D for transitions."
+            },
+            {
+              "type": "info",
+              "code": "PIPE_MATERIAL_SPECIFICATION",
+              "message": "Specification M0.2 indicates 'Cast Iron with No-Hub fittings or DWV ABS pipe' - confirm acceptable for application and local code",
+              "affectedFields": [
+                "line_items[1]"
+              ],
+              "suggestedAction": "Verify local code acceptance of ABS for interior rainleaders. Note: ABS cannot be used in exposed areas or return plenums per spec."
+            },
+            {
+              "type": "warning",
+              "code": "HEAT_TRACE_OVERLAP",
+              "message": "Heat trace is specified in both electrical (E4.0) and mechanical specifications (M0.2) for rainleader pipes",
+              "affectedFields": [],
+              "suggestedAction": "Clarify trade responsibility for heat trace installation. Typically electrical installs but mechanical may need to provide access/sleeves."
+            }
+          ]
+        },
+        {
+          "packageId": "ELEC",
+          "confidence": 0.85,
+          "confidence_reasoning": "Electrical scope includes significant panel modifications and new feeders that carry risk. Power connections to equipment are clearly shown, but panel capacity verification is needed. Heat trace scope is well-defined. One-line diagram assumptions need field verification.",
+          "flags": [
+            {
+              "type": "error",
+              "code": "MAIN_BREAKER_REPLACEMENT_RISK",
+              "message": "One-line diagram shows replacing existing 300A main breaker with 400A - requires verification of main service capacity and utility coordination",
+              "affectedFields": [
+                "line_items[3]"
+              ],
+              "suggestedAction": "CRITICAL: Verify existing service entrance capacity supports 400A main breaker. May require utility service upgrade if existing service is only 300A."
+            },
+            {
+              "type": "warning",
+              "code": "PANEL_SPACE_VERIFICATION_REQUIRED",
+              "message": "Moving all circuits from Panel X to new Panel D and adding new Panel MECH requires field verification of available space and circuit compatibility",
+              "affectedFields": [
+                "line_items[2]",
+                "line_items[3]"
+              ],
+              "suggestedAction": "Conduct site visit to verify: (1) existing Panel X circuit count/types, (2) available space for new Panel D and MECH, (3) conduit routing feasibility"
+            },
+            {
+              "type": "warning",
+              "code": "FEEDER_SIZING_VERIFICATION",
+              "message": "New feeder to Panel MECH sized at 500kcmil appears oversized for panel schedule loads - verify calculation or confirm future capacity requirement",
+              "affectedFields": [
+                "line_items[3]"
+              ],
+              "suggestedAction": "Review Panel MECH schedule on E5.0 and verify feeder ampacity calculation. Appears to be sized for 400A but panel loads may be less."
+            },
+            {
+              "type": "info",
+              "code": "EQUIPMENT_CIRCUIT_COORDINATION",
+              "message": "Circuits for new mechanical equipment are detailed on schedule E5.0 but require verification against final equipment submittals",
+              "affectedFields": [
+                "line_items[0]"
+              ],
+              "suggestedAction": "Include allowance for potential circuit modifications based on actual equipment FLA/MCA/MOP after substitutions per Addendum 1"
+            },
+            {
+              "type": "warning",
+              "code": "HEAT_TRACE_CONTROLLER_LOCATION",
+              "message": "Heat trace system includes controller but mounting location not clearly specified beyond 'in janitor closet' per Note 2 on E4.0",
+              "affectedFields": [
+                "line_items[1]"
+              ],
+              "suggestedAction": "Verify janitor closet location and available wall space for controller and HOA switch. Coordinate with owner for access."
+            },
+            {
+              "type": "info",
+              "code": "SMOKE_DETECTOR_ALARM_AMBIGUITY",
+              "message": "Note 2 on E3.0 specifies audio/visual alarm for duct smoke detector but duct smoke detector installation is mechanical scope - coordination required",
+              "affectedFields": [
+                "line_items[4]"
+              ],
+              "suggestedAction": "Clarify: Does electrical scope include duct smoke detector or only alarm? Coordinate with mechanical on detector wiring and alarm interface."
+            }
+          ]
+        },
+        {
+          "packageId": "PAINT",
+          "confidence": 0.92,
+          "confidence_reasoning": "Painting scope is clearly defined in specifications with detailed paint systems. However, quantities must be calculated from architectural drawings.",
+          "flags": [
+            {
+              "type": "info",
+              "code": "QUANTITY_TAKEOFF_REQUIRED",
+              "message": "Linear footage of composite trim and surface area of galvanized metal items require takeoff from architectural details",
+              "affectedFields": [
+                "line_items[0].quantity",
+                "line_items[1].quantity"
+              ],
+              "suggestedAction": "Calculate LF of composite trim from parapet details A2.1/A2.2 and SF of exposed galvanized surfaces (flashings, curb caps, etc.)"
+            },
+            {
+              "type": "info",
+              "code": "COLOR_SELECTION_TBD",
+              "message": "Paint specifications note color to be determined by Architect - may impact procurement schedule",
+              "affectedFields": [],
+              "suggestedAction": "Request color selections during submittal phase to avoid delays in material procurement"
+            },
+            {
+              "type": "warning",
+              "code": "WEATHER_DEPENDENT_WORK",
+              "message": "Exterior painting in Alaska climate requires careful scheduling and may impact project timeline",
+              "affectedFields": [],
+              "suggestedAction": "Verify acceptable temperature ranges for specified paint products and plan work during suitable weather window"
+            }
+          ]
+        },
+        {
+          "packageId": "SEAL",
+          "confidence": 0.88,
+          "confidence_reasoning": "Sealant scope is detailed in specifications with clear product types and locations. Quantities require detailed takeoff of joint locations.",
+          "flags": [
+            {
+              "type": "warning",
+              "code": "JOINT_QUANTITY_CALCULATION",
+              "message": "Linear footage of control joints, penetrations, and metal-to-substrate joints must be calculated from plans and details",
+              "affectedFields": [
+                "line_items[0].quantity",
+                "line_items[1].quantity"
+              ],
+              "suggestedAction": "Perform detailed takeoff of: (1) parapet edge joints, (2) flashing terminations, (3) roof penetrations, (4) wall control joints per architectural details"
+            },
+            {
+              "type": "info",
+              "code": "SUBSTRATE_PREPARATION",
+              "message": "Sealant specifications include detailed surface preparation requirements that may impact labor costs",
+              "affectedFields": [],
+              "suggestedAction": "Review Section 07 90 00 for cleaning, priming, and joint preparation requirements when estimating labor"
+            }
+          ]
+        }
+      ],
+      "observations": [
+        {
+          "severity": "critical",
+          "category": "scope_omission_risk",
+          "title": "Missing Work Package: Structural Support for Equipment",
+          "insight": "The extraction does not include a dedicated structural work package. Details M2.3 (sheets 3 and 4) explicitly reference 'SEE STRUCTURAL' for roof curb framing for RTU-5 and RTU-6. The civil notes reference structural engineer stamp required for seismic restraint calculations. This suggests there may be structural modifications or reinforcement required that are not captured in any work package.",
+          "affected_packages": [
+            "MEC",
+            "ARCH"
+          ],
+          "suggested_actions": [
+            "Review full structural drawing set if available (not included in provided pages)",
+            "Verify if new roof curb framing requires structural modifications to existing roof framing",
+            "Confirm responsibility for seismic restraint design and installation per IBC 2009 Section 1613",
+            "Include contingency for potential structural reinforcement if drawings are incomplete"
+          ]
+        },
+        {
+          "severity": "critical",
+          "category": "quantity_verification",
+          "title": "No Square Footage Totals Provided for Roofing",
+          "insight": "While the extraction correctly identifies the roofing scope including the critical recovery board requirement, NO total square footage quantities are provided anywhere in the document set. The roof plan shows multiple roof areas (A through H) but no area schedule. This is a significant omission that requires complete manual takeoff and carries high risk of estimation error.",
+          "affected_packages": [
+            "ARCH",
+            "DEMO"
+          ],
+          "suggested_actions": [
+            "Perform detailed CAD takeoff of all roof areas from plan A1.2",
+            "Separate R1 (existing with recovery board) from R2 (new sheathing) areas",
+            "Calculate parapet linear footage for each detail type",
+            "Add contingency for field-verified area adjustments (+/- 5-10%)",
+            "Request any available as-built drawings or prior roof surveys from owner"
+          ]
+        },
+        {
+          "severity": "critical",
+          "category": "electrical_capacity",
+          "title": "Main Service Capacity Assumption Unverified",
+          "insight": "The one-line diagram (E4.0) shows upgrading the main breaker from 300A to 400A and adding significant new mechanical loads. However, there is NO indication that the existing service entrance conductors or utility transformer capacity was verified. The note states 'Panel 'C' is assumed to be connect to Panel B's feeder' and 'The J-BOX where this would occur was not found' - indicating incomplete existing condition documentation. This represents a critical risk that could result in required utility service upgrade not included in scope.",
+          "affected_packages": [
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "IMMEDIATE: Request utility service records from owner showing existing service size and available capacity",
+            "Field verify existing service entrance conductor size and condition",
+            "Perform detailed load calculation confirming 400A service is adequate for all existing + new loads",
+            "Include contingency allowance for potential service entrance upgrade if capacity is insufficient",
+            "Clarify with engineer if service upgrade is owner's responsibility or contractor's"
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "coordination_complexity",
+          "title": "Multi-Trade Interface at Underground Drainage Transition",
+          "insight": "There is a critical but poorly defined interface between three trades at the building wall where roof drainage transitions from interior plumbing rainleaders to exterior civil drain fields. The plumbing scope (M2.2) shows piping 'DN to dry well discharge, see civil for continuation outside of building.' The civil scope (C1.0) shows drain fields. The electrical scope (E4.0) shows heat trace 'from dry well to 3-feet above ground level.' The exact point of responsibility transfer and heat trace termination is not explicitly detailed.",
+          "affected_packages": [
+            "PLMB",
+            "SITE",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Define explicit scope break between plumbing and civil at building wall penetration",
+            "Detail at C2.0/D shows transition but verify if civil includes building wall penetration or starts at exterior grade",
+            "Clarify heat trace installation: Does plumber install with pipe or electrician install separately?",
+            "Specify who provides wall sleeves, flashing, and sealing at penetrations",
+            "Hold pre-construction coordination meeting with all three trades to walk through interface"
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "document_consistency",
+          "title": "Potential Conflict: Equipment Schedule vs. Additive Alternates",
+          "insight": "The mechanical equipment schedule (M0.1) clearly marks RTU-1 and RTU-6 as additive alternates. However, the demolition plan (M1.2) shows demolition work in those areas WITHOUT the additive alternate designation consistently applied. The electrical roof power plan (E3.0) does show 'Work in this area shall be listed as Additive Alternate #1 and #2' boundaries. This inconsistency could lead to confusion about what work is base bid vs. alternate.",
+          "affected_packages": [
+            "DEMO",
+            "MEC",
+            "ELEC",
+            "ARCH"
+          ],
+          "suggested_actions": [
+            "Create clear additive alternate scope matrix showing ALL work items (demo, roofing, mechanical, electrical, controls) associated with each alternate",
+            "Verify demolition costs for RTU-1 and RTU-6 areas are correctly allocated to alternates in estimate",
+            "Confirm roofing in Alternate areas is included in base bid (roof must be complete regardless) but equipment-specific work is alternate",
+            "Request clarification from design team if any ambiguity exists"
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "missing_specification_sections",
+          "title": "Limited Specification Sections Included in Document Set",
+          "insight": "The provided document set includes only selected specification sections (Paint Systems 09 90 00 and Joint Sealants 07 90 00 in references). Critical specification sections that would typically govern work quality and warranty requirements are not included: Division 07 Roofing Specification, Division 22 Plumbing, Division 23 HVAC, Division 26 Electrical. The mechanical specification sheet M0.2 provides abbreviated specifications but references 'SPECIFICATIONS' documents that are not included. This creates risk of missing requirements.",
+          "affected_packages": [
+            "ARCH",
+            "MEC",
+            "PLMB",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Request complete Project Manual with all Division 1 and technical specifications",
+            "Verify warranty requirements, particularly the critical 20-year/120mph roofing warranty and manufacturer requirements",
+            "Review referenced standards (SMACNA, NFPA 70, UPC, IMC, etc.) for applicable edition and local amendments",
+            "Check for performance testing requirements (roofing flood test, duct leakage testing, etc.)",
+            "Include allowance for compliance with specification requirements not visible in drawings"
+          ]
+        },
+        {
+          "severity": "info",
+          "category": "clarification_needed",
+          "title": "Temporary Protection and Phasing Requirements Undefined",
+          "insight": "This is an occupied recreation center with roof replacement work. The documents do not include a clear phasing plan, temporary weather protection requirements, or occupancy restrictions during construction. General Note 1 on C1.0 references a 10-year 24-hour storm for drain field sizing, indicating Alaska weather considerations are critical. Demo note 3 on A1.1 requires 'coordination' for temporary removal of equipment but doesn't detail protection requirements.",
+          "affected_packages": [
+            "DEMO",
+            "ARCH",
+            "MEC",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Clarify with owner: Will building remain occupied during construction? Are there restricted hours?",
+            "Determine temporary weather protection requirements during roof tear-off and re-roofing",
+            "Budget for temporary roof covers, dehumidification, or accelerated sequencing if weather protection is required",
+            "Include temporary power requirements for construction if building power must remain energized for occupancy",
+            "Factor Alaska weather delays into schedule and pricing (short construction season)"
+          ]
+        },
+        {
+          "severity": "info",
+          "category": "basis_of_design_substitutions",
+          "title": "Equipment Substitution Policy per Addendum 1 Creates Variability",
+          "insight": "Addendum 1 explicitly allows substitution of specified equipment (Daikin RTUs, Greenheck fans) with alternates having 'comparable features.' This is standard practice but creates pricing variability and requires careful verification that substituted equipment is truly comparable in size, connections, and performance. The same addendum eliminates complex DDC controls, which significantly reduces the mechanical controls budget.",
+          "affected_packages": [
+            "MEC"
+          ],
+          "suggested_actions": [
+            "If bidding with specified equipment, price is straightforward from schedule M0.1",
+            "If proposing substitutions: verify physical dimensions match existing openings, connection locations align, performance meets or exceeds specified (EER, CFM, ESP, etc.)",
+            "Confirm substitute equipment warranty matches or exceeds specified",
+            "Factor in potential additional costs for adapter curbs or duct transitions if substituted equipment has different connection locations",
+            "Verify that factory controls on substitute equipment meet simplified control requirements from Addendum 1"
+          ]
+        }
+      ],
+      "overall_assessment": {
+        "completeness": 0.78,
+        "accuracy_estimate": 0.85,
+        "items_needing_review": [
+          "Total roof area square footage - MUST BE CALCULATED (most critical missing quantity)",
+          "Existing electrical service capacity verification - CRITICAL before bidding",
+          "Structural support requirements for new RTU curbs - may be missing scope package",
+          "Complete project specifications - only excerpts provided",
+          "Parapet rebuild linear footage by detail type - requires detailed takeoff",
+          "Ductwork transition complexity - requires site visit assessment",
+          "Gas piping developed lengths - requires calculation from plan M2.3",
+          "Underground excavation quantities - requires calculation from drain field dimensions",
+          "Existing panel 'X' circuit inventory - field verification needed",
+          "Temporary protection and phasing requirements - not specified"
+        ],
+        "critical_issues": [
+          {
+            "issue": "Recovery board requirement ONLY in Addendum 2",
+            "impact": "High risk of cost underestimation if addendum not reviewed",
+            "priority": "CRITICAL"
+          },
+          {
+            "issue": "No roof area quantities provided anywhere in documents",
+            "impact": "Complete manual takeoff required - high error risk",
+            "priority": "CRITICAL"
+          },
+          {
+            "issue": "Main electrical service capacity not verified",
+            "impact": "Potential for unforeseen utility service upgrade cost",
+            "priority": "CRITICAL"
+          },
+          {
+            "issue": "Structural support scope potentially missing",
+            "impact": "Undefined responsibility for curb framing and seismic restraint",
+            "priority": "HIGH"
+          },
+          {
+            "issue": "Multi-trade interfaces at drainage transition poorly defined",
+            "impact": "Risk of scope gaps or overlaps between plumbing/civil/electrical",
+            "priority": "MEDIUM"
+          }
+        ]
+      }
+    },
+    "cacheHit": false,
+    "cacheKey": "89e25ec81f0360a2"
+  },
+  "createdAt": "2025-11-27T09:46:27.451Z"
+}

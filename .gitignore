@@ -52,7 +52,5 @@ api/__pycache__/
 # prisma
 prisma/migrations/
 
-# Extraction test artifacts
-tests/comparison-results/cache/
-tests/comparison-results/runs/
+# Extraction test output (not comparison results - those are shared for development)
 tests/output/

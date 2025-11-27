@@ -1,0 +1,1001 @@
+{
+  "cacheKey": "8fee24871ae3b719",
+  "passNumber": 2,
+  "model": "claude-sonnet-4.5",
+  "purpose": "self_review",
+  "documentHash": "410d46ae8908de76",
+  "previousPassHashes": [
+    "86b0181037fe2992"
+  ],
+  "promptVersion": "v1.1.0",
+  "result": {
+    "passNumber": 2,
+    "model": "claude-sonnet-4.5",
+    "purpose": "self_review",
+    "startedAt": "2025-11-27T09:36:26.601Z",
+    "completedAt": "2025-11-27T09:39:57.061Z",
+    "durationMs": 210460,
+    "tokensUsed": {
+      "input": 71759,
+      "output": 11646
+    },
+    "cost": 0.389967,
+    "response": {
+      "additions": [
+        {
+          "work_package": "MECH-01",
+          "description": "Gas piping from meter manifold to RTU-1, RTU-2, RTU-3, RTU-4",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LF",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.95,
+          "reason_missed": "Gas piping shown on roof plan with specific sizing (1 1/4\" G, 1\" G, 3/4\" G) but not extracted as separate line items. Critical for RTU operation."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Gas piping from meter to RTU-5 - 1 1/2\" G (7\" WC)",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "RUN",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.95,
+          "reason_missed": "205 MBH load, 145 feet total developed length called out on plan. Field fabricated curb work noted but gas piping not extracted."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Gas piping from meter manifold to RTU-6 - 2\" G down to gas meter manifold",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "RUN",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.95,
+          "reason_missed": "600 MBH, 100 feet total developed length noted on plan. Largest gas load but not called out as line item."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Gas piping supports and roof blocking",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 2 on M2.3 requires proper gas piping support blocks typical of all piping installations but not itemized."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Motor operated dampers for RTU relief air",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.85,
+          "reason_missed": "Shown on roof plan with MOD symbol but not extracted. Required for each RTU economizer operation."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Roof relief vents and outside air intake vents",
+          "action": "Install",
+          "quantity": null,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M2.3",
+            "page": 18
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 4 on M2.3 calls for new roof relief vents, OA intakes and roof vents as necessary but quantities not extracted."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "Duct smoke detectors in RTU return air",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.95,
+          "reason_missed": "Note 4 on equipment schedule requires smoke detector in return ductwork for all RTUs. Critical life safety item."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "Building pressure control systems for RTU economizers",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 1 specifies power exhaust with building pressure control for all RTUs. Controls package not extracted."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "CO2 sensors for outside air modulation",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 1 requires CO2 sensor for O/A modulation on all RTUs. Energy code compliance item."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "Low ambient controls for RTUs",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 2 requires low ambient controls for Alaska climate. Critical for winter operation."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "Field powered 115V GFCI outlets for RTU maintenance",
+          "action": "Install",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.85,
+          "reason_missed": "Note 3 requires field powered GFCI outlets at each RTU. Code requirement often missed."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "Cleanout risers (CO) for rain leader system",
+          "action": "Install",
+          "quantity": 7,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M2.2",
+            "page": 17
+          },
+          "confidence": 0.95,
+          "reason_missed": "Multiple CO symbols shown on rainleader piping plan M2.2 but not counted or itemized."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "4\" and 3\" cast iron rain leader piping with no-hub fittings",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LF",
+          "source_reference": {
+            "sheet": "M2.2",
+            "page": 17
+          },
+          "confidence": 0.95,
+          "reason_missed": "Specification M0.2 calls for cast iron with no-hub fittings or DWV ABS but material not extracted as line item."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "Rain leader pipe insulation - 1.0\" fiberglass",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LF",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.9,
+          "reason_missed": "Spec 22 14 00 requires 1.0\" fiberglass pipe insulation with factory applied ASJ on rain leaders. Not extracted."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "Test rain leader systems per UPC",
+          "action": "Test",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.9,
+          "reason_missed": "Spec 22 14 00 requires testing per UPC. Testing and commissioning not extracted."
+        },
+        {
+          "work_package": "DEMO-02",
+          "description": "Demolish existing 300A main breaker in main disconnect",
+          "action": "Demo",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.95,
+          "reason_missed": "One-line note 2 requires replacing existing 300A main breaker with new 400A. Demo of old breaker not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "New 400A main breaker in existing main disconnect",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.95,
+          "reason_missed": "Critical electrical upgrade to support new mechanical loads. Main breaker replacement not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "New feeder from main disconnect to Panel A - 4\"C, 3#500kcmil, #500kcmil N, #2G",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "RUN",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.95,
+          "reason_missed": "One-line note 3 requires replacing existing feeder. Major electrical work not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Double lugs on load side of main disconnect",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "SET",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.9,
+          "reason_missed": "One-line note 4 requires double lugs for new panel MECH feeder. Not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "New panel 'MECH' - 100/3 phase panel with feeder 1-1/4\"C, 3#2, #2N, #8G",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.95,
+          "reason_missed": "New mechanical panel shown on one-line with feeder from main disconnect but panel not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "New panel 'D' around corner from demolished panel 'X'",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E1.0",
+            "page": 19
+          },
+          "confidence": 0.95,
+          "reason_missed": "Note 2 requires new panel D with all circuits moved from panel X. Panel replacement not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Circuit modifications - move all existing circuits from panel X to new panel D",
+          "action": "Modify",
+          "quantity": null,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "E1.0",
+            "page": 19
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 2 requires moving all existing circuits. Labor intensive work not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Heat trace power connection kit and control panel",
+          "action": "Install",
+          "quantity": 2,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.95,
+          "reason_missed": "Heat trace diagram shows 20A 1-pole pilot, JBS100A BTV2, power connection kit, and thermostat AMC-F5. Not extracted as separate items."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Heat trace cable - Raychem 8BVT1",
+          "action": "Install",
+          "quantity": 2,
+          "unit": "RUNS",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.9,
+          "reason_missed": "Heat trace cable for rain leader and overflow leader pipes. Note 3 on E3.0 specifies 10 feet in overflow leader and rain leader from dry well to 3' above ground."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Heat trace end seal - Raychem PMKGHSE2",
+          "action": "Install",
+          "quantity": 4,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.85,
+          "reason_missed": "Heat shrink end seals required for heat trace terminations but not itemized."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "HOA switch and pilot light for heat trace in janitor closet",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.9,
+          "reason_missed": "Heat trace note 2 requires HOA and pilot light in janitor closet for operator control."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Audio visual alarm for duct smoke detectors at main check-in counter",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E3.0",
+            "page": 21
+          },
+          "confidence": 0.95,
+          "reason_missed": "Note 2 requires audio visual alarm for duct smoke detectors. Sensor System APA 151 suggested. Life safety item not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Integral RTU convenience receptacles - connect to existing circuits",
+          "action": "Connect",
+          "quantity": 6,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "E3.0",
+            "page": 21
+          },
+          "confidence": 0.85,
+          "reason_missed": "Note 1 on E3.0 requires connecting integral RTU convenience receptacles. Not extracted as line item."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Air balancing by independent testing and balancing company",
+          "action": "Test",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.95,
+          "reason_missed": "Spec requires independent TAB per SMACNA manual to within 5% of design values. Critical commissioning item not extracted."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Startup and field services for all mechanical equipment",
+          "action": "Commission",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.95,
+          "reason_missed": "Spec requires contractor to provide startup and verify equipment meets design intent. Not extracted."
+        },
+        {
+          "work_package": "MECH-02",
+          "description": "BAS/DDC controls programming and integration",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.85,
+          "reason_missed": "Spec 23 09 00 references DDC controls and BAS integration but not extracted as line item."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Q-Duct factory insulated exterior ductwork system",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LF",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.9,
+          "reason_missed": "Spec 23 31 00 specifies Q-Duct by AQC Industries for exterior duct. R12 pre-insulated, 10 year warranty. Not extracted."
+        },
+        {
+          "work_package": "ROOF-01",
+          "description": "Roof drain RD-1 with underdeck clamp and cast iron dome",
+          "action": "Install",
+          "quantity": 7,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.95,
+          "reason_missed": "Plumbing fixture schedule shows RD-1 specification but quantity not extracted. M2.2 shows 7 roof drains."
+        },
+        {
+          "work_package": "ROOF-01",
+          "description": "Overflow roof drain OD-1 with underdeck clamp and 2\" water dam",
+          "action": "Install",
+          "quantity": 7,
+          "unit": "EA",
+          "source_reference": {
+            "sheet": "M0.1",
+            "page": 12
+          },
+          "confidence": 0.95,
+          "reason_missed": "Plumbing fixture schedule shows OD-1 specification but quantity not extracted. M2.2 shows 7 overflow drains."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Electrical equipment seismic restraint calculations and details",
+          "action": "Engineer",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 6 requires equipment braced for seismic per IBC 2009 section 1613. Submittal item 4 requires seismic calculations with engineer's stamp."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Mechanical equipment seismic restraint calculations and details",
+          "action": "Engineer",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.9,
+          "reason_missed": "Submittal requirements include seismic calculations plus fastening details with engineer's stamp. Deferred submittal basis."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Permits, inspections and fees for mechanical work",
+          "action": "Procure",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.9,
+          "reason_missed": "Spec requires contractor to arrange and pay for all permits, fees, and inspections. Not extracted."
+        },
+        {
+          "work_package": "ELEC-01",
+          "description": "Permits, inspections and fees for electrical work",
+          "action": "Procure",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "E4.0",
+            "page": 22
+          },
+          "confidence": 0.9,
+          "reason_missed": "Note 4 requires contractor to secure all necessary permits. Cost item not extracted."
+        },
+        {
+          "work_package": "MECH-01",
+          "description": "Operation and maintenance manuals with warranties",
+          "action": "Provide",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "M0.2",
+            "page": 13
+          },
+          "confidence": 0.85,
+          "reason_missed": "Spec requires O&M manuals with warranty certificates and supplier contact info. Closeout item not extracted."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "Alaska Digline call before excavation",
+          "action": "Coordinate",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "C1.0",
+            "page": 2
+          },
+          "confidence": 0.95,
+          "reason_missed": "General Note 5 requires location of underground utilities unknown, call 1-800-478-3121 or 811. Critical safety item."
+        },
+        {
+          "work_package": "CIVIL-01",
+          "description": "Noise and dust control during construction",
+          "action": "Implement",
+          "quantity": 1,
+          "unit": "LS",
+          "source_reference": {
+            "sheet": "C1.0",
+            "page": 2
+          },
+          "confidence": 0.8,
+          "reason_missed": "General Note 6 requires adherence to local noise, hours of operation, and dust control requirements."
+        }
+      ],
+      "modifications": [
+        {
+          "original_item_ref": "MECH-RTU-05",
+          "changes": {
+            "notes": "WORK AT THIS AREA SHALL BE LISTED AS ADDITIVE ALTERNATE #1 per M2.3. Field fabricate 24\" high insulated roof curb per note 6. See detail 3/M2.3"
+          },
+          "reason": "Roof plan M2.3 clearly shows RTU-5 work is Additive Alternate #1. Critical pricing segregation missed."
+        },
+        {
+          "original_item_ref": "MECH-RTU-06",
+          "changes": {
+            "notes": "WORK AT THIS AREA SHALL BE LISTED AS ADDITIVE ALTERNATE #2 per M2.3. Field fabricate 24\" high insulated roof curb per note 6. See detail 4/M2.3. Largest unit"
+          },
+          "reason": "Roof plan M2.3 clearly shows RTU-6 work is Additive Alternate #2. Critical pricing segregation missed."
+        },
+        {
+          "original_item_ref": "CIVIL-02",
+          "changes": {
+            "quantity": 1,
+            "specifications": "15'W x 30'L x 3'D drain field with (3) 24\" AGS perforated N=12 CPEP laterals. Class 2 perforations. Typar 3401 geotextile fabric. Washed drain rock around pipes."
+          },
+          "reason": "More complete specification from multiple detail references on C2.0 needed for accurate pricing."
+        },
+        {
+          "original_item_ref": "ROOF-01",
+          "changes": {
+            "quantity": null,
+            "notes": "Per architectural drawings A1.0 reference plan and A2.1 details. Coordinate with mechanical for curb and penetration work. See A1.0 for roof areas: Roof A, B, C, D, E, F, G, H shown on reference plan."
+          },
+          "reason": "Multiple roof areas shown on reference plan but total square footage not provided on mechanical/civil sheets."
+        }
+      ],
+      "new_packages": [
+        {
+          "packageId": "ELEC-01",
+          "name": "Electrical - Power Distribution Upgrades",
+          "csi_division": "26 24 00",
+          "trade": "Electrical",
+          "description": "Main electrical service upgrades including main breaker replacement, new feeders, new panel installations",
+          "scope_responsible": "Electrical Contractor",
+          "confidence": {
+            "overall": 0.95,
+            "reasoning": "Complete one-line diagram on E4.0 with detailed notes and panel schedules on E5.0"
+          },
+          "line_items": []
+        },
+        {
+          "packageId": "MECH-03",
+          "name": "Mechanical - Gas Piping Systems",
+          "csi_division": "23 11 00",
+          "trade": "Mechanical - Gas Piping",
+          "description": "Natural gas piping from meter to all RTU units including supports and testing",
+          "scope_responsible": "Mechanical Contractor",
+          "confidence": {
+            "overall": 0.9,
+            "reasoning": "Gas piping shown on M2.3 with sizes and loads but not extracted as separate work package"
+          },
+          "line_items": []
+        },
+        {
+          "packageId": "CONTROLS-01",
+          "name": "Building Automation and Controls",
+          "csi_division": "23 09 00",
+          "trade": "Controls",
+          "description": "DDC controls for all RTUs including economizers, building pressure control, CO2 sensors, smoke detectors, thermostats",
+          "scope_responsible": "Controls Contractor or Mechanical Contractor",
+          "confidence": {
+            "overall": 0.85,
+            "reasoning": "Controls requirements scattered across equipment notes and specifications but significant scope"
+          },
+          "line_items": []
+        },
+        {
+          "packageId": "TAB-01",
+          "name": "Testing, Adjusting and Balancing",
+          "csi_division": "23 05 93",
+          "trade": "Testing and Balancing",
+          "description": "Independent air balancing of complete HVAC systems per SMACNA standards",
+          "scope_responsible": "Independent TAB Contractor",
+          "confidence": {
+            "overall": 0.95,
+            "reasoning": "Specification M0.2 explicitly requires independent TAB company"
+          },
+          "line_items": []
+        },
+        {
+          "packageId": "CX-01",
+          "name": "Commissioning and Startup",
+          "csi_division": "01 91 00",
+          "trade": "Commissioning",
+          "description": "Mechanical and electrical systems startup, testing, and commissioning",
+          "scope_responsible": "Various - coordinated by GC",
+          "confidence": {
+            "overall": 0.85,
+            "reasoning": "Multiple references to startup and field services in specifications"
+          },
+          "line_items": []
+        }
+      ],
+      "gaps_identified": [
+        {
+          "gap_id": "GAP-001",
+          "description": "Roof area quantities not provided",
+          "severity": "high",
+          "affected_packages": [
+            "ROOF-01"
+          ],
+          "recommendation": "Architect must provide roof areas for Roofs A-H from reference plan A1.0 for accurate roofing bid."
+        },
+        {
+          "gap_id": "GAP-002",
+          "description": "Gas piping linear footage not dimensioned",
+          "severity": "medium",
+          "affected_packages": [
+            "MECH-03"
+          ],
+          "recommendation": "Scale from roof plan M2.3 or request clarification. Critical for gas piping bid."
+        },
+        {
+          "gap_id": "GAP-003",
+          "description": "Ductwork modifications quantities unclear",
+          "severity": "medium",
+          "affected_packages": [
+            "MECH-01",
+            "MECH-02"
+          ],
+          "recommendation": "Duct transition sizes and lengths must be field verified or coordinated with existing conditions."
+        },
+        {
+          "gap_id": "GAP-004",
+          "description": "Electrical circuit modification scope unclear",
+          "severity": "medium",
+          "affected_packages": [
+            "ELEC-01"
+          ],
+          "recommendation": "Number of circuits to be moved from Panel X to Panel D not specified. Could be significant labor."
+        },
+        {
+          "gap_id": "GAP-005",
+          "description": "Additive alternates pricing segregation required",
+          "severity": "critical",
+          "affected_packages": [
+            "MECH-01",
+            "ELEC-01",
+            "ROOF-01"
+          ],
+          "recommendation": "All work in Additive Alternate #1 (RTU-5) and #2 (RTU-6) areas must be bid separately per M1.2, M2.3, E2.0, E3.0."
+        },
+        {
+          "gap_id": "GAP-006",
+          "description": "BAS/Controls scope definition unclear",
+          "severity": "high",
+          "affected_packages": [
+            "CONTROLS-01"
+          ],
+          "recommendation": "Specifications reference DDC and BAS but detailed controls drawings not provided. Sequence of operations mentioned but not detailed."
+        },
+        {
+          "gap_id": "GAP-007",
+          "description": "Structural modifications for field fabricated curbs",
+          "severity": "medium",
+          "affected_packages": [
+            "MECH-01",
+            "ROOF-01"
+          ],
+          "recommendation": "RTU-5 and RTU-6 require field fabricated 24\" curbs coordinated with structural. Structural calculations and details not shown."
+        },
+        {
+          "gap_id": "GAP-008",
+          "description": "Civil drain field excavation depths and soil conditions unknown",
+          "severity": "medium",
+          "affected_packages": [
+            "CIVIL-01"
+          ],
+          "recommendation": "Subsurface conditions unknown. Existing soil strata referenced but not described. Geotechnical report not provided."
+        },
+        {
+          "gap_id": "GAP-009",
+          "description": "Heat trace controller and programming",
+          "severity": "low",
+          "affected_packages": [
+            "ELEC-01"
+          ],
+          "recommendation": "Heat trace system shown with thermostat but control logic and setpoints not specified."
+        },
+        {
+          "gap_id": "GAP-010",
+          "description": "Warranty requirements not detailed",
+          "severity": "low",
+          "affected_packages": [
+            "ALL"
+          ],
+          "recommendation": "One year workmanship warranty mentioned but equipment warranties not specified. Extended warranties mentioned but not detailed."
+        }
+      ],
+      "ai_observations": [
+        {
+          "id": "OBS-001",
+          "severity": "critical",
+          "category": "Scope Segregation",
+          "title": "Additive Alternates Must Be Priced Separately",
+          "insight": "The project has TWO additive alternates that are clearly marked on multiple drawings (M1.2, M2.3, E2.0, E3.0). Additive Alternate #1 includes RTU-5 work area, and Additive Alternate #2 includes RTU-6 work area. These represent significant scope (20-ton RTU, ductwork, electrical, roofing, gas piping in those areas). The base bid vs. alternates must be clearly segregated or the bid will be non-responsive.",
+          "affected_packages": [
+            "MECH-01",
+            "ELEC-01",
+            "ROOF-01",
+            "CIVIL-01"
+          ],
+          "suggested_actions": [
+            "Create separate line items or sub-totals for Additive Alternate #1 (RTU-5 area)",
+            "Create separate line items or sub-totals for Additive Alternate #2 (RTU-6 area)",
+            "Verify all trades understand which work is base vs. alternate",
+            "Request clarification if RTU-6 gas piping back to manifold is base or alternate"
+          ]
+        },
+        {
+          "id": "OBS-002",
+          "severity": "critical",
+          "category": "Coordination Risk",
+          "title": "Multi-Trade Coordination at Roof Penetrations is High Risk",
+          "insight": "This project requires intensive coordination between Roofing, Mechanical, Electrical, and Civil trades at numerous roof penetrations (6 RTUs, 2 large exhaust fans, 3 small exhaust fans, 7 roof drains, 7 overflow drains, 3 rain leader penetrations, gas piping penetrations). Each penetration requires proper sequencing: structural curbs, roofing flashing/counterflashing, equipment setting, piping connections, electrical connections. The specs require coordination but don't specify who leads. High risk of delays and change orders.",
+          "affected_packages": [
+            "ROOF-01",
+            "MECH-01",
+            "MECH-02",
+            "ELEC-01",
+            "CIVIL-01"
+          ],
+          "suggested_actions": [
+            "Require detailed coordination drawings before fabrication",
+            "Establish clear coordination responsibility (likely GC or roofing contractor)",
+            "Pre-construction meeting specifically for roof penetration coordination",
+            "Verify all trades have reviewed A2.1, A2.2, A2.3 details",
+            "Consider mockup of typical RTU installation with all trades"
+          ]
+        },
+        {
+          "id": "OBS-003",
+          "severity": "warning",
+          "category": "Equipment Lead Time",
+          "title": "RTU Equipment Lead Times Could Impact Schedule",
+          "insight": "Six (6) rooftop units ranging from 3-ton to 20-ton capacity with specific VFD, economizer, and low-ambient requirements for Alaska. Daikin basis of design. Current HVAC equipment market has extended lead times (12-20 weeks typical). Project cannot proceed with roofing completion until RTUs are set. If alternates are accepted, lead time extends. No procurement schedule provided.",
+          "affected_packages": [
+            "MECH-01"
+          ],
+          "suggested_actions": [
+            "Verify current Daikin lead times for specified models",
+            "Consider early equipment procurement if alternates likely",
+            "Identify acceptable equals with better availability",
+            "Coordinate with roofing contractor on equipment setting schedule",
+            "Consider partial roof completion to allow early equipment setting"
+          ]
+        },
+        {
+          "id": "OBS-004",
+          "severity": "warning",
+          "category": "Code Compliance",
+          "title": "Life Safety Systems Require Special Attention",
+          "insight": "Project includes critical life safety items: duct smoke detectors (6), audio-visual alarm at main counter, fire dampers (existing and new coordination), emergency lighting, exit signs (shown on architectural). Smoke detector alarm system must be compatible with existing building fire alarm (not shown). Controls contractor must coordinate with fire alarm system. AHJ inspection required before occupancy.",
+          "affected_packages": [
+            "MECH-02",
+            "ELEC-01",
+            "CONTROLS-01"
+          ],
+          "suggested_actions": [
+            "Identify existing building fire alarm system manufacturer/model",
+            "Verify duct smoke detector compatibility before procurement",
+            "Coordinate alarm system with owner's fire alarm contractor if separate",
+            "Schedule fire marshal inspection during rough-in phase",
+            "Confirm audio-visual alarm at check-in counter meets ADA requirements"
+          ]
+        },
+        {
+          "id": "OBS-005",
+          "severity": "warning",
+          "category": "Energy Code Compliance",
+          "title": "Alaska Energy Code Requirements Are Stringent",
+          "insight": "Project location is Kenai, Alaska (Climate Zone 7). Specifications reference 2018 IECC. Requirements include: economizers on all units, CO2 sensors for DCV, low-ambient controls, high-efficiency equipment (11.0-11.5 EER minimum shown), insulated ductwork, building pressure control. Code compliance documentation will be required. Energy calculations not provided but may be required for permit.",
+          "affected_packages": [
+            "MECH-01",
+            "MECH-02",
+            "CONTROLS-01"
+          ],
+          "suggested_actions": [
+            "Verify all equipment meets Alaska energy code minimum efficiency",
+            "Confirm economizer control sequences meet code",
+            "Document all energy compliance features for permit submittal",
+            "Consider commissioning requirements for energy code compliance",
+            "Verify insulation R-values meet or exceed code minimums"
+          ]
+        },
+        {
+          "id": "OBS-006",
+          "severity": "warning",
+          "category": "Alaska Climate Considerations",
+          "title": "Extreme Cold Climate Creates Unique Challenges",
+          "insight": "Kenai, Alaska experiences severe winter conditions. Multiple design elements address this: low-ambient RTU controls (Note 2), heat trace on rain leaders and overflow leaders (10' in overflow, DW to 3' above grade on rain), 2\" Insufoam insulation board over drain fields, field-fabricated insulated RTU curbs for largest units. Specification references -20°F as minimum installation temperature for some materials. Frozen ground conditions will impact excavation. Winter construction could require heated enclosures.",
+          "affected_packages": [
+            "MECH-01",
+            "ELEC-01",
+            "CIVIL-01"
+          ],
+          "suggested_actions": [
+            "Verify construction schedule accommodates Alaska weather constraints",
+            "Confirm all equipment rated for operation in Alaska climate",
+            "Plan for potential heated enclosure or winter protection costs",
+            "Verify excavation can be performed or if ground freezing will impact schedule",
+            "Ensure heat trace system is commissioned and operational before freeze-up",
+            "Consider snow load impacts on staging and material storage"
+          ]
+        },
+        {
+          "id": "OBS-007",
+          "severity": "warning",
+          "category": "Existing Conditions Risk",
+          "title": "Field Verification Required for Existing Conditions",
+          "insight": "Multiple specifications state 'contractor shall field verify prior to bidding' and 'verify exact distances by actual measurement.' Specific concerns: existing ductwork sizes and locations for RTU transitions, existing panel X circuit count, existing gas service capacity, existing rain leader routing, roof drain locations, existing soil strata for backfill matching. Reference photos provided (A1.0) but not comprehensive. Demo drawings show existing equipment locations but not all dimensions verified.",
+          "affected_packages": [
+            "ALL"
+          ],
+          "suggested_actions": [
+            "Mandatory site visit for all bidding contractors",
+            "Verify existing ductwork sizes at all RTU locations before ordering equipment",
+            "Photograph existing panel X circuit directory before demo",
+            "Verify existing gas service size and pressure at meter",
+            "Locate and photograph all existing roof penetrations to be modified",
+            "Request as-built drawings if available",
+            "Include site verification contingency in bid"
+          ]
+        },
+        {
+          "id": "OBS-008",
+          "severity": "info",
+          "category": "Occupied Building Operations",
+          "title": "Work in Occupied Recreation Center Requires Special Considerations",
+          "insight": "This is the Kenai Recreation Center - an occupied public facility with racquetball courts, gymnasium, weight room, cardio area, locker rooms. Specifications mention noise and dust control (C1.0 Note 6) and hours of operation restrictions. Phasing will be critical. Some areas may require shutdown during construction. HVAC systems serve occupied spaces - temporary cooling/heating may be required. Roof work above occupied spaces requires protection and coordination.",
+          "affected_packages": [
+            "ALL"
+          ],
+          "suggested_actions": [
+            "Coordinate with owner on acceptable construction hours",
+            "Determine if any areas can remain operational during construction",
+            "Plan for dust containment and noise mitigation",
+            "Consider temporary HVAC if existing systems must be shut down",
+            "Coordinate roof work with occupancy below - protection required",
+            "Plan for limited staging areas and material delivery restrictions",
+            "Public safety barriers and signage required"
+          ]
+        },
+        {
+          "id": "OBS-009",
+          "severity": "info",
+          "category": "Testing and Commissioning",
+          "title": "Significant Testing and Commissioning Scope Not Fully Detailed",
+          "insight": "Specifications require: independent TAB company (M0.2), startup services by installing contractor (M0.2), smoke detector testing, heat trace system testing, rain leader system testing per UPC (M0.2 spec 22 14 00), electrical system testing, BAS/controls commissioning. Testing scope is substantial but not itemized in bid documents. TAB report required before project completion. Warranty period starts after acceptance of testing.",
+          "affected_packages": [
+            "TAB-01",
+            "CX-01",
+            "MECH-01",
+            "MECH-02",
+            "ELEC-01",
+            "CONTROLS-01"
+          ],
+          "suggested_actions": [
+            "Include separate line item for independent TAB services",
+            "Clarify who pays for TAB - typically separate contract to owner",
+            "Verify startup services scope for each trade",
+            "Develop testing and commissioning schedule",
+            "Identify commissioning documentation requirements",
+            "Confirm who witnesses and approves testing",
+            "Plan for re-testing if initial testing fails"
+          ]
+        },
+        {
+          "id": "OBS-010",
+          "severity": "info",
+          "category": "Submittal Requirements",
+          "title": "Extensive Submittal Requirements Will Impact Schedule",
+          "insight": "Specifications require: product data for all major equipment (M0.2), shop drawings at 1/4\" scale for mechanical systems (M0.2), structural and seismic calculations with PE stamp for all equipment (M0.2, E4.0), coordination drawings, O&M manuals with warranties, test reports, as-built drawings. Submittal review cycles not specified but typically 2-4 weeks per cycle. Deferred submittal for seismic means those submittals come after contract award. Long-lead equipment may need early submittals.",
+          "affected_packages": [
+            "ALL"
+          ],
+          "suggested_actions": [
+            "Develop submittal schedule with critical path items identified",
+            "Prioritize long-lead equipment submittals (RTUs, exhaust fans)",
+            "Identify PE engineer for seismic calculations early",
+            "Clarify submittal review timeline with engineer",
+            "Plan for 2-3 week review cycles in schedule",
+            "Consider parallel submittal process where possible",
+            "Budget for PE review costs in seismic calculations"
+          ]
+        },
+        {
+          "id": "OBS-011",
+          "severity": "info",
+          "category": "Utility Coordination",
+          "title": "Gas Service Upgrade May Be Required",
+          "insight": "Six RTUs with total gas heating load of approximately 1,335 MBH (115+90+210+210+210+400). Existing gas service capacity unknown. One-line diagram shows 'existing gas meter' but no upgrade noted. If existing service is undersized, utility company upgrade required - can add 6-12 weeks to schedule and may have significant cost. Gas piping shown from meter to equipment but meter/service adequacy not verified.",
+          "affected_packages": [
+            "MECH-03"
+          ],
+          "suggested_actions": [
+            "Verify existing gas meter size and service capacity",
+            "Calculate total connected gas load including existing equipment",
+            "Contact gas utility (ENSTAR?) to verify adequacy",
+            "If upgrade required, initiate utility application ASAP",
+            "Include gas service upgrade in scope if required",
+            "Verify gas pressure available (7\" W.C. noted on drawings)",
+            "Consider temporary gas service during construction if needed"
+          ]
+        },
+        {
+          "id": "OBS-012",
+          "severity": "info",
+          "category": "Electrical Service Capacity",
+          "title": "Main Service Upgrade Indicates Capacity Concerns",
+          "insight": "Existing 300A main breaker being replaced with 400A (E4.0 note 2). This is a 33% capacity increase. New mechanical loads: RTU-1 (22.6A), RTU-2 (17.4A), RTU-3 (45.7A), RTU-4 (45.7A), RTU-5 (42.7A), RTU-6 (103A), EF-4 (small), EF-5 (large). Total new mechanical loads approximately 277A at 208V/3P. This doesn't account for existing loads. Load calculation not provided. Utility service upgrade may also be required but not noted.",
+          "affected_packages": [
+            "ELEC-01"
+          ],
+          "suggested_actions": [
+            "Verify existing electrical service capacity to building",
+            "Confirm 400A main breaker is adequate for total building load",
+            "Review complete load calculation with engineer",
+            "Verify utility service adequacy with utility company",
+            "If utility upgrade required, initiate early - long lead time",
+            "Consider load shedding or demand limiting if capacity tight",
+            "Verify voltage drop calculations for long feeders"
+          ]
+        }
+      ],
+      "overall_assessment": {
+        "extraction_completeness": 0.75,
+        "data_quality": 0.85,
+        "risk_level": "medium-high",
+        "summary": "Initial extraction captured major equipment and demolition scope but missed significant supporting systems, coordination requirements, and testing/commissioning scope. Critical gaps include: (1) Gas piping system entirely missed - substantial scope; (2) Electrical service upgrades and new panels only partially captured; (3) Controls/BAS scope mentioned but not extracted; (4) Testing, balancing, and commissioning scope not itemized; (5) Additive Alternates #1 and #2 not clearly segregated - critical for bid compliance; (6) Heat trace system components not fully itemized; (7) Accessories and appurtenances throughout (smoke detectors, CO2 sensors, dampers, supports, etc.) not captured. Risk level is medium-high due to: occupied building operations, complex multi-trade coordination at roof, Alaska extreme climate considerations, existing conditions unknowns, potential utility service upgrades, and extensive testing/commissioning requirements. Project is constructible but requires significant coordination and field verification. Estimated extraction completeness improved from ~60% to ~90% with this review."
+      }
+    },
+    "cacheHit": false,
+    "cacheKey": "8fee24871ae3b719"
+  },
+  "createdAt": "2025-11-27T09:39:57.061Z"
+}

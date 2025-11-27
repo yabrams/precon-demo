@@ -1,0 +1,192 @@
+{
+  "cacheKey": "4af247ac51b16256",
+  "passNumber": 1,
+  "model": "gpt-4o",
+  "purpose": "initial_extraction",
+  "documentHash": "410d46ae8908de76",
+  "previousPassHashes": [],
+  "promptVersion": "v1.1.0",
+  "result": {
+    "passNumber": 1,
+    "model": "gpt-4o",
+    "purpose": "initial_extraction",
+    "startedAt": "2025-11-27T13:22:05.055Z",
+    "completedAt": "2025-11-27T13:23:31.110Z",
+    "durationMs": 86055,
+    "tokensUsed": {
+      "input": 22618,
+      "output": 1130
+    },
+    "cost": 0.067845,
+    "response": {
+      "project_name": "Kenai Rec Center Upgrades",
+      "work_packages": [
+        {
+          "packageId": "CIVIL",
+          "name": "Civil Site Work",
+          "csi_division": "Division 02",
+          "trade": "Civil",
+          "description": "Site preparation and drainage improvements.",
+          "scope_responsible": "Civil Contractor",
+          "line_items": [
+            {
+              "item_number": "C1",
+              "description": "Roof Drain Field #1",
+              "action": "Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "12'L x 4'W x 3.5'D",
+              "notes": "Includes heat trace for rain leader pipes.",
+              "source_reference": {
+                "sheet": "C1.0",
+                "location": "Plan View",
+                "page": 2
+              },
+              "confidence": 0.9,
+              "flags": []
+            },
+            {
+              "item_number": "C2",
+              "description": "Roof Drain Field #2",
+              "action": "Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "4'W x 12'L",
+              "notes": null,
+              "source_reference": {
+                "sheet": "C3.0",
+                "location": "Section A",
+                "page": 4
+              },
+              "confidence": 0.9,
+              "flags": []
+            }
+          ],
+          "confidence": {
+            "overall": 0.9,
+            "reasoning": "Clear specifications and quantities provided in the drawings."
+          }
+        },
+        {
+          "packageId": "ROOF",
+          "name": "Roofing Work",
+          "csi_division": "Division 07",
+          "trade": "Roofing",
+          "description": "Roof replacement and upgrades.",
+          "scope_responsible": "Roofing Contractor",
+          "line_items": [
+            {
+              "item_number": "R1",
+              "description": "Demo Existing Roofing",
+              "action": "Demo",
+              "quantity": null,
+              "unit": "SF",
+              "specifications": null,
+              "notes": "Includes removal of existing BUR and cant strips.",
+              "source_reference": {
+                "sheet": "A1.0",
+                "location": "Key Notes",
+                "page": 6
+              },
+              "confidence": 0.85,
+              "flags": [
+                "VERIFY_QTY"
+              ]
+            },
+            {
+              "item_number": "R2",
+              "description": "New Roof System",
+              "action": "Install",
+              "quantity": null,
+              "unit": "SF",
+              "specifications": "Per roof type and spec.",
+              "notes": null,
+              "source_reference": {
+                "sheet": "A2.1",
+                "location": "Detail 2",
+                "page": 7
+              },
+              "confidence": 0.85,
+              "flags": [
+                "VERIFY_QTY"
+              ]
+            }
+          ],
+          "confidence": {
+            "overall": 0.85,
+            "reasoning": "Details provided but quantities need verification."
+          }
+        },
+        {
+          "packageId": "MECH",
+          "name": "Mechanical Work",
+          "csi_division": "Division 23",
+          "trade": "Mechanical",
+          "description": "HVAC upgrades and installations.",
+          "scope_responsible": "Mechanical Contractor",
+          "line_items": [
+            {
+              "item_number": "M1",
+              "description": "RTU Installation",
+              "action": "Install",
+              "quantity": 2,
+              "unit": "EA",
+              "specifications": "RTU-5 and RTU-6",
+              "notes": "Includes curb installation.",
+              "source_reference": {
+                "sheet": "M2.3",
+                "location": "Plan View",
+                "page": 14
+              },
+              "confidence": 0.9,
+              "flags": []
+            }
+          ],
+          "confidence": {
+            "overall": 0.9,
+            "reasoning": "Specific units and installation details provided."
+          }
+        }
+      ],
+      "ai_observations": [
+        {
+          "severity": "warning",
+          "category": "coordination_required",
+          "title": "Roof Drain Heat Trace Coordination",
+          "insight": "Ensure electrical connections for heat trace are coordinated with electrical contractor.",
+          "affected_packages": [
+            "CIVIL",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Coordinate with electrical contractor for power supply to heat trace."
+          ],
+          "source_reference": {
+            "sheet": "C1.0",
+            "page": 2
+          }
+        },
+        {
+          "severity": "info",
+          "category": "risk_flag",
+          "title": "Existing Roof Demolition",
+          "insight": "Verify structural integrity after demolition of existing roofing.",
+          "affected_packages": [
+            "ROOF"
+          ],
+          "suggested_actions": [
+            "Conduct structural assessment post-demolition."
+          ],
+          "source_reference": {
+            "sheet": "A1.0",
+            "page": 6
+          }
+        }
+      ],
+      "extraction_confidence": 0.88
+    },
+    "cacheHit": false,
+    "cacheKey": "4af247ac51b16256"
+  },
+  "createdAt": "2025-11-27T13:23:31.110Z"
+}

@@ -1,0 +1,89 @@
+{
+  "cacheKey": "3f00474303fce70f",
+  "passNumber": 2,
+  "model": "gpt-4o",
+  "purpose": "self_review",
+  "documentHash": "410d46ae8908de76",
+  "previousPassHashes": [
+    "c82b77dfb59b1b27"
+  ],
+  "promptVersion": "v1.1.0",
+  "result": {
+    "passNumber": 2,
+    "model": "gpt-4o",
+    "purpose": "self_review",
+    "startedAt": "2025-11-27T13:23:31.113Z",
+    "completedAt": "2025-11-27T13:24:35.327Z",
+    "durationMs": 64214,
+    "tokensUsed": {
+      "input": 23737,
+      "output": 433
+    },
+    "cost": 0.0636725,
+    "response": {
+      "additions": [
+        {
+          "packageId": "ELEC",
+          "line_item": {
+            "item_number": "E1",
+            "description": "Electrical Connections for Heat Trace",
+            "action": "Coordinate",
+            "quantity": null,
+            "unit": "LS",
+            "specifications": null,
+            "notes": "Coordinate with civil contractor for power supply to heat trace.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "General Notes",
+              "page": 2
+            },
+            "confidence": 0.85,
+            "flags": []
+          }
+        }
+      ],
+      "modifications": [
+        {
+          "packageId": "ROOF",
+          "item_number": "R1",
+          "updates": {
+            "quantity": 10000,
+            "unit": "SF",
+            "specifications": "BUR and cant strips removal",
+            "notes": "Includes removal of existing BUR and cant strips."
+          }
+        }
+      ],
+      "new_packages": [],
+      "gaps_identified": [
+        "Verify quantities for roofing and mechanical work.",
+        "Check for any addendum changes not included."
+      ],
+      "confidence_adjustments": [],
+      "ai_observations": [
+        {
+          "severity": "critical",
+          "category": "coordination_required",
+          "title": "Electrical Coordination for Heat Trace",
+          "insight": "Ensure electrical connections for heat trace are coordinated with electrical contractor.",
+          "affected_packages": [
+            "CIVIL",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Coordinate with electrical contractor for power supply to heat trace."
+          ]
+        }
+      ],
+      "overall_assessment": {
+        "extraction_completeness": 0.9,
+        "data_quality": 0.88,
+        "risk_level": "medium",
+        "summary": "The extraction is mostly complete with some coordination and quantity verification needed. Electrical coordination for heat trace is critical."
+      }
+    },
+    "cacheHit": false,
+    "cacheKey": "3f00474303fce70f"
+  },
+  "createdAt": "2025-11-27T13:24:35.327Z"
+}

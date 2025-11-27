@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extraction Permutation Comparison Report</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .container { max-width: 1800px; margin: 0 auto; }
+    h1 { color: #1a1a1a; border-bottom: 3px solid #2563eb; padding-bottom: 10px; }
+    h2 { color: #374151; margin-top: 30px; }
+    h3 { color: #4b5563; }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+    .metric {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .metric-value { font-size: 28px; font-weight: bold; color: #2563eb; }
+    .metric-label { color: #6b7280; font-size: 14px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    tr:nth-child(even) { background: #f9fafb; }
+    tr:hover { background: #f0f9ff; }
+    .found { color: #059669; font-weight: 500; }
+    .missing { color: #dc2626; }
+    .severity-critical { background: #fef2f2; color: #991b1b; }
+    .severity-warning { background: #fffbeb; color: #92400e; }
+    .severity-info { background: #eff6ff; color: #1e40af; }
+    .recommendation {
+      background: #ecfdf5;
+      border-left: 4px solid #059669;
+      padding: 12px 16px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .cost { color: #059669; font-weight: 500; }
+    .comparison-scroll {
+      overflow-x: auto;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .description-col { max-width: 300px; word-wrap: break-word; }
+    .timestamp { color: #9ca3af; font-size: 12px; }
+    .pass-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin: 2px;
+    }
+    .pass-gemini { background: #dbeafe; color: #1e40af; }
+    .pass-claude { background: #fce7f3; color: #9d174d; }
+    .collapsible { cursor: pointer; }
+    .collapsible:after { content: ' ▼'; font-size: 10px; }
+    .collapsible.active:after { content: ' ▲'; }
+    .content { display: none; padding: 10px 0; }
+    .content.show { display: block; }
+    .work-package {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin: 10px 0;
+      padding: 15px;
+    }
+    .work-package h4 {
+      margin: 0 0 10px 0;
+      color: #1e40af;
+    }
+    .line-item {
+      padding: 8px;
+      margin: 5px 0;
+      background: #f9fafb;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .observation {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔬 Extraction Permutation Comparison Report</h1>
+    <p class="timestamp">Generated: 2025-11-27T09:26:22.626Z</p>
+
+    <div class="card">
+      <h2>📊 Executive Summary</h2>
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-value">3</div>
+          <div class="metric-label">Permutations Tested</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">4</div>
+          <div class="metric-label">Unique Line Items</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">8</div>
+          <div class="metric-label">Unique Observations</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">$1.06</div>
+          <div class="metric-label">Total Cost</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">3</div>
+          <div class="metric-label">Cache Hits</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">3</div>
+          <div class="metric-label">API Calls</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💡 Recommendations</h2>
+      <div class="recommendation"><strong>Best single-pass value:</strong> Gemini 2.5 Pro - Pass 1 Only - 0 items at $0.20</div><div class="recommendation"><strong>Most comprehensive:</strong> Gemini 2.5 Pro - Full 3-Pass - 4 items</div><div class="recommendation"><strong>Pass 2 value:</strong> Self-review adds ~7.0 items on average (Infinity% improvement)</div>
+    </div>
+
+    <div class="card">
+      <h2>📈 Permutation Results Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Passes</th>
+            <th>Line Items</th>
+            <th>Observations</th>
+            <th>Cost</th>
+            <th>Duration</th>
+            <th>Cache/API</th>
+            <th>Items/$</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td><strong>G25_P1</strong></td>
+              <td>Gemini 2.5 Pro - Pass 1 Only</td>
+              <td><span class="pass-badge pass-gemini">P1:gemini</span></td>
+              <td><strong>0</strong></td>
+              <td>0</td>
+              <td class="cost">$0.2024</td>
+              <td>177.1s</td>
+              <td>0/1</td>
+              <td>0.0</td>
+            </tr>
+          
+            <tr>
+              <td><strong>G25_P1P2</strong></td>
+              <td>Gemini 2.5 Pro - Pass 1+2</td>
+              <td><span class="pass-badge pass-gemini">P1:gemini</span><span class="pass-badge pass-gemini">P2:gemini</span></td>
+              <td><strong>4</strong></td>
+              <td>5</td>
+              <td class="cost">$0.3607</td>
+              <td>146.9s</td>
+              <td>1/1</td>
+              <td>11.1</td>
+            </tr>
+          
+            <tr>
+              <td><strong>G25_P1P2P3</strong></td>
+              <td>Gemini 2.5 Pro - Full 3-Pass</td>
+              <td><span class="pass-badge pass-gemini">P1:gemini</span><span class="pass-badge pass-gemini">P2:gemini</span><span class="pass-badge pass-gemini">P3:gemini</span></td>
+              <td><strong>4</strong></td>
+              <td>8</td>
+              <td class="cost">$0.5010</td>
+              <td>88.3s</td>
+              <td>2/1</td>
+              <td>8.0</td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🔄 Incremental Value Analysis</h2>
+      <p>Shows what each pass adds to the extraction</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Permutation</th>
+            <th>Pass</th>
+            <th>Model</th>
+            <th>Purpose</th>
+            <th>Items Added</th>
+            <th>Cost</th>
+            <th>Cached</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+              <tr>
+                <td rowspan="1"><strong>G25_P1</strong></td>
+                <td>Pass 1</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>initial extraction</td>
+                <td>(base)</td>
+                <td class="cost">$0.2024</td>
+                <td>✗</td>
+              </tr>
+            
+              <tr>
+                <td rowspan="2"><strong>G25_P1P2</strong></td>
+                <td>Pass 1</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>initial extraction</td>
+                <td>(base)</td>
+                <td class="cost">$0.2024</td>
+                <td>✓</td>
+              </tr>
+            
+              <tr>
+                
+                <td>Pass 2</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>self review</td>
+                <td>+7</td>
+                <td class="cost">$0.1583</td>
+                <td>✗</td>
+              </tr>
+            
+              <tr>
+                <td rowspan="3"><strong>G25_P1P2P3</strong></td>
+                <td>Pass 1</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>initial extraction</td>
+                <td>(base)</td>
+                <td class="cost">$0.2024</td>
+                <td>✓</td>
+              </tr>
+            
+              <tr>
+                
+                <td>Pass 2</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>self review</td>
+                <td>+7</td>
+                <td class="cost">$0.1583</td>
+                <td>✓</td>
+              </tr>
+            
+              <tr>
+                
+                <td>Pass 3</td>
+                <td><span class="pass-badge pass-gemini">gemini-2.5-pro</span></td>
+                <td>trade deep dive</td>
+                <td>+9</td>
+                <td class="cost">$0.1403</td>
+                <td>✗</td>
+              </tr>
+            
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>📋 Line Item Comparison</h2>
+      <p>Shows which line items were found by each permutation</p>
+      <div class="comparison-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Item Key</th>
+              <th class="description-col">Description</th>
+              <th>G25_P1</th><th>G25_P1P2</th><th>G25_P1P2P3</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td><code>PAINT.EPS 10</code></td>
+                <td class="description-col">Painting of Exterior Composite Trim</td>
+                <td class="missing">✗</td><td class="found">✓</td><td class="found">✓</td>
+              </tr>
+            
+              <tr>
+                <td><code>PAINT.EPS 20</code></td>
+                <td class="description-col">Painting of Exterior Galvanized and Ferrous Metal</td>
+                <td class="missing">✗</td><td class="found">✓</td><td class="found">✓</td>
+              </tr>
+            
+              <tr>
+                <td><code>SEAL.A</code></td>
+                <td class="description-col">Sealants at Concrete Masonry</td>
+                <td class="missing">✗</td><td class="found">✓</td><td class="found">✓</td>
+              </tr>
+            
+              <tr>
+                <td><code>SEAL.C</code></td>
+                <td class="description-col">Sealants at Flashing and Metal Trim</td>
+                <td class="missing">✗</td><td class="found">✓</td><td class="found">✓</td>
+              </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚠️ AI Observations Comparison</h2>
+      <div class="comparison-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Observation</th>
+              <th>G25_P1</th><th>G25_P1P2</th><th>G25_P1P2P3</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>Critical Scope Addition in Addendum No. 2 (Recovery Board)</td>
+                <td class="missing">-</td><td class="found severity-critical">CRITICAL</td><td class="found severity-critical">CRITICAL</td>
+              </tr>
+            
+              <tr>
+                <td>HVAC Equipment Loads Exceed Design Basis</td>
+                <td class="missing">-</td><td class="found severity-warning">WARNING</td><td class="found severity-warning">WARNING</td>
+              </tr>
+            
+              <tr>
+                <td>Work in an Occupied Facility</td>
+                <td class="missing">-</td><td class="found severity-warning">WARNING</td><td class="found severity-warning">WARNING</td>
+              </tr>
+            
+              <tr>
+                <td>Stringent Roofing Warranty Requirements</td>
+                <td class="missing">-</td><td class="found severity-info">INFO</td><td class="found severity-info">INFO</td>
+              </tr>
+            
+              <tr>
+                <td>Owner Training and Record Document Requirements</td>
+                <td class="missing">-</td><td class="found severity-info">INFO</td><td class="found severity-info">INFO</td>
+              </tr>
+            
+              <tr>
+                <td>Electrical Load Discrepancy for New RTUs</td>
+                <td class="missing">-</td><td class="missing">-</td><td class="found severity-critical">CRITICAL</td>
+              </tr>
+            
+              <tr>
+                <td>Heat Trace System Coordination</td>
+                <td class="missing">-</td><td class="missing">-</td><td class="found severity-warning">WARNING</td>
+              </tr>
+            
+              <tr>
+                <td>Field Verification Required for Electrical Panel Work</td>
+                <td class="missing">-</td><td class="missing">-</td><td class="found severity-warning">WARNING</td>
+              </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="card">
+      <h2 class="collapsible" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('show');">
+        📦 Gemini 2.5 Pro - Pass 1 Only - Detailed Results
+      </h2>
+      <div class="content">
+        <h3>Work Packages (0)</h3>
+        
+
+        <h3>AI Observations (0)</h3>
+        
+        
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2 class="collapsible" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('show');">
+        📦 Gemini 2.5 Pro - Pass 1+2 - Detailed Results
+      </h2>
+      <div class="content">
+        <h3>Work Packages (2)</h3>
+        
+          <div class="work-package">
+            <h4>PAINT: Painting</h4>
+            <p><strong>Trade:</strong> Painting | <strong>CSI:</strong> 09</p>
+            
+              <div class="line-item">
+                <strong>EPS 10</strong>: Painting of Exterior Composite Trim
+                
+                | Sheet: Project Manual
+              </div>
+            
+              <div class="line-item">
+                <strong>EPS 20</strong>: Painting of Exterior Galvanized and Ferrous Metal
+                
+                | Sheet: Project Manual
+              </div>
+            
+            
+          </div>
+        
+          <div class="work-package">
+            <h4>SEAL: Joint Sealants</h4>
+            <p><strong>Trade:</strong> Caulking & Sealants | <strong>CSI:</strong> 07</p>
+            
+              <div class="line-item">
+                <strong>A</strong>: Sealants at Concrete Masonry
+                
+                | Sheet: Project Manual
+              </div>
+            
+              <div class="line-item">
+                <strong>C</strong>: Sealants at Flashing and Metal Trim
+                
+                | Sheet: Project Manual
+              </div>
+            
+            
+          </div>
+        
+
+        <h3>AI Observations (5)</h3>
+        
+          <div class="observation severity-critical">
+            <strong>CRITICAL:</strong> Critical Scope Addition in Addendum No. 2 (Recovery Board)<br>
+            <small>Addendum No. 2 mandates the installation of a 5/8" Georgia Pacific Dens Deck recovery board over all roof areas designated as R1. This is a requirement to achieve the specified 20-year/120mph warranty...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> HVAC Equipment Loads Exceed Design Basis<br>
+            <small>The Mechanical Submittal Review letter included in Addendum 1 states that the submitted (and likely to be used) alternate HVAC equipment loads exceed the basis of design loads. It explicitly requires ...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> Work in an Occupied Facility<br>
+            <small>The specifications and project context make it clear the Kenai Rec Center will remain occupied during construction. This imposes significant constraints on the contractor, including requirements for d...</small>
+          </div>
+        
+          <div class="observation severity-info">
+            <strong>INFO:</strong> Stringent Roofing Warranty Requirements<br>
+            <small>The project requires a 20-year Membrane System Warranty with coverage for peak wind gusts of 120 mph. This is a high-performance requirement that drives material selection (e.g., the .090 EPDM membran...</small>
+          </div>
+        
+          <div class="observation severity-info">
+            <strong>INFO:</strong> Owner Training and Record Document Requirements<br>
+            <small>The specifications include detailed requirements for project closeout that require dedicated time and resources. Section 01 67 00 requires 8 hours of training for each major system (HVAC, Controls, El...</small>
+          </div>
+        
+        
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2 class="collapsible" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('show');">
+        📦 Gemini 2.5 Pro - Full 3-Pass - Detailed Results
+      </h2>
+      <div class="content">
+        <h3>Work Packages (2)</h3>
+        
+          <div class="work-package">
+            <h4>PAINT: Painting</h4>
+            <p><strong>Trade:</strong> Painting | <strong>CSI:</strong> 09</p>
+            
+              <div class="line-item">
+                <strong>EPS 10</strong>: Painting of Exterior Composite Trim
+                
+                | Sheet: Project Manual
+              </div>
+            
+              <div class="line-item">
+                <strong>EPS 20</strong>: Painting of Exterior Galvanized and Ferrous Metal
+                
+                | Sheet: Project Manual
+              </div>
+            
+            
+          </div>
+        
+          <div class="work-package">
+            <h4>SEAL: Joint Sealants</h4>
+            <p><strong>Trade:</strong> Caulking & Sealants | <strong>CSI:</strong> 07</p>
+            
+              <div class="line-item">
+                <strong>A</strong>: Sealants at Concrete Masonry
+                
+                | Sheet: Project Manual
+              </div>
+            
+              <div class="line-item">
+                <strong>C</strong>: Sealants at Flashing and Metal Trim
+                
+                | Sheet: Project Manual
+              </div>
+            
+            
+          </div>
+        
+
+        <h3>AI Observations (8)</h3>
+        
+          <div class="observation severity-critical">
+            <strong>CRITICAL:</strong> Critical Scope Addition in Addendum No. 2 (Recovery Board)<br>
+            <small>Addendum No. 2 mandates the installation of a 5/8" Georgia Pacific Dens Deck recovery board over all roof areas designated as R1. This is a requirement to achieve the specified 20-year/120mph warranty...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> HVAC Equipment Loads Exceed Design Basis<br>
+            <small>The Mechanical Submittal Review letter included in Addendum 1 states that the submitted (and likely to be used) alternate HVAC equipment loads exceed the basis of design loads. It explicitly requires ...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> Work in an Occupied Facility<br>
+            <small>The specifications and project context make it clear the Kenai Rec Center will remain occupied during construction. This imposes significant constraints on the contractor, including requirements for d...</small>
+          </div>
+        
+          <div class="observation severity-info">
+            <strong>INFO:</strong> Stringent Roofing Warranty Requirements<br>
+            <small>The project requires a 20-year Membrane System Warranty with coverage for peak wind gusts of 120 mph. This is a high-performance requirement that drives material selection (e.g., the .090 EPDM membran...</small>
+          </div>
+        
+          <div class="observation severity-info">
+            <strong>INFO:</strong> Owner Training and Record Document Requirements<br>
+            <small>The specifications include detailed requirements for project closeout that require dedicated time and resources. Section 01 67 00 requires 8 hours of training for each major system (HVAC, Controls, El...</small>
+          </div>
+        
+          <div class="observation severity-critical">
+            <strong>CRITICAL:</strong> Electrical Load Discrepancy for New RTUs<br>
+            <small>Addendum No. 1 includes a Mechanical Submittal Review from Jernstrom Engineering which explicitly states that the submitted equipment loads for all new RTUs (RTU-1 through RTU-6) exceed the basis of d...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> Heat Trace System Coordination<br>
+            <small>The project requires a new heat trace system for the rain leaders and overflow leaders. The Electrical scope (E3.0, E4.0) includes providing the Raychem system and power connection. The Plumbing scope...</small>
+          </div>
+        
+          <div class="observation severity-warning">
+            <strong>WARNING:</strong> Field Verification Required for Electrical Panel Work<br>
+            <small>The electrical scope includes major modifications to the main distribution system, including replacing a main breaker, replacing a feeder to Panel 'A', demolishing Panel 'X', and adding new Panels 'D'...</small>
+          </div>
+        
+        
+      </div>
+    </div>
+    
+
+    <div class="card">
+      <h2>📝 Test Configuration</h2>
+      <pre>{
+  "PROMPT_VERSION": "v1.1.0",
+  "timestamp": "2025-11-27T09:26:22.626Z",
+  "permutationsRun": [
+    "G25_P1",
+    "G25_P1P2",
+    "G25_P1P2P3"
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <script>
+    // Make all collapsibles work
+    document.querySelectorAll('.collapsible').forEach(el => {
+      el.addEventListener('click', function() {
+        this.classList.toggle('active');
+        const content = this.nextElementSibling;
+        content.classList.toggle('show');
+      });
+    });
+  </script>
+</body>
+</html>

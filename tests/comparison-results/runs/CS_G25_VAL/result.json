@@ -1,0 +1,517 @@
+{
+  "permutationId": "CS_G25_VAL",
+  "permutationName": "Claude + Gemini 2.5 Validation",
+  "config": {
+    "id": "CS_G25_VAL",
+    "name": "Claude + Gemini 2.5 Validation",
+    "description": "Claude extracts, Gemini validates",
+    "passes": [
+      {
+        "passNumber": 1,
+        "model": "claude-sonnet-4.5",
+        "purpose": "initial_extraction",
+        "dependsOnPasses": []
+      },
+      {
+        "passNumber": 2,
+        "model": "claude-sonnet-4.5",
+        "purpose": "self_review",
+        "dependsOnPasses": [
+          1
+        ]
+      },
+      {
+        "passNumber": 3,
+        "model": "gemini-2.5-pro",
+        "purpose": "cross_validation",
+        "dependsOnPasses": [
+          1,
+          2
+        ]
+      }
+    ],
+    "expectedCost": 14
+  },
+  "documentHash": "28d539949daa0e9e",
+  "passes": [
+    {
+      "passNumber": 1,
+      "model": "claude-sonnet-4.5",
+      "purpose": "initial_extraction",
+      "startedAt": "2025-11-27T08:35:56.983Z",
+      "completedAt": "2025-11-27T08:35:56.984Z",
+      "durationMs": 1,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": true,
+      "cacheKey": "788360267c141e93"
+    },
+    {
+      "passNumber": 2,
+      "model": "claude-sonnet-4.5",
+      "purpose": "self_review",
+      "startedAt": "2025-11-27T08:35:56.984Z",
+      "completedAt": "2025-11-27T08:35:56.985Z",
+      "durationMs": 1,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": true,
+      "cacheKey": "378ea4cf552ec806"
+    },
+    {
+      "passNumber": 3,
+      "model": "gemini-2.5-pro",
+      "purpose": "cross_validation",
+      "startedAt": "2025-11-27T08:35:56.988Z",
+      "completedAt": "2025-11-27T08:37:19.985Z",
+      "durationMs": 82997,
+      "tokensUsed": {
+        "input": 7222,
+        "output": 4426
+      },
+      "cost": 0.0532875,
+      "response": {
+        "additions": [
+          {
+            "work_package": "General Requirements",
+            "item_number": "GR-1",
+            "description": "Independent Third-Party HVAC Testing and Balancing",
+            "action": "Provide",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Perform air balancing of the complete heating and HVAC systems per the SMACNA Balancing and Adjustment Manual. Adjust air quantities to within 5% of design values. Submit final report.",
+            "notes": "This is a specific requirement for a third-party service, not just contractor's own testing.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "BALANCING & STARTUP",
+              "page": 13,
+              "bounding_box": [
+                787,
+                666,
+                822,
+                959
+              ]
+            },
+            "confidence": 0.95,
+            "reason_missed": "Requirement is located within the text-heavy specification sheet (M0.2) and not on the plan sheets, making it easy to overlook during a quick takeoff."
+          },
+          {
+            "work_package": "Civil",
+            "item_number": "CV-6",
+            "description": "Remove and Replace Concrete Sidewalk",
+            "action": "Provide",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "4\" thick, 3000 PSI concrete with W1.4xW1.4 WWM. 8\" thickened edge with #3 rebar continuous. Broom finish.",
+            "notes": "Area of sidewalk replacement is adjacent to Roof Drain Field #1 trenching.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2,
+              "bounding_box": [
+                299,
+                600,
+                322,
+                721
+              ]
+            },
+            "confidence": 0.98,
+            "reason_missed": "This item is part of the site work but could be missed if the estimator focuses solely on the primary scope of the underground drain fields."
+          },
+          {
+            "work_package": "Architectural",
+            "item_number": "AR-5",
+            "description": "Roofing Walking Mats",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Provide roofing walking mats from access hatch to roof access ladder.",
+            "notes": "Path length and width not specified, assume standard 36\" width and estimate path length from plan.",
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "ROOF PLAN NOTES",
+              "page": 7,
+              "bounding_box": [
+                540,
+                62,
+                565,
+                295
+              ]
+            },
+            "confidence": 0.9,
+            "reason_missed": "This is a small accessory item listed in the plan notes that does not have a graphical representation, making it easy to skip."
+          },
+          {
+            "work_package": "Mechanical",
+            "item_number": "ME-10",
+            "description": "Pipe Insulation for Interior Rain Leaders",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "1.0-inch thick fiberglass pipe insulation with factory applied all-service jacket. Factory pre-molded PVC fitting and valve covers.",
+            "notes": "Applies to all new interior rain leader and overflow piping shown on M2.2.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "22 14 00 STORM DRAINAGE PIPING",
+              "page": 13,
+              "bounding_box": [
+                494,
+                342,
+                530,
+                636
+              ]
+            },
+            "confidence": 0.95,
+            "reason_missed": "This is a specification-driven requirement not explicitly called out on the piping plan, requiring careful review of the spec sheets to capture."
+          },
+          {
+            "work_package": "Electrical",
+            "item_number": "EL-8",
+            "description": "Audio Visual Alarm for Duct Smoke Detector",
+            "action": "Provide",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Sensor System APA 151 or approved equal. Ensure compatibility with duct smoke detector. Install at main check-in counter.",
+            "notes": "This is for the new RTUs.",
+            "source_reference": {
+              "sheet": "E3.0",
+              "location": "NOTES",
+              "page": 21,
+              "bounding_box": [
+                775,
+                735,
+                818,
+                959
+              ]
+            },
+            "confidence": 0.95,
+            "reason_missed": "This is a specific life-safety component detailed in a note on the electrical plan, which could be missed if only tracing circuits and feeders."
+          },
+          {
+            "work_package": "Demolition",
+            "item_number": "DM-8",
+            "description": "Demolish Wood Privacy Fence",
+            "action": "Demolish",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Remove and dispose of existing wood privacy fence.",
+            "notes": "Location shown on reference plan A1.0.",
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "KEY NOTES",
+              "page": 5,
+              "bounding_box": [
+                758,
+                718,
+                769,
+                868
+              ]
+            },
+            "confidence": 0.98,
+            "reason_missed": "This is an architectural demolition item that is separate from the main roofing and MEP demolition scope and could be overlooked."
+          }
+        ],
+        "modifications": [],
+        "new_packages": [
+          {
+            "packageId": "GEN_REQ",
+            "name": "General Requirements",
+            "csi_division": "01",
+            "trade": "General",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Standard general requirements derived from notes and specifications across multiple sheets."
+            },
+            "line_items": [
+              {
+                "item_number": "GR-2",
+                "description": "Permits, Inspections, and Fees",
+                "action": "Provide",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "Arrange and pay for all permits, fees, and inspections required. Present signed certificates of final inspection.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "PERMITS, INSPECTIONS AND FEES",
+                  "page": 13,
+                  "bounding_box": [
+                    118,
+                    342,
+                    154,
+                    636
+                  ]
+                },
+                "confidence": 0.99
+              },
+              {
+                "item_number": "GR-3",
+                "description": "Operation and Maintenance Manuals",
+                "action": "Provide",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "Provide O&M manuals including warranty certificates for all equipment.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "OPERATION AND MAINTENANCE MANUAL",
+                  "page": 13,
+                  "bounding_box": [
+                    284,
+                    342,
+                    311,
+                    636
+                  ]
+                },
+                "confidence": 0.99
+              },
+              {
+                "item_number": "GR-4",
+                "description": "One-Year Warranty",
+                "action": "Provide",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "Provide written guaranty that all materials and workmanship that prove defective within one year after date of acceptance will be replaced.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "FINAL CHECKOUT AND PROJECT CLOSEOUT",
+                  "page": 13,
+                  "bounding_box": [
+                    240,
+                    342,
+                    276,
+                    636
+                  ]
+                },
+                "confidence": 0.99
+              }
+            ]
+          }
+        ],
+        "gaps_identified": [
+          "Structural details for the 'field fabricated' RTU curbs are missing. The plans state to 'COORDINATE WITH STRUCTURAL FOR COMPONENTS' but no structural drawings are provided.",
+          "The adequacy of the existing natural gas service to support the new, larger RTUs is not confirmed. No gas riser diagram or load calculation is provided.",
+          "The exact path and length for the 'Roofing Walking Mats' from the hatch to the ladder is not dimensioned.",
+          "A unit price for replacement of deteriorated roof decking should be requested, as this is a known potential for change orders.",
+          "The specific model and manufacturer for the new roof drains and overflow drains are not listed in the schedule, only 'ZURN OR APPROVED EQUAL'."
+        ],
+        "confidence_adjustments": [],
+        "ai_observations": [
+          {
+            "id": "obs_001",
+            "severity": "critical",
+            "category": "scope_gap",
+            "title": "Missing Structural Details for RTU Curbs",
+            "insight": "Details 3/M2.3 and 4/M2.3 for the new RTU curbs state they are 'FIELD FABRICATED' and require coordination with 'STRUCTURAL FOR COMPONENTS'. However, there are no structural drawings included in this drawing set. This creates a significant risk as the cost and design of these curbs are unknown. The contractor cannot accurately price or build these critical support elements without further information.",
+            "affected_packages": [
+              "Mechanical",
+              "Architectural"
+            ],
+            "affected_line_items": [
+              "RTU-5",
+              "RTU-6"
+            ],
+            "source_reference": {
+              "sheet": "M2.3",
+              "location": "RTU-5 ROOF CURB DETAIL",
+              "page": 18,
+              "bounding_box": [
+                549,
+                800,
+                573,
+                959
+              ],
+              "text_excerpt": "FIELD FABRICATED INSULATED ROOF CURB. 24\" HIGH, COORDINATE WITH STRUCTURAL FOR COMPONENTS"
+            },
+            "suggested_actions": [
+              "Submit an RFI to the Architect/Engineer requesting structural drawings and specifications for the new RTU curbs.",
+              "Include a qualification in the bid stating that pricing is based on an assumed curb design (e.g., standard wood framing) pending receipt of structural details."
+            ],
+            "estimated_impact": "High potential for change order related to cost of materials and labor if the required structure is more complex than assumed."
+          },
+          {
+            "id": "obs_002",
+            "severity": "warning",
+            "category": "change_order_risk",
+            "title": "Unknown Condition of Existing Roof Deck and Insulation",
+            "insight": "Architectural General Note 1 on A1.1 states that if deteriorated decking is discovered after demolition, the architect must be contacted. Demo Note 1 on the same sheet indicates existing non-tapered insulation is to remain. Both of these items represent significant risk. The condition of the underlying deck and the moisture content of the insulation to remain cannot be verified until the roof is opened up. This is a very common source of change orders on re-roofing projects.",
+            "affected_packages": [
+              "Demolition",
+              "Architectural"
+            ],
+            "affected_line_items": [
+              "Demo BUR Roofing",
+              "New EPDM Roofing System"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "GENERAL NOTES",
+              "page": 6,
+              "bounding_box": [
+                265,
+                62,
+                309,
+                456
+              ],
+              "text_excerpt": "AFTER DEMOLITION OF THE EXISTING ROOFING, IF ANY DETERIORATED DECKING IS DISCOVERED, EITHER THE ARCHITECT OR PROJECT MANAGER SHALL BE CONTACTED TO VERIFY THE EXTENT OF DAMAGE PRIOR TO REPLACEMENT OR COVERING."
+            },
+            "suggested_actions": [
+              "Request a pre-bid site walk to inspect any accessible areas of the roof deck from below.",
+              "Submit an RFI requesting unit prices for replacement of damaged decking (per SF) and wet insulation (per SF).",
+              "Carry a contingency allowance in the bid to cover potential replacement work."
+            ],
+            "estimated_impact": "Could significantly impact both project cost and schedule if widespread replacement is required."
+          },
+          {
+            "id": "obs_003",
+            "severity": "warning",
+            "category": "coordination_required",
+            "title": "Additive Alternates Scope Definition",
+            "insight": "The project includes Additive Alternate #1 and #2, which cover the replacement of RTUs and associated roofing in specific areas. The scope for these alternates is spread across Architectural, Mechanical, and Electrical drawings. There is a risk of scope gaps or overlaps if the boundaries of the alternate work are not carefully coordinated and priced by all affected trades. For example, the electrical demolition on E2.0 is tied to the alternates.",
+            "affected_packages": [
+              "Architectural",
+              "Mechanical",
+              "Electrical"
+            ],
+            "affected_line_items": [
+              "RTU-1",
+              "RTU-2",
+              "RTU-5",
+              "RTU-6"
+            ],
+            "source_reference": {
+              "sheet": "M1.2",
+              "location": "Plan Area",
+              "page": 15,
+              "bounding_box": [
+                260,
+                460,
+                285,
+                560
+              ],
+              "text_excerpt": "WORK AT THIS AREA SHALL BE LISTED AS ADDITIVE ALTERNATE #1"
+            },
+            "suggested_actions": [
+              "Create separate takeoffs for the base bid and each alternate.",
+              "Ensure all subcontractors clearly break out their pricing for the base bid and each alternate.",
+              "Review all trade bids to ensure the full scope of each alternate is captured without duplication."
+            ],
+            "estimated_impact": "Medium risk of bidding errors or post-award scope disputes if not managed carefully."
+          },
+          {
+            "id": "obs_004",
+            "severity": "info",
+            "category": "coordination_required",
+            "title": "Multi-Trade Coordination for Heat Trace Installation",
+            "insight": "The project requires electric heat trace on the new underground rain leaders and exposed overflow leaders. This necessitates close coordination between three trades: Civil (trenching, pipe laying, backfill), Electrical (installing heat trace, conduit, wiring, controls), and Mechanical (pipe connections). Sequencing is critical to avoid re-work. The civil contractor cannot fully backfill the trench until the electrical work is complete and inspected.",
+            "affected_packages": [
+              "Civil",
+              "Mechanical",
+              "Electrical"
+            ],
+            "affected_line_items": [
+              "Underground Rain Leader Pipe",
+              "Heat Trace System"
+            ],
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "GENERAL NOTES",
+              "page": 2,
+              "bounding_box": [
+                758,
+                292,
+                794,
+                586
+              ],
+              "text_excerpt": "CONTRACTOR SHALL PROVIDE AND INSTALL ELECTRIC HEAT TRACE IN RAIN LEADER PIPES. COORDINATE WITH ELECTRICAL FOR POINT OF CONNECTION."
+            },
+            "suggested_actions": [
+              "Hold a pre-construction meeting with the Civil, Mechanical, and Electrical foremen to plan the installation sequence.",
+              "Clearly define hand-off points and inspection requirements in subcontracts."
+            ],
+            "estimated_impact": "Low cost impact, but high potential for schedule delays if not coordinated properly."
+          },
+          {
+            "id": "obs_005",
+            "severity": "info",
+            "category": "code_compliance",
+            "title": "Lead Awareness Training Requirement",
+            "insight": "General Note 7 on sheet A1.1 specifies that VTRs containing lead caps must be removed by workers trained in lead awareness and the materials recycled. This is a specific safety and environmental compliance requirement that may necessitate specialized labor or training, impacting cost and personnel selection for the demolition phase.",
+            "affected_packages": [
+              "Demolition"
+            ],
+            "affected_line_items": [
+              "Demo VTRs"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "GENERAL NOTES",
+              "page": 6,
+              "bounding_box": [
+                472,
+                62,
+                497,
+                456
+              ],
+              "text_excerpt": "VTR'S WHICH CONTAIN LEAD CAPS SHALL BE REMOVED BY WORKERS WHO ARE TRAINED IN LEAD AWARENESS. MATERIALS SHALL BE RECYCLED."
+            },
+            "suggested_actions": [
+              "Verify with the demolition subcontractor that their personnel have the required training.",
+              "Ensure the cost of this specific handling and disposal/recycling procedure is included in the bid."
+            ],
+            "estimated_impact": "Minor cost impact, but a compliance risk if overlooked."
+          }
+        ],
+        "overall_assessment": {
+          "extraction_completeness": 0.95,
+          "data_quality": 0.9,
+          "risk_level": "medium",
+          "summary": "The extraction is comprehensive, covering all major trades and scopes. The primary project risk stems from unknown existing conditions inherent in a re-roofing project, specifically the potential for deteriorated roof decking and wet insulation, which could lead to significant change orders. A secondary risk is the lack of structural details for the new RTU curbs, which requires an RFI for accurate pricing. The project also features two additive alternates that require careful scope delineation across trades to avoid bidding errors. Coordination between roofing, MEP, and civil trades is critical to project success."
+        }
+      },
+      "cacheHit": false,
+      "cacheKey": "cbfd9fe0901abca9"
+    }
+  ],
+  "finalResult": {
+    "workPackages": [],
+    "observations": [],
+    "totalLineItems": 0,
+    "totalObservations": 0
+  },
+  "metrics": {
+    "totalDurationMs": 83000,
+    "totalTokens": {
+      "input": 7222,
+      "output": 4426
+    },
+    "totalCost": 0.0532875,
+    "cacheHits": 2,
+    "apiCalls": 1
+  },
+  "startedAt": "2025-11-27T08:35:56.987Z",
+  "completedAt": "2025-11-27T08:37:19.987Z"
+}

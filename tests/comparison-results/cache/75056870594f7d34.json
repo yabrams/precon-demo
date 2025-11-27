@@ -1,0 +1,374 @@
+{
+  "cacheKey": "75056870594f7d34",
+  "passNumber": 4,
+  "model": "gemini-2.5-pro",
+  "purpose": "cross_validation",
+  "documentHash": "410d46ae8908de76",
+  "previousPassHashes": [
+    "c82b77dfb59b1b27",
+    "04c9cc40487157c7"
+  ],
+  "promptVersion": "v1.1.0",
+  "result": {
+    "passNumber": 4,
+    "model": "gemini-2.5-pro",
+    "purpose": "cross_validation",
+    "startedAt": "2025-11-27T13:26:17.699Z",
+    "completedAt": "2025-11-27T13:27:45.875Z",
+    "durationMs": 88176,
+    "tokensUsed": {
+      "input": 71792,
+      "output": 3690
+    },
+    "cost": 0.12664,
+    "response": {
+      "additions": [
+        {
+          "packageId": "CIVIL",
+          "line_item": {
+            "item_number": "C3",
+            "description": "Remove & Replace Concrete Sidewalk",
+            "action": "Demo/Replace",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Per detail B/C3.0",
+            "notes": "Sawcut existing asphalt as required for trenching and repave to match existing.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2
+            },
+            "confidence": 0.95,
+            "flags": []
+          }
+        },
+        {
+          "packageId": "ROOF",
+          "line_item": {
+            "item_number": "R3",
+            "description": "Demo and Replace Parapet Cap Flashing",
+            "action": "Demo/Replace",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "New 24 GA pre-finished flashing over continuous hold down cleats.",
+            "notes": "Includes new composite trim and sistering/adding new parapet framing as detailed.",
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "Details 2, 4, 6, 8, 10",
+              "page": 8
+            },
+            "confidence": 0.9,
+            "flags": [
+              "VERIFY_QTY_LF"
+            ]
+          }
+        },
+        {
+          "packageId": "ROOF",
+          "line_item": {
+            "item_number": "R4",
+            "description": "Install 5/8\" GP Dens Deck Recovery Board",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "5/8\" Georgia Pacific Dens Deck",
+            "notes": "CRITICAL SCOPE ADDITION: Required per Addendum No. 2 to be installed throughout all areas designated as R1 to meet the 20 year / 120mph warranty requirement.",
+            "source_reference": {
+              "sheet": "Addendum No. 2",
+              "location": "02-01 Clarification",
+              "page": 1
+            },
+            "confidence": 1,
+            "flags": [
+              "VERIFY_QTY"
+            ]
+          }
+        }
+      ],
+      "modifications": [
+        {
+          "packageId": "CIVIL",
+          "itemId": "C1",
+          "field": "specifications",
+          "old_value": "12'L x 4'W x 3.5'D",
+          "new_value": "30'L x 15'W x 3.5'D",
+          "reason": "The original extraction incorrectly used the dimensions for Roof Drain Field #2. The correct dimensions for Roof Drain Field #1 are 30'L x 15'W x 3.5'D as shown on sheet C1.0."
+        }
+      ],
+      "new_packages": [
+        {
+          "packageId": "MECH_CORRECTED",
+          "name": "Mechanical Work (Corrected & Expanded)",
+          "csi_division": "Division 23",
+          "trade": "Mechanical",
+          "description": "Demolition and replacement of rooftop units (RTUs) and installation of new exhaust fans. Includes base bid and additive alternate pricing structure.",
+          "scope_responsible": "Mechanical Contractor",
+          "line_items": [
+            {
+              "item_number": "M1.1",
+              "description": "Demo and Replace Rooftop Units (Base Bid)",
+              "action": "Demo/Replace",
+              "quantity": 4,
+              "unit": "EA",
+              "specifications": "RTU-2, RTU-3, RTU-4, RTU-5",
+              "notes": "Includes new insulated roof curbs, gas piping, and transition ductwork to connect to existing.",
+              "source_reference": {
+                "sheet": "M2.3",
+                "location": "Mechanical Remodel Roof Plan",
+                "page": 18
+              },
+              "confidence": 0.95,
+              "flags": []
+            },
+            {
+              "item_number": "M1.2",
+              "description": "Demo and Replace Rooftop Unit (Additive Alternate #1)",
+              "action": "Demo/Replace",
+              "quantity": 1,
+              "unit": "EA",
+              "specifications": "RTU-1",
+              "notes": "This work is part of Additive Alternate #1. Includes new insulated roof curb, gas piping, and transition ductwork.",
+              "source_reference": {
+                "sheet": "M1.2",
+                "location": "Mechanical Demolition Roof Plan",
+                "page": 15
+              },
+              "confidence": 0.95,
+              "flags": [
+                "ALTERNATE_BID"
+              ]
+            },
+            {
+              "item_number": "M1.3",
+              "description": "Demo and Replace Rooftop Unit (Additive Alternate #2)",
+              "action": "Demo/Replace",
+              "quantity": 1,
+              "unit": "EA",
+              "specifications": "RTU-6",
+              "notes": "This work is part of Additive Alternate #2. Includes new insulated roof curb, gas piping, and transition ductwork.",
+              "source_reference": {
+                "sheet": "M1.2",
+                "location": "Mechanical Demolition Roof Plan",
+                "page": 15
+              },
+              "confidence": 0.95,
+              "flags": [
+                "ALTERNATE_BID"
+              ]
+            },
+            {
+              "item_number": "M2",
+              "description": "Install New Exhaust Fans",
+              "action": "Install",
+              "quantity": 3,
+              "unit": "EA",
+              "specifications": "EF-1, EF-3, EF-5",
+              "notes": "Includes demolition of existing fan in weight room, new insulated ductwork, and new roof penetrations/doghouse as detailed.",
+              "source_reference": {
+                "sheet": "M2.1",
+                "location": "First Floor Partial Mechanical Remodel Plan",
+                "page": 16
+              },
+              "confidence": 0.9,
+              "flags": []
+            }
+          ],
+          "confidence": {
+            "overall": 0.95,
+            "reasoning": "The corrected package now accurately reflects the full scope, including all units and the alternate bid structure detailed in the plans."
+          }
+        },
+        {
+          "packageId": "ELEC",
+          "name": "Electrical Work",
+          "csi_division": "Division 26",
+          "trade": "Electrical",
+          "description": "Demolition of existing panel and installation of new panels, feeders, and branch circuits to support new mechanical equipment. Installation of heat trace system.",
+          "scope_responsible": "Electrical Contractor",
+          "line_items": [
+            {
+              "item_number": "E1",
+              "description": "Panel Modifications",
+              "action": "Demo/Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "Demolish existing Panel 'X'. Install new Panel 'D' and relocate existing circuits.",
+              "notes": "Coordinate shutdown and cutover with facility.",
+              "source_reference": {
+                "sheet": "E1.0",
+                "location": "Notes",
+                "page": 19
+              },
+              "confidence": 0.95,
+              "flags": []
+            },
+            {
+              "item_number": "E2",
+              "description": "New Panel 'MECH' and Feeders",
+              "action": "Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "Install new panel 'MECH'. Install new 4\"C, 3#500kcmil feeder from main disconnect. Replace feeder to Panel 'A'.",
+              "notes": "Requires coordination with existing main service.",
+              "source_reference": {
+                "sheet": "E4.0",
+                "location": "One Line Diagram",
+                "page": 22
+              },
+              "confidence": 0.9,
+              "flags": []
+            },
+            {
+              "item_number": "E3",
+              "description": "Power to New Mechanical Equipment",
+              "action": "Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "Provide new branch circuits and disconnects for all new RTUs and Exhaust Fans.",
+              "notes": "Scope must align with base bid and awarded alternates for mechanical equipment.",
+              "source_reference": {
+                "sheet": "E3.0",
+                "location": "Roof Power Plan",
+                "page": 21
+              },
+              "confidence": 0.95,
+              "flags": [
+                "COORDINATION_REQUIRED"
+              ]
+            },
+            {
+              "item_number": "E4",
+              "description": "Install Heat Trace System",
+              "action": "Install",
+              "quantity": 1,
+              "unit": "LS",
+              "specifications": "Raychem system or equal.",
+              "notes": "Provide power and controls for heat trace on new rain leaders and overflow leaders as specified on Civil and Mechanical drawings.",
+              "source_reference": {
+                "sheet": "E4.0",
+                "location": "Heat Trace Diagram",
+                "page": 22
+              },
+              "confidence": 0.95,
+              "flags": [
+                "COORDINATION_REQUIRED"
+              ]
+            }
+          ],
+          "confidence": {
+            "overall": 0.9,
+            "reasoning": "The electrical scope is clearly defined in the E-series drawings, which were missed by the initial extraction."
+          }
+        }
+      ],
+      "gaps_identified": [
+        {
+          "gap_id": "G1",
+          "description": "The entire Electrical scope of work was missed. This includes new panels, feeders, and power connections for all new mechanical equipment.",
+          "severity": "critical"
+        },
+        {
+          "gap_id": "G2",
+          "description": "The Mechanical scope was severely incomplete. The original extraction only identified 2 of 6 RTUs and completely missed the new exhaust fans.",
+          "severity": "high"
+        },
+        {
+          "gap_id": "G3",
+          "description": "The extraction failed to identify the Additive Alternate bid structure for RTU-1 and RTU-6, which is critical for accurate bidding.",
+          "severity": "critical"
+        },
+        {
+          "gap_id": "G4",
+          "description": "Key scope items from other trades were missed, including concrete sidewalk replacement (Civil) and parapet flashing (Roofing).",
+          "severity": "medium"
+        },
+        {
+          "gap_id": "G5",
+          "description": "The extraction failed to incorporate information from the project Addenda, specifically Addendum No. 2 which adds a recovery board to the roofing scope.",
+          "severity": "critical"
+        }
+      ],
+      "confidence_adjustments": [
+        {
+          "packageId": "CIVIL",
+          "old_confidence": 0.9,
+          "new_confidence": 0.7,
+          "reason": "The original extraction contained a significant dimensional error for a key line item, indicating a lack of detailed review."
+        },
+        {
+          "packageId": "MECH",
+          "old_confidence": 0.9,
+          "new_confidence": 0.2,
+          "reason": "The original extraction was grossly incomplete, missing 67% of the primary equipment (RTUs), all exhaust fans, and the alternate bid structure. It is not a reliable representation of the scope."
+        }
+      ],
+      "ai_observations": [
+        {
+          "severity": "critical",
+          "category": "bidding_requirement",
+          "title": "Additive Alternates Impact Scope",
+          "insight": "The project includes two Additive Alternates: #1 for the demolition and replacement of RTU-1, and #2 for RTU-6. Bids must clearly separate the costs for the base bid (RTUs 2, 3, 4, 5) and each alternate.",
+          "affected_packages": [
+            "MECH_CORRECTED",
+            "ELEC"
+          ],
+          "suggested_actions": [
+            "Ensure bid form correctly separates costs for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+            "Coordinate mechanical and electrical quotes to align with the alternate structure."
+          ],
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "Plan View",
+            "page": 6
+          }
+        },
+        {
+          "severity": "critical",
+          "category": "scope_change",
+          "title": "Addendum No. 2 Modifies Roofing System",
+          "insight": "Addendum No. 2, Clarification 02-01, mandates the installation of a 5/8\" Georgia Pacific Dens Deck recovery board over all existing roof sheathing areas designated as R1. This is a requirement to achieve the specified 20-year/120mph warranty and was not in the original drawings.",
+          "affected_packages": [
+            "ROOF"
+          ],
+          "suggested_actions": [
+            "Include the material and labor for installing the 5/8\" recovery board in the roofing bid.",
+            "Verify the total square footage of R1 roof areas for accurate material takeoff."
+          ],
+          "source_reference": {
+            "sheet": "Addendum No. 2",
+            "location": "02-01 Clarification",
+            "page": 1
+          }
+        },
+        {
+          "severity": "warning",
+          "category": "coordination_required",
+          "title": "New Electrical Load Coordination",
+          "insight": "A new 'MECH' panel and a new 4-inch feeder are being added to the main service. The total new load from all RTUs and fans must be verified against the capacity of the existing main electrical service to ensure it can handle the additional demand.",
+          "affected_packages": [
+            "ELEC",
+            "MECH_CORRECTED"
+          ],
+          "suggested_actions": [
+            "Electrical contractor to perform a load calculation on the existing main service.",
+            "Verify existing service size and available capacity prior to starting work."
+          ],
+          "source_reference": {
+            "sheet": "E4.0",
+            "location": "One Line Diagram",
+            "page": 22
+          }
+        }
+      ],
+      "overall_assessment": {
+        "extraction_completeness": 0.25,
+        "data_quality": 0.2,
+        "risk_level": "High",
+        "summary": "The initial AI extraction is critically flawed and unsuitable for any bidding or planning purposes. It is grossly incomplete, missing the entire electrical trade, the majority of the mechanical scope, and other key items. It also contains factual errors in the data it did extract and, most importantly, failed to identify critical bidding requirements like additive alternates and a major scope change from an addendum. The extracted data is highly misleading and presents a significant risk of an inaccurate bid."
+      }
+    },
+    "cacheHit": false,
+    "cacheKey": "75056870594f7d34"
+  },
+  "createdAt": "2025-11-27T13:27:45.875Z"
+}

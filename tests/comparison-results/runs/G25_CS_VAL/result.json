@@ -1,0 +1,4428 @@
+{
+  "permutationId": "G25_CS_VAL",
+  "permutationName": "Gemini 2.5 Pro + Claude Validation",
+  "config": {
+    "id": "G25_CS_VAL",
+    "name": "Gemini 2.5 Pro + Claude Validation",
+    "description": "Gemini extracts, Claude validates",
+    "passes": [
+      {
+        "passNumber": 1,
+        "model": "gemini-2.5-pro",
+        "purpose": "initial_extraction",
+        "dependsOnPasses": []
+      },
+      {
+        "passNumber": 2,
+        "model": "gemini-2.5-pro",
+        "purpose": "self_review",
+        "dependsOnPasses": [
+          1
+        ]
+      },
+      {
+        "passNumber": 3,
+        "model": "claude-sonnet-4.5",
+        "purpose": "cross_validation",
+        "dependsOnPasses": [
+          1,
+          2
+        ]
+      }
+    ],
+    "expectedCost": 12
+  },
+  "documentHash": "28d539949daa0e9e",
+  "passes": [
+    {
+      "passNumber": 1,
+      "model": "gemini-2.5-pro",
+      "purpose": "initial_extraction",
+      "startedAt": "2025-11-26T22:12:46.162Z",
+      "completedAt": "2025-11-26T22:14:45.418Z",
+      "durationMs": 119256,
+      "tokensUsed": {
+        "input": 7177,
+        "output": 14945
+      },
+      "cost": 0.15842125,
+      "response": {
+        "project_name": "KENAI REC CENTER UPGRADES",
+        "work_packages": [
+          {
+            "packageId": "CIV-EARTH",
+            "name": "Civil - Earthwork & Site Prep",
+            "csi_division": "31",
+            "trade": "Civil / Earthwork",
+            "description": "Excavation, backfill, and grading for new roof drain fields and associated trenching.",
+            "scope_responsible": "Civil Contractor",
+            "confidence": {
+              "overall": 0.95,
+              "reasoning": "Drawings provide clear dimensions and details for the drain fields."
+            },
+            "line_items": [
+              {
+                "item_number": null,
+                "description": "Excavation for Roof Drain Field #1",
+                "action": "Excavate",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "30'L x 15'W x 3.5'D",
+                "notes": "Includes trench for 4\" DIP CL52 rain leader pipe.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #1",
+                  "page": 2,
+                  "bounding_box": [
+                    288,
+                    748,
+                    352,
+                    871
+                  ],
+                  "text_excerpt": "30'L X 15'W X 3.5'D ROOF DRAIN FIELD"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Excavation for Roof Drain Field #2",
+                "action": "Excavate",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "12'L x 4'W x 3.5'D",
+                "notes": "Includes trench for 4\" DIP CL52 rain leader pipe.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #2",
+                  "page": 2,
+                  "bounding_box": [
+                    518,
+                    629,
+                    552,
+                    700
+                  ],
+                  "text_excerpt": "12'L X 4'W X 3.5'D ROOF DRAIN FIELD"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Backfill for drain fields and trenches",
+                "action": "Install",
+                "quantity": null,
+                "unit": "CY",
+                "specifications": "Backfill with NFS sand/gravel from excavation. Compact to 95% max dry density.",
+                "notes": "See notes on C2.0 and C3.0.",
+                "source_reference": {
+                  "sheet": "C2.0",
+                  "location": "Typical Section - Roof Drain Field #1",
+                  "page": 3,
+                  "bounding_box": [
+                    79,
+                    526,
+                    101,
+                    818
+                  ],
+                  "text_excerpt": "BACKFILL WITH NFS SAND/GRAVEL FROM EXCAVATION TO MATCH EXISTING SOIL STRATA."
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Regrade disturbed area",
+                "action": "Regrade",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "Regrade to maintain existing drainage patterns.",
+                "notes": "Applies to area around Roof Drain Field #2.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #2",
+                  "page": 2,
+                  "bounding_box": [
+                    585,
+                    662,
+                    607,
+                    871
+                  ],
+                  "text_excerpt": "REGRADE DISTURBED AREA TO MAINTAIN EXISTING DRAINAGE PATTERNS"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              }
+            ]
+          },
+          {
+            "packageId": "CIV-EXT",
+            "name": "Civil - Exterior Improvements",
+            "csi_division": "32",
+            "trade": "Civil / Paving / Concrete",
+            "description": "Asphalt sawcutting, paving, concrete sidewalk replacement, and landscaping.",
+            "scope_responsible": "Civil Contractor",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Details are provided, but quantities need to be calculated from plans."
+            },
+            "line_items": [
+              {
+                "item_number": null,
+                "description": "Asphalt Pavement Sawcutting",
+                "action": "Sawcut",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Sawcut clean edge on existing asphalt pavement as required for trench.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #1",
+                  "page": 2,
+                  "bounding_box": [
+                    166,
+                    748,
+                    199,
+                    871
+                  ],
+                  "text_excerpt": "SAWCUT CLEAN EDGE ON EXISTING ASPHALT PAVEMENT AS REQUIRED FOR TRENCH."
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Asphalt Pavement",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "2\" Asphalt Pavement over 2\" Leveling Course.",
+                "notes": "Repave trenched area at Roof Drain Field #1.",
+                "source_reference": {
+                  "sheet": "C2.0",
+                  "location": "Typical Section - Roof Drain Field #1",
+                  "page": 3,
+                  "bounding_box": [
+                    58,
+                    546,
+                    79,
+                    678
+                  ],
+                  "text_excerpt": "2\" ASPHALT PAVEMENT\n2\" LEVELING COURSE"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Concrete Sidewalk",
+                "action": "Demo & Replace",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "4\" thick, 3,000 PSI concrete with W1.4xW1.4 welded wire mesh.",
+                "notes": "Broom finish perpendicular to pedestrian traffic.",
+                "source_reference": {
+                  "sheet": "C3.0",
+                  "location": "Typical Concrete Sidewalk Detail",
+                  "page": 4,
+                  "bounding_box": [
+                    288,
+                    601,
+                    300,
+                    811
+                  ],
+                  "text_excerpt": "TYPICAL CONCRETE SIDEWALK"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Topsoil & Seeding",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "4\" Topsoil & Seeding.",
+                "notes": "At disturbed area around Roof Drain Field #2.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #2",
+                  "page": 2,
+                  "bounding_box": [
+                    607,
+                    767,
+                    618,
+                    871
+                  ],
+                  "text_excerpt": "PROVIDE 4\" TOPSOIL & SEEDING"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              }
+            ]
+          },
+          {
+            "packageId": "CIV-UTIL",
+            "name": "Civil - Utilities",
+            "csi_division": "33",
+            "trade": "Civil / Utilities",
+            "description": "Installation of new underground storm drainage system including piping, drain rock, geotextile, and insulation.",
+            "scope_responsible": "Civil Contractor",
+            "confidence": {
+              "overall": 0.95,
+              "reasoning": "Detailed sections and plans are provided for the new drain fields."
+            },
+            "line_items": [
+              {
+                "item_number": null,
+                "description": "Coarse Grade Drain Rock",
+                "action": "Install",
+                "quantity": null,
+                "unit": "CY",
+                "specifications": "Washed drain rock per sieve analysis on sheet C2.0.",
+                "notes": "For both drain fields.",
+                "source_reference": {
+                  "sheet": "C2.0",
+                  "location": "Sieve Table",
+                  "page": 3,
+                  "bounding_box": [
+                    218,
+                    92,
+                    322,
+                    189
+                  ],
+                  "text_excerpt": "COARSE GRADE DRAIN ROCK"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Geotextile Fabric",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "TYPAR 3401 or approved alternative.",
+                "notes": "Install on top of drain rock.",
+                "source_reference": {
+                  "sheet": "C2.0",
+                  "location": "Typical Section - Roof Drain Field #1",
+                  "page": 3,
+                  "bounding_box": [
+                    199,
+                    830,
+                    232,
+                    953
+                  ],
+                  "text_excerpt": "TYPAR 3401 GEOTEXTILE FABRIC OR APPROVED ALTERNATIVE ON TOP OF DRAIN ROCK"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Perforated Drainage Pipe",
+                "action": "Install",
+                "quantity": 3,
+                "unit": "EA",
+                "specifications": "24\" ADS Perforated N-12 CPEP, Class 2 perforations.",
+                "notes": "Laterals for Roof Drain Field #1.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #1",
+                  "page": 2,
+                  "bounding_box": [
+                    352,
+                    748,
+                    374,
+                    871
+                  ],
+                  "text_excerpt": "(3) 24\" LATERALS PER CIVIL SHEET C2.0"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Perforated Drainage Pipe",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "24\" CPEP.",
+                "notes": "Lateral for Roof Drain Field #2.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #2",
+                  "page": 2,
+                  "bounding_box": [
+                    552,
+                    629,
+                    574,
+                    700
+                  ],
+                  "text_excerpt": "WITH (1) 24\" CPEP PER CIVIL SHEET C3.0"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Rain Leader Pipe",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "4\" DIP CL52 @ 2.0% slope.",
+                "notes": "Provide heat trace per electrical.",
+                "source_reference": {
+                  "sheet": "C1.0",
+                  "location": "Enlarged Site Plan - Roof Drain #1",
+                  "page": 2,
+                  "bounding_box": [
+                    221,
+                    700,
+                    254,
+                    871
+                  ],
+                  "text_excerpt": "4\" DIP CL52 RAIN LEADER PIPE @ 2.0% SLOPE. PROVIDE HEAT TRACE PER ELECTRICAL"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Rigid Insulation Board",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "4\" 'Insulfoam 40' Expanded Polystyrene.",
+                "notes": "Across full dimension of drain fields. Stagger joints.",
+                "source_reference": {
+                  "sheet": "C2.0",
+                  "location": "Typical Section - Roof Drain Field #1",
+                  "page": 3,
+                  "bounding_box": [
+                    157,
+                    830,
+                    199,
+                    953
+                  ],
+                  "text_excerpt": "4\" 'INSULFOAM 40' EXPANDED POLYSTYRENE INSULATION BOARD ACROSS FULL DIMENSION OF DRAIN FIELD."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              }
+            ]
+          },
+          {
+            "packageId": "DEMO",
+            "name": "Demolition",
+            "csi_division": "02",
+            "trade": "Demolition",
+            "description": "Demolition of existing roofing, parapets, scuppers, rooftop equipment, interior fans, and associated MEP systems.",
+            "scope_responsible": "General Contractor / Subcontractors",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Demolition plans are provided, but some existing conditions are unknown until demo begins."
+            },
+            "line_items": [
+              {
+                "item_number": "1",
+                "description": "Existing BUR Roofing and Coverboard",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "Demo all existing BUR roofing and coverboard. Demo all existing tapered insulation at crickets. Existing non-tapered insulation to remain.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A1.1",
+                  "location": "Demo Roof Plan Notes",
+                  "page": 6,
+                  "bounding_box": [
+                    688,
+                    113,
+                    721,
+                    498
+                  ],
+                  "text_excerpt": "DEMO ALL EXISTING BUR ROOFING AND COVERBOARD. DEMO ALL EXISTING TAPERED INSULATION AT CRICKETS. EXISTING NON-TAPERED INSULATION TO REMAIN."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "2",
+                "description": "Existing Parapet Cap Flashing",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Demo all existing parapet cap flashing, typ.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A1.1",
+                  "location": "Demo Roof Plan Notes",
+                  "page": 6,
+                  "bounding_box": [
+                    721,
+                    113,
+                    732,
+                    362
+                  ],
+                  "text_excerpt": "DEMO ALL EXISTING PARAPET CAP FLASHING, TYP."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "6",
+                "description": "Existing Scuppers",
+                "action": "Demo and Infill",
+                "quantity": null,
+                "unit": "EA",
+                "specifications": "Demo and infill existing scuppers other than at roof B.",
+                "notes": "Roof B scuppers to be removed and replaced.",
+                "source_reference": {
+                  "sheet": "A1.1",
+                  "location": "Demo Roof Plan Notes",
+                  "page": 6,
+                  "bounding_box": [
+                    809,
+                    113,
+                    831,
+                    498
+                  ],
+                  "text_excerpt": "DEMO AND INFILL EXISTING SCUPPERS OTHER THAN AT ROOF B, TYP. ROOF B SCUPPERS TO BE REMOVED AND REPLACED PER DETAIL 5/A2.3."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "9",
+                "description": "Roofing, Sheathing, and Sloped 2x4 Sleepers at Roof D",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "Demo roofing, sheathing and sloped 2x4 sleepers.",
+                "notes": "Located at Roof D.",
+                "source_reference": {
+                  "sheet": "A1.1",
+                  "location": "Demo Roof Plan Notes",
+                  "page": 6,
+                  "bounding_box": [
+                    864,
+                    113,
+                    875,
+                    426
+                  ],
+                  "text_excerpt": "DEMO ROOFING, SHEATHING AND SLOPED 2X4 SLEEPERS."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "J",
+                "description": "Roof Access Ladder",
+                "action": "Demo and Replace",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Demo and replace roof access ladder at new location per plan.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A1.0",
+                  "location": "Key Notes",
+                  "page": 5,
+                  "bounding_box": [
+                    800,
+                    708,
+                    822,
+                    953
+                  ],
+                  "text_excerpt": "DEMO AND REPLACE ROOF ACCESS LADDER AT NEW LOCATION PER PLAN."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "1",
+                "description": "Rooftop Unit (RTU)",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "EA",
+                "specifications": "Demolish RTU, roof curb and all associated appurtenances.",
+                "notes": "Applies to RTU-1, RTU-2, RTU-5, RTU-6.",
+                "source_reference": {
+                  "sheet": "M1.2",
+                  "location": "Referenced Sheet Notes",
+                  "page": 15,
+                  "bounding_box": [
+                    188,
+                    777,
+                    210,
+                    953
+                  ],
+                  "text_excerpt": "DEMOLISH RTU, ROOF CURB AND ALL ASSOCIATED APPURTENANCES."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "2",
+                "description": "Gas Piping",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Demolish gas piping, supports and all associated appurtenances.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M1.2",
+                  "location": "Referenced Sheet Notes",
+                  "page": 15,
+                  "bounding_box": [
+                    210,
+                    777,
+                    232,
+                    953
+                  ],
+                  "text_excerpt": "DEMOLISH GAS PIPING, SUPPORTS AND ALL ASSOCIATED APPURTENANCES."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "1",
+                "description": "Interior Fan",
+                "action": "Demo",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Demolish fan, wiring, controls and all associated appurtenances.",
+                "notes": "Patch wall to match adjacent construction.",
+                "source_reference": {
+                  "sheet": "M1.1",
+                  "location": "Referenced Sheet Notes",
+                  "page": 14,
+                  "bounding_box": [
+                    100,
+                    659,
+                    133,
+                    871
+                  ],
+                  "text_excerpt": "DEMOLISH FAN, WIRING, CONTROLS AND ALL ASSOCIATED APPURTENANCES. PATCH WALL TO MATCH ADJACENT CONSTRUCTION MATERIALS."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "1",
+                "description": "Electrical Panel 'X'",
+                "action": "Demo",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Demolish existing panel 'X'. Demolish feeder wires and conduit back to panel.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "E1.0",
+                  "location": "Notes",
+                  "page": 19,
+                  "bounding_box": [
+                    100,
+                    418,
+                    122,
+                    570
+                  ],
+                  "text_excerpt": "DEMOLISH EXISTING PANEL 'X'. DEMOLISH FEEDER WIRES AND CONDUIT BACK TO PANEL."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "1",
+                "description": "Electrical wiring and conduit to rooftop equipment",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "LS",
+                "specifications": "Demolish wires and conduit back to panel.",
+                "notes": "For all demolished rooftop equipment.",
+                "source_reference": {
+                  "sheet": "E2.0",
+                  "location": "Notes",
+                  "page": 20,
+                  "bounding_box": [
+                    647,
+                    736,
+                    658,
+                    871
+                  ],
+                  "text_excerpt": "DEMOLISH WIRES AND CONDUIT BACK TO PANEL."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "I",
+                "description": "Wood Privacy Fence",
+                "action": "Demo",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Demo wood privacy fence.",
+                "notes": "Location shown on reference plan A1.0.",
+                "source_reference": {
+                  "sheet": "A1.0",
+                  "location": "Key Notes",
+                  "page": 5,
+                  "bounding_box": [
+                    788,
+                    708,
+                    799,
+                    844
+                  ],
+                  "text_excerpt": "DEMO WOOD PRIVACY FENCE."
+                }
+              }
+            ]
+          },
+          {
+            "packageId": "WOOD",
+            "name": "Wood, Plastics, and Composites",
+            "csi_division": "06",
+            "trade": "Carpentry",
+            "description": "Framing for parapets, new roof sheathing, and blocking.",
+            "scope_responsible": "Carpentry Contractor",
+            "confidence": {
+              "overall": 0.85,
+              "reasoning": "Details are provided, but quantities require takeoff. Potential for unforeseen wood rot in existing structures."
+            },
+            "line_items": [
+              {
+                "item_number": null,
+                "description": "Parapet Framing",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Sister new 2x4 parapet framing to existing.",
+                "notes": "See detail 2/A2.1.",
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    188,
+                    388,
+                    210,
+                    488
+                  ],
+                  "text_excerpt": "SISTER NEW 2X4 PARAPET FRAMING TO EXISTING"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Plywood Sheathing at Parapets",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "New 1/2\" Plywood Sheathing.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    210,
+                    388,
+                    221,
+                    488
+                  ],
+                  "text_excerpt": "NEW 1/2\" PLYWOOD SHEATHING"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Plywood Decking at Roof D",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "New 1/2\" Plywood Decking.",
+                "notes": "Replaces demolished sheathing.",
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    407,
+                    689,
+                    439,
+                    721
+                  ],
+                  "text_excerpt": "NEW 1/2\"\nPLYWOOD\nDECKING"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Composite Trim",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "New 1x8 over 1x10 composite trim.",
+                "notes": "At parapets.",
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    166,
+                    388,
+                    188,
+                    488
+                  ],
+                  "text_excerpt": "NEW 1X8 OVER 1X10 COMPOSITE TRIM"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Blocking",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Blocking as needed.",
+                "notes": "At parapets for flashing attachment.",
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    144,
+                    388,
+                    155,
+                    488
+                  ],
+                  "text_excerpt": "BLOCKING AS NEEDED"
+                },
+                "confidence": 0.8,
+                "flags": [
+                  "ESTIMATE_QTY",
+                  "NEEDS_REVIEW"
+                ]
+              }
+            ]
+          },
+          {
+            "packageId": "ROOF",
+            "name": "Thermal and Moisture Protection",
+            "csi_division": "07",
+            "trade": "Roofing",
+            "description": "Installation of new roofing system, insulation, flashing, and accessories.",
+            "scope_responsible": "Roofing Contractor",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Plans and details are clear, but specific roofing system manufacturer is not specified, which affects pricing."
+            },
+            "line_items": [
+              {
+                "item_number": "1",
+                "description": "New Roofing System",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "EPDM Fully Adhered Roofing Membrane. New roof system to be installed per specifications and manufacturer requirements.",
+                "notes": "See details 9/A2.3 and 10/A2.3 for roof types.",
+                "source_reference": {
+                  "sheet": "A1.2",
+                  "location": "Roof Plan Notes",
+                  "page": 7,
+                  "bounding_box": [
+                    288,
+                    81,
+                    310,
+                    297
+                  ],
+                  "text_excerpt": "NEW ROOFING SYSTEM TO BE INSTALLED PER SPECIFICATIONS AND MANUFACTURER REQUIREMENTS."
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY",
+                  "NEEDS_REVIEW"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Roof Coverboard",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "New 5/8\" Coverboard.",
+                "notes": "Part of roof type R2.",
+                "source_reference": {
+                  "sheet": "A2.3",
+                  "location": "Roof Type Detail",
+                  "page": 10,
+                  "bounding_box": [
+                    732,
+                    689,
+                    743,
+                    789
+                  ],
+                  "text_excerpt": "NEW 5/8\"COVERBOARD"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "9",
+                "description": "Tapered Insulation Roof Crickets",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "New tapered insulation roof crickets to slope at 1/4\" per 12\" to roof drains, typ.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A1.2",
+                  "location": "Roof Plan Notes",
+                  "page": 7,
+                  "bounding_box": [
+                    500,
+                    81,
+                    522,
+                    297
+                  ],
+                  "text_excerpt": "NEW TAPERED INSULATION ROOF CRICKETS TO SLOPE AT 1/4\" PER 12\" TO ROOF DRAINS, TYP."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "2",
+                "description": "Parapet Cap Flashing",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "New 24 GA. pre-finished flashing over cont. hold down cleats.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A2.1",
+                  "location": "New Parapet Detail",
+                  "page": 8,
+                  "bounding_box": [
+                    111,
+                    388,
+                    144,
+                    488
+                  ],
+                  "text_excerpt": "NEW 24 GA. PRE-FINISHED FLASHING OVER CONT. HOLD DOWN CLEATS"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "6",
+                "description": "New Scupper",
+                "action": "Install",
+                "quantity": null,
+                "unit": "EA",
+                "specifications": "20 GA. welded scupper sleeve with seamless alum gutter and downspout.",
+                "notes": "Per detail 5/A2.3.",
+                "source_reference": {
+                  "sheet": "A1.2",
+                  "location": "Roof Plan Notes",
+                  "page": 7,
+                  "bounding_box": [
+                    433,
+                    81,
+                    444,
+                    244
+                  ],
+                  "text_excerpt": "NEW SCUPPER PER DETAIL 5/A2.3."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": "11",
+                "description": "Roofing Walking Mats",
+                "action": "Install",
+                "quantity": null,
+                "unit": "SF",
+                "specifications": "Provide roofing walking mats from access hatch to roof access ladder.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "A1.2",
+                  "location": "Roof Plan Notes",
+                  "page": 7,
+                  "bounding_box": [
+                    577,
+                    81,
+                    599,
+                    297
+                  ],
+                  "text_excerpt": "PROVIDE ROOFING WALKING MATS FROM ACCESS HATCH TO ROOF ACCESS LADDER."
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Interior Finish Repair",
+                "action": "Repair",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "Repair all interior finishes that are damaged due to roof drain removal, leader repair, or other adjacencies as required to accomplish the work.",
+                "notes": "This is a General Contractor scope item. The extent of repairs is unknown and should be priced with an allowance.",
+                "source_reference": {
+                  "sheet": "A1.1",
+                  "location": "General Notes",
+                  "page": 6,
+                  "bounding_box": [
+                    577,
+                    81,
+                    622,
+                    297
+                  ],
+                  "text_excerpt": "CONTRACTOR SHALL REPAIR ALL INTERIOR FINISHES THAT ARE DAMAGED DUE TO ROOF DRAIN REMOVAL, LEADER REPAIR, OR OTHER ADJACENCIES AS REQUIRED TO ACCOMPLISH THE WORK."
+                }
+              }
+            ]
+          },
+          {
+            "packageId": "SPEC",
+            "name": "Specialties",
+            "csi_division": "10",
+            "trade": "Specialties",
+            "description": "Installation of new roof access ladder.",
+            "scope_responsible": "Specialties Contractor",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Details are provided for the ladder."
+            },
+            "line_items": [
+              {
+                "item_number": "5",
+                "description": "Roof Access Ladder",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Aluminum ladder with serrated rungs and side rails. See details 6/A2.3 and 8/A2.2.",
+                "notes": "New ladder per spec, see details 6,7/A2.3.",
+                "source_reference": {
+                  "sheet": "A1.2",
+                  "location": "Roof Plan Notes",
+                  "page": 7,
+                  "bounding_box": [
+                    411,
+                    81,
+                    422,
+                    281
+                  ],
+                  "text_excerpt": "NEW ROOF LADDER PER SPEC, SEE DETAILS 6,7/A2.3."
+                },
+                "confidence": 1,
+                "flags": []
+              }
+            ]
+          },
+          {
+            "packageId": "PLUMB",
+            "name": "Plumbing",
+            "csi_division": "22",
+            "trade": "Plumbing",
+            "description": "Installation of new roof drains, overflow drains, and interior rain leader piping.",
+            "scope_responsible": "Plumbing Contractor",
+            "confidence": {
+              "overall": 0.95,
+              "reasoning": "Fixture schedule and piping plans are clear."
+            },
+            "line_items": [
+              {
+                "item_number": "RD-1",
+                "description": "Roof Drain",
+                "action": "Install",
+                "quantity": 6,
+                "unit": "EA",
+                "specifications": "Zurn Z100-C-CI-R-89 4\" CI body, 8\" CI dome",
+                "notes": "Quantity counted from M2.2.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Plumbing Fixture Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    144,
+                    336,
+                    177,
+                    678
+                  ],
+                  "text_excerpt": "RD-1 ROOF DRAIN"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "OD-1",
+                "description": "Overflow Drain",
+                "action": "Install",
+                "quantity": 6,
+                "unit": "EA",
+                "specifications": "Zurn Z100-C-CI-R-89 4\" CI body, 8\" CI dome, 2\" water dam",
+                "notes": "Quantity counted from M2.2.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Plumbing Fixture Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    177,
+                    336,
+                    199,
+                    678
+                  ],
+                  "text_excerpt": "OD-1 OVERFLOW DRAIN"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Rain Leader Piping",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Cast iron with no-hub fittings or DWV ABS pipe.",
+                "notes": "Sizes range from 3\" to 4\". See plan M2.2 for layout.",
+                "source_reference": {
+                  "sheet": "M2.2",
+                  "location": "Rainleader Piping Plan",
+                  "page": 17,
+                  "bounding_box": [
+                    933,
+                    113,
+                    955,
+                    262
+                  ],
+                  "text_excerpt": "RAINLEADER PIPING PLAN"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Pipe Insulation",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "1.0-inch fiberglass pipe insulation with factory applied all-service jacket.",
+                "notes": "For storm drainage piping.",
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "Mechanical Specifications",
+                  "page": 13,
+                  "bounding_box": [
+                    500,
+                    336,
+                    533,
+                    678
+                  ],
+                  "text_excerpt": "PIPE INSULATION: FIBERGLASS PIPE INSULATION WITH FACTORY APPLIED ALL-SERVICE JACKET"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              }
+            ]
+          },
+          {
+            "packageId": "HVAC",
+            "name": "Heating, Ventilating, and Air-Conditioning",
+            "csi_division": "23",
+            "trade": "Mechanical / HVAC",
+            "description": "Installation of new rooftop units, exhaust fans, gas piping, and ductwork.",
+            "scope_responsible": "Mechanical Contractor",
+            "confidence": {
+              "overall": 0.95,
+              "reasoning": "Detailed equipment schedules and plans are provided."
+            },
+            "line_items": [
+              {
+                "item_number": "RTU-1",
+                "description": "Roof Top Gas/Electric A/C Unit",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Trane YSC060, 5 Ton, 1200 CFM, 120 MBH Gas Heat",
+                "notes": "Additive Alternate #1.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Roof Top Gas/Electric A/C Unit Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    288,
+                    336,
+                    322,
+                    953
+                  ],
+                  "text_excerpt": "RTU-1"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ADD_ALT"
+                ]
+              },
+              {
+                "item_number": "RTU-2",
+                "description": "Roof Top Gas/Electric A/C Unit",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Trane YSC060, 5 Ton, 1200 CFM, 120 MBH Gas Heat",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Roof Top Gas/Electric A/C Unit Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    322,
+                    336,
+                    344,
+                    953
+                  ],
+                  "text_excerpt": "RTU-2"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "RTU-5",
+                "description": "Roof Top Gas/Electric A/C Unit",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Trane YSC090, 7.5 Ton, 2610 CFM, 270 MBH Gas Heat",
+                "notes": "Additive Alternate #2.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Roof Top Gas/Electric A/C Unit Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    344,
+                    336,
+                    366,
+                    953
+                  ],
+                  "text_excerpt": "RTU-5"
+                },
+                "confidence": 1,
+                "flags": [
+                  "ADD_ALT"
+                ]
+              },
+              {
+                "item_number": "RTU-6",
+                "description": "Roof Top Gas/Electric A/C Unit",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Trane YHC120, 10 Ton, 3180 CFM, 450 MBH Gas Heat",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Roof Top Gas/Electric A/C Unit Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    366,
+                    336,
+                    388,
+                    953
+                  ],
+                  "text_excerpt": "RTU-6"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "EF-1",
+                "description": "Exhaust Fan",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+                "notes": "Industrial/Locker Room.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Fan Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    488,
+                    336,
+                    511,
+                    953
+                  ],
+                  "text_excerpt": "EF-1"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "EF-3",
+                "description": "Exhaust Fan",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+                "notes": "Industrial/Locker Room.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Fan Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    522,
+                    336,
+                    544,
+                    953
+                  ],
+                  "text_excerpt": "EF-3"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Natural Gas Piping",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Black steel, ASTM A120 or A53.",
+                "notes": "See plan M2.3 for layout and sizes.",
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "Mechanical Specifications",
+                  "page": 13,
+                  "bounding_box": [
+                    288,
+                    336,
+                    300,
+                    444
+                  ],
+                  "text_excerpt": "23 11 00 FUEL PIPING"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Ductwork",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LF",
+                "specifications": "Galvanized steel, fabricated per SMACNA standards.",
+                "notes": "Includes transitions from new RTUs to existing ductwork.",
+                "source_reference": {
+                  "sheet": "M2.3",
+                  "location": "RTU-5 Roof Curb Detail",
+                  "page": 18,
+                  "bounding_box": [
+                    688,
+                    811,
+                    721,
+                    953
+                  ],
+                  "text_excerpt": "TRANSITION RETURN AIR DUCT OPENING FROM BOTTOM OF RTU-5 TO (E) RETURN AIR DUCT"
+                },
+                "confidence": 0.9,
+                "flags": [
+                  "ESTIMATE_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Insulated Roof Curb",
+                "action": "Install",
+                "quantity": 4,
+                "unit": "EA",
+                "specifications": "Field fabricated insulated roof curb, 24\" high.",
+                "notes": "For RTU-1, -2, -5, -6. Coordinate with structural.",
+                "source_reference": {
+                  "sheet": "M2.3",
+                  "location": "RTU-5 Roof Curb Detail",
+                  "page": 18,
+                  "bounding_box": [
+                    644,
+                    811,
+                    677,
+                    953
+                  ],
+                  "text_excerpt": "FIELD FABRICATED INSULATED ROOF CURB. 24\" HIGH, COORDINATE WITH STRUCTURAL FOR COMPONENTS"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Temporary Removal and Reinstallation of Rooftop Equipment",
+                "action": "Remove & Reinstall",
+                "quantity": null,
+                "unit": "EA",
+                "specifications": "Coordinate the temporary removal of mechanical, electrical or comm. equipment. Reinstall with new roofing on rubber walking pads.",
+                "notes": "This applies to equipment not being replaced but located within the new roofing area. Quantity needs to be verified from plans (e.g., RTU-3, RTU-4).",
+                "source_reference": {
+                  "sheet": "A1.0",
+                  "location": "Key Notes",
+                  "page": 5,
+                  "bounding_box": [
+                    732,
+                    708,
+                    765,
+                    953
+                  ],
+                  "text_excerpt": "COORDINATE THE TEMPORARY REMOVAL OF MECHANICAL, ELECTRICAL OR COMM. EQUIPMENT. REINSTALL WITH NEW ROOFING ON WALK-OFF PADS."
+                }
+              },
+              {
+                "item_number": "EF-4",
+                "description": "Exhaust Fan",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+                "notes": "Weights/Cardio area.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Fan Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    533,
+                    336,
+                    555,
+                    953
+                  ],
+                  "text_excerpt": "EF-4"
+                }
+              },
+              {
+                "item_number": "EF-5",
+                "description": "Exhaust Fan",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+                "notes": "Weights/Cardio area.",
+                "source_reference": {
+                  "sheet": "M0.1",
+                  "location": "Fan Schedule",
+                  "page": 12,
+                  "bounding_box": [
+                    544,
+                    336,
+                    566,
+                    953
+                  ],
+                  "text_excerpt": "EF-5"
+                }
+              },
+              {
+                "item_number": null,
+                "description": "HVAC Systems Testing and Balancing",
+                "action": "Perform",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "An independent air balancing company will perform the air balancing of the complete heating and HVAC systems per the SMACNA balancing and adjustment manual. Adjust air quantities to within 5% of the design values.",
+                "notes": "Requires submission of a final report.",
+                "source_reference": {
+                  "sheet": "M0.2",
+                  "location": "Mechanical Specifications Cont'd",
+                  "page": 13,
+                  "bounding_box": [
+                    766,
+                    336,
+                    810,
+                    678
+                  ],
+                  "text_excerpt": "BALANCING & STARTUP"
+                }
+              }
+            ]
+          },
+          {
+            "packageId": "ELEC",
+            "name": "Electrical",
+            "csi_division": "26",
+            "trade": "Electrical",
+            "description": "Demolition of existing panel and feeders, installation of new panel, feeders, and power to new mechanical equipment. Includes heat trace system.",
+            "scope_responsible": "Electrical Contractor",
+            "confidence": {
+              "overall": 0.9,
+              "reasoning": "Plans and one-line diagrams are provided. Panel schedules define loads."
+            },
+            "line_items": [
+              {
+                "item_number": "2",
+                "description": "Electrical Panel 'D'",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "Install new panel 'D' around corner as shown. Move all existing circuits from demolish panel to new panel.",
+                "notes": null,
+                "source_reference": {
+                  "sheet": "E1.0",
+                  "location": "Notes",
+                  "page": 19,
+                  "bounding_box": [
+                    122,
+                    418,
+                    144,
+                    570
+                  ],
+                  "text_excerpt": "INSTALL NEW PANEL 'D' AROUND CORNER AS SHOWN. MOVE ALL EXISTING CIRCUITS FROM DEMOLISH PANEL TO NEW PANEL."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Feeder for Panel 'MECH'",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "LS",
+                "specifications": "4\"C, 3#500kcmil, #500kcmil N, #2G.",
+                "notes": "From main disconnect to new panel 'MECH'.",
+                "source_reference": {
+                  "sheet": "E4.0",
+                  "location": "One Line Diagram",
+                  "page": 22,
+                  "bounding_box": [
+                    900,
+                    388,
+                    911,
+                    562
+                  ],
+                  "text_excerpt": "4\"C, 3#500kcmil, #500kcmil N, #2G"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Power to RTU-6",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "1-1/4\"C, 3#1, #6G.",
+                "notes": "Circuits MECH-2,4,6.",
+                "source_reference": {
+                  "sheet": "E3.0",
+                  "location": "Roof Power Plan",
+                  "page": 21,
+                  "bounding_box": [
+                    588,
+                    550,
+                    610,
+                    621
+                  ],
+                  "text_excerpt": "MECH-2,4,6\n1-1/4\"C,3#1,#6G"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": null,
+                "description": "Power to RTU-3",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "1\"C, 3#4, #10G.",
+                "notes": "Circuits MECH-13,15,17.",
+                "source_reference": {
+                  "sheet": "E3.0",
+                  "location": "Roof Power Plan",
+                  "page": 21,
+                  "bounding_box": [
+                    177,
+                    250,
+                    199,
+                    321
+                  ],
+                  "text_excerpt": "MECH-13,15,17\n1\"C,3#4,#10G"
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "3",
+                "description": "Heat Trace System",
+                "action": "Install",
+                "quantity": 2,
+                "unit": "EA",
+                "specifications": "Raychem 8BTV1-CT. Install 10 feet in end of overflow-leader and rain-leader.",
+                "notes": "Typical of two locations.",
+                "source_reference": {
+                  "sheet": "E3.0",
+                  "location": "Notes",
+                  "page": 21,
+                  "bounding_box": [
+                    799,
+                    736,
+                    855,
+                    871
+                  ],
+                  "text_excerpt": "SEE DETAIL E4.0/2. INSTALL 10 FEET OF HEAT TRACE IN END OF OVERFLOW-LEADER AND OX-TONGUE. PROVIDE HEAT TRACE IN RAIN-LEADER FROM DRY WELL TO 3-FEET ABOVE GROUND LEVEL. TYPICAL OF TWO."
+                },
+                "confidence": 1,
+                "flags": []
+              },
+              {
+                "item_number": "2",
+                "description": "Duct Smoke Detector Alarm",
+                "action": "Install",
+                "quantity": null,
+                "unit": "LS",
+                "specifications": "Provide audio visual alarm for duct smoke detector. Sensor System APA 151 is one solution.",
+                "notes": "Alarm to be installed at main check-in counter. Quantity of detectors not specified.",
+                "source_reference": {
+                  "sheet": "E3.0",
+                  "location": "Notes",
+                  "page": 21,
+                  "bounding_box": [
+                    766,
+                    736,
+                    799,
+                    871
+                  ],
+                  "text_excerpt": "PROVIDE AUDIO VISUAL ALARM FOR DUCT SMOKE DETECTOR. SENSOR SYSTEM APA 151 IS ONE SOLUTION. ENSURE COMPATIBILITY WITH DUCT SMOKE DETECTOR. SEE MECHANICAL DRAWINGS FOR MORE DETAILS. ALARM SHALL BE INSTALLED AT MAIN CHECK-IN COUNTER."
+                },
+                "confidence": 0.8,
+                "flags": [
+                  "NEEDS_REVIEW",
+                  "VERIFY_QTY"
+                ]
+              },
+              {
+                "item_number": null,
+                "description": "Electrical Panel 'MECH'",
+                "action": "Install",
+                "quantity": 1,
+                "unit": "EA",
+                "specifications": "208Y/120V 3P 4W, 150A Main Breaker. See panel schedule E5.0 for details.",
+                "notes": "New panel to feed new mechanical loads.",
+                "source_reference": {
+                  "sheet": "E5.0",
+                  "location": "Panel Schedule MECH",
+                  "page": 23,
+                  "bounding_box": [
+                    111,
+                    221,
+                    144,
+                    570
+                  ],
+                  "text_excerpt": "MECH"
+                }
+              }
+            ]
+          }
+        ],
+        "ai_observations": [
+          {
+            "severity": "critical",
+            "category": "pricing_concern",
+            "title": "Additive Alternates Identified",
+            "insight": "The project includes two significant Additive Alternates. Additive Alternate #1 covers work on the northwest portion of the roof, including RTU-1. Additive Alternate #2 covers work on the central-south portion of the roof, including RTU-5. These scopes must be priced separately from the base bid.",
+            "affected_packages": [
+              "DEMO",
+              "ROOF",
+              "HVAC",
+              "ELEC"
+            ],
+            "suggested_actions": [
+              "Create separate cost breakdowns for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+              "Clarify the exact boundaries of each alternate's scope with the architect."
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "page": 6,
+              "bounding_box": [
+                300,
+                533,
+                311,
+                621
+              ]
+            }
+          },
+          {
+            "severity": "warning",
+            "category": "risk_flag",
+            "title": "Potential for Unforeseen Deck Deterioration",
+            "insight": "General Note #1 on sheet A1.1 states that if any deteriorated decking is discovered after demolition, the architect must be contacted. This indicates a known risk of finding rotten or damaged roof decking which would result in a change order for repair or replacement. An allowance should be considered.",
+            "affected_packages": [
+              "DEMO",
+              "WOOD",
+              "ROOF"
+            ],
+            "suggested_actions": [
+              "Include a clarification in the bid stating that the price excludes the repair of unknown deteriorated decking.",
+              "Request a pre-bid site walk to inspect the underside of the deck where possible.",
+              "Consider carrying a contingency or suggesting a unit price for deck replacement."
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "page": 6,
+              "bounding_box": [
+                266,
+                81,
+                322,
+                297
+              ]
+            }
+          },
+          {
+            "severity": "warning",
+            "category": "coordination_required",
+            "title": "Heavy Coordination for Rooftop Equipment Replacement",
+            "insight": "The replacement of multiple Rooftop Units (RTUs) requires careful coordination between several trades. The sequence of demolition, roofing, curb installation, equipment setting, and final MEP connections is critical to maintaining a watertight building and minimizing downtime.",
+            "affected_packages": [
+              "DEMO",
+              "ROOF",
+              "HVAC",
+              "ELEC"
+            ],
+            "suggested_actions": [
+              "Hold a pre-construction meeting with Roofing, Mechanical, and Electrical subcontractors to plan the sequence of work.",
+              "Verify lead times for new RTUs and roof curbs.",
+              "General Note #3 on A1.1 requires temporary removal and reinstallation of other equipment on rubber walking pads, which must be scheduled."
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "page": 6,
+              "bounding_box": [
+                732,
+                113,
+                765,
+                498
+              ]
+            }
+          },
+          {
+            "severity": "info",
+            "category": "code_compliance",
+            "title": "Applicable Building Codes",
+            "insight": "The cover sheet T1.1 lists the specific codes governing the project, including the 2012 International Building Code and the 2018 National Electrical Code. All work must comply with these standards, which may have implications for materials and installation methods, particularly for electrical and mechanical systems.",
+            "affected_packages": [
+              "PLUMB",
+              "HVAC",
+              "ELEC"
+            ],
+            "suggested_actions": [
+              "Ensure all subcontractors are aware of and will comply with the specified code editions.",
+              "Verify that specified equipment meets the requirements of ASHRAE 90.1-2016 for energy efficiency."
+            ],
+            "source_reference": {
+              "sheet": "T1.1",
+              "page": 1,
+              "bounding_box": [
+                455,
+                588,
+                533,
+                790
+              ]
+            }
+          },
+          {
+            "severity": "info",
+            "category": "missing_information",
+            "title": "Roofing System Manufacturer Not Specified",
+            "insight": "The drawings specify an EPDM roofing system but do not name a specific manufacturer. Pricing can vary between manufacturers (e.g., Carlisle, Firestone, Johns Manville). The bid should be based on a specific manufacturer and note this assumption.",
+            "affected_packages": [
+              "ROOF"
+            ],
+            "suggested_actions": [
+              "Submit an RFI to request a list of approved manufacturers or to confirm if a specific basis-of-design is intended.",
+              "State the assumed manufacturer in the bid proposal."
+            ],
+            "source_reference": {
+              "sheet": "A2.3",
+              "page": 10,
+              "bounding_box": [
+                688,
+                499,
+                721,
+                600
+              ]
+            }
+          },
+          {
+            "severity": "info",
+            "category": "warranty_requirement",
+            "title": "10-Year Warranty for Exterior Ductwork",
+            "insight": "Mechanical specification 23 31 00 on sheet M0.2 requires a 10-year warranty for the QDUCT pre-insulated ductwork system. This must be communicated to the HVAC subcontractor and included in their pricing.",
+            "affected_packages": [
+              "HVAC"
+            ],
+            "suggested_actions": [
+              "Confirm the HVAC subcontractor can provide the specified QDUCT system and the required 10-year warranty.",
+              "Ensure warranty documentation is collected as part of project closeout."
+            ],
+            "source_reference": {
+              "sheet": "M0.2",
+              "page": 13,
+              "bounding_box": [
+                710,
+                689,
+                732,
+                953
+              ]
+            }
+          },
+          {
+            "id": "obs_001",
+            "severity": "critical",
+            "category": "pricing_concern",
+            "title": "Additive Alternates Identified",
+            "insight": "The project includes two significant Additive Alternates. Additive Alternate #1 covers work on the northwest portion of the roof, including RTU-1. Additive Alternate #2 covers work on the central-south portion of the roof, including RTU-5. These scopes must be priced separately from the base bid.",
+            "affected_packages": [
+              "DEMO",
+              "ROOF",
+              "HVAC",
+              "ELEC"
+            ],
+            "affected_line_items": [
+              "RTU-1",
+              "RTU-5"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Roof Plan",
+              "page": 6,
+              "bounding_box": [
+                300,
+                533,
+                311,
+                621
+              ],
+              "text_excerpt": "ADDITIVE ALTERNATE #1"
+            },
+            "suggested_actions": [
+              "Create separate cost breakdowns for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+              "Carefully perform takeoffs to delineate the exact boundaries of each alternate's scope."
+            ],
+            "estimated_impact": "High cost impact. Failure to separate pricing will result in a non-compliant bid."
+          },
+          {
+            "id": "obs_002",
+            "severity": "critical",
+            "category": "change_order_risk",
+            "title": "Potential for Unforeseen Deck Deterioration",
+            "insight": "General Note #1 on sheet A1.1 explicitly states that if any deteriorated decking is discovered after demolition, the architect must be contacted. This is a clear warning of a known risk of finding rotten or damaged roof decking, which is outside the base scope and would result in a change order.",
+            "affected_packages": [
+              "DEMO",
+              "WOOD",
+              "ROOF"
+            ],
+            "affected_line_items": [
+              "Existing BUR Roofing and Coverboard",
+              "Plywood Decking at Roof D"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                266,
+                81,
+                322,
+                297
+              ],
+              "text_excerpt": "AFTER DEMOLITION OF THE EXISTING ROOFING, IF ANY DETERIORATED DECKING IS DISCOVERED, EITHER THE ARCHITECT OR PROJECT MANAGER SHALL BE CONTACTED TO VERIFY THE EXTENT OF DAMAGE PRIOR TO REPLACEMENT OR COVERING."
+            },
+            "suggested_actions": [
+              "Include a specific bid clarification excluding the repair of unknown deteriorated decking.",
+              "Propose a unit price ($/SF) for plywood deck replacement to be used if such conditions are found."
+            ],
+            "estimated_impact": "Medium to high cost impact, depending on the extent of damage found."
+          },
+          {
+            "id": "obs_003",
+            "severity": "warning",
+            "category": "coordination_required",
+            "title": "Occupied Facility Constraints",
+            "insight": "The project is at a public Recreation Center, which is likely to remain operational during construction. This imposes significant constraints on work hours, noise, dust control, site access, and public safety. These factors must be incorporated into the project schedule and pricing.",
+            "affected_packages": [
+              "CIV-EARTH",
+              "DEMO",
+              "ROOF",
+              "PLUMB"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "General Notes",
+              "page": 2,
+              "bounding_box": [
+                618,
+                308,
+                640,
+                570
+              ],
+              "text_excerpt": "CONTRACTOR SHALL ADHERE TO LOCAL REQUIREMENTS FOR NOISE, HOURS OF OPERATION, AND DUST CONTROL."
+            },
+            "suggested_actions": [
+              "Clarify expected work hours with the owner.",
+              "Develop a site logistics and safety plan.",
+              "Include costs for temporary protection, daily cleanup, and potential off-hours work."
+            ],
+            "estimated_impact": "Medium cost and schedule impact."
+          },
+          {
+            "id": "obs_004",
+            "severity": "warning",
+            "category": "long_lead_item",
+            "title": "Rooftop Unit (RTU) Lead Times",
+            "insight": "HVAC rooftop units are known long-lead items, with delivery times that can extend for many months. The entire project schedule hinges on the procurement and delivery of the new RTUs. This must be verified immediately.",
+            "affected_packages": [
+              "HVAC"
+            ],
+            "affected_line_items": [
+              "RTU-1",
+              "RTU-2",
+              "RTU-5",
+              "RTU-6"
+            ],
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                210,
+                336,
+                232,
+                621
+              ]
+            },
+            "suggested_actions": [
+              "Contact Trane representatives or suppliers immediately to get current lead times for the specified models.",
+              "Base the construction schedule on confirmed delivery dates.",
+              "Inform the owner of any potential schedule impacts due to lead times."
+            ],
+            "estimated_impact": "High schedule impact."
+          },
+          {
+            "id": "obs_005",
+            "severity": "info",
+            "category": "coordination_required",
+            "title": "Crane Access and Site Logistics",
+            "insight": "The removal of old RTUs and installation of new ones will require a large crane. The site plan shows parking areas, but a detailed plan for crane setup, laydown/staging areas, and potential disruption to facility access is required. The cost for the crane, rigging, and any necessary traffic control must be included.",
+            "affected_packages": [
+              "DEMO",
+              "HVAC"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Civil Site Plan",
+              "page": 2
+            },
+            "suggested_actions": [
+              "Perform a site visit to confirm crane access routes and setup locations.",
+              "Develop a crane lift plan.",
+              "Include costs for crane mobilization, rental, operator, and flaggers if needed."
+            ],
+            "estimated_impact": "Medium cost impact."
+          },
+          {
+            "id": "obs_006",
+            "severity": "info",
+            "category": "code_compliance",
+            "title": "Lead-Safe Work Practices Required",
+            "insight": "General Note #7 on sheet A1.1 specifies that existing VTRs containing lead caps must be removed by workers trained in lead awareness. This implies specific OSHA requirements for handling and disposal of lead-containing materials, which may affect labor costs and disposal fees.",
+            "affected_packages": [
+              "DEMO",
+              "PLUMB"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                522,
+                81,
+                544,
+                297
+              ],
+              "text_excerpt": "VTR'S WHICH CONTAIN LEAD CAPS SHALL BE REMOVED BY WORKERS WHO ARE TRAINED IN LEAD AWARENESS. MATERIALS SHALL BE RECYCLED."
+            },
+            "suggested_actions": [
+              "Ensure the demolition/plumbing subcontractor is aware of this requirement and has appropriately certified personnel.",
+              "Verify and include any associated costs for specialized labor, PPE, and disposal."
+            ],
+            "estimated_impact": "Low cost impact, but high compliance risk."
+          }
+        ],
+        "extraction_confidence": 0.92,
+        "incomplete_areas": [
+          "Exact quantities for linear and area takeoffs (e.g., roofing SF, piping LF) require manual measurement from the plans."
+        ],
+        "extraction_notes": "The project primarily involves a complete roof replacement with significant upgrades to the rooftop HVAC systems and associated electrical and plumbing (roof drainage) work. The scope is well-defined through plans, details, and schedules. Key pricing considerations are the two additive alternates, the potential for discovering deteriorated roof decking, and the heavy coordination required between trades for the rooftop work. The civil scope for the new roof drain fields is also a significant component."
+      },
+      "cacheHit": true,
+      "cacheKey": "8061d4fb32a77135"
+    },
+    {
+      "passNumber": 2,
+      "model": "gemini-2.5-pro",
+      "purpose": "self_review",
+      "startedAt": "2025-11-26T22:14:45.423Z",
+      "completedAt": "2025-11-26T22:15:40.174Z",
+      "durationMs": 54751,
+      "tokensUsed": {
+        "input": 22014,
+        "output": 4320
+      },
+      "cost": 0.0707175,
+      "response": {
+        "additions": [
+          {
+            "work_package": "DEMO",
+            "item_number": "I",
+            "description": "Wood Privacy Fence",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Demo wood privacy fence.",
+            "notes": "Location shown on reference plan A1.0.",
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "Key Notes",
+              "page": 5,
+              "bounding_box": [
+                788,
+                708,
+                799,
+                844
+              ],
+              "text_excerpt": "DEMO WOOD PRIVACY FENCE."
+            },
+            "confidence": 1,
+            "reason_missed": "This was a keynote item that was overlooked in the initial pass."
+          },
+          {
+            "work_package": "HVAC",
+            "item_number": null,
+            "description": "Temporary Removal and Reinstallation of Rooftop Equipment",
+            "action": "Remove & Reinstall",
+            "quantity": null,
+            "unit": "EA",
+            "specifications": "Coordinate the temporary removal of mechanical, electrical or comm. equipment. Reinstall with new roofing on rubber walking pads.",
+            "notes": "This applies to equipment not being replaced but located within the new roofing area. Quantity needs to be verified from plans (e.g., RTU-3, RTU-4).",
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "Key Notes",
+              "page": 5,
+              "bounding_box": [
+                732,
+                708,
+                765,
+                953
+              ],
+              "text_excerpt": "COORDINATE THE TEMPORARY REMOVAL OF MECHANICAL, ELECTRICAL OR COMM. EQUIPMENT. REINSTALL WITH NEW ROOFING ON WALK-OFF PADS."
+            },
+            "confidence": 0.9,
+            "reason_missed": "This was noted in an observation but not created as a distinct, cost-bearing line item."
+          },
+          {
+            "work_package": "HVAC",
+            "item_number": "EF-4",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Weights/Cardio area.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                533,
+                336,
+                555,
+                953
+              ],
+              "text_excerpt": "EF-4"
+            },
+            "confidence": 1,
+            "reason_missed": "The initial extraction missed some of the fans listed in the schedule."
+          },
+          {
+            "work_package": "HVAC",
+            "item_number": "EF-5",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Weights/Cardio area.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                544,
+                336,
+                566,
+                953
+              ],
+              "text_excerpt": "EF-5"
+            },
+            "confidence": 1,
+            "reason_missed": "The initial extraction missed some of the fans listed in the schedule."
+          },
+          {
+            "work_package": "HVAC",
+            "item_number": null,
+            "description": "HVAC Systems Testing and Balancing",
+            "action": "Perform",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "An independent air balancing company will perform the air balancing of the complete heating and HVAC systems per the SMACNA balancing and adjustment manual. Adjust air quantities to within 5% of the design values.",
+            "notes": "Requires submission of a final report.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "Mechanical Specifications Cont'd",
+              "page": 13,
+              "bounding_box": [
+                766,
+                336,
+                810,
+                678
+              ],
+              "text_excerpt": "BALANCING & STARTUP"
+            },
+            "confidence": 1,
+            "reason_missed": "This is a specification requirement that represents a distinct subcontract."
+          },
+          {
+            "work_package": "ELEC",
+            "item_number": null,
+            "description": "Electrical Panel 'MECH'",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "208Y/120V 3P 4W, 150A Main Breaker. See panel schedule E5.0 for details.",
+            "notes": "New panel to feed new mechanical loads.",
+            "source_reference": {
+              "sheet": "E5.0",
+              "location": "Panel Schedule MECH",
+              "page": 23,
+              "bounding_box": [
+                111,
+                221,
+                144,
+                570
+              ],
+              "text_excerpt": "MECH"
+            },
+            "confidence": 1,
+            "reason_missed": "This new panel shown on the one-line and schedule was not included as a line item."
+          },
+          {
+            "work_package": "ROOF",
+            "item_number": null,
+            "description": "Interior Finish Repair",
+            "action": "Repair",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Repair all interior finishes that are damaged due to roof drain removal, leader repair, or other adjacencies as required to accomplish the work.",
+            "notes": "This is a General Contractor scope item. The extent of repairs is unknown and should be priced with an allowance.",
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                577,
+                81,
+                622,
+                297
+              ],
+              "text_excerpt": "CONTRACTOR SHALL REPAIR ALL INTERIOR FINISHES THAT ARE DAMAGED DUE TO ROOF DRAIN REMOVAL, LEADER REPAIR, OR OTHER ADJACENCIES AS REQUIRED TO ACCOMPLISH THE WORK."
+            },
+            "confidence": 1,
+            "reason_missed": "This was a general note requirement that has significant cost implications and was not previously itemized."
+          }
+        ],
+        "modifications": [
+          {
+            "original_item_ref": "DEMO.Existing BUR Roofing and Coverboard",
+            "changes": {
+              "notes": "Excludes Metal Roof areas, which are noted as Not In Contract (N.I.C.) per Key Note H on A1.0."
+            },
+            "reason": "To clarify the scope boundary and explicitly note the exclusion of the metal roof areas."
+          },
+          {
+            "original_item_ref": "HVAC.Ductwork",
+            "changes": {
+              "description": "Ductwork Transitions and New Exhaust Ductwork",
+              "specifications": "Galvanized steel, fabricated per SMACNA standards. Includes transitions from new RTUs to existing ductwork and new insulated exhaust duct runs for EF-1 and EF-3.",
+              "notes": "See M2.1 for new exhaust duct layout and M2.3 for RTU transition details."
+            },
+            "reason": "The original description was too generic. This modification adds specificity based on details found in the mechanical plans."
+          }
+        ],
+        "new_packages": [],
+        "gaps_identified": [
+          "The specific type, manufacturer, and duration (e.g., 20-year NDL) of the roofing warranty is not specified on the drawings and will be a major cost factor.",
+          "The route for the new main electrical feeder to panel 'MECH' is not shown and needs to be determined in the field, which could impact cost based on complexity.",
+          "Exhaust Fan EF-2 is listed in the schedule but not shown on the remodel plans. Clarification is needed on whether it is in the scope of work.",
+          "The exact quantity and locations of duct smoke detectors requiring new audio-visual alarms are not specified.",
+          "No structural drawings are provided to verify if the existing roof structure can support the new RTUs, which may be heavier than the units they replace. The mechanical plans note to coordinate with structural."
+        ],
+        "confidence_adjustments": [],
+        "ai_observations": [
+          {
+            "id": "obs_001",
+            "severity": "critical",
+            "category": "pricing_concern",
+            "title": "Additive Alternates Identified",
+            "insight": "The project includes two significant Additive Alternates. Additive Alternate #1 covers work on the northwest portion of the roof, including RTU-1. Additive Alternate #2 covers work on the central-south portion of the roof, including RTU-5. These scopes must be priced separately from the base bid.",
+            "affected_packages": [
+              "DEMO",
+              "ROOF",
+              "HVAC",
+              "ELEC"
+            ],
+            "affected_line_items": [
+              "RTU-1",
+              "RTU-5"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Roof Plan",
+              "page": 6,
+              "bounding_box": [
+                300,
+                533,
+                311,
+                621
+              ],
+              "text_excerpt": "ADDITIVE ALTERNATE #1"
+            },
+            "suggested_actions": [
+              "Create separate cost breakdowns for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+              "Carefully perform takeoffs to delineate the exact boundaries of each alternate's scope."
+            ],
+            "estimated_impact": "High cost impact. Failure to separate pricing will result in a non-compliant bid."
+          },
+          {
+            "id": "obs_002",
+            "severity": "critical",
+            "category": "change_order_risk",
+            "title": "Potential for Unforeseen Deck Deterioration",
+            "insight": "General Note #1 on sheet A1.1 explicitly states that if any deteriorated decking is discovered after demolition, the architect must be contacted. This is a clear warning of a known risk of finding rotten or damaged roof decking, which is outside the base scope and would result in a change order.",
+            "affected_packages": [
+              "DEMO",
+              "WOOD",
+              "ROOF"
+            ],
+            "affected_line_items": [
+              "Existing BUR Roofing and Coverboard",
+              "Plywood Decking at Roof D"
+            ],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                266,
+                81,
+                322,
+                297
+              ],
+              "text_excerpt": "AFTER DEMOLITION OF THE EXISTING ROOFING, IF ANY DETERIORATED DECKING IS DISCOVERED, EITHER THE ARCHITECT OR PROJECT MANAGER SHALL BE CONTACTED TO VERIFY THE EXTENT OF DAMAGE PRIOR TO REPLACEMENT OR COVERING."
+            },
+            "suggested_actions": [
+              "Include a specific bid clarification excluding the repair of unknown deteriorated decking.",
+              "Propose a unit price ($/SF) for plywood deck replacement to be used if such conditions are found."
+            ],
+            "estimated_impact": "Medium to high cost impact, depending on the extent of damage found."
+          },
+          {
+            "id": "obs_003",
+            "severity": "warning",
+            "category": "coordination_required",
+            "title": "Occupied Facility Constraints",
+            "insight": "The project is at a public Recreation Center, which is likely to remain operational during construction. This imposes significant constraints on work hours, noise, dust control, site access, and public safety. These factors must be incorporated into the project schedule and pricing.",
+            "affected_packages": [
+              "CIV-EARTH",
+              "DEMO",
+              "ROOF",
+              "PLUMB"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "General Notes",
+              "page": 2,
+              "bounding_box": [
+                618,
+                308,
+                640,
+                570
+              ],
+              "text_excerpt": "CONTRACTOR SHALL ADHERE TO LOCAL REQUIREMENTS FOR NOISE, HOURS OF OPERATION, AND DUST CONTROL."
+            },
+            "suggested_actions": [
+              "Clarify expected work hours with the owner.",
+              "Develop a site logistics and safety plan.",
+              "Include costs for temporary protection, daily cleanup, and potential off-hours work."
+            ],
+            "estimated_impact": "Medium cost and schedule impact."
+          },
+          {
+            "id": "obs_004",
+            "severity": "warning",
+            "category": "long_lead_item",
+            "title": "Rooftop Unit (RTU) Lead Times",
+            "insight": "HVAC rooftop units are known long-lead items, with delivery times that can extend for many months. The entire project schedule hinges on the procurement and delivery of the new RTUs. This must be verified immediately.",
+            "affected_packages": [
+              "HVAC"
+            ],
+            "affected_line_items": [
+              "RTU-1",
+              "RTU-2",
+              "RTU-5",
+              "RTU-6"
+            ],
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                210,
+                336,
+                232,
+                621
+              ]
+            },
+            "suggested_actions": [
+              "Contact Trane representatives or suppliers immediately to get current lead times for the specified models.",
+              "Base the construction schedule on confirmed delivery dates.",
+              "Inform the owner of any potential schedule impacts due to lead times."
+            ],
+            "estimated_impact": "High schedule impact."
+          },
+          {
+            "id": "obs_005",
+            "severity": "info",
+            "category": "coordination_required",
+            "title": "Crane Access and Site Logistics",
+            "insight": "The removal of old RTUs and installation of new ones will require a large crane. The site plan shows parking areas, but a detailed plan for crane setup, laydown/staging areas, and potential disruption to facility access is required. The cost for the crane, rigging, and any necessary traffic control must be included.",
+            "affected_packages": [
+              "DEMO",
+              "HVAC"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Civil Site Plan",
+              "page": 2
+            },
+            "suggested_actions": [
+              "Perform a site visit to confirm crane access routes and setup locations.",
+              "Develop a crane lift plan.",
+              "Include costs for crane mobilization, rental, operator, and flaggers if needed."
+            ],
+            "estimated_impact": "Medium cost impact."
+          },
+          {
+            "id": "obs_006",
+            "severity": "info",
+            "category": "code_compliance",
+            "title": "Lead-Safe Work Practices Required",
+            "insight": "General Note #7 on sheet A1.1 specifies that existing VTRs containing lead caps must be removed by workers trained in lead awareness. This implies specific OSHA requirements for handling and disposal of lead-containing materials, which may affect labor costs and disposal fees.",
+            "affected_packages": [
+              "DEMO",
+              "PLUMB"
+            ],
+            "affected_line_items": [],
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                522,
+                81,
+                544,
+                297
+              ],
+              "text_excerpt": "VTR'S WHICH CONTAIN LEAD CAPS SHALL BE REMOVED BY WORKERS WHO ARE TRAINED IN LEAD AWARENESS. MATERIALS SHALL BE RECYCLED."
+            },
+            "suggested_actions": [
+              "Ensure the demolition/plumbing subcontractor is aware of this requirement and has appropriately certified personnel.",
+              "Verify and include any associated costs for specialized labor, PPE, and disposal."
+            ],
+            "estimated_impact": "Low cost impact, but high compliance risk."
+          }
+        ],
+        "overall_assessment": {
+          "extraction_completeness": 0.95,
+          "data_quality": 0.9,
+          "risk_level": "medium",
+          "summary": "The extraction is now more complete, capturing key scope items from general notes and schedules that were initially missed. The project is a relatively straightforward roof and HVAC replacement, but carries a medium risk level due to several factors: the presence of two large additive alternates that complicate bidding, the high potential for change orders related to unknown roof deck conditions, and the logistical challenges of working on an occupied public facility. Long lead times for RTUs are the primary schedule risk. Careful planning, subcontractor coordination, and clear communication with the owner regarding allowances and potential risks will be critical for success."
+        }
+      },
+      "cacheHit": true,
+      "cacheKey": "289363ffa3503cdc"
+    },
+    {
+      "passNumber": 3,
+      "model": "claude-sonnet-4.5",
+      "purpose": "cross_validation",
+      "startedAt": "2025-11-27T08:35:56.986Z",
+      "completedAt": "2025-11-27T08:35:56.986Z",
+      "durationMs": 0,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": false,
+      "cacheKey": "4b529b30b1f044ac"
+    }
+  ],
+  "finalResult": {
+    "workPackages": [
+      {
+        "packageId": "CIV-EARTH",
+        "name": "Civil - Earthwork & Site Prep",
+        "csi_division": "31",
+        "trade": "Civil / Earthwork",
+        "description": "Excavation, backfill, and grading for new roof drain fields and associated trenching.",
+        "scope_responsible": "Civil Contractor",
+        "confidence": {
+          "overall": 0.95,
+          "reasoning": "Drawings provide clear dimensions and details for the drain fields."
+        },
+        "line_items": [
+          {
+            "item_number": null,
+            "description": "Excavation for Roof Drain Field #1",
+            "action": "Excavate",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "30'L x 15'W x 3.5'D",
+            "notes": "Includes trench for 4\" DIP CL52 rain leader pipe.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2,
+              "bounding_box": [
+                288,
+                748,
+                352,
+                871
+              ],
+              "text_excerpt": "30'L X 15'W X 3.5'D ROOF DRAIN FIELD"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Excavation for Roof Drain Field #2",
+            "action": "Excavate",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "12'L x 4'W x 3.5'D",
+            "notes": "Includes trench for 4\" DIP CL52 rain leader pipe.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #2",
+              "page": 2,
+              "bounding_box": [
+                518,
+                629,
+                552,
+                700
+              ],
+              "text_excerpt": "12'L X 4'W X 3.5'D ROOF DRAIN FIELD"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Backfill for drain fields and trenches",
+            "action": "Install",
+            "quantity": null,
+            "unit": "CY",
+            "specifications": "Backfill with NFS sand/gravel from excavation. Compact to 95% max dry density.",
+            "notes": "See notes on C2.0 and C3.0.",
+            "source_reference": {
+              "sheet": "C2.0",
+              "location": "Typical Section - Roof Drain Field #1",
+              "page": 3,
+              "bounding_box": [
+                79,
+                526,
+                101,
+                818
+              ],
+              "text_excerpt": "BACKFILL WITH NFS SAND/GRAVEL FROM EXCAVATION TO MATCH EXISTING SOIL STRATA."
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Regrade disturbed area",
+            "action": "Regrade",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "Regrade to maintain existing drainage patterns.",
+            "notes": "Applies to area around Roof Drain Field #2.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #2",
+              "page": 2,
+              "bounding_box": [
+                585,
+                662,
+                607,
+                871
+              ],
+              "text_excerpt": "REGRADE DISTURBED AREA TO MAINTAIN EXISTING DRAINAGE PATTERNS"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          }
+        ]
+      },
+      {
+        "packageId": "CIV-EXT",
+        "name": "Civil - Exterior Improvements",
+        "csi_division": "32",
+        "trade": "Civil / Paving / Concrete",
+        "description": "Asphalt sawcutting, paving, concrete sidewalk replacement, and landscaping.",
+        "scope_responsible": "Civil Contractor",
+        "confidence": {
+          "overall": 0.9,
+          "reasoning": "Details are provided, but quantities need to be calculated from plans."
+        },
+        "line_items": [
+          {
+            "item_number": null,
+            "description": "Asphalt Pavement Sawcutting",
+            "action": "Sawcut",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Sawcut clean edge on existing asphalt pavement as required for trench.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2,
+              "bounding_box": [
+                166,
+                748,
+                199,
+                871
+              ],
+              "text_excerpt": "SAWCUT CLEAN EDGE ON EXISTING ASPHALT PAVEMENT AS REQUIRED FOR TRENCH."
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Asphalt Pavement",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "2\" Asphalt Pavement over 2\" Leveling Course.",
+            "notes": "Repave trenched area at Roof Drain Field #1.",
+            "source_reference": {
+              "sheet": "C2.0",
+              "location": "Typical Section - Roof Drain Field #1",
+              "page": 3,
+              "bounding_box": [
+                58,
+                546,
+                79,
+                678
+              ],
+              "text_excerpt": "2\" ASPHALT PAVEMENT\n2\" LEVELING COURSE"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Concrete Sidewalk",
+            "action": "Demo & Replace",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "4\" thick, 3,000 PSI concrete with W1.4xW1.4 welded wire mesh.",
+            "notes": "Broom finish perpendicular to pedestrian traffic.",
+            "source_reference": {
+              "sheet": "C3.0",
+              "location": "Typical Concrete Sidewalk Detail",
+              "page": 4,
+              "bounding_box": [
+                288,
+                601,
+                300,
+                811
+              ],
+              "text_excerpt": "TYPICAL CONCRETE SIDEWALK"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Topsoil & Seeding",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "4\" Topsoil & Seeding.",
+            "notes": "At disturbed area around Roof Drain Field #2.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #2",
+              "page": 2,
+              "bounding_box": [
+                607,
+                767,
+                618,
+                871
+              ],
+              "text_excerpt": "PROVIDE 4\" TOPSOIL & SEEDING"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          }
+        ]
+      },
+      {
+        "packageId": "CIV-UTIL",
+        "name": "Civil - Utilities",
+        "csi_division": "33",
+        "trade": "Civil / Utilities",
+        "description": "Installation of new underground storm drainage system including piping, drain rock, geotextile, and insulation.",
+        "scope_responsible": "Civil Contractor",
+        "confidence": {
+          "overall": 0.95,
+          "reasoning": "Detailed sections and plans are provided for the new drain fields."
+        },
+        "line_items": [
+          {
+            "item_number": null,
+            "description": "Coarse Grade Drain Rock",
+            "action": "Install",
+            "quantity": null,
+            "unit": "CY",
+            "specifications": "Washed drain rock per sieve analysis on sheet C2.0.",
+            "notes": "For both drain fields.",
+            "source_reference": {
+              "sheet": "C2.0",
+              "location": "Sieve Table",
+              "page": 3,
+              "bounding_box": [
+                218,
+                92,
+                322,
+                189
+              ],
+              "text_excerpt": "COARSE GRADE DRAIN ROCK"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Geotextile Fabric",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "TYPAR 3401 or approved alternative.",
+            "notes": "Install on top of drain rock.",
+            "source_reference": {
+              "sheet": "C2.0",
+              "location": "Typical Section - Roof Drain Field #1",
+              "page": 3,
+              "bounding_box": [
+                199,
+                830,
+                232,
+                953
+              ],
+              "text_excerpt": "TYPAR 3401 GEOTEXTILE FABRIC OR APPROVED ALTERNATIVE ON TOP OF DRAIN ROCK"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Perforated Drainage Pipe",
+            "action": "Install",
+            "quantity": 3,
+            "unit": "EA",
+            "specifications": "24\" ADS Perforated N-12 CPEP, Class 2 perforations.",
+            "notes": "Laterals for Roof Drain Field #1.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2,
+              "bounding_box": [
+                352,
+                748,
+                374,
+                871
+              ],
+              "text_excerpt": "(3) 24\" LATERALS PER CIVIL SHEET C2.0"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Perforated Drainage Pipe",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "24\" CPEP.",
+            "notes": "Lateral for Roof Drain Field #2.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #2",
+              "page": 2,
+              "bounding_box": [
+                552,
+                629,
+                574,
+                700
+              ],
+              "text_excerpt": "WITH (1) 24\" CPEP PER CIVIL SHEET C3.0"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Rain Leader Pipe",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "4\" DIP CL52 @ 2.0% slope.",
+            "notes": "Provide heat trace per electrical.",
+            "source_reference": {
+              "sheet": "C1.0",
+              "location": "Enlarged Site Plan - Roof Drain #1",
+              "page": 2,
+              "bounding_box": [
+                221,
+                700,
+                254,
+                871
+              ],
+              "text_excerpt": "4\" DIP CL52 RAIN LEADER PIPE @ 2.0% SLOPE. PROVIDE HEAT TRACE PER ELECTRICAL"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Rigid Insulation Board",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "4\" 'Insulfoam 40' Expanded Polystyrene.",
+            "notes": "Across full dimension of drain fields. Stagger joints.",
+            "source_reference": {
+              "sheet": "C2.0",
+              "location": "Typical Section - Roof Drain Field #1",
+              "page": 3,
+              "bounding_box": [
+                157,
+                830,
+                199,
+                953
+              ],
+              "text_excerpt": "4\" 'INSULFOAM 40' EXPANDED POLYSTYRENE INSULATION BOARD ACROSS FULL DIMENSION OF DRAIN FIELD."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          }
+        ]
+      },
+      {
+        "packageId": "DEMO",
+        "name": "Demolition",
+        "csi_division": "02",
+        "trade": "Demolition",
+        "description": "Demolition of existing roofing, parapets, scuppers, rooftop equipment, interior fans, and associated MEP systems.",
+        "scope_responsible": "General Contractor / Subcontractors",
+        "confidence": {
+          "overall": 0.9,
+          "reasoning": "Demolition plans are provided, but some existing conditions are unknown until demo begins."
+        },
+        "line_items": [
+          {
+            "item_number": "1",
+            "description": "Existing BUR Roofing and Coverboard",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "Demo all existing BUR roofing and coverboard. Demo all existing tapered insulation at crickets. Existing non-tapered insulation to remain.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Demo Roof Plan Notes",
+              "page": 6,
+              "bounding_box": [
+                688,
+                113,
+                721,
+                498
+              ],
+              "text_excerpt": "DEMO ALL EXISTING BUR ROOFING AND COVERBOARD. DEMO ALL EXISTING TAPERED INSULATION AT CRICKETS. EXISTING NON-TAPERED INSULATION TO REMAIN."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "2",
+            "description": "Existing Parapet Cap Flashing",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Demo all existing parapet cap flashing, typ.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Demo Roof Plan Notes",
+              "page": 6,
+              "bounding_box": [
+                721,
+                113,
+                732,
+                362
+              ],
+              "text_excerpt": "DEMO ALL EXISTING PARAPET CAP FLASHING, TYP."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "6",
+            "description": "Existing Scuppers",
+            "action": "Demo and Infill",
+            "quantity": null,
+            "unit": "EA",
+            "specifications": "Demo and infill existing scuppers other than at roof B.",
+            "notes": "Roof B scuppers to be removed and replaced.",
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Demo Roof Plan Notes",
+              "page": 6,
+              "bounding_box": [
+                809,
+                113,
+                831,
+                498
+              ],
+              "text_excerpt": "DEMO AND INFILL EXISTING SCUPPERS OTHER THAN AT ROOF B, TYP. ROOF B SCUPPERS TO BE REMOVED AND REPLACED PER DETAIL 5/A2.3."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "9",
+            "description": "Roofing, Sheathing, and Sloped 2x4 Sleepers at Roof D",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "Demo roofing, sheathing and sloped 2x4 sleepers.",
+            "notes": "Located at Roof D.",
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "Demo Roof Plan Notes",
+              "page": 6,
+              "bounding_box": [
+                864,
+                113,
+                875,
+                426
+              ],
+              "text_excerpt": "DEMO ROOFING, SHEATHING AND SLOPED 2X4 SLEEPERS."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "J",
+            "description": "Roof Access Ladder",
+            "action": "Demo and Replace",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Demo and replace roof access ladder at new location per plan.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "Key Notes",
+              "page": 5,
+              "bounding_box": [
+                800,
+                708,
+                822,
+                953
+              ],
+              "text_excerpt": "DEMO AND REPLACE ROOF ACCESS LADDER AT NEW LOCATION PER PLAN."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "1",
+            "description": "Rooftop Unit (RTU)",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "EA",
+            "specifications": "Demolish RTU, roof curb and all associated appurtenances.",
+            "notes": "Applies to RTU-1, RTU-2, RTU-5, RTU-6.",
+            "source_reference": {
+              "sheet": "M1.2",
+              "location": "Referenced Sheet Notes",
+              "page": 15,
+              "bounding_box": [
+                188,
+                777,
+                210,
+                953
+              ],
+              "text_excerpt": "DEMOLISH RTU, ROOF CURB AND ALL ASSOCIATED APPURTENANCES."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "2",
+            "description": "Gas Piping",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Demolish gas piping, supports and all associated appurtenances.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "M1.2",
+              "location": "Referenced Sheet Notes",
+              "page": 15,
+              "bounding_box": [
+                210,
+                777,
+                232,
+                953
+              ],
+              "text_excerpt": "DEMOLISH GAS PIPING, SUPPORTS AND ALL ASSOCIATED APPURTENANCES."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "1",
+            "description": "Interior Fan",
+            "action": "Demo",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Demolish fan, wiring, controls and all associated appurtenances.",
+            "notes": "Patch wall to match adjacent construction.",
+            "source_reference": {
+              "sheet": "M1.1",
+              "location": "Referenced Sheet Notes",
+              "page": 14,
+              "bounding_box": [
+                100,
+                659,
+                133,
+                871
+              ],
+              "text_excerpt": "DEMOLISH FAN, WIRING, CONTROLS AND ALL ASSOCIATED APPURTENANCES. PATCH WALL TO MATCH ADJACENT CONSTRUCTION MATERIALS."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "1",
+            "description": "Electrical Panel 'X'",
+            "action": "Demo",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Demolish existing panel 'X'. Demolish feeder wires and conduit back to panel.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "E1.0",
+              "location": "Notes",
+              "page": 19,
+              "bounding_box": [
+                100,
+                418,
+                122,
+                570
+              ],
+              "text_excerpt": "DEMOLISH EXISTING PANEL 'X'. DEMOLISH FEEDER WIRES AND CONDUIT BACK TO PANEL."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "1",
+            "description": "Electrical wiring and conduit to rooftop equipment",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "LS",
+            "specifications": "Demolish wires and conduit back to panel.",
+            "notes": "For all demolished rooftop equipment.",
+            "source_reference": {
+              "sheet": "E2.0",
+              "location": "Notes",
+              "page": 20,
+              "bounding_box": [
+                647,
+                736,
+                658,
+                871
+              ],
+              "text_excerpt": "DEMOLISH WIRES AND CONDUIT BACK TO PANEL."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "I",
+            "description": "Wood Privacy Fence",
+            "action": "Demo",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Demo wood privacy fence.",
+            "notes": "Location shown on reference plan A1.0.",
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "Key Notes",
+              "page": 5,
+              "bounding_box": [
+                788,
+                708,
+                799,
+                844
+              ],
+              "text_excerpt": "DEMO WOOD PRIVACY FENCE."
+            }
+          }
+        ]
+      },
+      {
+        "packageId": "WOOD",
+        "name": "Wood, Plastics, and Composites",
+        "csi_division": "06",
+        "trade": "Carpentry",
+        "description": "Framing for parapets, new roof sheathing, and blocking.",
+        "scope_responsible": "Carpentry Contractor",
+        "confidence": {
+          "overall": 0.85,
+          "reasoning": "Details are provided, but quantities require takeoff. Potential for unforeseen wood rot in existing structures."
+        },
+        "line_items": [
+          {
+            "item_number": null,
+            "description": "Parapet Framing",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Sister new 2x4 parapet framing to existing.",
+            "notes": "See detail 2/A2.1.",
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                188,
+                388,
+                210,
+                488
+              ],
+              "text_excerpt": "SISTER NEW 2X4 PARAPET FRAMING TO EXISTING"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Plywood Sheathing at Parapets",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "New 1/2\" Plywood Sheathing.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                210,
+                388,
+                221,
+                488
+              ],
+              "text_excerpt": "NEW 1/2\" PLYWOOD SHEATHING"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Plywood Decking at Roof D",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "New 1/2\" Plywood Decking.",
+            "notes": "Replaces demolished sheathing.",
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                407,
+                689,
+                439,
+                721
+              ],
+              "text_excerpt": "NEW 1/2\"\nPLYWOOD\nDECKING"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Composite Trim",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "New 1x8 over 1x10 composite trim.",
+            "notes": "At parapets.",
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                166,
+                388,
+                188,
+                488
+              ],
+              "text_excerpt": "NEW 1X8 OVER 1X10 COMPOSITE TRIM"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Blocking",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Blocking as needed.",
+            "notes": "At parapets for flashing attachment.",
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                144,
+                388,
+                155,
+                488
+              ],
+              "text_excerpt": "BLOCKING AS NEEDED"
+            },
+            "confidence": 0.8,
+            "flags": [
+              "ESTIMATE_QTY",
+              "NEEDS_REVIEW"
+            ]
+          }
+        ]
+      },
+      {
+        "packageId": "ROOF",
+        "name": "Thermal and Moisture Protection",
+        "csi_division": "07",
+        "trade": "Roofing",
+        "description": "Installation of new roofing system, insulation, flashing, and accessories.",
+        "scope_responsible": "Roofing Contractor",
+        "confidence": {
+          "overall": 0.9,
+          "reasoning": "Plans and details are clear, but specific roofing system manufacturer is not specified, which affects pricing."
+        },
+        "line_items": [
+          {
+            "item_number": "1",
+            "description": "New Roofing System",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "EPDM Fully Adhered Roofing Membrane. New roof system to be installed per specifications and manufacturer requirements.",
+            "notes": "See details 9/A2.3 and 10/A2.3 for roof types.",
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "Roof Plan Notes",
+              "page": 7,
+              "bounding_box": [
+                288,
+                81,
+                310,
+                297
+              ],
+              "text_excerpt": "NEW ROOFING SYSTEM TO BE INSTALLED PER SPECIFICATIONS AND MANUFACTURER REQUIREMENTS."
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY",
+              "NEEDS_REVIEW"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Roof Coverboard",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "New 5/8\" Coverboard.",
+            "notes": "Part of roof type R2.",
+            "source_reference": {
+              "sheet": "A2.3",
+              "location": "Roof Type Detail",
+              "page": 10,
+              "bounding_box": [
+                732,
+                689,
+                743,
+                789
+              ],
+              "text_excerpt": "NEW 5/8\"COVERBOARD"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "9",
+            "description": "Tapered Insulation Roof Crickets",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "New tapered insulation roof crickets to slope at 1/4\" per 12\" to roof drains, typ.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "Roof Plan Notes",
+              "page": 7,
+              "bounding_box": [
+                500,
+                81,
+                522,
+                297
+              ],
+              "text_excerpt": "NEW TAPERED INSULATION ROOF CRICKETS TO SLOPE AT 1/4\" PER 12\" TO ROOF DRAINS, TYP."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "2",
+            "description": "Parapet Cap Flashing",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "New 24 GA. pre-finished flashing over cont. hold down cleats.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A2.1",
+              "location": "New Parapet Detail",
+              "page": 8,
+              "bounding_box": [
+                111,
+                388,
+                144,
+                488
+              ],
+              "text_excerpt": "NEW 24 GA. PRE-FINISHED FLASHING OVER CONT. HOLD DOWN CLEATS"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "6",
+            "description": "New Scupper",
+            "action": "Install",
+            "quantity": null,
+            "unit": "EA",
+            "specifications": "20 GA. welded scupper sleeve with seamless alum gutter and downspout.",
+            "notes": "Per detail 5/A2.3.",
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "Roof Plan Notes",
+              "page": 7,
+              "bounding_box": [
+                433,
+                81,
+                444,
+                244
+              ],
+              "text_excerpt": "NEW SCUPPER PER DETAIL 5/A2.3."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": "11",
+            "description": "Roofing Walking Mats",
+            "action": "Install",
+            "quantity": null,
+            "unit": "SF",
+            "specifications": "Provide roofing walking mats from access hatch to roof access ladder.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "Roof Plan Notes",
+              "page": 7,
+              "bounding_box": [
+                577,
+                81,
+                599,
+                297
+              ],
+              "text_excerpt": "PROVIDE ROOFING WALKING MATS FROM ACCESS HATCH TO ROOF ACCESS LADDER."
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Interior Finish Repair",
+            "action": "Repair",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "Repair all interior finishes that are damaged due to roof drain removal, leader repair, or other adjacencies as required to accomplish the work.",
+            "notes": "This is a General Contractor scope item. The extent of repairs is unknown and should be priced with an allowance.",
+            "source_reference": {
+              "sheet": "A1.1",
+              "location": "General Notes",
+              "page": 6,
+              "bounding_box": [
+                577,
+                81,
+                622,
+                297
+              ],
+              "text_excerpt": "CONTRACTOR SHALL REPAIR ALL INTERIOR FINISHES THAT ARE DAMAGED DUE TO ROOF DRAIN REMOVAL, LEADER REPAIR, OR OTHER ADJACENCIES AS REQUIRED TO ACCOMPLISH THE WORK."
+            }
+          }
+        ]
+      },
+      {
+        "packageId": "SPEC",
+        "name": "Specialties",
+        "csi_division": "10",
+        "trade": "Specialties",
+        "description": "Installation of new roof access ladder.",
+        "scope_responsible": "Specialties Contractor",
+        "confidence": {
+          "overall": 0.9,
+          "reasoning": "Details are provided for the ladder."
+        },
+        "line_items": [
+          {
+            "item_number": "5",
+            "description": "Roof Access Ladder",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Aluminum ladder with serrated rungs and side rails. See details 6/A2.3 and 8/A2.2.",
+            "notes": "New ladder per spec, see details 6,7/A2.3.",
+            "source_reference": {
+              "sheet": "A1.2",
+              "location": "Roof Plan Notes",
+              "page": 7,
+              "bounding_box": [
+                411,
+                81,
+                422,
+                281
+              ],
+              "text_excerpt": "NEW ROOF LADDER PER SPEC, SEE DETAILS 6,7/A2.3."
+            },
+            "confidence": 1,
+            "flags": []
+          }
+        ]
+      },
+      {
+        "packageId": "PLUMB",
+        "name": "Plumbing",
+        "csi_division": "22",
+        "trade": "Plumbing",
+        "description": "Installation of new roof drains, overflow drains, and interior rain leader piping.",
+        "scope_responsible": "Plumbing Contractor",
+        "confidence": {
+          "overall": 0.95,
+          "reasoning": "Fixture schedule and piping plans are clear."
+        },
+        "line_items": [
+          {
+            "item_number": "RD-1",
+            "description": "Roof Drain",
+            "action": "Install",
+            "quantity": 6,
+            "unit": "EA",
+            "specifications": "Zurn Z100-C-CI-R-89 4\" CI body, 8\" CI dome",
+            "notes": "Quantity counted from M2.2.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Plumbing Fixture Schedule",
+              "page": 12,
+              "bounding_box": [
+                144,
+                336,
+                177,
+                678
+              ],
+              "text_excerpt": "RD-1 ROOF DRAIN"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "OD-1",
+            "description": "Overflow Drain",
+            "action": "Install",
+            "quantity": 6,
+            "unit": "EA",
+            "specifications": "Zurn Z100-C-CI-R-89 4\" CI body, 8\" CI dome, 2\" water dam",
+            "notes": "Quantity counted from M2.2.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Plumbing Fixture Schedule",
+              "page": 12,
+              "bounding_box": [
+                177,
+                336,
+                199,
+                678
+              ],
+              "text_excerpt": "OD-1 OVERFLOW DRAIN"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Rain Leader Piping",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Cast iron with no-hub fittings or DWV ABS pipe.",
+            "notes": "Sizes range from 3\" to 4\". See plan M2.2 for layout.",
+            "source_reference": {
+              "sheet": "M2.2",
+              "location": "Rainleader Piping Plan",
+              "page": 17,
+              "bounding_box": [
+                933,
+                113,
+                955,
+                262
+              ],
+              "text_excerpt": "RAINLEADER PIPING PLAN"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Pipe Insulation",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "1.0-inch fiberglass pipe insulation with factory applied all-service jacket.",
+            "notes": "For storm drainage piping.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "Mechanical Specifications",
+              "page": 13,
+              "bounding_box": [
+                500,
+                336,
+                533,
+                678
+              ],
+              "text_excerpt": "PIPE INSULATION: FIBERGLASS PIPE INSULATION WITH FACTORY APPLIED ALL-SERVICE JACKET"
+            },
+            "confidence": 1,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          }
+        ]
+      },
+      {
+        "packageId": "HVAC",
+        "name": "Heating, Ventilating, and Air-Conditioning",
+        "csi_division": "23",
+        "trade": "Mechanical / HVAC",
+        "description": "Installation of new rooftop units, exhaust fans, gas piping, and ductwork.",
+        "scope_responsible": "Mechanical Contractor",
+        "confidence": {
+          "overall": 0.95,
+          "reasoning": "Detailed equipment schedules and plans are provided."
+        },
+        "line_items": [
+          {
+            "item_number": "RTU-1",
+            "description": "Roof Top Gas/Electric A/C Unit",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Trane YSC060, 5 Ton, 1200 CFM, 120 MBH Gas Heat",
+            "notes": "Additive Alternate #1.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                288,
+                336,
+                322,
+                953
+              ],
+              "text_excerpt": "RTU-1"
+            },
+            "confidence": 1,
+            "flags": [
+              "ADD_ALT"
+            ]
+          },
+          {
+            "item_number": "RTU-2",
+            "description": "Roof Top Gas/Electric A/C Unit",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Trane YSC060, 5 Ton, 1200 CFM, 120 MBH Gas Heat",
+            "notes": null,
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                322,
+                336,
+                344,
+                953
+              ],
+              "text_excerpt": "RTU-2"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "RTU-5",
+            "description": "Roof Top Gas/Electric A/C Unit",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Trane YSC090, 7.5 Ton, 2610 CFM, 270 MBH Gas Heat",
+            "notes": "Additive Alternate #2.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                344,
+                336,
+                366,
+                953
+              ],
+              "text_excerpt": "RTU-5"
+            },
+            "confidence": 1,
+            "flags": [
+              "ADD_ALT"
+            ]
+          },
+          {
+            "item_number": "RTU-6",
+            "description": "Roof Top Gas/Electric A/C Unit",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Trane YHC120, 10 Ton, 3180 CFM, 450 MBH Gas Heat",
+            "notes": null,
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Roof Top Gas/Electric A/C Unit Schedule",
+              "page": 12,
+              "bounding_box": [
+                366,
+                336,
+                388,
+                953
+              ],
+              "text_excerpt": "RTU-6"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "EF-1",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Industrial/Locker Room.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                488,
+                336,
+                511,
+                953
+              ],
+              "text_excerpt": "EF-1"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "EF-3",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Industrial/Locker Room.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                522,
+                336,
+                544,
+                953
+              ],
+              "text_excerpt": "EF-3"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Natural Gas Piping",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Black steel, ASTM A120 or A53.",
+            "notes": "See plan M2.3 for layout and sizes.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "Mechanical Specifications",
+              "page": 13,
+              "bounding_box": [
+                288,
+                336,
+                300,
+                444
+              ],
+              "text_excerpt": "23 11 00 FUEL PIPING"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Ductwork",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LF",
+            "specifications": "Galvanized steel, fabricated per SMACNA standards.",
+            "notes": "Includes transitions from new RTUs to existing ductwork.",
+            "source_reference": {
+              "sheet": "M2.3",
+              "location": "RTU-5 Roof Curb Detail",
+              "page": 18,
+              "bounding_box": [
+                688,
+                811,
+                721,
+                953
+              ],
+              "text_excerpt": "TRANSITION RETURN AIR DUCT OPENING FROM BOTTOM OF RTU-5 TO (E) RETURN AIR DUCT"
+            },
+            "confidence": 0.9,
+            "flags": [
+              "ESTIMATE_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Insulated Roof Curb",
+            "action": "Install",
+            "quantity": 4,
+            "unit": "EA",
+            "specifications": "Field fabricated insulated roof curb, 24\" high.",
+            "notes": "For RTU-1, -2, -5, -6. Coordinate with structural.",
+            "source_reference": {
+              "sheet": "M2.3",
+              "location": "RTU-5 Roof Curb Detail",
+              "page": 18,
+              "bounding_box": [
+                644,
+                811,
+                677,
+                953
+              ],
+              "text_excerpt": "FIELD FABRICATED INSULATED ROOF CURB. 24\" HIGH, COORDINATE WITH STRUCTURAL FOR COMPONENTS"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Temporary Removal and Reinstallation of Rooftop Equipment",
+            "action": "Remove & Reinstall",
+            "quantity": null,
+            "unit": "EA",
+            "specifications": "Coordinate the temporary removal of mechanical, electrical or comm. equipment. Reinstall with new roofing on rubber walking pads.",
+            "notes": "This applies to equipment not being replaced but located within the new roofing area. Quantity needs to be verified from plans (e.g., RTU-3, RTU-4).",
+            "source_reference": {
+              "sheet": "A1.0",
+              "location": "Key Notes",
+              "page": 5,
+              "bounding_box": [
+                732,
+                708,
+                765,
+                953
+              ],
+              "text_excerpt": "COORDINATE THE TEMPORARY REMOVAL OF MECHANICAL, ELECTRICAL OR COMM. EQUIPMENT. REINSTALL WITH NEW ROOFING ON WALK-OFF PADS."
+            }
+          },
+          {
+            "item_number": "EF-4",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Weights/Cardio area.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                533,
+                336,
+                555,
+                953
+              ],
+              "text_excerpt": "EF-4"
+            }
+          },
+          {
+            "item_number": "EF-5",
+            "description": "Exhaust Fan",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Greenheck CUBE 121, 200 CFM, 120V",
+            "notes": "Weights/Cardio area.",
+            "source_reference": {
+              "sheet": "M0.1",
+              "location": "Fan Schedule",
+              "page": 12,
+              "bounding_box": [
+                544,
+                336,
+                566,
+                953
+              ],
+              "text_excerpt": "EF-5"
+            }
+          },
+          {
+            "item_number": null,
+            "description": "HVAC Systems Testing and Balancing",
+            "action": "Perform",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "An independent air balancing company will perform the air balancing of the complete heating and HVAC systems per the SMACNA balancing and adjustment manual. Adjust air quantities to within 5% of the design values.",
+            "notes": "Requires submission of a final report.",
+            "source_reference": {
+              "sheet": "M0.2",
+              "location": "Mechanical Specifications Cont'd",
+              "page": 13,
+              "bounding_box": [
+                766,
+                336,
+                810,
+                678
+              ],
+              "text_excerpt": "BALANCING & STARTUP"
+            }
+          }
+        ]
+      },
+      {
+        "packageId": "ELEC",
+        "name": "Electrical",
+        "csi_division": "26",
+        "trade": "Electrical",
+        "description": "Demolition of existing panel and feeders, installation of new panel, feeders, and power to new mechanical equipment. Includes heat trace system.",
+        "scope_responsible": "Electrical Contractor",
+        "confidence": {
+          "overall": 0.9,
+          "reasoning": "Plans and one-line diagrams are provided. Panel schedules define loads."
+        },
+        "line_items": [
+          {
+            "item_number": "2",
+            "description": "Electrical Panel 'D'",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "Install new panel 'D' around corner as shown. Move all existing circuits from demolish panel to new panel.",
+            "notes": null,
+            "source_reference": {
+              "sheet": "E1.0",
+              "location": "Notes",
+              "page": 19,
+              "bounding_box": [
+                122,
+                418,
+                144,
+                570
+              ],
+              "text_excerpt": "INSTALL NEW PANEL 'D' AROUND CORNER AS SHOWN. MOVE ALL EXISTING CIRCUITS FROM DEMOLISH PANEL TO NEW PANEL."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Feeder for Panel 'MECH'",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "LS",
+            "specifications": "4\"C, 3#500kcmil, #500kcmil N, #2G.",
+            "notes": "From main disconnect to new panel 'MECH'.",
+            "source_reference": {
+              "sheet": "E4.0",
+              "location": "One Line Diagram",
+              "page": 22,
+              "bounding_box": [
+                900,
+                388,
+                911,
+                562
+              ],
+              "text_excerpt": "4\"C, 3#500kcmil, #500kcmil N, #2G"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Power to RTU-6",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "1-1/4\"C, 3#1, #6G.",
+            "notes": "Circuits MECH-2,4,6.",
+            "source_reference": {
+              "sheet": "E3.0",
+              "location": "Roof Power Plan",
+              "page": 21,
+              "bounding_box": [
+                588,
+                550,
+                610,
+                621
+              ],
+              "text_excerpt": "MECH-2,4,6\n1-1/4\"C,3#1,#6G"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": null,
+            "description": "Power to RTU-3",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "1\"C, 3#4, #10G.",
+            "notes": "Circuits MECH-13,15,17.",
+            "source_reference": {
+              "sheet": "E3.0",
+              "location": "Roof Power Plan",
+              "page": 21,
+              "bounding_box": [
+                177,
+                250,
+                199,
+                321
+              ],
+              "text_excerpt": "MECH-13,15,17\n1\"C,3#4,#10G"
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "3",
+            "description": "Heat Trace System",
+            "action": "Install",
+            "quantity": 2,
+            "unit": "EA",
+            "specifications": "Raychem 8BTV1-CT. Install 10 feet in end of overflow-leader and rain-leader.",
+            "notes": "Typical of two locations.",
+            "source_reference": {
+              "sheet": "E3.0",
+              "location": "Notes",
+              "page": 21,
+              "bounding_box": [
+                799,
+                736,
+                855,
+                871
+              ],
+              "text_excerpt": "SEE DETAIL E4.0/2. INSTALL 10 FEET OF HEAT TRACE IN END OF OVERFLOW-LEADER AND OX-TONGUE. PROVIDE HEAT TRACE IN RAIN-LEADER FROM DRY WELL TO 3-FEET ABOVE GROUND LEVEL. TYPICAL OF TWO."
+            },
+            "confidence": 1,
+            "flags": []
+          },
+          {
+            "item_number": "2",
+            "description": "Duct Smoke Detector Alarm",
+            "action": "Install",
+            "quantity": null,
+            "unit": "LS",
+            "specifications": "Provide audio visual alarm for duct smoke detector. Sensor System APA 151 is one solution.",
+            "notes": "Alarm to be installed at main check-in counter. Quantity of detectors not specified.",
+            "source_reference": {
+              "sheet": "E3.0",
+              "location": "Notes",
+              "page": 21,
+              "bounding_box": [
+                766,
+                736,
+                799,
+                871
+              ],
+              "text_excerpt": "PROVIDE AUDIO VISUAL ALARM FOR DUCT SMOKE DETECTOR. SENSOR SYSTEM APA 151 IS ONE SOLUTION. ENSURE COMPATIBILITY WITH DUCT SMOKE DETECTOR. SEE MECHANICAL DRAWINGS FOR MORE DETAILS. ALARM SHALL BE INSTALLED AT MAIN CHECK-IN COUNTER."
+            },
+            "confidence": 0.8,
+            "flags": [
+              "NEEDS_REVIEW",
+              "VERIFY_QTY"
+            ]
+          },
+          {
+            "item_number": null,
+            "description": "Electrical Panel 'MECH'",
+            "action": "Install",
+            "quantity": 1,
+            "unit": "EA",
+            "specifications": "208Y/120V 3P 4W, 150A Main Breaker. See panel schedule E5.0 for details.",
+            "notes": "New panel to feed new mechanical loads.",
+            "source_reference": {
+              "sheet": "E5.0",
+              "location": "Panel Schedule MECH",
+              "page": 23,
+              "bounding_box": [
+                111,
+                221,
+                144,
+                570
+              ],
+              "text_excerpt": "MECH"
+            }
+          }
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "severity": "critical",
+        "category": "pricing_concern",
+        "title": "Additive Alternates Identified",
+        "insight": "The project includes two significant Additive Alternates. Additive Alternate #1 covers work on the northwest portion of the roof, including RTU-1. Additive Alternate #2 covers work on the central-south portion of the roof, including RTU-5. These scopes must be priced separately from the base bid.",
+        "affected_packages": [
+          "DEMO",
+          "ROOF",
+          "HVAC",
+          "ELEC"
+        ],
+        "suggested_actions": [
+          "Create separate cost breakdowns for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+          "Clarify the exact boundaries of each alternate's scope with the architect."
+        ],
+        "source_reference": {
+          "sheet": "A1.1",
+          "page": 6,
+          "bounding_box": [
+            300,
+            533,
+            311,
+            621
+          ]
+        }
+      },
+      {
+        "severity": "warning",
+        "category": "risk_flag",
+        "title": "Potential for Unforeseen Deck Deterioration",
+        "insight": "General Note #1 on sheet A1.1 states that if any deteriorated decking is discovered after demolition, the architect must be contacted. This indicates a known risk of finding rotten or damaged roof decking which would result in a change order for repair or replacement. An allowance should be considered.",
+        "affected_packages": [
+          "DEMO",
+          "WOOD",
+          "ROOF"
+        ],
+        "suggested_actions": [
+          "Include a clarification in the bid stating that the price excludes the repair of unknown deteriorated decking.",
+          "Request a pre-bid site walk to inspect the underside of the deck where possible.",
+          "Consider carrying a contingency or suggesting a unit price for deck replacement."
+        ],
+        "source_reference": {
+          "sheet": "A1.1",
+          "page": 6,
+          "bounding_box": [
+            266,
+            81,
+            322,
+            297
+          ]
+        }
+      },
+      {
+        "severity": "warning",
+        "category": "coordination_required",
+        "title": "Heavy Coordination for Rooftop Equipment Replacement",
+        "insight": "The replacement of multiple Rooftop Units (RTUs) requires careful coordination between several trades. The sequence of demolition, roofing, curb installation, equipment setting, and final MEP connections is critical to maintaining a watertight building and minimizing downtime.",
+        "affected_packages": [
+          "DEMO",
+          "ROOF",
+          "HVAC",
+          "ELEC"
+        ],
+        "suggested_actions": [
+          "Hold a pre-construction meeting with Roofing, Mechanical, and Electrical subcontractors to plan the sequence of work.",
+          "Verify lead times for new RTUs and roof curbs.",
+          "General Note #3 on A1.1 requires temporary removal and reinstallation of other equipment on rubber walking pads, which must be scheduled."
+        ],
+        "source_reference": {
+          "sheet": "A1.1",
+          "page": 6,
+          "bounding_box": [
+            732,
+            113,
+            765,
+            498
+          ]
+        }
+      },
+      {
+        "severity": "info",
+        "category": "code_compliance",
+        "title": "Applicable Building Codes",
+        "insight": "The cover sheet T1.1 lists the specific codes governing the project, including the 2012 International Building Code and the 2018 National Electrical Code. All work must comply with these standards, which may have implications for materials and installation methods, particularly for electrical and mechanical systems.",
+        "affected_packages": [
+          "PLUMB",
+          "HVAC",
+          "ELEC"
+        ],
+        "suggested_actions": [
+          "Ensure all subcontractors are aware of and will comply with the specified code editions.",
+          "Verify that specified equipment meets the requirements of ASHRAE 90.1-2016 for energy efficiency."
+        ],
+        "source_reference": {
+          "sheet": "T1.1",
+          "page": 1,
+          "bounding_box": [
+            455,
+            588,
+            533,
+            790
+          ]
+        }
+      },
+      {
+        "severity": "info",
+        "category": "missing_information",
+        "title": "Roofing System Manufacturer Not Specified",
+        "insight": "The drawings specify an EPDM roofing system but do not name a specific manufacturer. Pricing can vary between manufacturers (e.g., Carlisle, Firestone, Johns Manville). The bid should be based on a specific manufacturer and note this assumption.",
+        "affected_packages": [
+          "ROOF"
+        ],
+        "suggested_actions": [
+          "Submit an RFI to request a list of approved manufacturers or to confirm if a specific basis-of-design is intended.",
+          "State the assumed manufacturer in the bid proposal."
+        ],
+        "source_reference": {
+          "sheet": "A2.3",
+          "page": 10,
+          "bounding_box": [
+            688,
+            499,
+            721,
+            600
+          ]
+        }
+      },
+      {
+        "severity": "info",
+        "category": "warranty_requirement",
+        "title": "10-Year Warranty for Exterior Ductwork",
+        "insight": "Mechanical specification 23 31 00 on sheet M0.2 requires a 10-year warranty for the QDUCT pre-insulated ductwork system. This must be communicated to the HVAC subcontractor and included in their pricing.",
+        "affected_packages": [
+          "HVAC"
+        ],
+        "suggested_actions": [
+          "Confirm the HVAC subcontractor can provide the specified QDUCT system and the required 10-year warranty.",
+          "Ensure warranty documentation is collected as part of project closeout."
+        ],
+        "source_reference": {
+          "sheet": "M0.2",
+          "page": 13,
+          "bounding_box": [
+            710,
+            689,
+            732,
+            953
+          ]
+        }
+      },
+      {
+        "id": "obs_001",
+        "severity": "critical",
+        "category": "pricing_concern",
+        "title": "Additive Alternates Identified",
+        "insight": "The project includes two significant Additive Alternates. Additive Alternate #1 covers work on the northwest portion of the roof, including RTU-1. Additive Alternate #2 covers work on the central-south portion of the roof, including RTU-5. These scopes must be priced separately from the base bid.",
+        "affected_packages": [
+          "DEMO",
+          "ROOF",
+          "HVAC",
+          "ELEC"
+        ],
+        "affected_line_items": [
+          "RTU-1",
+          "RTU-5"
+        ],
+        "source_reference": {
+          "sheet": "A1.1",
+          "location": "Roof Plan",
+          "page": 6,
+          "bounding_box": [
+            300,
+            533,
+            311,
+            621
+          ],
+          "text_excerpt": "ADDITIVE ALTERNATE #1"
+        },
+        "suggested_actions": [
+          "Create separate cost breakdowns for Base Bid, Additive Alternate #1, and Additive Alternate #2.",
+          "Carefully perform takeoffs to delineate the exact boundaries of each alternate's scope."
+        ],
+        "estimated_impact": "High cost impact. Failure to separate pricing will result in a non-compliant bid."
+      },
+      {
+        "id": "obs_002",
+        "severity": "critical",
+        "category": "change_order_risk",
+        "title": "Potential for Unforeseen Deck Deterioration",
+        "insight": "General Note #1 on sheet A1.1 explicitly states that if any deteriorated decking is discovered after demolition, the architect must be contacted. This is a clear warning of a known risk of finding rotten or damaged roof decking, which is outside the base scope and would result in a change order.",
+        "affected_packages": [
+          "DEMO",
+          "WOOD",
+          "ROOF"
+        ],
+        "affected_line_items": [
+          "Existing BUR Roofing and Coverboard",
+          "Plywood Decking at Roof D"
+        ],
+        "source_reference": {
+          "sheet": "A1.1",
+          "location": "General Notes",
+          "page": 6,
+          "bounding_box": [
+            266,
+            81,
+            322,
+            297
+          ],
+          "text_excerpt": "AFTER DEMOLITION OF THE EXISTING ROOFING, IF ANY DETERIORATED DECKING IS DISCOVERED, EITHER THE ARCHITECT OR PROJECT MANAGER SHALL BE CONTACTED TO VERIFY THE EXTENT OF DAMAGE PRIOR TO REPLACEMENT OR COVERING."
+        },
+        "suggested_actions": [
+          "Include a specific bid clarification excluding the repair of unknown deteriorated decking.",
+          "Propose a unit price ($/SF) for plywood deck replacement to be used if such conditions are found."
+        ],
+        "estimated_impact": "Medium to high cost impact, depending on the extent of damage found."
+      },
+      {
+        "id": "obs_003",
+        "severity": "warning",
+        "category": "coordination_required",
+        "title": "Occupied Facility Constraints",
+        "insight": "The project is at a public Recreation Center, which is likely to remain operational during construction. This imposes significant constraints on work hours, noise, dust control, site access, and public safety. These factors must be incorporated into the project schedule and pricing.",
+        "affected_packages": [
+          "CIV-EARTH",
+          "DEMO",
+          "ROOF",
+          "PLUMB"
+        ],
+        "affected_line_items": [],
+        "source_reference": {
+          "sheet": "C1.0",
+          "location": "General Notes",
+          "page": 2,
+          "bounding_box": [
+            618,
+            308,
+            640,
+            570
+          ],
+          "text_excerpt": "CONTRACTOR SHALL ADHERE TO LOCAL REQUIREMENTS FOR NOISE, HOURS OF OPERATION, AND DUST CONTROL."
+        },
+        "suggested_actions": [
+          "Clarify expected work hours with the owner.",
+          "Develop a site logistics and safety plan.",
+          "Include costs for temporary protection, daily cleanup, and potential off-hours work."
+        ],
+        "estimated_impact": "Medium cost and schedule impact."
+      },
+      {
+        "id": "obs_004",
+        "severity": "warning",
+        "category": "long_lead_item",
+        "title": "Rooftop Unit (RTU) Lead Times",
+        "insight": "HVAC rooftop units are known long-lead items, with delivery times that can extend for many months. The entire project schedule hinges on the procurement and delivery of the new RTUs. This must be verified immediately.",
+        "affected_packages": [
+          "HVAC"
+        ],
+        "affected_line_items": [
+          "RTU-1",
+          "RTU-2",
+          "RTU-5",
+          "RTU-6"
+        ],
+        "source_reference": {
+          "sheet": "M0.1",
+          "location": "Roof Top Gas/Electric A/C Unit Schedule",
+          "page": 12,
+          "bounding_box": [
+            210,
+            336,
+            232,
+            621
+          ]
+        },
+        "suggested_actions": [
+          "Contact Trane representatives or suppliers immediately to get current lead times for the specified models.",
+          "Base the construction schedule on confirmed delivery dates.",
+          "Inform the owner of any potential schedule impacts due to lead times."
+        ],
+        "estimated_impact": "High schedule impact."
+      },
+      {
+        "id": "obs_005",
+        "severity": "info",
+        "category": "coordination_required",
+        "title": "Crane Access and Site Logistics",
+        "insight": "The removal of old RTUs and installation of new ones will require a large crane. The site plan shows parking areas, but a detailed plan for crane setup, laydown/staging areas, and potential disruption to facility access is required. The cost for the crane, rigging, and any necessary traffic control must be included.",
+        "affected_packages": [
+          "DEMO",
+          "HVAC"
+        ],
+        "affected_line_items": [],
+        "source_reference": {
+          "sheet": "C1.0",
+          "location": "Civil Site Plan",
+          "page": 2
+        },
+        "suggested_actions": [
+          "Perform a site visit to confirm crane access routes and setup locations.",
+          "Develop a crane lift plan.",
+          "Include costs for crane mobilization, rental, operator, and flaggers if needed."
+        ],
+        "estimated_impact": "Medium cost impact."
+      },
+      {
+        "id": "obs_006",
+        "severity": "info",
+        "category": "code_compliance",
+        "title": "Lead-Safe Work Practices Required",
+        "insight": "General Note #7 on sheet A1.1 specifies that existing VTRs containing lead caps must be removed by workers trained in lead awareness. This implies specific OSHA requirements for handling and disposal of lead-containing materials, which may affect labor costs and disposal fees.",
+        "affected_packages": [
+          "DEMO",
+          "PLUMB"
+        ],
+        "affected_line_items": [],
+        "source_reference": {
+          "sheet": "A1.1",
+          "location": "General Notes",
+          "page": 6,
+          "bounding_box": [
+            522,
+            81,
+            544,
+            297
+          ],
+          "text_excerpt": "VTR'S WHICH CONTAIN LEAD CAPS SHALL BE REMOVED BY WORKERS WHO ARE TRAINED IN LEAD AWARENESS. MATERIALS SHALL BE RECYCLED."
+        },
+        "suggested_actions": [
+          "Ensure the demolition/plumbing subcontractor is aware of this requirement and has appropriately certified personnel.",
+          "Verify and include any associated costs for specialized labor, PPE, and disposal."
+        ],
+        "estimated_impact": "Low cost impact, but high compliance risk."
+      }
+    ],
+    "totalLineItems": 62,
+    "totalObservations": 12
+  },
+  "metrics": {
+    "totalDurationMs": 1,
+    "totalTokens": {
+      "input": 29191,
+      "output": 19265
+    },
+    "totalCost": 0.22913875,
+    "cacheHits": 2,
+    "apiCalls": 1
+  },
+  "startedAt": "2025-11-27T08:35:56.985Z",
+  "completedAt": "2025-11-27T08:35:56.986Z"
+}

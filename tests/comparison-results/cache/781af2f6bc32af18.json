@@ -1,0 +1,392 @@
+{
+  "cacheKey": "781af2f6bc32af18",
+  "passNumber": 2,
+  "model": "gemini-3-pro-preview",
+  "purpose": "self_review",
+  "documentHash": "28d539949daa0e9e",
+  "previousPassHashes": [
+    "a5076c17732cf9bf"
+  ],
+  "promptVersion": "v1.0.0",
+  "result": {
+    "passNumber": 2,
+    "model": "gemini-3-pro-preview",
+    "purpose": "self_review",
+    "startedAt": "2025-11-27T08:51:49.413Z",
+    "completedAt": "2025-11-27T08:53:21.674Z",
+    "durationMs": 92261,
+    "tokensUsed": {
+      "input": 20459,
+      "output": 3385
+    },
+    "cost": 0.091693,
+    "response": {
+      "additions": [
+        {
+          "work_package": "CIV",
+          "item_number": "5",
+          "description": "Asphalt Pavement Patching",
+          "action": "Repair",
+          "quantity": null,
+          "unit": "LS",
+          "specifications": "Sawcut clean edge, repave and grade to match existing",
+          "notes": "At roof drain field locations where pavement is disturbed.",
+          "source_reference": {
+            "sheet": "C1.0",
+            "location": "Enlarged Site Plan - Roof Drain #1",
+            "page": 2,
+            "bounding_box": [
+              40,
+              785,
+              100,
+              870
+            ]
+          },
+          "confidence": 0.9,
+          "reason_missed": "Text note located outside the main detail block was missed."
+        },
+        {
+          "work_package": "ROOF",
+          "item_number": "6",
+          "description": "Lead Cap Removal (Hazmat)",
+          "action": "Remove",
+          "quantity": null,
+          "unit": "LS",
+          "specifications": "Workers trained in lead awareness",
+          "notes": "VTR's which contain lead caps shall be removed by trained workers.",
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "General Note 7",
+            "page": 6,
+            "bounding_box": [
+              490,
+              65,
+              510,
+              260
+            ]
+          },
+          "confidence": 0.95,
+          "reason_missed": "Specific safety/hazmat requirement in general notes."
+        },
+        {
+          "work_package": "ROOF",
+          "item_number": "7",
+          "description": "Rough Carpentry / Blocking",
+          "action": "Install",
+          "quantity": null,
+          "unit": "LS",
+          "specifications": "Sister new 2x4 framing, 1x8 over 1x10 composite trim",
+          "notes": "Parapet framing and blocking for new roofing system.",
+          "source_reference": {
+            "sheet": "A2.1",
+            "location": "Detail 2",
+            "page": 8,
+            "bounding_box": [
+              180,
+              390,
+              250,
+              460
+            ]
+          },
+          "confidence": 0.9,
+          "reason_missed": "Detail callouts for carpentry work associated with roofing."
+        },
+        {
+          "work_package": "MEC",
+          "item_number": "9",
+          "description": "Testing, Adjusting, and Balancing (TAB)",
+          "action": "Verify",
+          "quantity": 1,
+          "unit": "LS",
+          "specifications": "Independent Air Balancing Company",
+          "notes": "Balance complete heating and HVAC systems per SMACNA.",
+          "source_reference": {
+            "sheet": "M0.2",
+            "location": "Balancing & Startup",
+            "page": 13,
+            "bounding_box": [
+              670,
+              630,
+              710,
+              900
+            ]
+          },
+          "confidence": 0.95,
+          "reason_missed": "Located in specifications sheet text."
+        },
+        {
+          "work_package": "MEC",
+          "item_number": "10",
+          "description": "Doghouse Equipment Enclosure",
+          "action": "Construct",
+          "quantity": 1,
+          "unit": "EA",
+          "specifications": "24\"x24\"x32\" Tall, Insulated",
+          "notes": "Includes 2x framing, insulation, flashing, and counterflashing. See Detail 2/M2.3.",
+          "source_reference": {
+            "sheet": "M2.3",
+            "location": "Detail 2",
+            "page": 18,
+            "bounding_box": [
+              110,
+              780,
+              230,
+              900
+            ]
+          },
+          "confidence": 0.9,
+          "reason_missed": "Complex assembly detail missed in initial pass."
+        },
+        {
+          "work_package": "ELE",
+          "item_number": "5",
+          "description": "New Panel 'MECH'",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "specifications": "400A, 208Y/120V, 3P 4W",
+          "notes": "Fed from Main Disconnect. Feeds new Panel D.",
+          "source_reference": {
+            "sheet": "E4.0",
+            "location": "One Line Diagram",
+            "page": 22,
+            "bounding_box": [
+              700,
+              400,
+              850,
+              450
+            ]
+          },
+          "confidence": 0.95,
+          "reason_missed": "Missed the upstream distribution equipment in the One-Line diagram."
+        },
+        {
+          "work_package": "ELE",
+          "item_number": "6",
+          "description": "Main Breaker Replacement",
+          "action": "Replace",
+          "quantity": 1,
+          "unit": "EA",
+          "specifications": "Replace existing 300A with new 400A",
+          "notes": "At Main Distribution Panel.",
+          "source_reference": {
+            "sheet": "E4.0",
+            "location": "One Line Notes",
+            "page": 22,
+            "bounding_box": [
+              820,
+              220,
+              890,
+              360
+            ]
+          },
+          "confidence": 0.95,
+          "reason_missed": "Critical electrical scope hidden in One-Line notes."
+        },
+        {
+          "work_package": "ELE",
+          "item_number": "7",
+          "description": "Remote Duct Smoke Alarm",
+          "action": "Install",
+          "quantity": 1,
+          "unit": "EA",
+          "specifications": "Audio Visual Alarm",
+          "notes": "Install at main check-in counter. Connect to duct smoke detector.",
+          "source_reference": {
+            "sheet": "E3.0",
+            "location": "Notes",
+            "page": 21,
+            "bounding_box": [
+              650,
+              750,
+              680,
+              900
+            ]
+          },
+          "confidence": 0.9,
+          "reason_missed": "Specific location requirement in notes."
+        }
+      ],
+      "modifications": [
+        {
+          "original_item_ref": "CIV.1",
+          "changes": {
+            "specifications": "8\" Thickened Edge with #3 Rebar Continuous"
+          },
+          "reason": "Detail B/C3.0 specifies structural requirements for the sidewalk replacement."
+        },
+        {
+          "original_item_ref": "MEC.RTU-1",
+          "changes": {
+            "notes": "Requires Field Fabricated 24\" High Insulated Roof Curb (Not Prefab)."
+          },
+          "reason": "Note 6 on M0.1 and Detail 4/M2.3 specify field fabrication, which is a significant labor cost difference."
+        },
+        {
+          "original_item_ref": "ELE.4",
+          "changes": {
+            "notes": "Fed from new Panel MECH. Includes relocation of existing circuits."
+          },
+          "reason": "Clarifying the source and scope based on One-Line diagram E4.0."
+        }
+      ],
+      "new_packages": [],
+      "gaps_identified": [
+        "Roofing membrane manufacturer and type (referenced to specs but not on drawings)",
+        "Exact routing of underground electrical to dry well",
+        "Condition of existing roof decking (unit price needed)",
+        "Hazardous materials survey report for lead caps"
+      ],
+      "confidence_adjustments": [
+        {
+          "item_ref": "ELE.4",
+          "previous_confidence": 0.95,
+          "new_confidence": 0.85,
+          "reason": "One-line note 1 states existing J-Box location is unknown/not found, implying field discovery risk."
+        }
+      ],
+      "ai_observations": [
+        {
+          "id": "obs_001",
+          "severity": "critical",
+          "category": "risk_flag",
+          "title": "Unknown Electrical Conditions",
+          "insight": "Sheet E4.0 Note 1 states 'The J-Box where this would occur was not found' regarding the connection between Panel C and Panel B's feeder. This explicitly identifies a blind spot in the existing conditions that the contractor must resolve.",
+          "affected_packages": [
+            "ELE"
+          ],
+          "affected_line_items": [
+            "Panel D",
+            "Panel MECH"
+          ],
+          "source_reference": {
+            "sheet": "E4.0",
+            "location": "One Line Notes",
+            "page": 22,
+            "bounding_box": [
+              820,
+              220,
+              850,
+              360
+            ],
+            "text_excerpt": "THE J-BOX WHERE THIS WOULD OCCUR WAS NOT FOUND"
+          },
+          "suggested_actions": [
+            "Include allowance for circuit tracing and finding J-Box",
+            "RFI to engineer for alternative feed method"
+          ],
+          "estimated_impact": "Potential delay and T&M work"
+        },
+        {
+          "id": "obs_002",
+          "severity": "warning",
+          "category": "pricing_concern",
+          "title": "Field Fabricated Roof Curbs",
+          "insight": "The project requires 'Field Fabricate 24\" High Insulated Roof Curb' (Note 6, M0.1). Most estimators assume factory-built curbs. Field fabrication is significantly more labor-intensive and requires coordination between the mechanical installer and the roofer/carpenter.",
+          "affected_packages": [
+            "MEC",
+            "ROOF"
+          ],
+          "affected_line_items": [
+            "RTU-1",
+            "RTU-2",
+            "RTU-3",
+            "RTU-4",
+            "RTU-5",
+            "RTU-6"
+          ],
+          "source_reference": {
+            "sheet": "M0.1",
+            "location": "General Notes",
+            "page": 12,
+            "bounding_box": [
+              210,
+              340,
+              230,
+              600
+            ],
+            "text_excerpt": "FIELD FABRICATE 24\" HIGH INSULATED ROOF CURB"
+          },
+          "suggested_actions": [
+            "Ensure labor hours reflect field fabrication",
+            "Clarify trade responsibility (Mechanical vs Roofing)"
+          ],
+          "estimated_impact": "High labor variance"
+        },
+        {
+          "id": "obs_003",
+          "severity": "warning",
+          "category": "code_compliance",
+          "title": "Lead Awareness Requirement",
+          "insight": "General Note 7 on A1.1 specifically mentions removal of VTRs with lead caps by 'workers who are trained in lead awareness'. This triggers OSHA lead standards and potentially requires a specialized abatement sub.",
+          "affected_packages": [
+            "ROOF",
+            "PLM"
+          ],
+          "affected_line_items": [
+            "Lead Cap Removal"
+          ],
+          "source_reference": {
+            "sheet": "A1.1",
+            "location": "General Note 7",
+            "page": 6,
+            "bounding_box": [
+              490,
+              65,
+              510,
+              260
+            ],
+            "text_excerpt": "REMOVED BY WORKERS WHO ARE TRAINED IN LEAD AWARENESS"
+          },
+          "suggested_actions": [
+            "Verify if abatement sub is needed",
+            "Include safety training/PPE costs"
+          ],
+          "estimated_impact": "Compliance cost"
+        },
+        {
+          "id": "obs_004",
+          "severity": "info",
+          "category": "coordination_required",
+          "title": "Heat Trace in Downspouts",
+          "insight": "Heat trace is required inside the rain leaders and overflow leaders (M2.2). This requires the Electrical contractor to feed cable into piping installed by Civil/Plumbing before it is buried or sealed. High risk of sequencing error.",
+          "affected_packages": [
+            "ELE",
+            "CIV",
+            "PLM"
+          ],
+          "affected_line_items": [
+            "Heat Trace System",
+            "Rain Leader Piping"
+          ],
+          "source_reference": {
+            "sheet": "M2.2",
+            "location": "Plan Notes",
+            "page": 17,
+            "bounding_box": [
+              265,
+              605,
+              295,
+              700
+            ],
+            "text_excerpt": "PROVIDE AND INSTALL ELECTRIC HEAT TRACE COORDINATE WITH ELECTRICAL"
+          },
+          "suggested_actions": [
+            "Pre-installation meeting required",
+            "Coordinate conduit stub-ups with civil trenching"
+          ],
+          "estimated_impact": "Sequencing coordination"
+        }
+      ],
+      "overall_assessment": {
+        "extraction_completeness": 0.85,
+        "data_quality": 0.9,
+        "risk_level": "medium",
+        "summary": "The initial extraction captured the main equipment but missed significant electrical distribution upgrades (Main Breaker/Panel MECH) and specific labor-intensive details like field-fabricated curbs and lead abatement. The 'unknown' electrical J-Box is a notable risk factor."
+      }
+    },
+    "cacheHit": false,
+    "cacheKey": "781af2f6bc32af18"
+  },
+  "createdAt": "2025-11-27T08:53:21.674Z"
+}

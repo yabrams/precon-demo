@@ -1,0 +1,62 @@
+{
+  "permutationId": "CS_P1",
+  "permutationName": "Claude Sonnet 4.5 - Pass 1 Only",
+  "config": {
+    "id": "CS_P1",
+    "name": "Claude Sonnet 4.5 - Pass 1 Only",
+    "description": "Single pass extraction with Claude Sonnet 4.5",
+    "passes": [
+      {
+        "passNumber": 1,
+        "model": "claude-sonnet-4.5",
+        "purpose": "initial_extraction",
+        "dependsOnPasses": []
+      }
+    ],
+    "expectedCost": 5
+  },
+  "documentHash": "28d539949daa0e9e",
+  "passes": [
+    {
+      "passNumber": 1,
+      "model": "claude-sonnet-4.5",
+      "purpose": "initial_extraction",
+      "startedAt": "2025-11-27T08:35:56.983Z",
+      "completedAt": "2025-11-27T08:35:56.984Z",
+      "durationMs": 1,
+      "tokensUsed": {
+        "input": 0,
+        "output": 0
+      },
+      "cost": 0,
+      "response": {
+        "project_name": "SKIPPED - Claude cannot process PDFs directly",
+        "work_packages": [],
+        "incomplete_areas": [
+          "PDF processing not supported for Claude in this test"
+        ],
+        "extraction_notes": "This permutation requires PDF-to-image conversion for Claude"
+      },
+      "cacheHit": false,
+      "cacheKey": "788360267c141e93"
+    }
+  ],
+  "finalResult": {
+    "workPackages": [],
+    "observations": [],
+    "totalLineItems": 0,
+    "totalObservations": 0
+  },
+  "metrics": {
+    "totalDurationMs": 1,
+    "totalTokens": {
+      "input": 0,
+      "output": 0
+    },
+    "totalCost": 0,
+    "cacheHits": 0,
+    "apiCalls": 1
+  },
+  "startedAt": "2025-11-27T08:35:56.983Z",
+  "completedAt": "2025-11-27T08:35:56.984Z"
+}
