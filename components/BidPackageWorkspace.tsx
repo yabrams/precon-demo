@@ -71,6 +71,11 @@ interface BidPackageWorkspaceProps {
   onSubmitToReview?: () => void;
   onRecall?: () => void;
   onDeleteProject?: () => void;
+  // URL routing props
+  initialViewMode?: ViewMode;
+  initialItemId?: string | null;
+  onViewModeChange?: (mode: ViewMode) => void;
+  onItemIdChange?: (itemId: string | null) => void;
 }
 
 export default function BidPackageWorkspace({
@@ -93,6 +98,10 @@ export default function BidPackageWorkspace({
   onSubmitToReview,
   onRecall,
   onDeleteProject,
+  initialViewMode = 'single',
+  initialItemId = null,
+  onViewModeChange,
+  onItemIdChange,
 }: BidPackageWorkspaceProps) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [hoveredRowElement, setHoveredRowElement] = useState<HTMLTableRowElement | null>(null);
@@ -102,9 +111,32 @@ export default function BidPackageWorkspace({
   const [magnifyingGlassEnabled, setMagnifyingGlassEnabled] = useState(false);
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('single');
-  const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [viewMode, setViewModeInternal] = useState<ViewMode>(initialViewMode);
+  const [currentItemIndex, setCurrentItemIndexInternal] = useState(() => {
+    // Initialize from item ID if provided
+    if (initialItemId && lineItems.length > 0) {
+      const index = lineItems.findIndex(item => item.id === initialItemId);
+      return index >= 0 ? index : 0;
+    }
+    return 0;
+  });
   const [diagramContainerSize, setDiagramContainerSize] = useState({ width: 0, height: 0 });
+
+  // Wrapper functions to sync state with URL
+  const setViewMode = useCallback((mode: ViewMode) => {
+    setViewModeInternal(mode);
+    onViewModeChange?.(mode);
+  }, [onViewModeChange]);
+
+  const setCurrentItemIndex = useCallback((indexOrUpdater: number | ((prev: number) => number)) => {
+    setCurrentItemIndexInternal((prev) => {
+      const newIndex = typeof indexOrUpdater === 'function' ? indexOrUpdater(prev) : indexOrUpdater;
+      // Get the item ID at the new index and update URL
+      const itemAtIndex = lineItems[newIndex];
+      onItemIdChange?.(itemAtIndex?.id || null);
+      return newIndex;
+    });
+  }, [onItemIdChange, lineItems]);
   const imageRef = useRef<HTMLImageElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
   const diagramContainerRef = useRef<HTMLDivElement>(null);
@@ -206,11 +238,11 @@ export default function BidPackageWorkspace({
   // Navigation handlers for single view
   const handlePreviousItem = useCallback(() => {
     setCurrentItemIndex((prev) => Math.max(0, prev - 1));
-  }, []);
+  }, [setCurrentItemIndex]);
 
   const handleNextItem = useCallback(() => {
     setCurrentItemIndex((prev) => Math.min(lineItems.length - 1, prev + 1));
-  }, [lineItems.length]);
+  }, [lineItems.length, setCurrentItemIndex]);
 
   const handleApproveItem = useCallback(() => {
     if (!currentItem || lineItems.length === 0) return;
@@ -228,7 +260,7 @@ export default function BidPackageWorkspace({
     if (currentItemIndex < lineItems.length - 1) {
       setCurrentItemIndex((prev) => prev + 1);
     }
-  }, [currentItem, currentItemIndex, lineItems, onLineItemsUpdate]);
+  }, [currentItem, currentItemIndex, lineItems, onLineItemsUpdate, setCurrentItemIndex]);
 
   const handleUpdateItem = useCallback((updatedItem: LineItem) => {
     const updated = [...lineItems];
@@ -238,7 +270,7 @@ export default function BidPackageWorkspace({
 
   const handleExitSingleView = useCallback(() => {
     setViewMode('grid');
-  }, []);
+  }, [setViewMode]);
 
   const handleEnterFieldMode = useCallback(() => {
     singleItemPanelRef.current?.enterFieldMode();
@@ -255,12 +287,32 @@ export default function BidPackageWorkspace({
     onEnterFieldMode: handleEnterFieldMode,
   });
 
+  // Sync state from URL params when they change externally (browser back/forward)
+  useEffect(() => {
+    if (initialViewMode !== viewMode) {
+      setViewModeInternal(initialViewMode);
+    }
+  }, [initialViewMode]);
+
+  // Sync current item from URL item ID
+  useEffect(() => {
+    if (initialItemId && lineItems.length > 0) {
+      const index = lineItems.findIndex(item => item.id === initialItemId);
+      if (index >= 0 && index !== currentItemIndex) {
+        setCurrentItemIndexInternal(index);
+      }
+    } else if (!initialItemId && currentItemIndex !== 0 && lineItems.length > 0) {
+      // If no item ID in URL, reset to first item
+      setCurrentItemIndexInternal(0);
+    }
+  }, [initialItemId, lineItems]);
+
   // Reset current item index when switching to single view or when items change
   useEffect(() => {
     if (currentItemIndex >= lineItems.length && lineItems.length > 0) {
       setCurrentItemIndex(lineItems.length - 1);
     }
-  }, [lineItems.length, currentItemIndex]);
+  }, [lineItems.length, currentItemIndex, setCurrentItemIndex]);
 
   const hoveredItem = lineItems.find((item) => item.id === hoveredItemId);
 
@@ -351,16 +403,22 @@ export default function BidPackageWorkspace({
                   <span className="text-xs text-gray-600">Progress</span>
                   <div className="flex items-center gap-0.5">
                     {lineItems.map((item, index) => (
-                      <div
+                      <button
                         key={item.id || index}
-                        className={`w-2.5 h-4 transition-all duration-200 ${
-                          item.approved ? 'bg-emerald-500' : 'bg-gray-300'
+                        onClick={() => {
+                          setCurrentItemIndex(index);
+                          if (viewMode !== 'single') {
+                            setViewMode('single');
+                          }
+                        }}
+                        className={`w-2.5 h-4 transition-all duration-200 cursor-pointer hover:scale-110 ${
+                          item.approved ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-gray-300 hover:bg-gray-400'
                         } ${
                           viewMode === 'single' && index === currentItemIndex
                             ? 'ring-1 ring-zinc-900 ring-offset-1'
                             : ''
                         }`}
-                        title={`Item ${index + 1}${item.approved ? ' (approved)' : ''}`}
+                        title={`Item ${index + 1}${item.approved ? ' (approved)' : ''} - Click to view`}
                       />
                     ))}
                   </div>

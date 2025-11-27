@@ -420,6 +420,10 @@ export default function WorkspacePage({ params }: PageProps) {
       onSubmitToReview={handleSubmitToReview}
       onRecall={handleRecall}
       onDeleteProject={handleDeleteProject}
+      initialViewMode={workspaceParams.view}
+      initialItemId={workspaceParams.item}
+      onViewModeChange={setViewMode}
+      onItemIdChange={setCurrentItem}
     />
   );
 }

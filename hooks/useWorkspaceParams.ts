@@ -11,7 +11,7 @@ import { useCallback, useMemo } from 'react';
 export interface WorkspaceParams {
   chat: boolean;
   view: 'single' | 'grid';
-  item: number;
+  item: string | null;  // Item ID instead of index
   diagram: string | null;
 }
 
@@ -23,7 +23,7 @@ export function useWorkspaceParams() {
   const params: WorkspaceParams = useMemo(() => ({
     chat: searchParams.get('chat') === 'true',
     view: (searchParams.get('view') as 'single' | 'grid') || 'single',
-    item: parseInt(searchParams.get('item') || '0', 10),
+    item: searchParams.get('item'),  // Item ID as string
     diagram: searchParams.get('diagram'),
   }), [searchParams]);
 
@@ -48,8 +48,8 @@ export function useWorkspaceParams() {
     }
 
     if ('item' in updates) {
-      if (updates.item && updates.item > 0) {
-        newParams.set('item', String(updates.item));
+      if (updates.item) {
+        newParams.set('item', updates.item);
       } else {
         newParams.delete('item');
       }
@@ -76,8 +76,8 @@ export function useWorkspaceParams() {
     setParams({ view: mode });
   }, [setParams]);
 
-  const setCurrentItem = useCallback((index: number) => {
-    setParams({ item: index });
+  const setCurrentItem = useCallback((itemId: string | null) => {
+    setParams({ item: itemId });
   }, [setParams]);
 
   const setDiagram = useCallback((diagramId: string | null) => {
