@@ -425,7 +425,7 @@ export default function BidPackageWorkspace({
                             ? 'ring-1 ring-zinc-900 ring-offset-1'
                             : ''
                         }`}
-                        title={`Item ${index + 1}${item.approved ? ' (approved)' : ''} - Click to view`}
+                        title={`${item.item_number || `#${index + 1}`}: ${item.description || 'No description'}`}
                       />
                     ))}
                   </div>
