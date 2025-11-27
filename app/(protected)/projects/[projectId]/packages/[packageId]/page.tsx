@@ -114,11 +114,12 @@ export default function WorkspacePage({ params }: PageProps) {
         );
       }
 
-      // Ensure all line items have confidence and approved values
-      // This ensures consistency between grid view and single view
+      // Ensure all line items have approved values
+      // Only generate random confidence for items that don't have one (undefined)
+      // Items with null confidence are user-modified and should stay null (no badge)
       lineItems = lineItems.map((item: LineItem) => ({
         ...item,
-        confidence: item.confidence ?? Math.floor(Math.random() * 101),
+        confidence: item.confidence === undefined ? Math.floor(Math.random() * 101) : item.confidence,
         approved: item.approved ?? false,
       }));
 

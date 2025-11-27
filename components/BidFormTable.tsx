@@ -132,7 +132,7 @@ export default function BidFormTable({
   const [lineItems, setLineItems] = useState<LineItem[]>(initialLineItems || []);
   const [editingCell, setEditingCell] = useState<{ rowIndex: number; field: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortColumn, setSortColumn] = useState<'approved' | 'item_number' | 'description' | 'csiCode' | 'confidence' | null>('confidence');
+  const [sortColumn, setSortColumn] = useState<'approved' | 'item_number' | 'description' | 'csiCode' | 'confidence' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [reallocateDropdownIndex, setReallocateDropdownIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
@@ -273,6 +273,7 @@ export default function BidFormTable({
       ...updated[index],
       csiCode: code,
       csiTitle: title,
+      confidence: null, // Clear confidence when user manually changes CSI code
     };
     setLineItems(updated);
     onUpdate(updated);
@@ -549,14 +550,14 @@ export default function BidFormTable({
                     <button
                       onClick={() => handleChange(index, 'approved', !item.approved)}
                       disabled={readOnly}
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all ${
+                      className={`px-2 py-1 text-xs font-medium rounded-lg transition-colors flex items-center ${
                         item.approved
                           ? 'bg-emerald-100 text-emerald-600 border border-emerald-200 hover:bg-emerald-200'
-                          : 'bg-zinc-100 text-zinc-400 border border-zinc-200 hover:bg-zinc-200'
+                          : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200'
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
                       title={item.approved ? 'Approved - click to unapprove' : 'Click to approve'}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </button>
@@ -613,8 +614,8 @@ export default function BidFormTable({
                         onBlur={stopEditing}
                         placeholder="Search CSI code or description..."
                         currentCode={item.csiCode}
-                        confidenceLabel={getConfidenceLabel(item.confidence)}
-                        confidenceBadgeClass={getConfidenceBadgeClass(item.confidence)}
+                        confidenceLabel={item.confidence != null ? getConfidenceLabel(item.confidence) : undefined}
+                        confidenceBadgeClass={item.confidence != null ? getConfidenceBadgeClass(item.confidence) : undefined}
                       />
                     ) : (
                       <div
@@ -637,11 +638,13 @@ export default function BidFormTable({
                             <span className="text-gray-400">-</span>
                           )}
                         </span>
-                        {/* Confidence indicator */}
-                        <span className={`ml-3 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
-                          <span className="grayscale brightness-0">✨</span>
-                          <span>{getConfidenceLabel(item.confidence)}</span>
-                        </span>
+                        {/* Confidence indicator - only show for system-matched codes */}
+                        {item.confidence != null && (
+                          <span className={`ml-3 px-2 py-0.5 border text-[10px] font-medium rounded flex items-center gap-1 text-gray-700 ${getConfidenceBadgeClass(item.confidence)}`}>
+                            <span className="grayscale brightness-0">✨</span>
+                            <span>{getConfidenceLabel(item.confidence)}</span>
+                          </span>
+                        )}
                       </div>
                     )}
                   </td>
@@ -694,10 +697,10 @@ export default function BidFormTable({
                                   setReallocateHighlightIndex(0);
                                 }
                               }}
-                              className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-zinc-600 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 hover:border-zinc-300 rounded-full transition-all"
+                              className="px-2 py-1 text-xs font-medium rounded-lg transition-colors flex items-center bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
                               title="Move to another bid package"
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                               </svg>
                             </button>
@@ -785,7 +788,7 @@ export default function BidFormTable({
                         {/* Delete Button */}
                         <button
                           onClick={() => handleDeleteRow(index)}
-                          className="inline-flex items-center justify-center w-8 h-8 text-zinc-400 hover:text-red-500 bg-zinc-100 hover:bg-red-50 border border-zinc-200 hover:border-red-200 rounded-full transition-all"
+                          className="px-2 py-1 text-xs font-medium rounded-lg transition-colors flex items-center bg-gray-100 text-gray-600 border border-gray-300 hover:bg-red-50 hover:text-red-500 hover:border-red-200"
                           title="Delete row"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
