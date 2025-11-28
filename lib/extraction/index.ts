@@ -661,6 +661,47 @@ export { ExtractionOrchestrator } from './orchestrator';
 // import { OpenAIClient } from '@/lib/extraction/clients/openai';
 
 // ============================================================================
+// LARGE DOCUMENT SUPPORT
+// ============================================================================
+
+// Re-export large document components
+export {
+  BatchProcessor,
+  TradeContextManager,
+  processDocuments,
+  type ExtractionBatch,
+  type BatchResults,
+  type BatchProcessorOptions,
+  type BatchProgressEvent,
+  type DocumentProcessingResult,
+  type BatchCostBreakdown,
+} from './batch-processor';
+
+export {
+  LargeDocumentOrchestrator,
+  extractLargeDocuments,
+  type LargeDocumentExtractionOptions,
+  type LargeDocumentProgressEvent,
+  type LargeDocumentExtractionResult,
+} from './large-document-orchestrator';
+
+// Re-export page classifier
+export {
+  classifyDocument,
+  classifyPage,
+  classifyBySheetPrefix,
+  classifyByContent,
+  getPagesByTrade,
+  getPagesByCSI,
+  getUnclassifiedPages,
+  estimateTradeTokens,
+  SHEET_PREFIX_MAP,
+  CSI_DIVISIONS,
+  type PageClassification,
+  type ClassifiedDocument,
+} from './page-classifier';
+
+// ============================================================================
 // DEFAULT EXPORT
 // ============================================================================
 

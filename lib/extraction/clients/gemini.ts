@@ -996,6 +996,161 @@ Return ONLY valid JSON:
   }
 }`;
   }
+
+  /**
+   * Extract from page images (for large document batch processing)
+   * Accepts pre-processed page images instead of full documents
+   */
+  async extractFromPages(
+    pageImages: Array<{
+      buffer: Buffer;
+      mimeType: string;
+      pageNumber: number;
+    }>,
+    context: {
+      trade: string;
+      csiDivisions: string[];
+      pageContext: Array<{
+        pageNumber: number;
+        sheetNumber?: string;
+        textPreview: string;
+      }>;
+    }
+  ): Promise<{
+    response: GeminiExtractionResponse & { ai_observations?: unknown[] };
+    tokensUsed: { input: number; output: number };
+  }> {
+    const model = this.client.getGenerativeModel({
+      model: this.modelName,
+      generationConfig: {
+        maxOutputTokens: this.maxOutputTokens,
+        temperature: this.temperature,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    // Build parts array with page images
+    const parts: Part[] = [];
+
+    for (const page of pageImages) {
+      parts.push({
+        inlineData: {
+          mimeType: page.mimeType,
+          data: page.buffer.toString('base64'),
+        },
+      });
+    }
+
+    // Build context-aware prompt
+    const prompt = this.buildPageExtractionPrompt(context);
+    parts.push({ text: prompt });
+
+    const result = await model.generateContent(parts);
+    const response = result.response;
+    const text = response.text();
+
+    const parsed = this.parseJsonResponse<GeminiExtractionResponse & { ai_observations?: unknown[] }>(text);
+
+    const usage = response.usageMetadata;
+    const tokensUsed = {
+      input: usage?.promptTokenCount || 0,
+      output: usage?.candidatesTokenCount || 0,
+    };
+
+    return { response: parsed, tokensUsed };
+  }
+
+  /**
+   * Build prompt for page-based extraction
+   */
+  private buildPageExtractionPrompt(context: {
+    trade: string;
+    csiDivisions: string[];
+    pageContext: Array<{
+      pageNumber: number;
+      sheetNumber?: string;
+      textPreview: string;
+    }>;
+  }): string {
+    const pageInfo = context.pageContext
+      .map((p) => `- Page ${p.pageNumber}${p.sheetNumber ? ` (${p.sheetNumber})` : ''}: ${p.textPreview.substring(0, 100)}...`)
+      .join('\n');
+
+    return `
+You are a senior preconstruction estimator analyzing construction document pages.
+
+CONTEXT:
+- Primary Trade Focus: ${context.trade}
+- Related CSI Divisions: ${context.csiDivisions.join(', ')}
+- Pages being analyzed:
+${pageInfo}
+
+TASK: Extract all work packages and line items relevant to ${context.trade} from these pages.
+
+For each work package found, identify:
+1. Trade/CSI Division (use MasterFormat classification)
+2. Individual line items with:
+   - Item description
+   - Action (Install, Replace, Demo, Repair, etc.)
+   - Quantity (if visible)
+   - Unit of measure (SF, LF, EA, CY, etc.)
+   - Specifications/notes
+   - Page reference (which page the item was found on)
+   - Confidence level
+
+3. **AI OBSERVATIONS** - Expert insights about:
+   - Potential risks or concerns
+   - Missing information
+   - Coordination requirements
+   - Code compliance considerations
+
+IMPORTANT:
+- Focus on ${context.trade} but capture any related items you see
+- Note quantities exactly as shown
+- Include equipment schedules, fixture schedules, and keynotes
+- Flag anything unclear with "NEEDS_REVIEW"
+
+OUTPUT FORMAT:
+Return ONLY valid JSON:
+{
+  "project_name": "string or null",
+  "work_packages": [
+    {
+      "packageId": "string",
+      "name": "string",
+      "csi_division": "string",
+      "trade": "string",
+      "description": "string",
+      "scope_responsible": "string or null",
+      "line_items": [
+        {
+          "item_number": "string or null",
+          "description": "string",
+          "action": "string",
+          "quantity": "number or null",
+          "unit": "string or null",
+          "specifications": "string or null",
+          "notes": "string or null",
+          "source_page": "number (page number)",
+          "confidence": 0.9,
+          "flags": ["NEEDS_REVIEW"]
+        }
+      ]
+    }
+  ],
+  "ai_observations": [
+    {
+      "severity": "critical | warning | info",
+      "category": "risk_flag | coordination_required | missing_information",
+      "title": "string",
+      "insight": "string",
+      "affected_packages": ["packageId"],
+      "suggested_actions": ["string"]
+    }
+  ]
+}
+`;
+  }
 }
 
 // Export singleton instance
