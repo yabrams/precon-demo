@@ -1,16 +1,19 @@
 /**
  * Extraction Orchestrator
  *
- * Coordinates the multi-pass extraction workflow:
+ * Coordinates the full 5-pass extraction workflow:
  * - Pass 1: Initial extraction with Gemini
  * - Pass 2: Self-review to find missed items
- * - Pass 3: Validation with Claude (optional, based on config)
+ * - Pass 3: Trade deep-dive for focused extraction
+ * - Pass 4: Cross-model validation with Claude
+ * - Pass 5: Final validation and quality check
  *
  * Manages session state, progress updates, and database persistence.
  */
 
 import { prisma } from '@/lib/prisma';
 import { GeminiClient } from './clients/gemini';
+import { ClaudeClient } from './clients/claude';
 import {
   ExtractionSession,
   ExtractionConfig,
@@ -22,12 +25,14 @@ import {
   ExtractedLineItem,
   AIObservation,
   GeminiExtractionResponse,
+  GeminiReviewResponse,
   GeminiRawWorkPackage,
   GeminiRawLineItem,
   DEFAULT_EXTRACTION_CONFIG,
   ConfidenceScore,
   CSIClassification,
   ExtractionMetadata,
+  GeminiAIObservation,
 } from './types';
 
 // Event emitter for real-time updates
@@ -41,6 +46,7 @@ interface ProgressEvent {
 
 export class ExtractionOrchestrator {
   private gemini: GeminiClient;
+  private claude: ClaudeClient | null = null;
   private session: ExtractionSession;
   private progressCallback?: ProgressCallback;
 
@@ -50,6 +56,14 @@ export class ExtractionOrchestrator {
     private config: ExtractionConfig = DEFAULT_EXTRACTION_CONFIG
   ) {
     this.gemini = new GeminiClient();
+    // Only initialize Claude if API key is available
+    if (process.env.ANTHROPIC_API_KEY) {
+      try {
+        this.claude = new ClaudeClient();
+      } catch {
+        console.warn('Claude client not available, will use Gemini for all passes');
+      }
+    }
     this.session = this.initializeSession();
   }
 
@@ -81,22 +95,32 @@ export class ExtractionOrchestrator {
   }
 
   /**
-   * Run the full extraction workflow
+   * Run the full 5-pass extraction workflow
    */
   async run(): Promise<ExtractionSession> {
     try {
       // Create session in database
       await this.persistSession();
 
-      // Pass 1: Initial extraction
+      // Pass 1: Initial extraction with Gemini
       await this.runPass1();
 
-      // Pass 2: Self-review
+      // Pass 2: Self-review to find missed items
       await this.runPass2();
 
-      // Pass 3: Validation (if enabled and Claude available)
-      if (this.config.enableCrossModelValidation) {
-        await this.runPass3();
+      // Pass 3: Trade deep-dive (if enabled)
+      if (this.config.maxPasses >= 3) {
+        await this.runPass3TradeDeepDive();
+      }
+
+      // Pass 4: Cross-model validation (if enabled and Claude available)
+      if (this.config.enableCrossModelValidation && this.config.maxPasses >= 4) {
+        await this.runPass4CrossValidation();
+      }
+
+      // Pass 5: Final validation (if enabled)
+      if (this.config.maxPasses >= 5) {
+        await this.runPass5FinalValidation();
       }
 
       // Finalize
@@ -370,54 +394,65 @@ export class ExtractionOrchestrator {
   }
 
   /**
-   * Pass 3: Validation (simplified for Phase 1)
+   * Pass 3: Trade Deep-Dive
+   * Focused extraction on specific trades that need more detail
    */
-  private async runPass3(): Promise<void> {
-    this.session.status = 'pass_3_validating';
+  private async runPass3TradeDeepDive(): Promise<void> {
+    this.session.status = 'pass_3_deep_dive';
     this.session.currentPass = 3;
-    this.session.statusMessage = 'Validating extraction results...';
-    this.session.progress = 75;
+    this.session.statusMessage = 'Performing trade-by-trade deep dive...';
+    this.session.progress = 50;
 
     this.emitProgress('status', {
       status: this.session.status,
       currentPass: 3,
-      progress: 75,
-      message: 'Running validation...',
+      progress: 50,
+      message: 'Running trade deep-dive...',
     });
 
     const passStart = new Date();
+    let tokensUsed = { input: 0, output: 0 };
 
     try {
-      // For Phase 1, we'll do basic validation without Claude
-      // This can be enhanced in Phase 2 to use Claude for cross-validation
+      // Identify focus trades from current extraction
+      const focusTrades = this.getIdentifiedTrades();
 
-      // Generate basic observations based on extraction data
-      const observations = this.generateBasicObservations();
-      this.session.observations = observations;
+      // Build current extraction for review
+      const currentExtraction = this.buildExtractionResponse();
 
-      for (const obs of observations) {
-        this.emitProgress('observation', { observation: obs });
-      }
+      // Run trade deep-dive with Gemini
+      const result = await this.gemini.tradeDeepDive(
+        this.documents.filter(d => d.type === 'design_drawings'),
+        currentExtraction,
+        focusTrades
+      );
 
-      this.session.progress = 95;
+      tokensUsed = result.tokensUsed;
+
+      // Apply additions and modifications from deep dive
+      const { newItemsCount, modifiedItemsCount, observationsAdded } =
+        this.applyReviewResponse(result.response, 3);
+
+      this.session.progress = 65;
 
       const pass: ExtractionPass = {
         passNumber: 3,
-        model: 'gemini-2.5-pro', // Will be claude in Phase 2
-        purpose: 'Validation and observation generation',
+        model: 'gemini-2.5-pro',
+        purpose: `Trade deep-dive: ${focusTrades.join(', ')}`,
         startedAt: passStart,
         completedAt: new Date(),
-        newItemsFound: 0,
-        itemsModified: 0,
-        observationsAdded: observations.length,
+        newItemsFound: newItemsCount,
+        itemsModified: modifiedItemsCount,
+        observationsAdded,
+        tokensUsed,
       };
       this.session.passes.push(pass);
 
       this.emitProgress('pass_complete', {
         passNumber: 3,
-        newItems: 0,
-        modifiedItems: 0,
-        observations: observations.length,
+        newItems: newItemsCount,
+        modifiedItems: modifiedItemsCount,
+        observations: observationsAdded,
         duration: (pass.completedAt!.getTime() - pass.startedAt.getTime()) / 1000,
       });
 
@@ -427,7 +462,7 @@ export class ExtractionOrchestrator {
       const pass: ExtractionPass = {
         passNumber: 3,
         model: 'gemini-2.5-pro',
-        purpose: 'Validation and observation generation',
+        purpose: 'Trade deep-dive',
         startedAt: passStart,
         completedAt: new Date(),
         newItemsFound: 0,
@@ -437,6 +472,365 @@ export class ExtractionOrchestrator {
       };
       this.session.passes.push(pass);
     }
+  }
+
+  /**
+   * Pass 4: Cross-Model Validation
+   * Use Claude to validate the extraction from Gemini
+   */
+  private async runPass4CrossValidation(): Promise<void> {
+    this.session.status = 'pass_4_validating';
+    this.session.currentPass = 4;
+    this.session.statusMessage = 'Cross-validating extraction with Claude...';
+    this.session.progress = 70;
+
+    this.emitProgress('status', {
+      status: this.session.status,
+      currentPass: 4,
+      progress: 70,
+      message: 'Running cross-model validation...',
+    });
+
+    const passStart = new Date();
+    let tokensUsed = { input: 0, output: 0 };
+
+    try {
+      const currentExtraction = this.buildExtractionResponse();
+      const documents = this.documents.filter(d => d.type === 'design_drawings');
+
+      let observationsAdded = 0;
+
+      // Use Claude if available, otherwise fall back to Gemini
+      if (this.claude) {
+        const result = await this.claude.crossValidation(documents, currentExtraction);
+        tokensUsed = result.tokensUsed;
+
+        // Process validation response
+        if (result.response.observations) {
+          for (const obs of result.response.observations) {
+            const aiObs = this.convertObservation(obs, 4);
+            this.session.observations.push(aiObs);
+            observationsAdded++;
+            this.emitProgress('observation', { observation: aiObs });
+          }
+        }
+
+        // Apply confidence adjustments from validation
+        if (result.response.validated_packages) {
+          for (const validatedPkg of result.response.validated_packages) {
+            const pkg = this.session.workPackages.find(p => p.packageId === validatedPkg.packageId);
+            if (pkg && validatedPkg.confidence) {
+              pkg.extraction.confidence.overall = validatedPkg.confidence;
+              if (validatedPkg.confidence_reasoning) {
+                pkg.extraction.confidence.reasoning = validatedPkg.confidence_reasoning;
+              }
+            }
+          }
+        }
+      } else {
+        // Fallback to Gemini for validation
+        const result = await this.gemini.crossValidation(documents, currentExtraction);
+        tokensUsed = result.tokensUsed;
+
+        const { observationsAdded: obsCount } = this.applyReviewResponse(result.response, 4);
+        observationsAdded = obsCount;
+      }
+
+      this.session.progress = 85;
+
+      const pass: ExtractionPass = {
+        passNumber: 4,
+        model: this.claude ? 'claude-sonnet-4.5' : 'gemini-2.5-pro',
+        purpose: 'Cross-model validation',
+        startedAt: passStart,
+        completedAt: new Date(),
+        newItemsFound: 0,
+        itemsModified: 0,
+        observationsAdded,
+        tokensUsed,
+      };
+      this.session.passes.push(pass);
+
+      this.emitProgress('pass_complete', {
+        passNumber: 4,
+        newItems: 0,
+        modifiedItems: 0,
+        observations: observationsAdded,
+        duration: (pass.completedAt!.getTime() - pass.startedAt.getTime()) / 1000,
+      });
+
+      await this.persistSession();
+    } catch (error) {
+      console.error('Pass 4 error:', error);
+      const pass: ExtractionPass = {
+        passNumber: 4,
+        model: this.claude ? 'claude-sonnet-4.5' : 'gemini-2.5-pro',
+        purpose: 'Cross-model validation',
+        startedAt: passStart,
+        completedAt: new Date(),
+        newItemsFound: 0,
+        itemsModified: 0,
+        observationsAdded: 0,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+      this.session.passes.push(pass);
+    }
+  }
+
+  /**
+   * Pass 5: Final Validation & Quality Check
+   * Final review before human review
+   */
+  private async runPass5FinalValidation(): Promise<void> {
+    this.session.status = 'pass_5_final';
+    this.session.currentPass = 5;
+    this.session.statusMessage = 'Running final quality check...';
+    this.session.progress = 90;
+
+    this.emitProgress('status', {
+      status: this.session.status,
+      currentPass: 5,
+      progress: 90,
+      message: 'Running final validation...',
+    });
+
+    const passStart = new Date();
+    let tokensUsed = { input: 0, output: 0 };
+
+    try {
+      const currentExtraction = this.buildExtractionResponse();
+      const documents = this.documents.filter(d => d.type === 'design_drawings');
+
+      // Collect all previous observations as string
+      const previousObservations = this.session.observations
+        .map(obs => `[${obs.severity.toUpperCase()}] ${obs.title}: ${obs.insight}`)
+        .join('\n\n');
+
+      let observationsAdded = 0;
+
+      // Use Claude if available for final validation
+      if (this.claude) {
+        const result = await this.claude.finalValidation(documents, currentExtraction, previousObservations);
+        tokensUsed = result.tokensUsed;
+
+        if (result.response.observations) {
+          for (const obs of result.response.observations) {
+            const aiObs = this.convertObservation(obs, 5);
+            this.session.observations.push(aiObs);
+            observationsAdded++;
+            this.emitProgress('observation', { observation: aiObs });
+          }
+        }
+      } else {
+        // Fallback to Gemini
+        const result = await this.gemini.finalValidation(documents, currentExtraction, previousObservations);
+        tokensUsed = result.tokensUsed;
+
+        const { observationsAdded: obsCount } = this.applyReviewResponse(result.response, 5);
+        observationsAdded = obsCount;
+      }
+
+      // Generate basic observations if none were added
+      if (observationsAdded === 0) {
+        const basicObs = this.generateBasicObservations();
+        for (const obs of basicObs) {
+          this.session.observations.push(obs);
+          observationsAdded++;
+          this.emitProgress('observation', { observation: obs });
+        }
+      }
+
+      this.session.progress = 98;
+
+      const pass: ExtractionPass = {
+        passNumber: 5,
+        model: this.claude ? 'claude-sonnet-4.5' : 'gemini-2.5-pro',
+        purpose: 'Final validation and quality check',
+        startedAt: passStart,
+        completedAt: new Date(),
+        newItemsFound: 0,
+        itemsModified: 0,
+        observationsAdded,
+        tokensUsed,
+      };
+      this.session.passes.push(pass);
+
+      this.emitProgress('pass_complete', {
+        passNumber: 5,
+        newItems: 0,
+        modifiedItems: 0,
+        observations: observationsAdded,
+        duration: (pass.completedAt!.getTime() - pass.startedAt.getTime()) / 1000,
+      });
+
+      await this.persistSession();
+    } catch (error) {
+      console.error('Pass 5 error:', error);
+      const pass: ExtractionPass = {
+        passNumber: 5,
+        model: this.claude ? 'claude-sonnet-4.5' : 'gemini-2.5-pro',
+        purpose: 'Final validation and quality check',
+        startedAt: passStart,
+        completedAt: new Date(),
+        newItemsFound: 0,
+        itemsModified: 0,
+        observationsAdded: 0,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+      this.session.passes.push(pass);
+    }
+  }
+
+  /**
+   * Get list of identified trades from current extraction
+   */
+  private getIdentifiedTrades(): string[] {
+    const trades = new Set<string>();
+    for (const pkg of this.session.workPackages) {
+      trades.add(pkg.trade);
+    }
+    return Array.from(trades);
+  }
+
+  /**
+   * Build GeminiExtractionResponse from current session state
+   */
+  private buildExtractionResponse(): GeminiExtractionResponse {
+    return {
+      project_name: undefined,
+      work_packages: this.session.workPackages.map(pkg => ({
+        packageId: pkg.packageId,
+        name: pkg.name,
+        csi_division: pkg.csiClassification.divisionCode,
+        trade: pkg.trade,
+        description: pkg.description,
+        scope_responsible: pkg.scopeResponsible,
+        line_items: pkg.lineItems.map(item => ({
+          item_number: item.itemNumber,
+          description: item.description,
+          action: item.action,
+          quantity: item.quantity,
+          unit: item.unit,
+          specifications: item.specifications,
+          notes: item.notes,
+        })),
+      })),
+    };
+  }
+
+  /**
+   * Apply review response (additions, modifications, observations) to session
+   */
+  private applyReviewResponse(
+    response: GeminiReviewResponse,
+    pass: number
+  ): { newItemsCount: number; modifiedItemsCount: number; observationsAdded: number } {
+    let newItemsCount = 0;
+    let modifiedItemsCount = 0;
+    let observationsAdded = 0;
+
+    // Apply additions
+    if (response.additions && response.additions.length > 0) {
+      for (const addition of response.additions) {
+        const additionAny = addition as { work_package?: string; packageId?: string };
+        const targetPackageId = additionAny.work_package || additionAny.packageId;
+        const targetPackage = this.session.workPackages.find(
+          p => p.packageId === targetPackageId
+        );
+        if (targetPackage) {
+          const newItem = this.convertRawLineItem(
+            addition as GeminiRawLineItem,
+            targetPackage.lineItems.length,
+            pass
+          );
+          targetPackage.lineItems.push(newItem);
+          targetPackage.itemCount = targetPackage.lineItems.length;
+          newItemsCount++;
+
+          this.emitProgress('item_found', {
+            workPackageId: targetPackage.id,
+            workPackageName: targetPackage.name,
+            item: {
+              id: newItem.id,
+              description: newItem.description,
+              action: newItem.action,
+            },
+            isNew: true,
+          });
+        }
+      }
+    }
+
+    // Apply modifications
+    if (response.modifications && response.modifications.length > 0) {
+      for (const mod of response.modifications) {
+        for (const pkg of this.session.workPackages) {
+          const item = pkg.lineItems.find(
+            i =>
+              i.itemNumber === mod.original_item_ref ||
+              i.description.includes(mod.original_item_ref)
+          );
+          if (item && mod.changes) {
+            Object.assign(item, mod.changes);
+            item.extraction.refinedInPass = [
+              ...(item.extraction.refinedInPass || []),
+              pass,
+            ];
+            modifiedItemsCount++;
+          }
+        }
+      }
+    }
+
+    // Handle new packages
+    if (response.new_packages) {
+      for (const rawPkg of response.new_packages) {
+        const newPkg = this.convertRawPackage(rawPkg, pass);
+        this.session.workPackages.push(newPkg);
+        newItemsCount += newPkg.lineItems.length;
+      }
+    }
+
+    // Handle AI observations
+    if (response.ai_observations) {
+      for (const obs of response.ai_observations) {
+        const aiObs = this.convertObservation(obs, pass);
+        this.session.observations.push(aiObs);
+        observationsAdded++;
+        this.emitProgress('observation', { observation: aiObs });
+      }
+    }
+
+    return { newItemsCount, modifiedItemsCount, observationsAdded };
+  }
+
+  /**
+   * Convert observation from API response to AIObservation type
+   */
+  private convertObservation(obs: GeminiAIObservation, pass: number): AIObservation {
+    // Map category string to valid ObservationCategory or default
+    const validCategories = [
+      'scope_conflict', 'specification_mismatch', 'quantity_concern',
+      'coordination_required', 'addendum_impact', 'warranty_requirement',
+      'code_compliance', 'risk_flag', 'cost_impact', 'schedule_impact',
+      'missing_information', 'substitution_available'
+    ];
+    const category = validCategories.includes(obs.category)
+      ? obs.category as AIObservation['category']
+      : 'missing_information';
+
+    return {
+      id: this.generateId(),
+      severity: obs.severity || 'info',
+      category,
+      title: obs.title || 'Observation',
+      insight: obs.insight || '',
+      affectedWorkPackages: obs.affected_packages || [],
+      affectedLineItems: obs.affected_line_items,
+      references: [],
+      suggestedActions: obs.suggested_actions,
+      extraction: this.createExtractionMetadata(pass, 0.8),
+    };
   }
 
   /**

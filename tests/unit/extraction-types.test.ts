@@ -26,7 +26,7 @@ describe('Extraction Types', () => {
       expect(DEFAULT_EXTRACTION_CONFIG.primaryModel).toBe('gemini-2.5-pro');
       expect(DEFAULT_EXTRACTION_CONFIG.validationModel).toBe('claude-sonnet-4.5');
       expect(DEFAULT_EXTRACTION_CONFIG.enableIterativeRefinement).toBe(true);
-      expect(DEFAULT_EXTRACTION_CONFIG.maxPasses).toBe(3);
+      expect(DEFAULT_EXTRACTION_CONFIG.maxPasses).toBe(5);
       expect(DEFAULT_EXTRACTION_CONFIG.minimumConfidence).toBe(0.5);
       expect(DEFAULT_EXTRACTION_CONFIG.flagThreshold).toBe(0.7);
     });
@@ -278,13 +278,15 @@ describe('Extraction Types', () => {
         'initializing',
         'pass_1_extracting',
         'pass_2_reviewing',
-        'pass_3_validating',
+        'pass_3_deep_dive',
+        'pass_4_validating',
+        'pass_5_final',
         'awaiting_review',
         'completed',
         'failed',
       ];
 
-      expect(statuses).toHaveLength(7);
+      expect(statuses).toHaveLength(9);
     });
   });
 

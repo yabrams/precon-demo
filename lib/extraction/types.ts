@@ -136,7 +136,7 @@ export const DEFAULT_EXTRACTION_CONFIG: ExtractionConfig = {
   primaryModel: 'gemini-2.5-pro',
   validationModel: 'claude-sonnet-4.5',
   enableIterativeRefinement: true,
-  maxPasses: 3,
+  maxPasses: 5,
   enableCrossModelValidation: true,
   minimumConfidence: 0.5,
   flagThreshold: 0.7,
@@ -280,7 +280,9 @@ export type ExtractionStatus =
   | 'initializing'
   | 'pass_1_extracting'
   | 'pass_2_reviewing'
-  | 'pass_3_validating'
+  | 'pass_3_deep_dive'
+  | 'pass_4_validating'
+  | 'pass_5_final'
   | 'awaiting_review'
   | 'completed'
   | 'failed';

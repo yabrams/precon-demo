@@ -39,8 +39,16 @@ const PASS_LABELS: Record<number, { title: string; description: string }> = {
     description: 'Checking for missed items',
   },
   3: {
-    title: 'Validation',
-    description: 'Validating and generating observations',
+    title: 'Trade Deep-Dive',
+    description: 'Detailed analysis of specific trades',
+  },
+  4: {
+    title: 'Cross-Validation',
+    description: 'Validating with secondary model',
+  },
+  5: {
+    title: 'Final Quality Check',
+    description: 'Final validation and observations',
   },
 };
 
@@ -182,7 +190,7 @@ export default function ExtractionProgress({
 
       {/* Pass Progress */}
       <div className="px-6 py-4 space-y-3">
-        {[1, 2, 3].map(passNumber => {
+        {[1, 2, 3, 4, 5].map(passNumber => {
           const passStatus = getPassStatus(passNumber);
           const passInfo = PASS_LABELS[passNumber];
 
@@ -221,7 +229,9 @@ export default function ExtractionProgress({
                   <p className="text-sm text-green-600 mt-1">
                     {passNumber === 1 && `${status.metrics.totalWorkPackages} packages found`}
                     {passNumber === 2 && 'Review complete'}
-                    {passNumber === 3 && `${status.metrics.totalObservations} observations`}
+                    {passNumber === 3 && 'Trade analysis complete'}
+                    {passNumber === 4 && 'Validation complete'}
+                    {passNumber === 5 && `${status.metrics.totalObservations} observations`}
                   </p>
                 )}
 
