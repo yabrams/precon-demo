@@ -221,13 +221,21 @@ model Diagram {
   description   String?                      @db.Text
   tags          String?                      @db.Text // JSON array of tags
 
+  // Large document support
+  pageCount           Int?                   // Total pages in document
+  processedPages      Int                    @default(0) // Number of pages processed
+  processingStatus    String                 @default("pending") // pending, processing, completed, failed
+  processingError     String?                @db.Text
+
   bidForms      BidForm[]
+  pages         DocumentPage[]               // Individual page records
   createdAt     DateTime                     @default(now())
   updatedAt     DateTime                     @updatedAt
 
   @@index([bcProjectId])
   @@index([projectId])
   @@index([fileHash])
+  @@index([processingStatus])
 }
 
 // Updated BidForm model - can belong to either BidPackage or legacy Project
@@ -551,4 +559,102 @@ model ConfidenceCalibration {
 
   @@unique([model, entityType, fieldName])
   @@index([model])
+}
+
+// ============================================================================
+// LARGE DOCUMENT SUPPORT
+// ============================================================================
+
+// Individual page within a document (for large PDF support)
+model DocumentPage {
+  id                      String    @id @default(cuid())
+  diagramId               String
+  diagram                 Diagram   @relation(fields: [diagramId], references: [id], onDelete: Cascade)
+
+  // Page identification
+  pageNumber              Int
+  sheetNumber             String?   // Extracted sheet number (e.g., "M0.1", "E1.0")
+
+  // CSI/Trade classification
+  csiDivision             String?   // CSI division code (e.g., "23" for HVAC)
+  trade                   String?   // Trade name (e.g., "Mechanical", "Electrical")
+  pageType                String    @default("plan") // cover, index, plan, schedule, detail, section, elevation, specification, diagram, legend, general_notes
+  classificationConfidence Float    @default(0)
+  classificationMethod    String?   // 'pattern' or 'ai'
+
+  // Page content
+  imageUrl                String    // URL to rendered page image
+  thumbnailUrl            String?   // URL to thumbnail (lower res)
+  textContent             String?   @db.Text  // Extracted text layer
+  textPreview             String?   // First 500 chars for quick display
+
+  // Dimensions & metrics
+  width                   Int
+  height                  Int
+  estimatedTokens         Int?      // Estimated token count for this page
+
+  // Processing status
+  processedAt             DateTime?
+  extractionBatchId       String?   // Which batch processed this page
+
+  createdAt               DateTime  @default(now())
+
+  // Relations
+  lineItemRefs            LineItemPageRef[]
+
+  @@unique([diagramId, pageNumber])
+  @@index([diagramId])
+  @@index([csiDivision])
+  @@index([trade])
+  @@index([pageType])
+  @@index([extractionBatchId])
+}
+
+// Links extracted line items to source pages (for multi-page reference tracking)
+model LineItemPageRef {
+  id                  String        @id @default(cuid())
+  lineItemId          String        // References ExtractedLineItemRecord.id
+  pageId              String
+  page                DocumentPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  // Location on page
+  boundingBox         String?       @db.Text  // JSON BoundingBox { x, y, width, height }
+  relationshipType    String        @default("defined_at") // defined_at, modified_by, clarified_in, quantity_from, detail_at, spec_section
+  confidence          Float         @default(0.5)
+
+  createdAt           DateTime      @default(now())
+
+  @@unique([lineItemId, pageId])
+  @@index([lineItemId])
+  @@index([pageId])
+}
+
+// Tracks batches of pages processed together during extraction
+model ExtractionBatch {
+  id                  String    @id @default(cuid())
+  sessionId           String
+
+  // Batch info
+  batchNumber         Int
+  trade               String?   // Trade this batch is for (if trade-grouped)
+  pageNumbers         String    @db.Text  // JSON array of page numbers
+  pageCount           Int
+
+  // Processing status
+  status              String    @default("pending") // pending, processing, completed, failed
+  startedAt           DateTime?
+  completedAt         DateTime?
+
+  // Results
+  itemsFound          Int       @default(0)
+  observationsFound   Int       @default(0)
+  tokensUsed          String?   @db.Text  // JSON { input: number, output: number }
+  cost                Float?    // Estimated cost in USD
+  error               String?   @db.Text
+
+  createdAt           DateTime  @default(now())
+
+  @@index([sessionId])
+  @@index([status])
+  @@index([trade])
 }
