@@ -101,18 +101,48 @@ interface ThumbnailPreviewProps {
   reference: DocumentReference;
   onClose: () => void;
   onExpand?: () => void;
+  /** Anchor element rect for positioning */
+  anchorRect?: DOMRect | null;
 }
 
-function ThumbnailPreview({ reference, onClose, onExpand }: ThumbnailPreviewProps) {
+function ThumbnailPreview({ reference, onClose, onExpand, anchorRect }: ThumbnailPreviewProps) {
   const { location } = reference;
+
+  // Calculate position - show above by default, below if not enough space
+  const getPosition = () => {
+    if (!anchorRect) return { top: 0, left: 0 };
+
+    const previewHeight = 300; // approximate height
+    const previewWidth = 320;
+    const padding = 8;
+
+    // Prefer showing above the anchor
+    let top = anchorRect.top - previewHeight - padding;
+    let left = anchorRect.left + (anchorRect.width / 2) - (previewWidth / 2);
+
+    // If not enough space above, show below
+    if (top < padding) {
+      top = anchorRect.bottom + padding;
+    }
+
+    // Keep within horizontal bounds
+    left = Math.max(padding, Math.min(left, window.innerWidth - previewWidth - padding));
+
+    return { top, left };
+  };
+
+  const position = getPosition();
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95, y: -10 }}
+      initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: -10 }}
-      className="absolute z-50 w-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
-      style={{ bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 8 }}
+      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+      className="fixed z-50 w-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
+      style={{
+        top: position.top,
+        left: position.left,
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-b border-gray-200">
@@ -270,6 +300,7 @@ export default function DocumentReferenceCard({
                 setShowPreview(false);
                 onNavigate?.(reference);
               }}
+              anchorRect={containerRef.current?.getBoundingClientRect()}
             />
           )}
         </AnimatePresence>
@@ -360,6 +391,7 @@ export default function DocumentReferenceCard({
               setShowPreview(false);
               onNavigate?.(reference);
             }}
+            anchorRect={containerRef.current?.getBoundingClientRect()}
           />
         )}
       </AnimatePresence>

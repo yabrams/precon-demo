@@ -164,9 +164,11 @@ function WorkPackagePreview({
                       <span className="text-gray-400 w-6 text-right flex-shrink-0">
                         {idx + 1}.
                       </span>
-                      <span className="text-gray-900">{item.description}</span>
+                      <span className="text-gray-900 flex-1 min-w-0 truncate">
+                        {item.description}
+                      </span>
                       {item.quantity && item.unit && (
-                        <span className="text-gray-500 ml-auto flex-shrink-0">
+                        <span className="text-gray-500 flex-shrink-0 text-xs bg-gray-100 px-1.5 py-0.5 rounded">
                           {item.quantity} {item.unit}
                         </span>
                       )}
@@ -221,11 +223,14 @@ export default function ExtractionContainer({
   });
   const [error, setError] = useState<string | null>(null);
   const [selectedReference, setSelectedReference] = useState<DocumentReference | null>(null);
-  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isStarting, setIsStarting] = useState(false);
+  // Note: Polling is handled by ExtractionProgress component via sessionId
+  // ExtractionContainer only initializes the session and receives completion callbacks
 
   // Start extraction
   const startExtraction = useCallback(async () => {
     setError(null);
+    setIsStarting(true);
 
     try {
       const response = await fetch('/api/extraction/start', {
@@ -246,6 +251,7 @@ export default function ExtractionContainer({
       const data = await response.json();
 
       // Initialize session with pending status
+      // ExtractionProgress component handles all polling via sessionId
       setSession({
         id: data.sessionId,
         projectId,
@@ -271,82 +277,44 @@ export default function ExtractionContainer({
         progress: 0,
         startedAt: new Date(),
       });
-
-      // Start polling for updates
-      startPolling(data.sessionId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsStarting(false);
     }
   }, [projectId, documentIds, extractionConfig]);
 
-  // Poll for extraction status
-  const startPolling = useCallback((sessionId: string) => {
-    // Clear any existing interval
-    if (pollIntervalRef.current) {
-      clearInterval(pollIntervalRef.current);
-    }
-
-    const poll = async () => {
-      try {
-        const response = await fetch(`/api/extraction/${sessionId}`);
-        if (!response.ok) return;
-
-        const data = await response.json();
-
-        setSession((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            status: data.status,
-            currentPass: data.currentPass,
-            progress: data.progress,
-            statusMessage: data.statusMessage,
-            workPackages: data.workPackages || prev.workPackages,
-            observations: data.observations || prev.observations,
-            metrics: data.metrics || prev.metrics,
-            passes: data.passes || prev.passes,
-            completedAt: data.completedAt ? new Date(data.completedAt) : undefined,
-            error: data.error,
-          };
-        });
-
-        // Stop polling if completed or failed
-        if (data.status === 'completed' || data.status === 'failed') {
-          if (pollIntervalRef.current) {
-            clearInterval(pollIntervalRef.current);
-            pollIntervalRef.current = null;
-          }
-
-          // Switch to results tab on completion
-          if (data.status === 'completed') {
-            setActiveTab('results');
-          }
-        }
-      } catch (err) {
-        console.error('Polling error:', err);
+  // Handle completion from ExtractionProgress callbacks
+  const handleExtractionComplete = useCallback((results: {
+    workPackages: ExtractedWorkPackage[];
+    observations: AIObservation[];
+    metrics: ExtractionSession['metrics'];
+    passes: ExtractionSession['passes'];
+  }) => {
+    setSession((prev) => {
+      if (!prev) return prev;
+      const updatedSession = {
+        ...prev,
+        workPackages: results.workPackages,
+        observations: results.observations,
+        metrics: results.metrics,
+        passes: results.passes || [],
+        status: 'completed' as ExtractionStatus,
+        completedAt: new Date(),
+      };
+      // Trigger completion callback
+      if (onComplete) {
+        onComplete(updatedSession);
       }
-    };
+      return updatedSession;
+    });
+    setActiveTab('results');
+  }, [onComplete]);
 
-    // Poll immediately, then every 2 seconds
-    poll();
-    pollIntervalRef.current = setInterval(poll, 2000);
+  const handleExtractionError = useCallback((errorMsg: string) => {
+    setError(errorMsg);
+    setSession((prev) => prev ? { ...prev, status: 'failed' as ExtractionStatus } : prev);
   }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
-  }, []);
-
-  // Handle completion callback
-  useEffect(() => {
-    if (session?.status === 'completed' && onComplete) {
-      onComplete(session);
-    }
-  }, [session?.status, session, onComplete]);
 
   // Toggle package expansion
   const togglePackage = useCallback((packageId: string) => {
@@ -443,17 +411,32 @@ export default function ExtractionContainer({
             {!session || session.status === 'failed' ? (
               <button
                 onClick={startExtraction}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isStarting}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Play className="h-4 w-4" />
-                Start Extraction
+                {isStarting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Starting...
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    Start Extraction
+                  </>
+                )}
               </button>
             ) : session.status === 'completed' ? (
               <button
                 onClick={startExtraction}
-                className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                disabled={isStarting}
+                className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
-                <RefreshCw className="h-4 w-4" />
+                {isStarting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4" />
+                )}
                 Re-extract
               </button>
             ) : null}
@@ -477,7 +460,15 @@ export default function ExtractionContainer({
             <TabButton
               active={activeTab === 'progress'}
               onClick={() => setActiveTab('progress')}
-              icon={<Loader2 className="h-4 w-4" />}
+              icon={
+                session.status === 'completed' ? (
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                ) : session.status === 'failed' ? (
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                ) : (
+                  <Loader2 className="h-4 w-4" />
+                )
+              }
               label="Progress"
               badge={isExtracting ? session.currentPass : undefined}
             />
@@ -488,12 +479,13 @@ export default function ExtractionContainer({
               label="Results"
               badge={session.workPackages.length || undefined}
             />
-            {(processedPages || classification) && (
+            {processedPages && processedPages.length > 0 && classification && (
               <TabButton
                 active={activeTab === 'documents'}
                 onClick={() => setActiveTab('documents')}
                 icon={<FileText className="h-4 w-4" />}
                 label="Documents"
+                badge={processedPages.length}
               />
             )}
           </div>
@@ -553,21 +545,8 @@ export default function ExtractionContainer({
             >
               <ExtractionProgress
                 sessionId={session.id}
-                onComplete={(results) => {
-                  // Update session with results
-                  setSession((prev) => prev ? {
-                    ...prev,
-                    workPackages: results.workPackages,
-                    observations: results.observations,
-                    metrics: results.metrics,
-                    passes: results.passes,
-                    status: 'completed',
-                  } : prev);
-                  setActiveTab('results');
-                }}
-                onError={(errorMsg) => {
-                  setError(errorMsg);
-                }}
+                onComplete={handleExtractionComplete}
+                onError={handleExtractionError}
                 onCancel={onClose}
               />
             </motion.div>

@@ -125,6 +125,7 @@ export default function ExtractionProgress({
     });
   };
 
+  // Poll for status updates
   useEffect(() => {
     if (!polling) return;
 
@@ -136,6 +137,17 @@ export default function ExtractionProgress({
 
     return () => clearInterval(interval);
   }, [polling, fetchStatus]);
+
+  // ESC key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onCancel) {
+        onCancel();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
 
   const getPassStatus = (passNumber: number): 'completed' | 'in_progress' | 'pending' => {
     if (!status) return 'pending';
@@ -300,15 +312,9 @@ export default function ExtractionProgress({
       <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
         <button
           onClick={onCancel}
-          className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+          className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
         >
-          Cancel
-        </button>
-        <button
-          disabled
-          className="px-4 py-2 text-sm bg-gray-100 text-gray-400 rounded cursor-not-allowed"
-        >
-          Run in Background
+          Close
         </button>
       </div>
     </div>
