@@ -504,12 +504,12 @@ export function generateMockBidPackages(): MockExtractionResult {
   const divisionsWithItems = Object.keys(PREDEFINED_BID_ITEMS);
 
   // Map division codes to CSI division objects
-  const selectedDivisions: CSICode[] = divisionsWithItems
+  const selectedDivisions = divisionsWithItems
     .map(divCode => {
       const division = allDivisions.find(d => d.code === divCode);
       return division;
     })
-    .filter((div): div is CSICode => div !== undefined);
+    .filter(div => div !== undefined);
 
   // Generate bid packages for all divisions with predefined items
   const bidPackages: MockBidPackage[] = selectedDivisions.map(division => {

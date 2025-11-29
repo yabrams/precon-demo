@@ -40,6 +40,7 @@ interface ProjectCreationViewProps {
     uploadedDocuments: UploadedDocument[];
     selectedExternalProject?: ExternalProject;
     projectName?: string;
+    useMockData?: boolean;
   }) => void;
 }
 

@@ -7,6 +7,10 @@
 import { LineItem } from '@/components/BidFormTable';
 import { Diagram } from './diagram';
 
+// Type alias for all valid bid package statuses
+// Includes both new workflow states and legacy states for backward compatibility
+export type BidPackageStatus = 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed' | 'active' | 'bidding' | 'bidding-leveling' | 'pending-review' | 'awarded';
+
 export interface BidPackage {
   // Core identifiers
   id: string; // Internal database ID
@@ -20,7 +24,7 @@ export interface BidPackage {
   bidDueDate?: Date;
 
   // Status tracking (workflow-controlled, not user-editable)
-  status: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
+  status: BidPackageStatus;
   progress: number; // 0-100 percentage
 
   // Assignment
@@ -81,13 +85,13 @@ export interface BidPackageCreateInput {
   bcProjectId: string;
   name: string;
   bidDueDate?: Date;
-  status?: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
+  status?: BidPackageStatus;
 }
 
 export interface BidPackageUpdateInput {
   name?: string;
   bidDueDate?: Date;
-  status?: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
+  status?: BidPackageStatus;
   progress?: number;
   diagramIds?: string[]; // Update which diagrams from project to use
 }
@@ -97,7 +101,7 @@ export interface BidPackageSummary {
   id: string;
   bcBidPackageId: string;
   name: string;
-  status: 'to do' | 'assigned' | 'in progress' | 'in review' | 'completed';
+  status: BidPackageStatus;
   progress: number;
   bidDueDate?: Date;
   diagramCount: number;
